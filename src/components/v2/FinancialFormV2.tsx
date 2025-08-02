@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { Percent, Clock, Receipt, ArrowRight, ArrowLeft, Car, Fuel, ChevronDown, ChevronUp, Zap, Target, TrendingUp } from 'lucide-react'
+import { Percent, Clock, Receipt, ArrowRight, ArrowLeft, Car, Fuel, ChevronDown, ChevronUp, Calculator } from 'lucide-react'
 import { CarData } from '@/app/page'
 
 interface FinancialFormV2Props {
@@ -10,9 +10,10 @@ interface FinancialFormV2Props {
   updateCarData: (updates: Partial<CarData>) => void
   onNext: () => void
   onBack: () => void
+  standalone?: boolean
 }
 
-export default function FinancialFormV2({ carData, updateCarData, onNext, onBack }: FinancialFormV2Props) {
+export default function FinancialFormV2({ carData, updateCarData, onNext, onBack, standalone = true }: FinancialFormV2Props) {
   const [showOptionalInputs, setShowOptionalInputs] = useState(false)
   
   const calculateEMI = (principal: number, rate: number, years: number) => {
@@ -35,363 +36,320 @@ export default function FinancialFormV2({ carData, updateCarData, onNext, onBack
   const interestPresets = [
     { label: 'Excellent Credit', rate: 6.5, description: 'Best rates available' },
     { label: 'Good Credit', rate: 8.0, description: 'Standard rates' },
-    { label: 'Fair Credit', rate: 10.5, description: 'Higher rates' },
-    { label: 'Custom', rate: carData.interestRate, description: 'Set your own' }
+    { label: 'Fair Credit', rate: 10.5, description: 'Higher rates' }
   ]
 
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    onNext()
+  }
+
   return (
-    <div className="min-h-screen p-4 sm:p-6 lg:p-8">
-      <div className="max-w-6xl mx-auto">
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-8"
-        >
-          <div className="inline-flex items-center space-x-3 bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl px-6 py-3 mb-6">
-            <Target className="w-6 h-6 text-blue-300" />
-            <h2 className="text-2xl sm:text-3xl font-bold text-white">Loan Configuration</h2>
-            <Zap className="w-6 h-6 text-purple-300" />
+    <div className="space-y-8">
+      {standalone ? (
+        <div className="text-center space-y-3 mb-6">
+          <div className="w-16 h-16 mx-auto bg-gradient-to-br from-purple-400 to-pink-400 rounded-2xl flex items-center justify-center mb-3">
+            <Calculator className="w-8 h-8 text-white" />
           </div>
-        </motion.div>
+          <h2 className="text-2xl font-semibold text-white">Financial Details</h2>
+          <p className="text-gray-400">Enter your loan and financial information</p>
+        </div>
+      ) : (
+        <div className="lg:hidden mb-4">
+          <h3 className="text-lg font-semibold text-white">Loan Terms</h3>
+          <p className="text-gray-400 text-sm">Configure your loan details</p>
+        </div>
+      )}
 
-        {/* Main Dashboard Grid */}
-        <div className="grid lg:grid-cols-3 gap-6">
-          {/* Input Section */}
-          <div className="lg:col-span-2 space-y-6">
+      <form onSubmit={handleSubmit} className="space-y-6">
+        {/* Loan Tenure */}
+        <div className="space-y-2">
+          <label className="flex items-center space-x-2 text-sm font-medium text-white">
+            <Clock className="w-4 h-4 text-cyan-400" />
+            <span>Loan Tenure ({carData.tenure} years)</span>
+          </label>
+          
+          <div className="space-y-3">
+            <input
+              type="range"
+              min={minTenure}
+              max={maxTenure}
+              value={carData.tenure}
+              onChange={(e) => {
+                const years = parseInt(e.target.value)
+                updateCarData({ tenure: years })
+              }}
+              className="w-full h-2 bg-white/20 rounded-lg appearance-none cursor-pointer"
+              style={{
+                background: `linear-gradient(to right, ${carData.tenure <= 4 ? '#06b6d4' : '#ef4444'} 0%, ${carData.tenure <= 4 ? '#06b6d4' : '#ef4444'} ${((carData.tenure - minTenure) / (maxTenure - minTenure)) * 100}%, rgba(255,255,255,0.2) ${((carData.tenure - minTenure) / (maxTenure - minTenure)) * 100}%, rgba(255,255,255,0.2) 100%)`
+              }}
+            />
             
-            {/* Loan Tenure Card */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.1 }}
-              className="bg-white/10 backdrop-blur-md border border-white/20 rounded-3xl p-6 sm:p-8 shadow-2xl"
-            >
-              <div className="flex items-center space-x-3 mb-6">
-                <div className="w-12 h-12 bg-gradient-to-br from-cyan-400 to-blue-400 rounded-2xl flex items-center justify-center">
-                  <Clock className="w-6 h-6 text-white" />
-                </div>
-                <div>
-                  <h3 className="text-xl font-bold text-white">Loan Tenure</h3>
-                  <p className="text-white/70 text-sm">{carData.tenure} years selected</p>
-                </div>
+            <div className="flex justify-between text-xs text-white/60">
+              <span>1yr</span>
+              <span>2yr</span>
+              <span>3yr</span>
+              <span>4yr</span>
+              <span>5yr</span>
+              <span>6yr</span>
+              <span>7yr</span>
+            </div>
+            
+            {/* Warning for tenure > 4 years */}
+            {carData.tenure > 4 && (
+              <div className="bg-red-500/20 border border-red-400/50 rounded-2xl p-3">
+                <p className="text-red-300 text-xs">
+                  ⚠️ You're going above the suggested 4-year limit. Consider reducing the tenure for better financial health.
+                </p>
               </div>
-
-              {/* Tenure Slider with Visual Feedback */}
-              <div className="space-y-6">
-                <div className="relative">
-                  <input
-                    type="range"
-                    min={minTenure}
-                    max={maxTenure}
-                    value={carData.tenure}
-                    onChange={(e) => {
-                      const years = parseInt(e.target.value)
-                      updateCarData({ tenure: years })
-                    }}
-                    className="w-full h-4 bg-white/20 rounded-lg appearance-none cursor-pointer slider"
-                    style={{
-                      background: `linear-gradient(to right, ${carData.tenure <= 4 ? '#06b6d4' : '#ef4444'} 0%, ${carData.tenure <= 4 ? '#06b6d4' : '#ef4444'} ${((carData.tenure - minTenure) / (maxTenure - minTenure)) * 100}%, rgba(255,255,255,0.2) ${((carData.tenure - minTenure) / (maxTenure - minTenure)) * 100}%, rgba(255,255,255,0.2) 100%)`
-                    }}
-                  />
-                  
-                  {/* Year markers */}
-                  <div className="flex justify-between text-xs text-white/60 mt-2">
-                    {Array.from({ length: maxTenure }, (_, i) => (
-                      <span key={i + 1} className={carData.tenure === i + 1 ? 'text-cyan-300 font-semibold' : ''}>
-                        {i + 1}yr
-                      </span>
-                    ))}
-                  </div>
-                </div>
-                
-                {/* Tenure Impact Display */}
-                <div className="grid grid-cols-3 gap-4">
-                  <div className="bg-white/10 rounded-2xl p-4 text-center">
-                    <p className="text-white/70 text-sm">Monthly EMI</p>
-                    <p className="text-lg font-bold text-cyan-300">
-                      ₹{emi.toLocaleString('en-IN', { maximumFractionDigits: 0 })}
-                    </p>
-                  </div>
-                  <div className="bg-white/10 rounded-2xl p-4 text-center">
-                    <p className="text-white/70 text-sm">Total Interest</p>
-                    <p className="text-lg font-bold text-yellow-300">
-                      ₹{totalInterest.toLocaleString('en-IN', { maximumFractionDigits: 0 })}
-                    </p>
-                  </div>
-                  <div className="bg-white/10 rounded-2xl p-4 text-center">
-                    <p className="text-white/70 text-sm">Total Payment</p>
-                    <p className="text-lg font-bold text-red-300">
-                      ₹{totalPayment.toLocaleString('en-IN', { maximumFractionDigits: 0 })}
-                    </p>
-                  </div>
-                </div>
-                
-                {/* Warning for tenure > 4 years */}
-                {carData.tenure > 4 && (
-                  <div className="bg-red-500/20 border border-red-400/50 rounded-2xl p-4">
-                    <p className="text-red-300 text-sm flex items-center">
-                      <span className="mr-2">⚠️</span>
-                      You're going above the suggested 4-year limit. Consider reducing the tenure for better financial health.
-                    </p>
-                  </div>
-                )}
-              </div>
-            </motion.div>
-
-            {/* Interest Rate Card */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.2 }}
-              className="bg-white/10 backdrop-blur-md border border-white/20 rounded-3xl p-6 sm:p-8 shadow-2xl"
-            >
-              <div className="flex items-center space-x-3 mb-6">
-                <div className="w-12 h-12 bg-gradient-to-br from-red-400 to-pink-400 rounded-2xl flex items-center justify-center">
-                  <Percent className="w-6 h-6 text-white" />
-                </div>
-                <div>
-                  <h3 className="text-xl font-bold text-white">Interest Rate</h3>
-                  <p className="text-white/70 text-sm">{carData.interestRate}% per annum</p>
-                </div>
-              </div>
-
-              {/* Interest Rate Presets */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
-                {interestPresets.slice(0, 3).map((preset) => (
-                  <button
-                    key={preset.label}
-                    onClick={() => updateCarData({ interestRate: preset.rate })}
-                    className={`p-4 rounded-2xl text-left transition-all hover:scale-105 ${
-                      Math.abs(carData.interestRate - preset.rate) < 0.1
-                        ? 'bg-gradient-to-r from-red-400 to-pink-400 text-white shadow-lg'
-                        : 'bg-white/20 text-white/80 hover:bg-white/30'
-                    }`}
-                  >
-                    <p className="font-semibold">{preset.label}</p>
-                    <p className="text-sm opacity-80">{preset.rate}% - {preset.description}</p>
-                  </button>
-                ))}
-              </div>
-
-              {/* Custom Rate Input */}
-              <div className="space-y-4">
-                <input
-                  type="number"
-                  step="0.1"
-                  value={carData.interestRate}
-                  onChange={(e) => updateCarData({ interestRate: parseFloat(e.target.value) || 8 })}
-                  className="w-full px-4 py-4 text-lg border-2 border-white/30 rounded-2xl focus:outline-none focus:ring-4 focus:ring-red-400/50 focus:border-red-400 transition-all bg-white/10 backdrop-blur-md text-white placeholder-white/50"
-                  placeholder="Custom interest rate"
-                />
-                
-                {/* Interest Rate Slider */}
-                <div className="relative">
-                  <input
-                    type="range"
-                    min="5"
-                    max="15"
-                    step="0.1"
-                    value={carData.interestRate}
-                    onChange={(e) => updateCarData({ interestRate: parseFloat(e.target.value) })}
-                    className="w-full h-3 bg-white/20 rounded-lg appearance-none cursor-pointer slider"
-                    style={{
-                      background: `linear-gradient(to right, #ef4444 0%, #ef4444 ${((carData.interestRate - 5) / (15 - 5)) * 100}%, rgba(255,255,255,0.2) ${((carData.interestRate - 5) / (15 - 5)) * 100}%, rgba(255,255,255,0.2) 100%)`
-                    }}
-                  />
-                  <div className="flex justify-between text-xs text-white/60 mt-2">
-                    <span>5%</span>
-                    <span>10%</span>
-                    <span>15%</span>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-
-            {/* Optional Advanced Settings */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.3 }}
-              className="bg-white/10 backdrop-blur-md border border-white/20 rounded-3xl overflow-hidden shadow-2xl"
-            >
-              <button
-                onClick={() => setShowOptionalInputs(!showOptionalInputs)}
-                className="w-full p-6 text-left hover:bg-white/10 transition-colors flex items-center justify-between"
-              >
-                <div className="flex items-center space-x-3">
-                  <div className="w-10 h-10 bg-gradient-to-br from-purple-400 to-indigo-400 rounded-xl flex items-center justify-center">
-                    <Receipt className="w-5 h-5 text-white" />
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-bold text-white">Advanced Settings</h3>
-                    <p className="text-white/70 text-sm">Processing fees, fuel costs & more</p>
-                  </div>
-                </div>
-                {showOptionalInputs ? (
-                  <ChevronUp className="w-5 h-5 text-white/70" />
-                ) : (
-                  <ChevronDown className="w-5 h-5 text-white/70" />
-                )}
-              </button>
-
-              {showOptionalInputs && (
-                <motion.div
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: 'auto' }}
-                  exit={{ opacity: 0, height: 0 }}
-                  className="border-t border-white/20 p-6 space-y-6"
-                >
-                  {/* Processing Fee */}
-                  <div>
-                    <label className="flex items-center space-x-2 text-lg font-semibold text-white mb-4">
-                      <Receipt className="w-5 h-5 text-purple-400" />
-                      <span>Processing Fee</span>
-                    </label>
-                    <div className="relative">
-                      <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white/70 text-lg">₹</span>
-                      <input
-                        type="number"
-                        value={carData.processingFee === 0 ? '' : carData.processingFee}
-                        onChange={(e) => {
-                          const value = e.target.value;
-                          if (value === '') {
-                            updateCarData({ processingFee: 0 });
-                          } else {
-                            const fee = parseFloat(value);
-                            updateCarData({ processingFee: isNaN(fee) ? 0 : fee });
-                          }
-                        }}
-                        placeholder="Enter processing fee (if any)"
-                        className="w-full pl-8 pr-4 py-4 text-lg border-2 border-white/30 rounded-2xl focus:outline-none focus:ring-4 focus:ring-purple-400/50 focus:border-purple-400 transition-all bg-white/10 backdrop-blur-md text-white placeholder-white/50"
-                      />
-                    </div>
-                  </div>
-
-                  {/* Running Costs */}
-                  <div className="grid sm:grid-cols-2 gap-6">
-                    <div>
-                      <label className="flex items-center space-x-2 text-lg font-semibold text-white mb-4">
-                        <Car className="w-5 h-5 text-orange-400" />
-                        <span>KM/Month</span>
-                      </label>
-                      <input
-                        type="number"
-                        value={carData.kmPerMonth || ''}
-                        onChange={(e) => updateCarData({ kmPerMonth: parseFloat(e.target.value) || 0 })}
-                        placeholder="Monthly kilometers"
-                        className="w-full px-4 py-4 text-lg border-2 border-white/30 rounded-2xl focus:outline-none focus:ring-4 focus:ring-orange-400/50 focus:border-orange-400 transition-all bg-white/10 backdrop-blur-md text-white placeholder-white/50"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="flex items-center space-x-2 text-lg font-semibold text-white mb-4">
-                        <Fuel className="w-5 h-5 text-red-400" />
-                        <span>Fuel Cost/L</span>
-                      </label>
-                      <div className="relative">
-                        <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white/70 text-lg">₹</span>
-                        <input
-                          type="number"
-                          value={carData.fuelCostPerLiter || ''}
-                          onChange={(e) => updateCarData({ fuelCostPerLiter: parseFloat(e.target.value) || 0 })}
-                          placeholder="Cost per liter"
-                          className="w-full pl-8 pr-4 py-4 text-lg border-2 border-white/30 rounded-2xl focus:outline-none focus:ring-4 focus:ring-red-400/50 focus:border-red-400 transition-all bg-white/10 backdrop-blur-md text-white placeholder-white/50"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </motion.div>
-              )}
-            </motion.div>
+            )}
           </div>
+        </div>
 
-          {/* Enhanced Results Panel */}
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.4 }}
-            className="lg:col-span-1"
+        {/* Interest Rate */}
+        <div className="space-y-2">
+          <label className="flex items-center space-x-2 text-sm font-medium text-white">
+            <Percent className="w-4 h-4 text-red-400" />
+            <span>Interest Rate (% per annum)</span>
+          </label>
+          
+          
+          <div className="space-y-3">
+            <input
+              type="number"
+              step="0.1"
+              value={carData.interestRate}
+              onChange={(e) => updateCarData({ interestRate: parseFloat(e.target.value) || 8 })}
+              className="w-full px-4 py-3 bg-white/10 backdrop-blur-md border border-white/20 rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-red-400 focus:border-transparent transition-all"
+              placeholder="Custom interest rate"
+            />
+            
+            {/* Interest Rate Slider */}
+            <div className="relative">
+              <input
+                type="range"
+                min="5"
+                max="15"
+                step="0.1"
+                value={carData.interestRate}
+                onChange={(e) => updateCarData({ interestRate: parseFloat(e.target.value) })}
+                className="w-full h-2 bg-white/20 rounded-lg appearance-none cursor-pointer"
+                style={{
+                  background: `linear-gradient(to right, #ef4444 0%, #ef4444 ${((carData.interestRate - 5) / (15 - 5)) * 100}%, rgba(255,255,255,0.2) ${((carData.interestRate - 5) / (15 - 5)) * 100}%, rgba(255,255,255,0.2) 100%)`
+                }}
+              />
+              <div className="flex justify-between text-xs text-white/60 mt-1">
+                <span>5%</span>
+                <span>10%</span>
+                <span>15%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Hidden Cost Reminder Popup */}
+        {(!carData.kmPerMonth || !carData.fuelCostPerLiter || !carData.insuranceAndMaintenance) && !showOptionalInputs && (
+          <motion.div 
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mb-4 bg-amber-500/20 backdrop-blur-md border border-amber-400/30 p-3 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300"
           >
-            <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-3xl p-6 shadow-2xl sticky top-6">
-              <div className="flex items-center space-x-3 mb-6">
-                <div className="w-10 h-10 bg-gradient-to-br from-green-400 to-emerald-400 rounded-xl flex items-center justify-center">
-                  <TrendingUp className="w-5 h-5 text-white" />
-                </div>
-                <h3 className="text-lg font-bold text-white">Loan Summary</h3>
+            <div className="flex items-start space-x-2">
+              <div className="flex-shrink-0 w-6 h-6 bg-amber-500/30 rounded-full flex items-center justify-center mt-0.5">
+                <Calculator size={12} className="text-amber-400" />
               </div>
-
-              <div className="space-y-4">
-                {/* EMI Highlight */}
-                <div className="bg-gradient-to-r from-green-500/20 to-emerald-500/20 border border-green-400/30 rounded-2xl p-4 text-center">
-                  <p className="text-green-300 text-sm font-semibold">Monthly EMI</p>
-                  <p className="text-3xl font-bold text-white">
-                    ₹{emi.toLocaleString('en-IN', { maximumFractionDigits: 0 })}
-                  </p>
-                  <p className="text-green-300 text-xs">for {carData.tenure} years</p>
-                </div>
-
-                {/* Other Details */}
-                <div className="space-y-3">
-                  <div className="bg-white/10 rounded-2xl p-3">
-                    <p className="text-white/70 text-sm">Total Interest</p>
-                    <p className="text-xl font-bold text-yellow-300">
-                      ₹{totalInterest.toLocaleString('en-IN', { maximumFractionDigits: 0 })}
-                    </p>
-                  </div>
-
-                  <div className="bg-white/10 rounded-2xl p-3">
-                    <p className="text-white/70 text-sm">Total Payment</p>
-                    <p className="text-xl font-bold text-red-300">
-                      ₹{totalPayment.toLocaleString('en-IN', { maximumFractionDigits: 0 })}
-                    </p>
-                  </div>
-                </div>
-
-                {/* 20/4/10 Rule Check */}
-                <div className="bg-white/10 rounded-2xl p-4">
-                  <h4 className="text-white font-semibold mb-3 text-sm">Smart Finance Check</h4>
-                  <div className="space-y-2 text-xs">
-                    <div className="flex justify-between items-center">
-                      <span className="text-white/70">Tenure ≤ 4 years</span>
-                      <span className={carData.tenure <= 4 ? 'text-green-400' : 'text-red-400'}>
-                        {carData.tenure <= 4 ? '✓' : '✗'}
-                      </span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-white/70">Down ≥ 20%</span>
-                      <span className={((carData.downPayment / carData.carPrice) * 100) >= 20 ? 'text-green-400' : 'text-red-400'}>
-                        {((carData.downPayment / carData.carPrice) * 100) >= 20 ? '✓' : '✗'}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Navigation Buttons */}
-              <div className="flex flex-col space-y-3 mt-6">
-                <button
-                  onClick={onBack}
-                  className="w-full bg-white/20 text-white py-3 px-4 rounded-2xl font-semibold flex items-center justify-center space-x-2 hover:bg-white/30 transition-all"
-                >
-                  <ArrowLeft className="w-4 h-4" />
-                  <span>Back</span>
-                </button>
-                
-                <motion.button
-                  onClick={onNext}
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  className="w-full bg-gradient-to-r from-purple-500 to-blue-500 text-white py-3 px-4 rounded-2xl font-semibold flex items-center justify-center space-x-2 hover:from-purple-600 hover:to-blue-600 transition-all shadow-lg shadow-purple-500/25"
-                >
-                  <span>See EMI Plan</span>
-                  <ArrowRight className="w-4 h-4" />
-                </motion.button>
+              <div className="flex-1">
+                <p className="font-medium text-amber-200 mb-1 text-sm">💡 Complete Your Analysis</p>
+                <p className="text-amber-300/80 text-xs leading-relaxed">
+                  Add driving distance, fuel costs, and insurance details in "Hidden Cost" below for accurate total cost calculation.
+                </p>
               </div>
             </div>
           </motion.div>
+        )}
+
+        {/* Optional Inputs Section */}
+        <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-xl overflow-hidden">
+          <button
+            type="button"
+            onClick={() => setShowOptionalInputs(!showOptionalInputs)}
+            className="w-full p-4 text-left hover:bg-white/10 transition-colors flex items-center justify-between"
+          >
+            <div>
+              <h3 className="text-lg font-semibold text-white">Hidden Cost</h3>
+              <p className="text-white/70 text-sm">Optimize your decision with these hidden factors</p>
+            </div>
+            {showOptionalInputs ? (
+              <ChevronUp className="w-5 h-5 text-white/70" />
+            ) : (
+              <ChevronDown className="w-5 h-5 text-white/70" />
+            )}
+          </button>
+
+          {showOptionalInputs && (
+            <div className="border-t border-white/20 p-6 space-y-6">
+              {/* Processing Fee */}
+              <div className="space-y-2">
+                <label className="flex items-center space-x-2 text-sm font-medium text-white">
+                  <Receipt className="w-4 h-4 text-purple-400" />
+                  <span>Processing Fee</span>
+                </label>
+                <div className="relative">
+                  <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white/70 font-medium">₹</span>
+                  <input
+                    type="number"
+                    value={carData.processingFee === 0 ? '' : carData.processingFee}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      if (value === '') {
+                        updateCarData({ processingFee: 0 });
+                      } else {
+                        const fee = parseFloat(value);
+                        updateCarData({ processingFee: isNaN(fee) ? 0 : fee });
+                      }
+                    }}
+                    placeholder="Enter processing fee (if any)"
+                    className="w-full pl-8 pr-4 py-3 bg-white/10 backdrop-blur-md border border-white/20 rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all"
+                  />
+                </div>
+              </div>
+
+              {/* KM Driven Per Month */}
+              <div className="space-y-2">
+                <label className="flex items-center justify-between text-sm font-medium text-white">
+                  <div className="flex items-center space-x-2">
+                    <Car className="w-4 h-4 text-orange-400" />
+                    <span>KM Driven Per Month</span>
+                  </div>
+                  {!carData.kmPerMonth && (
+                    <div className="flex space-x-1">
+                      <button
+                        type="button"
+                        onClick={() => updateCarData({ kmPerMonth: 800 })}
+                        className="text-xs bg-orange-500/20 text-orange-300 px-2 py-1 rounded-full hover:bg-orange-500/30 transition-all"
+                      >
+                        City 800km
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => updateCarData({ kmPerMonth: 1500 })}
+                        className="text-xs bg-orange-500/20 text-orange-300 px-2 py-1 rounded-full hover:bg-orange-500/30 transition-all"
+                      >
+                        Mixed 1500km
+                      </button>
+                    </div>
+                  )}
+                </label>
+                <input
+                  type="number"
+                  value={carData.kmPerMonth || ''}
+                  onChange={(e) => updateCarData({ kmPerMonth: parseFloat(e.target.value) || 0 })}
+                  placeholder="Enter km per month"
+                  className="w-full px-4 py-3 bg-white/10 backdrop-blur-md border border-white/20 rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent transition-all"
+                />
+              </div>
+
+              {/* Fuel Cost Per Liter */}
+              <div className="space-y-2">
+                <label className="flex items-center justify-between text-sm font-medium text-white">
+                  <div className="flex items-center space-x-2">
+                    <Fuel className="w-4 h-4 text-red-400" />
+                    <span>Fuel Cost Per Liter</span>
+                  </div>
+                  {!carData.fuelCostPerLiter && (
+                    <div className="flex space-x-1">
+                      <button
+                        type="button"
+                        onClick={() => updateCarData({ fuelCostPerLiter: 95 })}
+                        className="text-xs bg-red-500/20 text-red-300 px-2 py-1 rounded-full hover:bg-red-500/30 transition-all"
+                      >
+                        Petrol ₹95
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => updateCarData({ fuelCostPerLiter: 85 })}
+                        className="text-xs bg-red-500/20 text-red-300 px-2 py-1 rounded-full hover:bg-red-500/30 transition-all"
+                      >
+                        Diesel ₹85
+                      </button>
+                    </div>
+                  )}
+                </label>
+                <div className="relative">
+                  <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white/70 font-medium">₹</span>
+                  <input
+                    type="number"
+                    value={carData.fuelCostPerLiter || ''}
+                    onChange={(e) => updateCarData({ fuelCostPerLiter: parseFloat(e.target.value) || 0 })}
+                    placeholder="Enter fuel cost per liter"
+                    className="w-full pl-8 pr-4 py-3 bg-white/10 backdrop-blur-md border border-white/20 rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-red-400 focus:border-transparent transition-all"
+                  />
+                </div>
+              </div>
+
+              {/* Monthly Insurance & Maintenance */}
+              <div className="space-y-2">
+                <label className="flex items-center justify-between text-sm font-medium text-white">
+                  <div className="flex items-center space-x-2">
+                    <Receipt className="w-4 h-4 text-green-400" />
+                    <span>Monthly Insurance & Maintenance</span>
+                  </div>
+                  {carData.carPrice > 0 && !carData.insuranceAndMaintenance && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const suggested = Math.round((carData.carPrice * 0.009) / 12);
+                        updateCarData({ insuranceAndMaintenance: suggested });
+                      }}
+                      className="text-xs bg-green-500/20 text-green-300 px-2 py-1 rounded-full hover:bg-green-500/30 transition-all"
+                    >
+                      Use suggested: ₹{Math.round((carData.carPrice * 0.009) / 12).toLocaleString('en-IN')}
+                    </button>
+                  )}
+                </label>
+                <div className="relative">
+                  <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white/70 font-medium">₹</span>
+                  <input
+                    type="number"
+                    value={carData.insuranceAndMaintenance || ''}
+                    onChange={(e) => updateCarData({ insuranceAndMaintenance: parseFloat(e.target.value) || 0 })}
+                    placeholder="Enter monthly insurance & maintenance"
+                    className="w-full pl-8 pr-4 py-3 bg-white/10 backdrop-blur-md border border-white/20 rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-transparent transition-all"
+                  />
+                </div>
+                <p className="text-xs text-white/60 flex items-center">
+                  <span className="w-1 h-1 bg-green-400 rounded-full mr-2"></span>
+                  Typically 0.8-1% of car price monthly for insurance + maintenance costs
+                </p>
+              </div>
+            </div>
+          )}
         </div>
-      </div>
+
+        {/* Monthly Income - Required for 20/4/10 Rule */}
+        <div className="space-y-2">
+          <label className="flex items-center space-x-2 text-sm font-medium text-white">
+            <Calculator className="w-4 h-4 text-emerald-400" />
+            <span>Monthly Income</span>
+            <span className="text-xs text-emerald-300 bg-emerald-500/20 px-2 py-0.5 rounded-full">required for 20/4/10 rule</span>
+          </label>
+          <div className="relative">
+            <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white/70 font-medium">₹</span>
+            <input
+              type="number"
+              value={carData.monthlyIncome || ''}
+              onChange={(e) => updateCarData({ monthlyIncome: parseFloat(e.target.value) || 0 })}
+              placeholder="Enter your monthly income"
+              className="w-full pl-8 pr-4 py-3 bg-white/10 backdrop-blur-md border border-white/20 rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-transparent transition-all"
+            />
+          </div>
+          <p className="text-xs text-white/60 flex items-center">
+            <span className="w-1 h-1 bg-emerald-400 rounded-full mr-2"></span>
+            Used to calculate the 10% rule: total car expenses should not exceed 10% of your income
+          </p>
+        </div>
+
+      </form>
     </div>
   )
 }

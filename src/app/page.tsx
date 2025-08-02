@@ -245,7 +245,7 @@ export default function HomePage() {
   // Render Version 2
   if (selectedVersion === 'v2') {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900">
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-slate-900 to-black font-sans" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>
         {/* Version Selector */}
         <div className="absolute top-4 right-4 z-50">
           <div className="relative">
@@ -264,31 +264,137 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* Version 2 Content */}
-        {step === 1 && (
-          <CarDetailsFormV2 
-            carData={carData} 
-            updateCarData={updateCarData}
-            onNext={nextStep}
-            step={step}
-            totalSteps={3}
-          />
-        )}
-        {step === 2 && (
-          <FinancialFormV2 
-            carData={carData} 
-            updateCarData={updateCarData}
-            onNext={nextStep}
-            onBack={prevStep}
-          />
-        )}
-        {step === 3 && (
-          <ResultsDisplayV2 
-            carData={carData}
-            onBack={prevStep}
-            onRestart={restart}
-          />
-        )}
+        <div className="container mx-auto px-4 py-8">
+          <div className="flex flex-col lg:flex-row gap-6">
+            {/* Main Content - Combined Form */}
+            <div className="w-full lg:w-3/5">
+              <div className="max-w-2xl mx-auto">
+                {/* App Title */}
+                <div className="text-center mb-8 lg:mb-12">
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="space-y-6"
+                  >
+                    <h1 className="text-3xl lg:text-4xl font-bold text-white bg-gradient-to-r from-emerald-400 via-cyan-400 to-purple-400 bg-clip-text text-transparent">
+                      Car Finance Calculator V2
+                    </h1>
+                    <p className="text-gray-400 text-lg">
+                      Modern glassmorphism design with instant EMI calculations
+                    </p>
+                  </motion.div>
+                </div>
+
+                {/* Mobile Tabs - Only show on mobile */}
+                <div className="lg:hidden mb-6">
+                  <div className="flex border-b border-gray-700">
+                    <button
+                      className={`py-3 px-4 font-medium text-sm ${step === 1 ? 'text-emerald-400 border-b-2 border-emerald-400' : 'text-gray-500'}`}
+                      onClick={() => setStep(1)}
+                    >
+                      Car Details
+                    </button>
+                    <button
+                      className={`py-3 px-4 font-medium text-sm ${step === 2 ? 'text-emerald-400 border-b-2 border-emerald-400' : 'text-gray-500'}`}
+                      onClick={() => setStep(2)}
+                      disabled={!carData.carPrice || carData.carPrice <= 0}
+                    >
+                      Financial Details
+                    </button>
+                  </div>
+                </div>
+
+                {/* Progress Bar - Only visible on mobile */}
+                <div className="mb-8 lg:hidden">
+                  <div className="flex justify-between items-center mb-2">
+                    <span className="text-sm font-medium text-gray-400">Progress</span>
+                    <span className="text-sm font-medium text-gray-400">{step} of {emiSteps.length}</span>
+                  </div>
+                  <div className="bg-gray-800 rounded-full h-3 overflow-hidden">
+                    <div 
+                      className="bg-gradient-to-r from-emerald-400 to-cyan-400 h-full transition-all duration-500"
+                      style={{ width: `${(step / emiSteps.length) * 100}%` }}
+                    />
+                  </div>
+                </div>
+
+                {/* Form Content */}
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={step}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}
+                    transition={{ duration: 0.3 }}
+                    className="bg-gray-800/50 backdrop-blur-md rounded-2xl shadow-2xl border border-gray-700/50 p-6 lg:p-8 w-full"
+                  >
+                    {/* Desktop View - Show all forms in one column */}
+                    <div className="hidden lg:block space-y-8">
+                      <CarDetailsFormV2 
+                        carData={carData} 
+                        updateCarData={updateCarData}
+                        onNext={nextStep}
+                        step={step}
+                        totalSteps={3}
+                        standalone={false}
+                      />
+                      <FinancialFormV2 
+                        carData={carData} 
+                        updateCarData={updateCarData}
+                        onNext={nextStep}
+                        onBack={prevStep}
+                        standalone={false}
+                      />
+                    </div>
+                    
+                    {/* Mobile View - Show one form at a time */}
+                    <div className="lg:hidden">
+                      {step === 1 && (
+                        <CarDetailsFormV2 
+                          carData={carData} 
+                          updateCarData={updateCarData}
+                          onNext={nextStep}
+                          step={step}
+                          totalSteps={3}
+                          standalone={true}
+                        />
+                      )}
+                      {step === 2 && (
+                        <FinancialFormV2 
+                          carData={carData} 
+                          updateCarData={updateCarData}
+                          onNext={nextStep}
+                          onBack={prevStep}
+                          standalone={true}
+                        />
+                      )}
+                    </div>
+                    
+                    {/* Results - Always show on both views */}
+                    {step === 3 && (
+                      <ResultsDisplayV2 
+                        carData={carData}
+                        onBack={prevStep}
+                        onRestart={restart}
+                      />
+                    )}
+                  </motion.div>
+                </AnimatePresence>
+              </div>
+            </div>
+
+            {/* Live Preview Panel */}
+            {step !== 3 && (
+              <div className="w-full lg:w-2/5">
+                <div className="sticky top-8 h-[calc(100vh-4rem)] overflow-y-auto">
+                  <div className="bg-gray-800/30 backdrop-blur-md rounded-2xl shadow-2xl border border-gray-700/50 p-6">
+                    <TotalCostDisplayV2 carData={carData} />
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
       </div>
     )
   }

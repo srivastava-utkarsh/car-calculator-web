@@ -1,285 +1,299 @@
 'use client'
 
+import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { CarData } from '@/app/page'
-import { DollarSign, TrendingUp, Car, Fuel, CheckCircle, XCircle, Zap } from 'lucide-react'
+import { DollarSign, TrendingUp, Car, Fuel, CheckCircle, XCircle, Zap, Percent, Clock, Info } from 'lucide-react'
 
 interface TotalCostDisplayV2Props {
   carData: CarData
 }
 
 export default function TotalCostDisplayV2({ carData }: TotalCostDisplayV2Props) {
+  const [durationToggle, setDurationToggle] = useState<'months' | 'years'>('months')
+  
   const calculateEMI = (principal: number, rate: number, years: number) => {
     if (principal <= 0 || rate <= 0 || years <= 0) return 0
     const monthlyRate = rate / (12 * 100)
     const months = years * 12
-    return (principal * monthlyRate * Math.pow(1 + monthlyRate, months)) / 
-           (Math.pow(1 + monthlyRate, months) - 1)
+    const emi = (principal * monthlyRate * Math.pow(1 + monthlyRate, months)) / (Math.pow(1 + monthlyRate, months) - 1)
+    return isNaN(emi) ? 0 : emi
   }
 
-  // Calculate values
   const loanAmount = carData.carPrice - carData.downPayment
   const emi = calculateEMI(loanAmount, carData.interestRate, carData.tenure)
   const totalInterest = (emi * carData.tenure * 12) - loanAmount
+  const totalPayment = loanAmount + totalInterest
+  const monthlyFuelCost = carData.kmPerMonth && carData.fuelCostPerLiter ? (carData.kmPerMonth / 15) * carData.fuelCostPerLiter : 0
   
-  // Check if optional fields are filled
-  const hasProcessingFee = carData.processingFee > 0
-  const hasFuelData = carData.kmPerMonth > 0 && carData.fuelCostPerLiter > 0
-  const hasMonthlyIncome = carData.monthlyIncome > 0
+  // Comprehensive monthly car expenses calculation for 20/4/10 rule
+  // Including EMI, fuel, insurance (user input) as per best practices
+  const totalMonthlyCarExpenses = emi + monthlyFuelCost + (carData.insuranceAndMaintenance || 0)
   
-  // Monthly running cost calculation (assuming 15 km/liter average)
-  const fuelEfficiency = 15
-  const monthlyFuelCost = hasFuelData ? (carData.kmPerMonth / fuelEfficiency) * carData.fuelCostPerLiter : 0
-  
-  // Total cost calculation
-  const totalCost = carData.carPrice + (hasProcessingFee ? carData.processingFee : 0)
-  
-  // 20/4/10 rule check
-  const downPaymentPercentage = (carData.downPayment / carData.carPrice) * 100
+  // 20/4/10 Rule Check
+  const downPaymentPercentage = carData.carPrice > 0 ? (carData.downPayment / carData.carPrice) * 100 : 0
   const isDownPaymentOk = downPaymentPercentage >= 20
   const isTenureOk = carData.tenure <= 4
-  const totalMonthlyExpense = emi + monthlyFuelCost
-  const expensePercentage = hasMonthlyIncome ? (totalMonthlyExpense / carData.monthlyIncome) * 100 : 0
-  const isExpenseOk = hasMonthlyIncome ? expensePercentage <= 10 : true
+  const expensePercentage = carData.monthlyIncome > 0 ? (totalMonthlyCarExpenses / carData.monthlyIncome) * 100 : 0
+  const isExpenseOk = carData.monthlyIncome > 0 ? expensePercentage <= 10 : true
   const isAffordable = isDownPaymentOk && isTenureOk && isExpenseOk
 
+  const formatCurrency = (value: number) => `₹${Math.round(value).toLocaleString('en-IN')}`
+  const formatDuration = () => {
+    return durationToggle === 'months' ? `${carData.tenure * 12} months` : `${carData.tenure} years`
+  }
+
+  // Calculate completion percentage
+  const completionFields = [
+    carData.carPrice > 0,
+    carData.downPayment >= 0,
+    carData.monthlyIncome > 0,
+    carData.kmPerMonth > 0,
+    carData.fuelCostPerLiter > 0,
+    carData.insuranceAndMaintenance > 0
+  ];
+  const completionPercentage = Math.round((completionFields.filter(Boolean).length / completionFields.length) * 100);
+
   return (
-    <div className="p-4 sm:p-6 space-y-4 sm:space-y-6 overflow-y-auto lg:h-full">
-      {/* Header */}
-      <div className="flex items-center space-x-3 mb-6">
-        <div className="w-10 h-10 bg-gradient-to-br from-purple-400 to-blue-400 rounded-xl flex items-center justify-center">
-          <Zap className="w-5 h-5 text-white" />
+    <div className="space-y-4">
+      <div className="flex items-center justify-between mb-3">
+        <h4 className="font-semibold text-white text-sm">Smart Loan Insights</h4>
+        <div className="flex items-center space-x-2">
+          <div className={`w-2 h-2 rounded-full ${completionPercentage === 100 ? 'bg-green-400' : completionPercentage >= 66 ? 'bg-yellow-400' : 'bg-red-400'}`}></div>
+          <span className="text-xs text-white/70">{completionPercentage}% Complete</span>
         </div>
-        <h3 className="text-lg sm:text-xl font-bold text-white">Live Summary</h3>
+      </div>
+      
+      {/* Monthly EMI - Compact Display */}
+      <motion.div 
+        className={`bg-gradient-to-r from-emerald-600 to-cyan-600 text-white p-4 rounded-xl mb-4 text-center shadow-xl transition-all duration-300 hover:scale-[1.01] ${
+          completionPercentage === 100 
+            ? 'shadow-emerald-500/40 ring-2 ring-emerald-400/50' 
+            : 'shadow-emerald-500/20 hover:shadow-emerald-500/30'
+        }`}
+        animate={completionPercentage === 100 ? { scale: [1, 1.02, 1] } : {}}
+        transition={{ duration: 0.6, repeat: 0 }}
+      >
+        <p className="text-xs text-emerald-100 mb-1 font-medium">
+          Monthly EMI {completionPercentage === 100 && '✨'}
+        </p>
+        <p className="text-2xl font-bold tracking-tight">{formatCurrency(emi)}</p>
+      </motion.div>
+
+      {/* Compact Metrics */}
+      <div className="space-y-2 mb-4">
+        {/* Duration with Year/Month Options */}
+        <div className="flex justify-between items-center bg-white/10 backdrop-blur-md border border-white/20 p-2 rounded-lg shadow-md hover:shadow-lg hover:bg-white/15 transition-all duration-300 group">
+          <span className="text-xs text-white/80 flex items-center group-hover:text-white transition-colors">
+            <Clock size={14} className="mr-1.5 text-cyan-400"/>Period
+          </span>
+          <div className="flex items-center space-x-2">
+            <span className="font-semibold text-white text-sm">{formatDuration()}</span>
+            <div className="flex bg-white/10 rounded-full p-0.5 shadow-inner">
+              <button
+                onClick={() => setDurationToggle('years')}
+                className={`text-xs px-2 py-1 rounded-full transition-all duration-200 font-medium min-w-[36px] ${
+                  durationToggle === 'years' 
+                    ? 'bg-emerald-500 text-white shadow-sm transform scale-105' 
+                    : 'text-emerald-300 hover:bg-white/15 hover:text-white'
+                }`}
+              >
+                Y
+              </button>
+              <button
+                onClick={() => setDurationToggle('months')}
+                className={`text-xs px-2 py-1 rounded-full transition-all duration-200 font-medium min-w-[36px] ${
+                  durationToggle === 'months' 
+                    ? 'bg-emerald-500 text-white shadow-sm transform scale-105' 
+                    : 'text-emerald-300 hover:bg-white/15 hover:text-white'
+                }`}
+              >
+                M
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Interest Rate */}
+        <div className="flex justify-between items-center bg-white/10 backdrop-blur-md border border-white/20 p-2 rounded-lg shadow-md hover:shadow-lg hover:bg-white/15 transition-all duration-300 group">
+          <span className="text-xs text-white/80 flex items-center group-hover:text-white transition-colors">
+            <Percent size={14} className="mr-1.5 text-red-400"/>Interest
+          </span>
+          <span className="font-semibold text-white text-sm">{carData.interestRate}% p.a.</span>
+        </div>
+
+        {/* Total Interest */}
+        <div className="flex justify-between items-center bg-white/10 backdrop-blur-md border border-white/20 p-2 rounded-lg shadow-md hover:shadow-lg hover:bg-white/15 transition-all duration-300 group">
+          <span className="text-xs text-white/80 flex items-center group-hover:text-white transition-colors">
+            <TrendingUp size={14} className="mr-1.5 text-yellow-400"/>Interest Cost
+          </span>
+          <span className="font-semibold text-white text-sm">{formatCurrency(totalInterest)}</span>
+        </div>
+
+        {/* Final Payment Amount */}
+        <div className="flex justify-between items-center bg-white/10 backdrop-blur-md border border-white/20 p-2 rounded-lg shadow-md hover:shadow-lg hover:bg-white/15 transition-all duration-300 group">
+          <span className="text-xs text-white/80 flex items-center group-hover:text-white transition-colors">
+            <DollarSign size={14} className="mr-1.5 text-purple-400"/>Total Payment
+          </span>
+          <span className="font-semibold text-white text-sm">{formatCurrency(totalPayment)}</span>
+        </div>
+
+        {/* Processing Fee - One-time cost */}
+        {carData.processingFee > 0 && (
+          <div className="flex justify-between items-center bg-orange-500/20 backdrop-blur-md border border-orange-400/30 p-2 rounded-lg shadow-md hover:shadow-lg hover:bg-orange-500/25 transition-all duration-300 group">
+            <span className="text-xs text-orange-200 flex items-center group-hover:text-orange-100 transition-colors">
+              <Info size={14} className="mr-1.5 text-orange-400"/>Processing Fee
+              <span className="ml-1 text-xs text-orange-300 bg-orange-500/30 px-1.5 py-0.5 rounded-full">one-time</span>
+            </span>
+            <span className="font-semibold text-orange-200 group-hover:text-orange-100 transition-colors text-sm">{formatCurrency(carData.processingFee)}</span>
+          </div>
+        )}
       </div>
 
-      {/* Car Price - Always shown */}
-      <motion.div
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-4 shadow-xl"
-      >
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-2">
-            <Car className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-400" />
-            <span className="text-white/80 text-sm sm:text-base">Car Price</span>
-          </div>
-          <span className="font-bold text-emerald-400 text-base sm:text-lg">
-            ₹{carData.carPrice.toLocaleString('en-IN')}
-          </span>
-        </div>
-      </motion.div>
-
-      {/* Down Payment - Always shown */}
-      <motion.div
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ delay: 0.1 }}
-        className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-4 shadow-xl"
-      >
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-2">
-            <DollarSign className="w-4 h-4 sm:w-5 sm:h-5 text-cyan-400" />
-            <span className="text-white/80 text-sm sm:text-base">Down Payment</span>
-          </div>
-          <div className="text-right">
-            <span className="font-bold text-cyan-400 text-base sm:text-lg block">
-              ₹{carData.downPayment.toLocaleString('en-IN')}
-            </span>
-            <span className="text-cyan-300/70 text-xs">
-              {downPaymentPercentage.toFixed(1)}%
-            </span>
-          </div>
-        </div>
-      </motion.div>
-
-      {/* Loan Amount - Always shown */}
-      <motion.div
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ delay: 0.2 }}
-        className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-4 shadow-xl"
-      >
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-2">
-            <TrendingUp className="w-4 h-4 sm:w-5 sm:h-5 text-purple-400" />
-            <span className="text-white/80 text-sm sm:text-base">Loan Amount</span>
-          </div>
-          <span className="font-bold text-purple-400 text-base sm:text-lg">
-            ₹{loanAmount.toLocaleString('en-IN')}
-          </span>
-        </div>
-      </motion.div>
-
-      {/* Monthly EMI - Always shown */}
-      {emi > 0 && (
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.3 }}
-          className="bg-gradient-to-r from-emerald-500/20 to-cyan-500/20 backdrop-blur-md border border-emerald-400/30 rounded-2xl p-6 shadow-xl"
-        >
-          <div className="text-center">
-            <p className="text-emerald-300 text-xs sm:text-sm mb-2">Monthly EMI</p>
-            <p className="font-bold text-2xl sm:text-3xl text-white">
-              ₹{emi.toLocaleString('en-IN', { maximumFractionDigits: 0 })}
-            </p>
-            <p className="text-emerald-300 text-xs sm:text-sm mt-2">
-              per month for {carData.tenure} years
-            </p>
-          </div>
-        </motion.div>
-      )}
-
-      {/* Processing Fee - Only if filled */}
-      {hasProcessingFee && (
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.4 }}
-          className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-4 shadow-xl"
-        >
-          <div className="flex items-center justify-between">
-            <span className="text-white/80 text-sm sm:text-base">Processing Fee</span>
-            <span className="font-bold text-yellow-400 text-base sm:text-lg">
-              ₹{carData.processingFee.toLocaleString('en-IN')}
-            </span>
-          </div>
-        </motion.div>
-      )}
-
-      {/* Total Monthly Expense - Only if fuel data provided */}
-      {hasFuelData && (
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.5 }}
-          className="bg-gradient-to-r from-orange-500/20 to-red-500/20 backdrop-blur-md border border-orange-400/30 rounded-2xl p-4 shadow-xl"
-        >
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-2">
-              <Fuel className="w-4 h-4 sm:w-5 sm:h-5 text-orange-400" />
-              <span className="text-white font-semibold text-sm sm:text-base">Total Monthly Cost</span>
+      {/* Comprehensive Monthly Car Expenses */}
+      <div className="mb-4">
+        <h5 className="font-semibold text-white mb-2 text-sm">Total Monthly Car Expenses</h5>
+        <div className="bg-blue-500/20 backdrop-blur-md border border-blue-400/30 p-3 rounded-lg shadow-lg hover:shadow-xl hover:bg-blue-500/25 transition-all duration-300">
+          <div className="space-y-1.5">
+            <div className="flex justify-between items-center">
+              <span className="text-xs text-blue-200">EMI Payment</span>
+              <span className="font-semibold text-blue-200 text-sm">{formatCurrency(emi)}</span>
             </div>
-            <span className="font-bold text-xl text-orange-300">
-              ₹{totalMonthlyExpense.toLocaleString('en-IN', { maximumFractionDigits: 0 })}/mo
-            </span>
+            {monthlyFuelCost > 0 && (
+              <div className="flex justify-between items-center">
+                <span className="text-xs text-blue-200">Fuel Cost</span>
+                <span className="font-semibold text-blue-200 text-sm">{formatCurrency(monthlyFuelCost)}</span>
+              </div>
+            )}
+            {carData.insuranceAndMaintenance > 0 && (
+              <div className="flex justify-between items-center">
+                <span className="text-xs text-blue-200">Insurance & Maintenance</span>
+                <span className="font-semibold text-blue-200 text-sm">{formatCurrency(carData.insuranceAndMaintenance)}</span>
+              </div>
+            )}
+            <div className="border-t border-blue-400/20 pt-1.5">
+              <div className="flex justify-between items-center">
+                <span className="text-sm font-semibold text-blue-100">Total Monthly Cost</span>
+                <span className="font-bold text-base text-blue-100">{formatCurrency(totalMonthlyCarExpenses)}</span>
+              </div>
+            </div>
+            {carData.monthlyIncome > 0 && (
+              <div className="mt-1 pt-1 border-t border-blue-400/20">
+                <div className="flex justify-between items-center">
+                  <span className="text-xs text-blue-300">% of Income</span>
+                  <span className={`text-xs font-bold ${expensePercentage <= 10 ? 'text-green-300' : 'text-red-300'}`}>
+                    {expensePercentage.toFixed(1)}%
+                  </span>
+                </div>
+              </div>
+            )}
           </div>
-        </motion.div>
-      )}
+          <p className="text-xs text-blue-300 mt-2 opacity-80">
+            {completionPercentage === 100 
+              ? '*Comprehensive calculation includes all major costs' 
+              : '*Add missing details for accurate calculation'
+            }
+          </p>
+        </div>
+      </div>
 
-      {/* 20/4/10 Rule Check - Only show after car price is filled */}
+      {/* Enhanced 20/4/10 Rule Check - Compact */}
       {carData.carPrice > 0 && (
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.6 }}
-          className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-4 shadow-xl"
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className={`p-3 rounded-xl border backdrop-blur-md shadow-lg mb-4 transition-all duration-300 hover:shadow-xl hover:scale-[1.01] ${
+            isAffordable 
+              ? 'bg-green-500/20 border-green-400/40 shadow-green-500/20 hover:shadow-green-500/30' 
+              : 'bg-red-500/20 border-red-400/40 shadow-red-500/20 hover:shadow-red-500/30'
+          }`}
         >
-          <h4 className="text-white font-semibold mb-3 text-sm sm:text-base">Smart Finance Check</h4>
+          <div className="flex items-center justify-between mb-3">
+            <h5 className="font-bold text-white flex items-center text-sm">
+              <Zap className="w-4 h-4 mr-1.5 text-yellow-400" />
+              Smart Purchase Score
+            </h5>
+            <div className={`px-2 py-1 rounded-full text-xs font-bold shadow-sm transition-all duration-200 hover:scale-105 ${
+              isAffordable 
+                ? 'bg-green-500/40 text-green-200 border border-green-400/50' 
+                : 'bg-red-500/40 text-red-200 border border-red-400/50'
+            }`}>
+              {isAffordable ? 'EXCELLENT' : 'REVIEW'}
+            </div>
+          </div>
           
-          <div className="space-y-3">
-            <div className="flex items-center justify-between">
-              <span className="text-white/70 text-xs sm:text-sm">20% Down Payment</span>
+          <div className="space-y-2 text-sm">
+            <div className="flex items-center justify-between bg-white/10 backdrop-blur-md border border-white/20 p-2 rounded-lg shadow-md hover:shadow-lg hover:bg-white/15 transition-all duration-300 group">
+              <span className="text-white/80 group-hover:text-white transition-colors font-medium text-xs">20% Down Payment</span>
               <div className="flex items-center space-x-2">
-                <span className="text-xs sm:text-sm text-white">{downPaymentPercentage.toFixed(1)}%</span>
+                <span className="text-white font-semibold text-sm">{downPaymentPercentage.toFixed(1)}%</span>
                 {isDownPaymentOk ? (
-                  <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4 text-green-400" />
+                  <CheckCircle className="w-3 h-3 text-green-400 drop-shadow-sm" />
                 ) : (
-                  <XCircle className="w-3 h-3 sm:w-4 sm:h-4 text-red-400" />
+                  <XCircle className="w-3 h-3 text-red-400 drop-shadow-sm" />
                 )}
               </div>
             </div>
             
-            <div className="flex items-center justify-between">
-              <span className="text-white/70 text-xs sm:text-sm">Max 4 Year Tenure</span>
+            <div className="flex items-center justify-between bg-white/10 backdrop-blur-md border border-white/20 p-2 rounded-lg shadow-md hover:shadow-lg hover:bg-white/15 transition-all duration-300 group">
+              <span className="text-white/80 group-hover:text-white transition-colors font-medium text-xs">Max 4 Year Tenure</span>
               <div className="flex items-center space-x-2">
-                <span className="text-xs sm:text-sm text-white">{carData.tenure}y</span>
+                <span className="text-white font-semibold text-sm">{carData.tenure}y</span>
                 {isTenureOk ? (
-                  <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4 text-green-400" />
+                  <CheckCircle className="w-3 h-3 text-green-400 drop-shadow-sm" />
                 ) : (
-                  <XCircle className="w-3 h-3 sm:w-4 sm:h-4 text-red-400" />
+                  <XCircle className="w-3 h-3 text-red-400 drop-shadow-sm" />
                 )}
               </div>
             </div>
             
-            {/* Income check - only if monthly income provided */}
-            {hasMonthlyIncome && (
-              <div className="flex items-center justify-between">
-                <span className="text-white/70 text-xs sm:text-sm">Max 10% of Income</span>
+            {carData.monthlyIncome > 0 && (
+              <div className="flex items-center justify-between bg-white/10 backdrop-blur-md border border-white/20 p-2 rounded-lg shadow-md hover:shadow-lg hover:bg-white/15 transition-all duration-300 group">
+                <span className="text-white/80 group-hover:text-white transition-colors font-medium text-xs">Max 10% of Income</span>
                 <div className="flex items-center space-x-2">
-                  <span className="text-xs sm:text-sm text-white">{expensePercentage.toFixed(1)}%</span>
+                  <span className="text-white font-semibold text-sm">{expensePercentage.toFixed(1)}%</span>
                   {isExpenseOk ? (
-                    <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4 text-green-400" />
+                    <CheckCircle className="w-3 h-3 text-green-400 drop-shadow-sm" />
                   ) : (
-                    <XCircle className="w-3 h-3 sm:w-4 sm:h-4 text-red-400" />
+                    <XCircle className="w-3 h-3 text-red-400 drop-shadow-sm" />
                   )}
                 </div>
               </div>
             )}
           </div>
 
-          {/* Overall affordability - only if all data available */}
-          {hasMonthlyIncome && (
-            <div className={`mt-4 p-3 rounded-xl ${
-              isAffordable 
-                ? 'bg-green-500/20 border border-green-400/30' 
-                : 'bg-red-500/20 border border-red-400/30'
-            }`}>
-              <p className={`text-xs sm:text-sm font-semibold ${
-                isAffordable ? 'text-green-400' : 'text-red-400'
-              }`}>
-                {isAffordable ? '✅ Car is Affordable!' : '⚠️ Car may be too expensive'}
-              </p>
-              {!isAffordable && (
-                <p className="text-red-300 text-xs mt-1">
-                  Consider adjusting your budget or loan terms
-                </p>
-              )}
-            </div>
-          )}
+          <div className={`mt-3 p-2 rounded-lg text-center shadow-inner backdrop-blur-sm transition-all duration-300 hover:scale-[1.02] ${
+            isAffordable 
+              ? 'bg-green-500/30 text-green-200 border border-green-400/40' 
+              : 'bg-red-500/30 text-red-200 border border-red-400/40'
+          }`}>
+            <p className="font-semibold text-xs">
+              {isAffordable 
+                ? '🎯 Great! Fits your budget' 
+                : '⚠️ Consider adjusting terms'
+              }
+            </p>
+          </div>
         </motion.div>
       )}
 
-      {/* Detailed Breakdown */}
-      <motion.div
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ delay: 0.7 }}
-        className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-4 shadow-xl"
+      {/* Additional Info - Compact */}
+      <motion.div 
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.3 }}
+        className="mt-3 p-3 bg-white/10 backdrop-blur-md border border-white/20 rounded-lg text-xs text-white/80 shadow-md hover:shadow-lg hover:bg-white/15 transition-all duration-300 group"
       >
-        <h4 className="text-white font-semibold mb-3 text-sm sm:text-base">Loan Details</h4>
-        <div className="space-y-2 text-xs sm:text-sm">
-          <div className="flex justify-between">
-            <span className="text-white/70">Interest Rate:</span>
-            <span className="text-white">{carData.interestRate}%</span>
+        <div className="flex items-start space-x-2">
+          <div className="flex-shrink-0 w-5 h-5 bg-blue-500/20 rounded-full flex items-center justify-center mt-0.5 group-hover:bg-blue-500/30 transition-colors">
+            <Info size={10} className="text-blue-400" />
           </div>
-          <div className="flex justify-between">
-            <span className="text-white/70">Tenure:</span>
-            <span className="text-white">{carData.tenure} years</span>
+          <div className="flex-1">
+            <p className="font-medium text-white mb-0.5 text-xs">Important Note</p>
+            <p className="text-white/70 leading-relaxed text-xs">
+              Calculations are indicative. Actual rates may vary by lender and credit profile.
+            </p>
           </div>
-          <div className="flex justify-between">
-            <span className="text-white/70">Total Interest:</span>
-            <span className="text-white">₹{totalInterest.toLocaleString('en-IN', { maximumFractionDigits: 0 })}</span>
-          </div>
-        </div>
-      </motion.div>
-
-      {/* Ad Space for Monetization */}
-      <motion.div
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ delay: 0.8 }}
-        className="bg-gradient-to-br from-blue-500/20 to-purple-500/20 backdrop-blur-md border border-blue-400/30 rounded-2xl p-4 shadow-xl"
-      >
-        <div className="text-center">
-          <h5 className="text-white font-semibold text-sm mb-2">🎯 Sponsored</h5>
-          <p className="text-white/80 text-xs mb-3">
-            Get pre-approved car loans with instant approval
-          </p>
-          <button className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white px-4 py-2 rounded-lg text-xs font-semibold transition-all">
-            Apply Now
-          </button>
         </div>
       </motion.div>
     </div>

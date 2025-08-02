@@ -1,1 +1,3 @@
-Create just a dummy page under V4 using design from https://readylaunch.framer.website/. Don't write any logic, just put dummy values
+1.remove Insurance (Est.), Maintenance (Est.) from right panel and add only Insurance in input in left calculator. 
+2. from right panel remove "Add driving distance & fuel costs in "Hidden Cost" above for better accuracy." and show as pop up above Hidden cost on left panel.
+3. Add any improvements if any you can think of 
