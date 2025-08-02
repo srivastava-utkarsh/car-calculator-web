@@ -194,49 +194,42 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-slate-900 to-black">
-      <div className="flex">
+      <div className="flex flex-col lg:flex-row">
         {/* Main Content */}
-        <div className={step === 3 ? "w-full" : "w-3/5"}>
+        <div className={`w-full ${step === 3 ? "lg:w-full" : "lg:w-3/5"}`}>
           <main className="container mx-auto px-4 py-8">
             <div className="max-w-4xl mx-auto">
               {/* App Title */}
-              <div className="text-center mb-12">
-                <motion.h1
+              <div className="text-center mb-8 lg:mb-12">
+                <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="text-4xl font-bold text-white mb-2 relative group"
+                  className="flex justify-center items-center"
                 >
-                  Calculate your CAR BUDGET
-                  <br />
-                  <span className="text-emerald-400 cursor-help relative">
-                    using 20/4/10 Rule Analysis
-                    {/* Hover tooltip */}
-                    <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-4 py-2 bg-gray-900 border border-gray-600 rounded-lg text-sm text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap z-10">
-                      20% down payment, max 4 years, max 10% of income
-                    </div>
-                  </span>
-                </motion.h1>
-                <p className="text-gray-400">Smart car financing made simple</p>
+                  <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white bg-gradient-to-r from-emerald-400 via-cyan-400 to-purple-400 bg-clip-text text-transparent text-center">
+                    Calculate your CAR BUDGET
+                  </h1>
+                </motion.div>
               </div>
 
               {/* Progress Bar */}
-              <div className="mb-8">
+              <div className="mb-6 lg:mb-8">
                 <div className="bg-gray-800 rounded-full h-3 overflow-hidden">
                   <div 
                     className="bg-gradient-to-r from-emerald-400 to-cyan-400 h-full transition-all duration-500"
                     style={{ width: `${(step / emiSteps.length) * 100}%` }}
                   />
                 </div>
-                <p className="text-center text-gray-400 mt-2">Step {step} of {emiSteps.length}</p>
+                <p className="text-center text-gray-400 mt-2 text-sm lg:text-base">Step {step} of {emiSteps.length}</p>
               </div>
 
               {/* Step Title */}
-              <div className="text-center mb-8">
+              <div className="text-center mb-6 lg:mb-8">
                 <motion.h2 
                   key={step}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="text-2xl font-bold text-white mb-2"
+                  className="text-xl sm:text-2xl font-bold text-white mb-2"
                 >
                   {emiSteps[step - 1]?.title}
                 </motion.h2>
@@ -250,7 +243,7 @@ export default function HomePage() {
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: -50 }}
                   transition={{ duration: 0.3 }}
-                  className="bg-gray-800/50 backdrop-blur-md rounded-2xl shadow-2xl border border-gray-700/50 p-8"
+                  className="bg-gray-800/50 backdrop-blur-md rounded-2xl shadow-2xl border border-gray-700/50 p-4 sm:p-6 lg:p-8"
                 >
                   {step === 1 && (
                     <CarDetailsForm 
@@ -280,10 +273,10 @@ export default function HomePage() {
           </main>
         </div>
 
-        {/* Right Sidebar - Hide on step 3 */}
+        {/* Results Panel - Show below form on mobile, sidebar on desktop */}
         {step !== 3 && (
           <motion.div 
-            className="hidden lg:block w-2/5 h-screen bg-gray-800/30 backdrop-blur-md border-l border-gray-700/50"
+            className={`w-full lg:w-2/5 ${step === 3 ? "lg:hidden" : ""} lg:h-screen bg-gray-800/30 backdrop-blur-md lg:border-l border-gray-700/50`}
             exit={{ opacity: 0, x: 100 }}
             transition={{ duration: 0.5 }}
           >
