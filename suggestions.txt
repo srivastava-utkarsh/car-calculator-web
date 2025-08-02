@@ -1,0 +1,1 @@
+Create just a dummy page under V4 using design from https://readylaunch.framer.website/. Don't write any logic, just put dummy values
