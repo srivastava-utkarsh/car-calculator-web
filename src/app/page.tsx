@@ -2,12 +2,18 @@
 
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Car, CreditCard, PiggyBank, HelpCircle } from 'lucide-react'
+import { Car, CreditCard, PiggyBank, HelpCircle, ChevronDown } from 'lucide-react'
 import CarDetailsForm from '@/components/CarDetailsForm'
 import FinancialForm from '@/components/FinancialForm'
 import ResultsDisplay from '@/components/ResultsDisplay'
 import ResultsDisplayNew from '@/components/ResultsDisplayNew'
 import TotalCostDisplay from '@/components/TotalCostDisplay'
+
+// Import Version 2 components
+import CarDetailsFormV2 from '@/components/v2/CarDetailsFormV2'
+import FinancialFormV2 from '@/components/v2/FinancialFormV2'
+import ResultsDisplayV2 from '@/components/v2/ResultsDisplayV2'
+import TotalCostDisplayV2 from '@/components/v2/TotalCostDisplayV2'
 
 export interface CarData {
   carPrice: number
@@ -24,6 +30,7 @@ export interface CarData {
 
 export default function HomePage() {
   const [step, setStep] = useState(1) // Start directly at step 1
+  const [selectedVersion, setSelectedVersion] = useState('v1') // Version selector
   const [carData, setCarData] = useState<CarData>({
     carPrice: 0,
     downPayment: 0,
@@ -34,6 +41,11 @@ export default function HomePage() {
     fuelCostPerLiter: 0,
     monthlyIncome: 0
   })
+
+  const versions = [
+    { id: 'v1', name: 'Version 1 - Original Design', description: 'Multi-step wizard with sidebar' },
+    { id: 'v2', name: 'Version 2 - Modern Cards', description: 'Card-based design with glassmorphism' }
+  ]
 
   const emiSteps = [
     { title: 'Car & Loan Details', component: CarDetailsForm },
@@ -192,8 +204,94 @@ export default function HomePage() {
 
   const [showHelp, setShowHelp] = useState(false)
 
+  // Reset state when switching versions
+  const handleVersionChange = (versionId: string) => {
+    setSelectedVersion(versionId)
+    setStep(1)
+    setCarData({
+      carPrice: 0,
+      downPayment: 0,
+      interestRate: 8,
+      tenure: 4,
+      processingFee: 0,
+      kmPerMonth: 0,
+      fuelCostPerLiter: 0,
+      monthlyIncome: 0
+    })
+  }
+
+  // Render Version 2
+  if (selectedVersion === 'v2') {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900">
+        {/* Version Selector */}
+        <div className="absolute top-4 right-4 z-50">
+          <div className="relative">
+            <select
+              value={selectedVersion}
+              onChange={(e) => handleVersionChange(e.target.value)}
+              className="appearance-none bg-white/10 backdrop-blur-md border border-white/20 rounded-lg px-4 py-2 text-white text-sm cursor-pointer hover:bg-white/20 transition-all"
+            >
+              {versions.map((version) => (
+                <option key={version.id} value={version.id} className="bg-gray-900 text-white">
+                  {version.name}
+                </option>
+              ))}
+            </select>
+            <ChevronDown className="w-4 h-4 text-white/70 absolute right-2 top-1/2 transform -translate-y-1/2 pointer-events-none" />
+          </div>
+        </div>
+
+        {/* Version 2 Content */}
+        {step === 1 && (
+          <CarDetailsFormV2 
+            carData={carData} 
+            updateCarData={updateCarData}
+            onNext={nextStep}
+            step={step}
+            totalSteps={3}
+          />
+        )}
+        {step === 2 && (
+          <FinancialFormV2 
+            carData={carData} 
+            updateCarData={updateCarData}
+            onNext={nextStep}
+            onBack={prevStep}
+          />
+        )}
+        {step === 3 && (
+          <ResultsDisplayV2 
+            carData={carData}
+            onBack={prevStep}
+            onRestart={restart}
+          />
+        )}
+      </div>
+    )
+  }
+
+  // Render Version 1 (Original)
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-slate-900 to-black">
+      {/* Version Selector */}
+      <div className="absolute top-4 right-4 z-50">
+        <div className="relative">
+          <select
+            value={selectedVersion}
+            onChange={(e) => handleVersionChange(e.target.value)}
+            className="appearance-none bg-white/10 backdrop-blur-md border border-white/20 rounded-lg px-4 py-2 text-white text-sm cursor-pointer hover:bg-white/20 transition-all"
+          >
+            {versions.map((version) => (
+              <option key={version.id} value={version.id} className="bg-gray-900 text-white">
+                {version.name}
+              </option>
+            ))}
+          </select>
+          <ChevronDown className="w-4 h-4 text-white/70 absolute right-2 top-1/2 transform -translate-y-1/2 pointer-events-none" />
+        </div>
+      </div>
+
       <div className="flex flex-col lg:flex-row">
         {/* Main Content */}
         <div className={`w-full ${step === 3 ? "lg:w-full" : "lg:w-3/5"}`}>
