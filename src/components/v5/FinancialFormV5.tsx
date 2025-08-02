@@ -9,14 +9,11 @@ interface FinancialFormV5Props {
   updateCarData: (updates: Partial<CarData>) => void
   onNext: () => void
   onBack: () => void
+  standalone?: boolean
 }
 
-export default function FinancialFormV5({
-  carData,
-  updateCarData,
-  onNext,
-  onBack
-}: FinancialFormV5Props) {
+export default function FinancialFormV5(props: FinancialFormV5Props) {
+  const { carData, updateCarData, onNext, onBack, standalone = true } = props
   const [showOptionalInputs, setShowOptionalInputs] = useState(false)
   
   const calculateEMI = (principal: number, rate: number, years: number) => {
@@ -42,14 +39,20 @@ export default function FinancialFormV5({
 
   return (
     <div className="space-y-8">
-      {/* Header */}
-      <div className="text-center space-y-3">
-        <div className="w-16 h-16 mx-auto bg-blue-600 rounded-2xl flex items-center justify-center mb-4">
-          <Calculator className="w-8 h-8 text-white" />
+      {standalone ? (
+        <div className="text-center space-y-3 mb-6">
+          <div className="w-16 h-16 mx-auto bg-blue-100 rounded-2xl flex items-center justify-center mb-3">
+            <Calculator className="w-8 h-8 text-blue-600" />
+          </div>
+          <h2 className="text-2xl font-semibold text-gray-900">Financial Details</h2>
+          <p className="text-gray-600">Enter your loan and financial information</p>
         </div>
-        <h2 className="text-2xl font-semibold text-gray-900">Financial Details</h2>
-        <p className="text-gray-600">Configure your loan terms</p>
-      </div>
+      ) : (
+        <div className="lg:hidden mb-4">
+          <h3 className="text-lg font-semibold text-gray-900">Loan Terms</h3>
+          <p className="text-gray-600 text-sm">Configure your loan details</p>
+        </div>
+      )}
 
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Loan Tenure */}

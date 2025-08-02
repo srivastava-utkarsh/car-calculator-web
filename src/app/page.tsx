@@ -25,10 +25,11 @@ import TotalCostDisplayV3 from '@/components/v3/TotalCostDisplayV3'
 import CarDetailsFormV4 from '@/components/v4/CarDetailsFormV4'
 import FinancialFormV4 from '@/components/v4/FinancialFormV4'
 import ResultsDisplayV4 from '@/components/v4/ResultsDisplayV4'
-import TotalCostDisplayV4 from '@/components/v4/TotalCostDisplayV4'
+import TotalCostDisplayV5 from '@/components/v5/TotalCostDisplayV5'
 
 // Import Version 5 components
-import CarDetailsFormV5 from '@/components/v5/CarDetailsFormV5'
+import CarDetailsFormV5 from '@/components/v5/CarDetailsFormV5';
+
 import FinancialFormV5 from '@/components/v5/FinancialFormV5'
 import ResultsDisplayV5 from '@/components/v5/ResultsDisplayV5'
 
@@ -41,6 +42,7 @@ export interface CarData {
   kmPerMonth: number
   fuelCostPerLiter: number
   monthlyIncome: number
+  insuranceAndMaintenance?: number
   monthlySavings?: number
 }
 
@@ -123,7 +125,7 @@ export default function HomePage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          onClick={() => handlePathSelection('emi')}
+          
           className="relative cursor-pointer group"
         >
           <div className="bg-gradient-to-br from-emerald-600 to-cyan-600 p-8 rounded-2xl shadow-2xl transform transition-all duration-300 group-hover:scale-105 group-hover:shadow-emerald-500/25">
@@ -156,7 +158,7 @@ export default function HomePage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
-          onClick={() => handlePathSelection('cash')}
+          
           className="cursor-pointer group"
         >
           <div className="bg-gradient-to-br from-purple-600 to-pink-600 p-8 rounded-2xl shadow-2xl transform transition-all duration-300 group-hover:scale-105 group-hover:shadow-purple-500/25">
@@ -512,7 +514,7 @@ export default function HomePage() {
               exit={{ opacity: 0, x: 100 }}
               transition={{ duration: 0.5 }}
             >
-              <TotalCostDisplayV4 carData={carData} />
+              <TotalCostDisplayV5 carData={carData} />
             </motion.div>
           )}
         </div>
@@ -542,10 +544,10 @@ export default function HomePage() {
           </div>
         </div>
 
-        <div className="flex flex-col lg:flex-row">
-          {/* Main Content */}
-          <div className="w-full">
-            <main className="container mx-auto px-4 py-8">
+        <div className="container mx-auto px-4 py-8">
+          <div className="flex flex-col lg:flex-row gap-8">
+            {/* Main Content - Combined Form */}
+            <div className="w-full lg:w-1/2">
               <div className="max-w-2xl mx-auto">
                 {/* App Title with Logo */}
                 <div className="text-center mb-8 lg:mb-12">
@@ -570,6 +572,25 @@ export default function HomePage() {
                   </motion.div>
                 </div>
 
+                {/* Mobile Tabs - Only show on mobile */}
+                <div className="lg:hidden mb-6">
+                  <div className="flex border-b border-gray-200">
+                    <button
+                      className={`py-3 px-4 font-medium text-sm ${step === 1 ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-500'}`}
+                      onClick={() => setStep(1)}
+                    >
+                      Car Details
+                    </button>
+                    <button
+                      className={`py-3 px-4 font-medium text-sm ${step === 2 ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-500'}`}
+                      onClick={() => setStep(2)}
+                      disabled={!carData.carPrice || carData.carPrice <= 0}
+                    >
+                      Financial Details
+                    </button>
+                  </div>
+                </div>
+
                 {/* Progress Bar */}
                 <div className="mb-8">
                   <div className="flex justify-between items-center mb-2">
@@ -584,7 +605,7 @@ export default function HomePage() {
                   </div>
                 </div>
 
-                {/* Step Content */}
+                {/* Form Content */}
                 <AnimatePresence mode="wait">
                   <motion.div
                     key={step}
@@ -592,23 +613,47 @@ export default function HomePage() {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -20 }}
                     transition={{ duration: 0.3 }}
-                    className="bg-white rounded-2xl shadow-lg border border-gray-200 p-6 lg:p-8"
+                    className="bg-white rounded-2xl shadow-lg border border-gray-200 p-6 lg:p-8 w-full"
                   >
-                    {step === 1 && (
+                    {/* Desktop View - Show all forms in one column */}
+                    <div className="hidden lg:block space-y-8">
                       <CarDetailsFormV5 
                         carData={carData} 
                         updateCarData={updateCarData}
                         onNext={nextStep}
+                        standalone={false}
                       />
-                    )}
-                    {step === 2 && (
                       <FinancialFormV5 
                         carData={carData} 
                         updateCarData={updateCarData}
                         onNext={nextStep}
                         onBack={prevStep}
+                        standalone={false}
                       />
-                    )}
+                    </div>
+                    
+                    {/* Mobile View - Show one form at a time */}
+                    <div className="lg:hidden">
+                      {step === 1 && (
+                        <CarDetailsFormV5 
+                          carData={carData} 
+                          updateCarData={updateCarData}
+                          onNext={nextStep}
+                          standalone={true}
+                        />
+                      )}
+                      {step === 2 && (
+                        <FinancialFormV5 
+                          carData={carData} 
+                          updateCarData={updateCarData}
+                          onNext={nextStep}
+                          onBack={prevStep}
+                          standalone={true}
+                        />
+                      )}
+                    </div>
+                    
+                    {/* Results - Always show on both views */}
                     {step === 3 && (
                       <ResultsDisplayV5 
                         carData={carData}
@@ -619,7 +664,18 @@ export default function HomePage() {
                   </motion.div>
                 </AnimatePresence>
               </div>
-            </main>
+            </div>
+
+            {/* Live Preview Panel */}
+            {step !== 3 && (
+              <div className="w-full lg:w-1/2">
+                <div className="sticky top-8 h-[calc(100vh-4rem)] overflow-y-auto">
+                  <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-6">
+                    <TotalCostDisplayV5 carData={carData} />
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
