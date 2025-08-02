@@ -12,7 +12,7 @@ interface FinancialFormProps {
   onBack: () => void
 }
 
-export default function FinancialForm({ carData, updateCarData, onNext, onBack }: FinancialFormProps) {
+export default function FinancialFormV1({ carData, updateCarData, onNext, onBack }: FinancialFormProps) {
   const [showOptionalInputs, setShowOptionalInputs] = useState(false)
   
   const calculateEMI = (principal: number, rate: number, years: number) => {

@@ -11,7 +11,7 @@ interface ResultsDisplayProps {
   onRestart: () => void
 }
 
-export default function ResultsDisplayNew({ carData, onBack, onRestart }: ResultsDisplayProps) {
+export default function ResultsDisplayV1({ carData, onBack, onRestart }: ResultsDisplayProps) {
   const [showOptimization, setShowOptimization] = useState(false)
   const [prepaymentAmount, setPrepaymentAmount] = useState(50000)
   const [prepaymentType, setPrepaymentType] = useState<'reduce-emi' | 'reduce-tenure'>('reduce-emi')

@@ -3,11 +3,11 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Car, CreditCard, PiggyBank, HelpCircle, ChevronDown } from 'lucide-react'
-import CarDetailsForm from '@/components/CarDetailsForm'
-import FinancialForm from '@/components/FinancialForm'
-import ResultsDisplay from '@/components/ResultsDisplay'
-import ResultsDisplayNew from '@/components/ResultsDisplayNew'
-import TotalCostDisplay from '@/components/TotalCostDisplay'
+// Import Version 1 components
+import CarDetailsFormV1 from '@/components/v1/CarDetailsFormV1'
+import FinancialFormV1 from '@/components/v1/FinancialFormV1'
+import ResultsDisplayV1 from '@/components/v1/ResultsDisplayV1'
+import TotalCostDisplayV1 from '@/components/v1/TotalCostDisplayV1'
 
 // Import Version 2 components
 import CarDetailsFormV2 from '@/components/v2/CarDetailsFormV2'
@@ -27,6 +27,11 @@ import FinancialFormV4 from '@/components/v4/FinancialFormV4'
 import ResultsDisplayV4 from '@/components/v4/ResultsDisplayV4'
 import TotalCostDisplayV4 from '@/components/v4/TotalCostDisplayV4'
 
+// Import Version 5 components
+import CarDetailsFormV5 from '@/components/v5/CarDetailsFormV5'
+import FinancialFormV5 from '@/components/v5/FinancialFormV5'
+import ResultsDisplayV5 from '@/components/v5/ResultsDisplayV5'
+
 export interface CarData {
   carPrice: number
   downPayment: number
@@ -42,7 +47,7 @@ export interface CarData {
 
 export default function HomePage() {
   const [step, setStep] = useState(1) // Start directly at step 1
-  const [selectedVersion, setSelectedVersion] = useState('v1') // Version selector
+  const [selectedVersion, setSelectedVersion] = useState('v5') // Version selector
   const [carData, setCarData] = useState<CarData>({
     carPrice: 0,
     downPayment: 0,
@@ -58,13 +63,14 @@ export default function HomePage() {
     { id: 'v1', name: 'Version 1 - Original Design', description: 'Multi-step wizard with sidebar' },
     { id: 'v2', name: 'Version 2 - Modern Cards', description: 'Card-based design with glassmorphism' },
     { id: 'v3', name: 'Version 3 - Neobrutalist', description: 'Bold neobrutalist design inspired by Didasko' },
-    { id: 'v4', name: 'Version 4 - ReadyLaunch Style', description: 'Clean modern design with dummy values' }
+    { id: 'v4', name: 'Version 4 - Clean Modern', description: 'Clean modern design with dummy values' },
+    { id: 'v5', name: 'Version 5 - BudgetGears', description: 'V4 design with V1 logic and BudgetGears branding' }
   ]
 
   const emiSteps = [
-    { title: 'Car & Loan Details', component: CarDetailsForm },
-    { title: 'Loan Terms', component: FinancialForm },
-    { title: 'Your EMI Plan', component: ResultsDisplay }
+    { title: 'Car & Loan Details', component: CarDetailsFormV1 },
+    { title: 'Loan Terms', component: FinancialFormV1 },
+    { title: 'Your EMI Plan', component: ResultsDisplayV1 }
   ]
 
   const updateCarData = (updates: Partial<CarData>) => {
@@ -514,6 +520,112 @@ export default function HomePage() {
     )
   }
 
+  // Render Version 5 (BudgetGears)
+  if (selectedVersion === 'v5') {
+    return (
+      <div className="min-h-screen bg-gray-50 font-sans" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>
+        {/* Version Selector */}
+        <div className="absolute top-4 right-4 z-50">
+          <div className="relative">
+            <select
+              value={selectedVersion}
+              onChange={(e) => handleVersionChange(e.target.value)}
+              className="appearance-none bg-white border border-gray-200 rounded-lg px-4 py-2 text-gray-700 text-sm cursor-pointer hover:bg-gray-50 transition-all shadow-sm"
+            >
+              {versions.map((version) => (
+                <option key={version.id} value={version.id} className="bg-white text-gray-700">
+                  {version.name}
+                </option>
+              ))}
+            </select>
+            <ChevronDown className="w-4 h-4 text-gray-400 absolute right-2 top-1/2 transform -translate-y-1/2 pointer-events-none" />
+          </div>
+        </div>
+
+        <div className="flex flex-col lg:flex-row">
+          {/* Main Content */}
+          <div className="w-full">
+            <main className="container mx-auto px-4 py-8">
+              <div className="max-w-2xl mx-auto">
+                {/* App Title with Logo */}
+                <div className="text-center mb-8 lg:mb-12">
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="space-y-6"
+                  >
+                    <div className="flex justify-center">
+                      <img 
+                        src="/brand_img.png" 
+                        alt="BudgetGears" 
+                        className="h-24 w-auto"
+                      />
+                    </div>
+                    <h1 className="text-3xl lg:text-4xl font-semibold text-gray-900">
+                      BudgetGears Car Finance Calculator
+                    </h1>
+                    <p className="text-gray-600 text-lg">
+                      Get instant EMI calculations and affordability insights
+                    </p>
+                  </motion.div>
+                </div>
+
+                {/* Progress Bar */}
+                <div className="mb-8">
+                  <div className="flex justify-between items-center mb-2">
+                    <span className="text-sm font-medium text-gray-600">Progress</span>
+                    <span className="text-sm font-medium text-gray-600">{step} of {emiSteps.length}</span>
+                  </div>
+                  <div className="bg-gray-200 rounded-full h-2 overflow-hidden">
+                    <div 
+                      className="bg-blue-600 h-full transition-all duration-500"
+                      style={{ width: `${(step / emiSteps.length) * 100}%` }}
+                    />
+                  </div>
+                </div>
+
+                {/* Step Content */}
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={step}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}
+                    transition={{ duration: 0.3 }}
+                    className="bg-white rounded-2xl shadow-lg border border-gray-200 p-6 lg:p-8"
+                  >
+                    {step === 1 && (
+                      <CarDetailsFormV5 
+                        carData={carData} 
+                        updateCarData={updateCarData}
+                        onNext={nextStep}
+                      />
+                    )}
+                    {step === 2 && (
+                      <FinancialFormV5 
+                        carData={carData} 
+                        updateCarData={updateCarData}
+                        onNext={nextStep}
+                        onBack={prevStep}
+                      />
+                    )}
+                    {step === 3 && (
+                      <ResultsDisplayV5 
+                        carData={carData}
+                        onBack={prevStep}
+                        onRestart={restart}
+                      />
+                    )}
+                  </motion.div>
+                </AnimatePresence>
+              </div>
+            </main>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
   // Render Version 1 (Original)
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-slate-900 to-black">
@@ -587,14 +699,14 @@ export default function HomePage() {
                   className="bg-gray-800/50 backdrop-blur-md rounded-2xl shadow-2xl border border-gray-700/50 p-4 sm:p-6 lg:p-8"
                 >
                   {step === 1 && (
-                    <CarDetailsForm 
+                    <CarDetailsFormV1 
                       carData={carData} 
                       updateCarData={updateCarData}
                       onNext={nextStep}
                     />
                   )}
                   {step === 2 && (
-                    <FinancialForm 
+                    <FinancialFormV1 
                       carData={carData} 
                       updateCarData={updateCarData}
                       onNext={nextStep}
@@ -602,7 +714,7 @@ export default function HomePage() {
                     />
                   )}
                   {step === 3 && (
-                    <ResultsDisplayNew 
+                    <ResultsDisplayV1 
                       carData={carData}
                       onBack={prevStep}
                       onRestart={restart}
@@ -621,7 +733,7 @@ export default function HomePage() {
             exit={{ opacity: 0, x: 100 }}
             transition={{ duration: 0.5 }}
           >
-            <TotalCostDisplay carData={carData} />
+            <TotalCostDisplayV1 carData={carData} />
           </motion.div>
         )}
       </div>

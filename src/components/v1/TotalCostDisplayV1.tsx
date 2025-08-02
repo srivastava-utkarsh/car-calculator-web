@@ -8,7 +8,7 @@ interface TotalCostDisplayProps {
   carData: CarData
 }
 
-export default function TotalCostDisplay({ carData }: TotalCostDisplayProps) {
+export default function TotalCostDisplayV1({ carData }: TotalCostDisplayProps) {
   const calculateEMI = (principal: number, rate: number, years: number) => {
     if (principal <= 0 || rate <= 0 || years <= 0) return 0
     const monthlyRate = rate / (12 * 100)

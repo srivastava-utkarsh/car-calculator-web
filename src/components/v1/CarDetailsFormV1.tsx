@@ -11,7 +11,7 @@ interface CarDetailsFormProps {
   onNext: () => void
 }
 
-export default function CarDetailsForm({ carData, updateCarData, onNext }: CarDetailsFormProps) {
+export default function CarDetailsFormV1({ carData, updateCarData, onNext }: CarDetailsFormProps) {
   const [errors, setErrors] = useState<Record<string, string>>({})
 
   const handleCarPriceChange = (value: string) => {
