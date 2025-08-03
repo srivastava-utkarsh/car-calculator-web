@@ -98,7 +98,7 @@ export default function CarDetailsFormV2({ carData, updateCarData, onNext, step,
         {/* Car Price */}
         <div className="space-y-2">
           <label className="block text-sm font-medium text-white">
-            Car Price (₹)
+            Car Price
           </label>
           
           {/* Preset Buttons */}
@@ -108,7 +108,7 @@ export default function CarDetailsFormV2({ carData, updateCarData, onNext, step,
                 key={preset.value}
                 type="button"
                 onClick={() => handleCarPriceChange(preset.value.toString())}
-                className={`p-3 rounded-xl text-sm font-semibold transition-all hover:scale-105 ${
+                className={`p-2 sm:p-3 rounded-lg sm:rounded-xl text-xs sm:text-sm font-semibold transition-all hover:scale-105 ${
                   carData.carPrice === preset.value
                     ? 'bg-gradient-to-r from-emerald-400 to-cyan-400 text-white shadow-lg'
                     : 'bg-white/20 text-white/80 hover:bg-white/30'
@@ -125,7 +125,7 @@ export default function CarDetailsFormV2({ carData, updateCarData, onNext, step,
               type="number"
               value={carData.carPrice || ''}
               onChange={(e) => handleCarPriceChange(e.target.value)}
-              className={`w-full pl-8 pr-4 py-3 bg-white/10 backdrop-blur-md border border-white/20 rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-transparent transition-all ${
+              className={`w-full pl-8 pr-4 py-2 sm:py-3 bg-white/10 backdrop-blur-md border border-white/20 rounded-lg sm:rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-transparent transition-all text-sm sm:text-base ${
                 errors.carPrice 
                   ? 'border-red-500 focus:border-red-500' 
                   : 'border-white/20'
@@ -147,7 +147,8 @@ export default function CarDetailsFormV2({ carData, updateCarData, onNext, step,
             )}
           </label>
           
-          {/* Slider for down payment */}
+          
+          {/* Slider for down payment with color */}
           <div className="mb-4">
             <input
               type="range"
@@ -157,6 +158,9 @@ export default function CarDetailsFormV2({ carData, updateCarData, onNext, step,
               value={carData.downPayment}
               onChange={(e) => handleDownPaymentChange(e.target.value)}
               className="w-full h-2 bg-white/20 rounded-lg appearance-none cursor-pointer"
+              style={{
+                background: `linear-gradient(to right, ${downPaymentPercentage >= 20 ? '#06b6d4' : '#f97316'} 0%, ${downPaymentPercentage >= 20 ? '#06b6d4' : '#f97316'} ${(carData.downPayment / carData.carPrice) * 100}%, rgba(255,255,255,0.2) ${(carData.downPayment / carData.carPrice) * 100}%, rgba(255,255,255,0.2) 100%)`
+              }}
             />
             <div className="flex justify-between text-xs text-white/60 mt-2">
               <span>₹0</span>
@@ -170,7 +174,7 @@ export default function CarDetailsFormV2({ carData, updateCarData, onNext, step,
               type="number"
               value={carData.downPayment || ''}
               onChange={(e) => handleDownPaymentChange(e.target.value)}
-              className={`w-full pl-8 pr-4 py-3 bg-white/10 backdrop-blur-md border border-white/20 rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all ${
+              className={`w-full pl-8 pr-4 py-2 sm:py-3 bg-white/10 backdrop-blur-md border border-white/20 rounded-lg sm:rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all text-sm sm:text-base ${
                 errors.downPayment 
                   ? 'border-red-500 focus:border-red-500' 
                   : 'border-white/20'
@@ -183,12 +187,35 @@ export default function CarDetailsFormV2({ carData, updateCarData, onNext, step,
           )}
         </div>
 
+        {/* Monthly Income - Required for calculations */}
+        <div className="space-y-2">
+          <label className="flex items-center space-x-2 text-sm font-medium text-white">
+            <Calculator className="w-4 h-4 text-emerald-400" />
+            <span>Monthly Income</span>
+            <span className="text-xs text-emerald-300 bg-emerald-500/20 px-2 py-0.5 rounded-full">for affordability check</span>
+          </label>
+          <div className="relative">
+            <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white/70 font-medium">₹</span>
+            <input
+              type="number"
+              value={carData.monthlyIncome || ''}
+              onChange={(e) => updateCarData({ monthlyIncome: parseFloat(e.target.value) || 0 })}
+              placeholder="Enter your monthly income"
+              className="w-full pl-8 pr-4 py-2 sm:py-3 bg-white/10 backdrop-blur-md border border-white/20 rounded-lg sm:rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-transparent transition-all text-sm sm:text-base"
+            />
+          </div>
+          <p className="text-xs text-white/60 flex items-center">
+            <span className="w-1 h-1 bg-emerald-400 rounded-full mr-2"></span>
+            Used to calculate the 10% rule: total car expenses should not exceed 10% of your income
+          </p>
+        </div>
+
         {/* Continue Button - Only show on mobile */}
         <div className="lg:hidden">
           <button
             type="submit"
             disabled={!carData.carPrice || carData.carPrice <= 0}
-            className="w-full bg-gradient-to-r from-emerald-600 to-cyan-600 text-white py-4 px-6 rounded-xl font-medium hover:from-emerald-700 hover:to-cyan-700 transition-all duration-200 flex items-center justify-center space-x-2 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed hover:scale-[1.02] active:scale-[0.98]"
+            className="w-full bg-gradient-to-r from-emerald-600 to-cyan-600 text-white py-3 sm:py-4 px-4 sm:px-6 rounded-lg sm:rounded-xl font-medium hover:from-emerald-700 hover:to-cyan-700 transition-all duration-200 flex items-center justify-center space-x-2 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed hover:scale-[1.02] active:scale-[0.98] text-sm sm:text-base"
           >
             <span>Continue to Loan Terms</span>
             <ArrowRight className="w-5 h-5" />

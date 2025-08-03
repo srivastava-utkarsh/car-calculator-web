@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { Percent, Clock, Receipt, ArrowRight, ArrowLeft, Car, Fuel, ChevronDown, ChevronUp, Calculator } from 'lucide-react'
+import { Percent, Clock, Receipt, ArrowRight, ArrowLeft, Car, Fuel, ChevronDown, ChevronUp, Calculator, Info } from 'lucide-react'
 import { CarData } from '@/app/page'
 
 interface FinancialFormV2Props {
@@ -43,6 +43,22 @@ export default function FinancialFormV2({ carData, updateCarData, onNext, onBack
     e.preventDefault()
     onNext()
   }
+
+  // Check if Smart Purchase Score requirements are met and additional details are missing
+  const requiredFields = [
+    carData.carPrice > 0,
+    carData.downPayment >= 0,
+    carData.monthlyIncome > 0
+  ];
+  const isAllRequiredFieldsFilled = requiredFields.every(Boolean);
+  
+  const additionalFields = [
+    carData.kmPerMonth > 0,
+    carData.fuelCostPerLiter > 0,
+    carData.insuranceAndMaintenance > 0
+  ];
+  const isAdditionalDetailsMissing = isAllRequiredFieldsFilled && !additionalFields.every(Boolean);
+  const missingAdditionalCount = additionalFields.filter(Boolean).length;
 
   return (
     <div className="space-y-8">
@@ -147,37 +163,25 @@ export default function FinancialFormV2({ carData, updateCarData, onNext, onBack
           </div>
         </div>
 
-        {/* Hidden Cost Reminder Popup */}
-        {(!carData.kmPerMonth || !carData.fuelCostPerLiter || !carData.insuranceAndMaintenance) && !showOptionalInputs && (
-          <motion.div 
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="mb-4 bg-amber-500/20 backdrop-blur-md border border-amber-400/30 p-3 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300"
-          >
-            <div className="flex items-start space-x-2">
-              <div className="flex-shrink-0 w-6 h-6 bg-amber-500/30 rounded-full flex items-center justify-center mt-0.5">
-                <Calculator size={12} className="text-amber-400" />
-              </div>
-              <div className="flex-1">
-                <p className="font-medium text-amber-200 mb-1 text-sm">💡 Complete Your Analysis</p>
-                <p className="text-amber-300/80 text-xs leading-relaxed">
-                  Add driving distance, fuel costs, and insurance details in "Hidden Cost" below for accurate total cost calculation.
-                </p>
-              </div>
-            </div>
-          </motion.div>
-        )}
 
-        {/* Optional Inputs Section */}
+        {/* Additional Details Section */}
         <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-xl overflow-hidden">
           <button
             type="button"
             onClick={() => setShowOptionalInputs(!showOptionalInputs)}
             className="w-full p-4 text-left hover:bg-white/10 transition-colors flex items-center justify-between"
+            title={isAdditionalDetailsMissing ? `Complete Additional Details for full analysis - Add fuel costs, km/month, and insurance details (${missingAdditionalCount}/3 filled)` : undefined}
           >
-            <div>
-              <h3 className="text-lg font-semibold text-white">Hidden Cost</h3>
-              <p className="text-white/70 text-sm">Optimize your decision with these hidden factors</p>
+            <div className="flex items-center space-x-2">
+              <div>
+                <h3 className="text-lg font-semibold text-white flex items-center">
+                  Additional Details
+                  {isAdditionalDetailsMissing && (
+                    <Info className="w-4 h-4 ml-2 text-amber-400" />
+                  )}
+                </h3>
+                <p className="text-white/70 text-sm">Add processing fees, insurance and running costs</p>
+              </div>
             </div>
             {showOptionalInputs ? (
               <ChevronUp className="w-5 h-5 text-white/70" />
@@ -188,124 +192,11 @@ export default function FinancialFormV2({ carData, updateCarData, onNext, onBack
 
           {showOptionalInputs && (
             <div className="border-t border-white/20 p-6 space-y-6">
-              {/* Processing Fee */}
+              {/* Consolidated Input for Processing Fee + Insurance + Others */}
               <div className="space-y-2">
                 <label className="flex items-center space-x-2 text-sm font-medium text-white">
                   <Receipt className="w-4 h-4 text-purple-400" />
-                  <span>Processing Fee</span>
-                </label>
-                <div className="relative">
-                  <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white/70 font-medium">₹</span>
-                  <input
-                    type="number"
-                    value={carData.processingFee === 0 ? '' : carData.processingFee}
-                    onChange={(e) => {
-                      const value = e.target.value;
-                      if (value === '') {
-                        updateCarData({ processingFee: 0 });
-                      } else {
-                        const fee = parseFloat(value);
-                        updateCarData({ processingFee: isNaN(fee) ? 0 : fee });
-                      }
-                    }}
-                    placeholder="Enter processing fee (if any)"
-                    className="w-full pl-8 pr-4 py-3 bg-white/10 backdrop-blur-md border border-white/20 rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all"
-                  />
-                </div>
-              </div>
-
-              {/* KM Driven Per Month */}
-              <div className="space-y-2">
-                <label className="flex items-center justify-between text-sm font-medium text-white">
-                  <div className="flex items-center space-x-2">
-                    <Car className="w-4 h-4 text-orange-400" />
-                    <span>KM Driven Per Month</span>
-                  </div>
-                  {!carData.kmPerMonth && (
-                    <div className="flex space-x-1">
-                      <button
-                        type="button"
-                        onClick={() => updateCarData({ kmPerMonth: 800 })}
-                        className="text-xs bg-orange-500/20 text-orange-300 px-2 py-1 rounded-full hover:bg-orange-500/30 transition-all"
-                      >
-                        City 800km
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => updateCarData({ kmPerMonth: 1500 })}
-                        className="text-xs bg-orange-500/20 text-orange-300 px-2 py-1 rounded-full hover:bg-orange-500/30 transition-all"
-                      >
-                        Mixed 1500km
-                      </button>
-                    </div>
-                  )}
-                </label>
-                <input
-                  type="number"
-                  value={carData.kmPerMonth || ''}
-                  onChange={(e) => updateCarData({ kmPerMonth: parseFloat(e.target.value) || 0 })}
-                  placeholder="Enter km per month"
-                  className="w-full px-4 py-3 bg-white/10 backdrop-blur-md border border-white/20 rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent transition-all"
-                />
-              </div>
-
-              {/* Fuel Cost Per Liter */}
-              <div className="space-y-2">
-                <label className="flex items-center justify-between text-sm font-medium text-white">
-                  <div className="flex items-center space-x-2">
-                    <Fuel className="w-4 h-4 text-red-400" />
-                    <span>Fuel Cost Per Liter</span>
-                  </div>
-                  {!carData.fuelCostPerLiter && (
-                    <div className="flex space-x-1">
-                      <button
-                        type="button"
-                        onClick={() => updateCarData({ fuelCostPerLiter: 95 })}
-                        className="text-xs bg-red-500/20 text-red-300 px-2 py-1 rounded-full hover:bg-red-500/30 transition-all"
-                      >
-                        Petrol ₹95
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => updateCarData({ fuelCostPerLiter: 85 })}
-                        className="text-xs bg-red-500/20 text-red-300 px-2 py-1 rounded-full hover:bg-red-500/30 transition-all"
-                      >
-                        Diesel ₹85
-                      </button>
-                    </div>
-                  )}
-                </label>
-                <div className="relative">
-                  <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white/70 font-medium">₹</span>
-                  <input
-                    type="number"
-                    value={carData.fuelCostPerLiter || ''}
-                    onChange={(e) => updateCarData({ fuelCostPerLiter: parseFloat(e.target.value) || 0 })}
-                    placeholder="Enter fuel cost per liter"
-                    className="w-full pl-8 pr-4 py-3 bg-white/10 backdrop-blur-md border border-white/20 rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-red-400 focus:border-transparent transition-all"
-                  />
-                </div>
-              </div>
-
-              {/* Monthly Insurance & Maintenance */}
-              <div className="space-y-2">
-                <label className="flex items-center justify-between text-sm font-medium text-white">
-                  <div className="flex items-center space-x-2">
-                    <Receipt className="w-4 h-4 text-green-400" />
-                    <span>Monthly Insurance & Maintenance</span>
-                  </div>
-                  {carData.carPrice > 0 && !carData.insuranceAndMaintenance && (
-                    <button
-                      type="button"
-                      onClick={() => {
-                        const suggested = Math.round((carData.carPrice * 0.009) / 12);
-                        updateCarData({ insuranceAndMaintenance: suggested });
-                      }}
-                      className="text-xs bg-green-500/20 text-green-300 px-2 py-1 rounded-full hover:bg-green-500/30 transition-all"
-                    >
-                      Use suggested: ₹{Math.round((carData.carPrice * 0.009) / 12).toLocaleString('en-IN')}
-                    </button>
-                  )}
+                  <span>Processing Fee + Insurance + Others</span>
                 </label>
                 <div className="relative">
                   <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white/70 font-medium">₹</span>
@@ -313,40 +204,54 @@ export default function FinancialFormV2({ carData, updateCarData, onNext, onBack
                     type="number"
                     value={carData.insuranceAndMaintenance || ''}
                     onChange={(e) => updateCarData({ insuranceAndMaintenance: parseFloat(e.target.value) || 0 })}
-                    placeholder="Enter monthly insurance & maintenance"
-                    className="w-full pl-8 pr-4 py-3 bg-white/10 backdrop-blur-md border border-white/20 rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-transparent transition-all"
+                    placeholder="Enter monthly processing fee, insurance & other costs"
+                    className="w-full pl-8 pr-4 py-3 bg-white/10 backdrop-blur-md border border-white/20 rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all"
                   />
                 </div>
                 <p className="text-xs text-white/60 flex items-center">
-                  <span className="w-1 h-1 bg-green-400 rounded-full mr-2"></span>
-                  Typically 0.8-1% of car price monthly for insurance + maintenance costs
+                  <span className="w-1 h-1 bg-purple-400 rounded-full mr-2"></span>
+                  Include processing fees, insurance or any other costs
                 </p>
+              </div>
+
+              {/* Monthly Running Cost Section */}
+              <div className="bg-white/5 rounded-lg p-4 border border-white/10">
+                <h4 className="text-sm font-semibold text-white mb-3 flex items-center">
+                  <Car className="w-4 h-4 mr-2 text-cyan-400" />
+                  Monthly Running Cost
+                </h4>
+                
+                <div className="space-y-4">
+                  {/* KM Driven Per Month */}
+                  <div className="space-y-2">
+                    <label className="text-sm text-white/80">Estimated KM Driven Per Month</label>
+                    <input
+                      type="number"
+                      value={carData.kmPerMonth || ''}
+                      onChange={(e) => updateCarData({ kmPerMonth: parseFloat(e.target.value) || 0 })}
+                      placeholder="Enter km per month"
+                      className="w-full px-4 py-3 bg-white/10 backdrop-blur-md border border-white/20 rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-transparent transition-all"
+                    />
+                  </div>
+
+                  {/* Fuel Cost Per Liter */}
+                  <div className="space-y-2">
+                    <label className="text-sm text-white/80">Fuel Cost Per Liter</label>
+                    <div className="relative">
+                      <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white/70 font-medium">₹</span>
+                      <input
+                        type="number"
+                        value={carData.fuelCostPerLiter || ''}
+                        onChange={(e) => updateCarData({ fuelCostPerLiter: parseFloat(e.target.value) || 0 })}
+                        placeholder="Enter fuel cost per liter"
+                        className="w-full pl-8 pr-4 py-3 bg-white/10 backdrop-blur-md border border-white/20 rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-transparent transition-all"
+                      />
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           )}
-        </div>
-
-        {/* Monthly Income - Required for 20/4/10 Rule */}
-        <div className="space-y-2">
-          <label className="flex items-center space-x-2 text-sm font-medium text-white">
-            <Calculator className="w-4 h-4 text-emerald-400" />
-            <span>Monthly Income</span>
-            <span className="text-xs text-emerald-300 bg-emerald-500/20 px-2 py-0.5 rounded-full">required for 20/4/10 rule</span>
-          </label>
-          <div className="relative">
-            <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white/70 font-medium">₹</span>
-            <input
-              type="number"
-              value={carData.monthlyIncome || ''}
-              onChange={(e) => updateCarData({ monthlyIncome: parseFloat(e.target.value) || 0 })}
-              placeholder="Enter your monthly income"
-              className="w-full pl-8 pr-4 py-3 bg-white/10 backdrop-blur-md border border-white/20 rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-transparent transition-all"
-            />
-          </div>
-          <p className="text-xs text-white/60 flex items-center">
-            <span className="w-1 h-1 bg-emerald-400 rounded-full mr-2"></span>
-            Used to calculate the 10% rule: total car expenses should not exceed 10% of your income
-          </p>
         </div>
 
       </form>

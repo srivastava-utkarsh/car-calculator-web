@@ -264,38 +264,42 @@ export default function HomePage() {
           </div>
         </div>
 
-        <div className="container mx-auto px-4 py-8">
-          <div className="flex flex-col lg:flex-row gap-6">
+        <div className="container mx-auto px-4 py-4 sm:py-6 lg:py-8">
+          <div className="flex flex-col lg:flex-row gap-4 lg:gap-6">
             {/* Main Content - Combined Form */}
             <div className="w-full lg:w-3/5">
               <div className="max-w-2xl mx-auto">
                 {/* App Title */}
-                <div className="text-center mb-8 lg:mb-12">
+                <div className="text-center mb-6 sm:mb-8 lg:mb-12">
                   <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="space-y-6"
+                    className="space-y-4 sm:space-y-6"
                   >
-                    <h1 className="text-3xl lg:text-4xl font-bold text-white bg-gradient-to-r from-emerald-400 via-cyan-400 to-purple-400 bg-clip-text text-transparent">
-                      Car Finance Calculator V2
-                    </h1>
-                    <p className="text-gray-400 text-lg">
-                      Modern glassmorphism design with instant EMI calculations
-                    </p>
+                    <div className="flex items-center justify-center space-x-2 sm:space-x-3 mb-2">
+                      <img 
+                        src="/brand_img.png" 
+                        alt="BudgetGear Logo" 
+                        className="w-10 h-10 sm:w-12 sm:h-12 object-contain"
+                      />
+                      <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white bg-gradient-to-r from-emerald-400 via-cyan-400 to-purple-400 bg-clip-text text-transparent">
+                        BudgetGear
+                      </h1>
+                    </div>
                   </motion.div>
                 </div>
 
                 {/* Mobile Tabs - Only show on mobile */}
-                <div className="lg:hidden mb-6">
+                <div className="lg:hidden mb-4 sm:mb-6">
                   <div className="flex border-b border-gray-700">
                     <button
-                      className={`py-3 px-4 font-medium text-sm ${step === 1 ? 'text-emerald-400 border-b-2 border-emerald-400' : 'text-gray-500'}`}
+                      className={`py-2 sm:py-3 px-3 sm:px-4 font-medium text-sm flex-1 text-center ${step === 1 ? 'text-emerald-400 border-b-2 border-emerald-400' : 'text-gray-500'}`}
                       onClick={() => setStep(1)}
                     >
                       Car Details
                     </button>
                     <button
-                      className={`py-3 px-4 font-medium text-sm ${step === 2 ? 'text-emerald-400 border-b-2 border-emerald-400' : 'text-gray-500'}`}
+                      className={`py-2 sm:py-3 px-3 sm:px-4 font-medium text-sm flex-1 text-center ${step === 2 ? 'text-emerald-400 border-b-2 border-emerald-400' : 'text-gray-500'} disabled:opacity-50`}
                       onClick={() => setStep(2)}
                       disabled={!carData.carPrice || carData.carPrice <= 0}
                     >
@@ -305,12 +309,12 @@ export default function HomePage() {
                 </div>
 
                 {/* Progress Bar - Only visible on mobile */}
-                <div className="mb-8 lg:hidden">
+                <div className="mb-6 sm:mb-8 lg:hidden">
                   <div className="flex justify-between items-center mb-2">
-                    <span className="text-sm font-medium text-gray-400">Progress</span>
-                    <span className="text-sm font-medium text-gray-400">{step} of {emiSteps.length}</span>
+                    <span className="text-xs sm:text-sm font-medium text-gray-400">Progress</span>
+                    <span className="text-xs sm:text-sm font-medium text-gray-400">{step} of {emiSteps.length}</span>
                   </div>
-                  <div className="bg-gray-800 rounded-full h-3 overflow-hidden">
+                  <div className="bg-gray-800 rounded-full h-2 sm:h-3 overflow-hidden">
                     <div 
                       className="bg-gradient-to-r from-emerald-400 to-cyan-400 h-full transition-all duration-500"
                       style={{ width: `${(step / emiSteps.length) * 100}%` }}
@@ -326,7 +330,7 @@ export default function HomePage() {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -20 }}
                     transition={{ duration: 0.3 }}
-                    className="bg-gray-800/50 backdrop-blur-md rounded-2xl shadow-2xl border border-gray-700/50 p-6 lg:p-8 w-full"
+                    className="bg-gray-800/50 backdrop-blur-md rounded-xl sm:rounded-2xl shadow-2xl border border-gray-700/50 p-4 sm:p-6 lg:p-8 w-full"
                   >
                     {/* Desktop View - Show all forms in one column */}
                     <div className="hidden lg:block space-y-8">
@@ -385,9 +389,9 @@ export default function HomePage() {
 
             {/* Live Preview Panel */}
             {step !== 3 && (
-              <div className="w-full lg:w-2/5">
-                <div className="sticky top-8 h-[calc(100vh-4rem)] overflow-y-auto">
-                  <div className="bg-gray-800/30 backdrop-blur-md rounded-2xl shadow-2xl border border-gray-700/50 p-6">
+              <div className="w-full lg:w-2/5 mt-6 lg:mt-0">
+                <div className="lg:sticky lg:top-8 lg:h-[calc(100vh-4rem)] lg:overflow-y-auto">
+                  <div className="bg-gray-800/30 backdrop-blur-md rounded-xl sm:rounded-2xl shadow-2xl border border-gray-700/50 p-4 sm:p-6">
                     <TotalCostDisplayV2 carData={carData} />
                   </div>
                 </div>
