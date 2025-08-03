@@ -44,6 +44,7 @@ export interface CarData {
   monthlyIncome: number
   insuranceAndMaintenance?: number
   monthlySavings?: number
+  includeFuelInAffordability?: boolean
 }
 
 
@@ -58,7 +59,8 @@ export default function HomePage() {
     processingFee: 0,
     kmPerMonth: 0,
     fuelCostPerLiter: 0,
-    monthlyIncome: 0
+    monthlyIncome: 0,
+    includeFuelInAffordability: false
   })
 
   const versions = [
@@ -92,7 +94,8 @@ export default function HomePage() {
       processingFee: 0,
       kmPerMonth: 0,
       fuelCostPerLiter: 0,
-      monthlyIncome: 0
+      monthlyIncome: 0,
+      includeFuelInAffordability: false
     })
   }
 
@@ -238,7 +241,8 @@ export default function HomePage() {
       processingFee: 0,
       kmPerMonth: 0,
       fuelCostPerLiter: 0,
-      monthlyIncome: 0
+      monthlyIncome: 0,
+      includeFuelInAffordability: false
     })
   }
 
@@ -264,30 +268,52 @@ export default function HomePage() {
           </div>
         </div>
 
+        {/* Header Navigation */}
+        <header className="bg-gray-900/95 backdrop-blur-md border-b border-gray-700/50 sticky top-0 z-40">
+          <div className="container mx-auto px-4">
+            <div className="flex items-center justify-between h-16">
+              {/* Logo */}
+              <div className="flex items-center space-x-3">
+                <img 
+                  src="/brand_img.png" 
+                  alt="BudgetGear Logo" 
+                  className="w-8 h-8 object-contain"
+                />
+                <span className="text-xl font-bold text-white">BudgetGear</span>
+              </div>
+
+              {/* Navigation Menu - Hidden on mobile */}
+              <nav className="hidden md:flex items-center space-x-8">
+                <a href="#" className="text-gray-300 hover:text-white transition-colors">Home Page</a>
+                <a href="#" className="text-gray-300 hover:text-white transition-colors">Calculator Tool</a>
+                <a href="#" className="text-white font-medium">Car Affordability Calculator</a>
+                <a href="#" className="text-gray-300 hover:text-white transition-colors">Car Listings</a>
+                <div className="relative group">
+                  <button className="text-gray-300 hover:text-white transition-colors flex items-center space-x-1">
+                    <span>More Info</span>
+                    <ChevronDown className="w-4 h-4" />
+                  </button>
+                </div>
+              </nav>
+
+              {/* Action Buttons */}
+              <div className="flex items-center space-x-3">
+                <button className="px-4 py-2 text-sm border border-gray-600 text-gray-300 hover:text-white hover:border-gray-500 transition-colors rounded-lg">
+                  Join
+                </button>
+                <button className="px-4 py-2 text-sm bg-white text-gray-900 hover:bg-gray-100 transition-colors rounded-lg font-medium">
+                  Start
+                </button>
+              </div>
+            </div>
+          </div>
+        </header>
+
         <div className="container mx-auto px-4 py-4 sm:py-6 lg:py-8">
           <div className="flex flex-col lg:flex-row gap-4 lg:gap-6">
             {/* Main Content - Combined Form */}
             <div className="w-full lg:w-3/5">
               <div className="max-w-2xl mx-auto">
-                {/* App Title */}
-                <div className="text-center mb-6 sm:mb-8 lg:mb-12">
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="space-y-4 sm:space-y-6"
-                  >
-                    <div className="flex items-center justify-center space-x-2 sm:space-x-3 mb-2">
-                      <img 
-                        src="/brand_img.png" 
-                        alt="BudgetGear Logo" 
-                        className="w-10 h-10 sm:w-12 sm:h-12 object-contain"
-                      />
-                      <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white bg-gradient-to-r from-emerald-400 via-cyan-400 to-purple-400 bg-clip-text text-transparent">
-                        BudgetGear
-                      </h1>
-                    </div>
-                  </motion.div>
-                </div>
 
                 {/* Mobile Tabs - Only show on mobile */}
                 <div className="lg:hidden mb-4 sm:mb-6">
@@ -392,7 +418,7 @@ export default function HomePage() {
               <div className="w-full lg:w-2/5 mt-6 lg:mt-0">
                 <div className="lg:sticky lg:top-8 lg:h-[calc(100vh-4rem)] lg:overflow-y-auto">
                   <div className="bg-gray-800/30 backdrop-blur-md rounded-xl sm:rounded-2xl shadow-2xl border border-gray-700/50 p-4 sm:p-6">
-                    <TotalCostDisplayV2 carData={carData} />
+                    <TotalCostDisplayV2 carData={carData} updateCarData={updateCarData} />
                   </div>
                 </div>
               </div>

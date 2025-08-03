@@ -62,25 +62,13 @@ export default function FinancialFormV2({ carData, updateCarData, onNext, onBack
 
   return (
     <div className="space-y-8">
-      {standalone ? (
+      {standalone && (
         <div className="text-center space-y-3 mb-6">
           <div className="w-16 h-16 mx-auto bg-gradient-to-br from-purple-400 to-pink-400 rounded-2xl flex items-center justify-center mb-3">
             <Calculator className="w-8 h-8 text-white" />
           </div>
           <h2 className="text-2xl font-semibold text-white">Financial Details</h2>
           <p className="text-gray-400">Enter your loan and financial information</p>
-        </div>
-      ) : (
-        <div className="mb-4">
-          <div className="flex items-center space-x-3 mb-2">
-            <div className="w-10 h-10 bg-gradient-to-br from-purple-400 to-pink-400 rounded-xl flex items-center justify-center">
-              <Calculator className="w-5 h-5 text-white" />
-            </div>
-            <div>
-              <h3 className="text-lg font-semibold text-white">Loan Terms</h3>
-              <p className="text-gray-400 text-sm">Configure your loan details</p>
-            </div>
-          </div>
         </div>
       )}
 
@@ -171,13 +159,29 @@ export default function FinancialFormV2({ carData, updateCarData, onNext, onBack
         </div>
 
 
+        {/* Smart Purchase Score Completion Notice */}
+        {isAdditionalDetailsMissing && (
+          <div className="mb-4 bg-amber-500/20 backdrop-blur-md border border-amber-400/30 rounded-xl p-4 shadow-lg">
+            <div className="flex items-start space-x-3">
+              <Info className="w-5 h-5 text-amber-400 mt-0.5 flex-shrink-0" />
+              <div>
+                <h4 className="text-sm font-semibold text-amber-200 mb-1">
+                  Complete Details for Full Analysis
+                </h4>
+                <p className="text-amber-300 text-xs">
+                  Add fuel costs, km/month, and insurance details ({missingAdditionalCount}/3 filled) to get your complete Smart Purchase Score analysis.
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Additional Details Section */}
         <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-xl overflow-hidden">
           <button
             type="button"
             onClick={() => setShowOptionalInputs(!showOptionalInputs)}
             className="w-full p-4 text-left hover:bg-white/10 transition-colors flex items-center justify-between"
-            title={isAdditionalDetailsMissing ? `Complete Additional Details for full analysis - Add fuel costs, km/month, and insurance details (${missingAdditionalCount}/3 filled)` : undefined}
           >
             <div className="flex items-center space-x-2">
               <div>

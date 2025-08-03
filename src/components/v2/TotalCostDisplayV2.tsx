@@ -7,9 +7,10 @@ import { DollarSign, TrendingUp, Car, Fuel, CheckCircle, XCircle, Zap, Percent, 
 
 interface TotalCostDisplayV2Props {
   carData: CarData
+  updateCarData: (updates: Partial<CarData>) => void
 }
 
-export default function TotalCostDisplayV2({ carData }: TotalCostDisplayV2Props) {
+export default function TotalCostDisplayV2({ carData, updateCarData }: TotalCostDisplayV2Props) {
   const [durationToggle, setDurationToggle] = useState<'months' | 'years'>('months')
   
   const calculateEMI = (principal: number, rate: number, years: number) => {
@@ -27,8 +28,8 @@ export default function TotalCostDisplayV2({ carData }: TotalCostDisplayV2Props)
   const monthlyFuelCost = carData.kmPerMonth && carData.fuelCostPerLiter ? (carData.kmPerMonth / 15) * carData.fuelCostPerLiter : 0
   
   // Monthly car expenses calculation for 20/4/10 rule
-  // Including EMI and fuel only (insurance moved to one-time costs)
-  const totalMonthlyCarExpenses = emi + monthlyFuelCost
+  // Including EMI and optionally fuel (insurance moved to one-time costs)
+  const totalMonthlyCarExpenses = emi + (carData.includeFuelInAffordability ? monthlyFuelCost : 0)
   
   // 20/4/10 Rule Check
   const downPaymentPercentage = carData.carPrice > 0 ? (carData.downPayment / carData.carPrice) * 100 : 0
@@ -384,15 +385,58 @@ export default function TotalCostDisplayV2({ carData }: TotalCostDisplayV2Props)
               <span className="text-xs text-blue-200">EMI Payment</span>
               <span className="font-semibold text-blue-200 text-sm">{formatCurrency(emi)}</span>
             </div>
+            
+            {/* Fuel Cost Section with Toggle */}
             {monthlyFuelCost > 0 && (
-              <div className="flex justify-between items-center">
-                <span className="text-xs text-blue-200">Fuel Cost</span>
-                <span className="font-semibold text-blue-200 text-sm">{formatCurrency(monthlyFuelCost)}</span>
+              <div className="space-y-2 pt-2 border-t border-blue-400/30">
+                <div className="flex justify-between items-center">
+                  <span className="text-xs text-blue-200">Fuel Cost (Separate)</span>
+                  <span className="font-semibold text-blue-200 text-sm">{formatCurrency(monthlyFuelCost)}</span>
+                </div>
+                
+                {/* Toggle for including fuel in 10% rule */}
+                <div className="bg-blue-600/20 rounded-lg p-2 border border-blue-400/40">
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-xs text-blue-100 font-medium">Include in monthly budget?</span>
+                    <div className="flex items-center space-x-2">
+                      <span className={`text-xs ${carData.includeFuelInAffordability ? 'text-blue-300' : 'text-blue-400'}`}>
+                        {carData.includeFuelInAffordability ? 'ON' : 'OFF'}
+                      </span>
+                      <button
+                        onClick={() => updateCarData({ includeFuelInAffordability: !carData.includeFuelInAffordability })}
+                        className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-900 ${
+                          carData.includeFuelInAffordability ? 'bg-blue-500' : 'bg-gray-600'
+                        }`}
+                        role="switch"
+                        aria-checked={carData.includeFuelInAffordability}
+                        title={carData.includeFuelInAffordability 
+                          ? "Click to exclude fuel cost from monthly budget" 
+                          : "Click to include fuel cost in monthly budget"
+                        }
+                      >
+                        <span
+                          className={`inline-block h-3 w-3 transform rounded-full bg-white transition-transform ${
+                            carData.includeFuelInAffordability ? 'translate-x-5' : 'translate-x-1'
+                          }`}
+                        />
+                      </button>
+                    </div>
+                  </div>
+                  <p className="text-xs text-blue-300 opacity-80">
+                    {carData.includeFuelInAffordability 
+                      ? "Fuel cost is included in your monthly budget calculation" 
+                      : "Fuel cost is tracked separately from your budget"
+                    }
+                  </p>
+                </div>
               </div>
             )}
+            
             <div className="border-t border-blue-400/20 pt-1.5">
               <div className="flex justify-between items-center">
-                <span className="text-sm font-semibold text-blue-100">Total Monthly Cost</span>
+                <span className="text-sm font-semibold text-blue-100">
+                  Total Monthly Budget {monthlyFuelCost > 0 && !carData.includeFuelInAffordability && '(excluding fuel)'}
+                </span>
                 <span className="font-bold text-base text-blue-100">{formatCurrency(totalMonthlyCarExpenses)}</span>
               </div>
             </div>
