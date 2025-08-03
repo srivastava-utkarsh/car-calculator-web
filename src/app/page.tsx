@@ -2,12 +2,13 @@
 
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Car, CreditCard, PiggyBank, HelpCircle, ChevronDown } from 'lucide-react'
+import { ChevronDown } from 'lucide-react'
 // Import Version 2 components
 import CarDetailsFormV2 from '@/components/v2/CarDetailsFormV2'
 import FinancialFormV2 from '@/components/v2/FinancialFormV2'
 import ResultsDisplayV2 from '@/components/v2/ResultsDisplayV2'
 import TotalCostDisplayV2 from '@/components/v2/TotalCostDisplayV2'
+import FastPayoffPage from '@/components/v2/FastPayoffPage'
 
 export interface CarData {
   carPrice: number
@@ -27,6 +28,7 @@ export interface CarData {
 export default function HomePage() {
   const [step, setStep] = useState(1) // Start directly at step 1
   const [selectedVersion, setSelectedVersion] = useState('v2') // Version selector
+  const [showPayoffPage, setShowPayoffPage] = useState(false) // Navigation state for payoff page
   const [carData, setCarData] = useState<CarData>({
     carPrice: 0,
     downPayment: 0,
@@ -55,6 +57,16 @@ export default function HomePage() {
 
   const nextStep = () => setStep(prev => Math.min(prev + 1, emiSteps.length))
   const prevStep = () => setStep(prev => Math.max(prev - 1, 1))
+  
+  // Function to navigate to payoff page
+  const showPayoffOptions = () => {
+    setShowPayoffPage(true)
+  }
+  
+  // Function to return to main calculator (preserves all data)
+  const returnToCalculator = () => {
+    setShowPayoffPage(false)
+  }
 
   const restart = () => {
     setStep(1)
@@ -71,7 +83,6 @@ export default function HomePage() {
     })
   }
 
-  const [showHelp, setShowHelp] = useState(false)
 
   // Reset state when switching versions
   const handleVersionChange = (versionId: string) => {
@@ -88,6 +99,16 @@ export default function HomePage() {
       monthlyIncome: 0,
       includeFuelInAffordability: false
     })
+  }
+
+  // Show Fast Payoff Page if navigation state is active
+  if (showPayoffPage) {
+    return (
+      <FastPayoffPage 
+        carData={carData}
+        onBack={returnToCalculator}
+      />
+    )
   }
 
   // Render Version 2 - CRED-inspired fluid design
@@ -281,7 +302,7 @@ export default function HomePage() {
                         className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-6 lg:p-8 shadow-2xl"
                       >
                         <h3 id="results-heading" className="sr-only">Loan Calculation Results</h3>
-                        <TotalCostDisplayV2 carData={carData} updateCarData={updateCarData} />
+                        <TotalCostDisplayV2 carData={carData} updateCarData={updateCarData} onShowPayoffOptions={showPayoffOptions} />
                       </motion.div>
                     </div>
                   </aside>

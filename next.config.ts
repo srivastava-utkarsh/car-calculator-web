@@ -2,14 +2,25 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   /* config options here */
-  // Completely disable all development indicators and overlays
-  devIndicators: {
-    buildActivity: false,
+  
+  // Configure Turbopack (now stable in Next.js 15)
+  turbopack: {
+    rules: {
+      // Configure file loaders for Turbopack
+      '*.svg': {
+        loaders: ['@svgr/webpack'],
+        as: '*.js',
+      },
+    },
   },
-  // Disable error overlay in development
-  webpack: (config, { dev, isServer }) => {
-    if (dev && !isServer) {
-      config.devtool = false;
+  
+  // Webpack configuration (only applies when not using Turbopack)
+  webpack: (config, { dev, isServer, webpack }) => {
+    // Only apply webpack config when not using Turbopack
+    if (!dev || process.env.NEXT_RUNTIME !== 'edge') {
+      if (dev && !isServer) {
+        config.devtool = 'eval-source-map';
+      }
     }
     return config;
   },

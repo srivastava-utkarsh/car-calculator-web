@@ -3,14 +3,15 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { CarData } from '@/app/page'
-import { TrendingUp, Car, Fuel, CheckCircle, XCircle, Zap, Percent, Clock, Info } from 'lucide-react'
+import { TrendingUp, CheckCircle, XCircle, Zap, Percent, Clock, Info, Rocket } from 'lucide-react'
 
 interface TotalCostDisplayV2Props {
   carData: CarData
   updateCarData: (updates: Partial<CarData>) => void
+  onShowPayoffOptions?: () => void
 }
 
-export default function TotalCostDisplayV2({ carData, updateCarData }: TotalCostDisplayV2Props) {
+export default function TotalCostDisplayV2({ carData, updateCarData, onShowPayoffOptions }: TotalCostDisplayV2Props) {
   const [durationToggle, setDurationToggle] = useState<'months' | 'years'>('months')
   
   const calculateEMI = (principal: number, rate: number, years: number) => {
@@ -21,9 +22,10 @@ export default function TotalCostDisplayV2({ carData, updateCarData }: TotalCost
     return isNaN(emi) ? 0 : emi
   }
 
-  const loanAmount = carData.carPrice - carData.downPayment
-  const emi = calculateEMI(loanAmount, carData.interestRate, carData.tenure)
-  const totalInterest = (emi * carData.tenure * 12) - loanAmount
+  // Safe calculation helpers
+  const loanAmount = Math.max(0, carData.carPrice - carData.downPayment)
+  const emi = carData.tenure > 0 ? calculateEMI(loanAmount, carData.interestRate, carData.tenure) : 0
+  const totalInterest = carData.tenure > 0 && emi > 0 ? (emi * carData.tenure * 12) - loanAmount : 0
   const totalPayment = loanAmount + totalInterest
   const monthlyFuelCost = carData.kmPerMonth && carData.fuelCostPerLiter ? (carData.kmPerMonth / 15) * carData.fuelCostPerLiter : 0
   
@@ -31,21 +33,30 @@ export default function TotalCostDisplayV2({ carData, updateCarData }: TotalCost
   // Including EMI and optionally fuel (insurance moved to one-time costs)
   const totalMonthlyCarExpenses = emi + (carData.includeFuelInAffordability ? monthlyFuelCost : 0)
   
-  // 20/4/10 Rule Check
+  // 20/4/10 Rule Check - Only calculate when valid data is available
   const downPaymentPercentage = carData.carPrice > 0 ? (carData.downPayment / carData.carPrice) * 100 : 0
   const isDownPaymentOk = downPaymentPercentage >= 20
-  const isTenureOk = carData.tenure <= 4
-  const expensePercentage = carData.monthlyIncome > 0 ? (totalMonthlyCarExpenses / carData.monthlyIncome) * 100 : 0
-  const isExpenseOk = carData.monthlyIncome > 0 ? expensePercentage <= 10 : true
+  const isTenureOk = carData.tenure > 0 && carData.tenure <= 4
+  const expensePercentage = carData.monthlyIncome > 0 && totalMonthlyCarExpenses > 0 ? (totalMonthlyCarExpenses / carData.monthlyIncome) * 100 : 0
+  const isExpenseOk = carData.monthlyIncome > 0 && totalMonthlyCarExpenses > 0 ? expensePercentage <= 10 : true
   const isAffordable = isDownPaymentOk && isTenureOk && isExpenseOk
 
-  const formatCurrency = (value: number) => `₹${Math.round(value).toLocaleString('en-IN')}`
+  const formatCurrency = (value: number) => {
+    if (isNaN(value) || !isFinite(value) || value < 0) return '₹0'
+    return `₹${Math.round(value).toLocaleString('en-IN')}`
+  }
+  
+  const formatPercentage = (value: number) => {
+    if (isNaN(value) || !isFinite(value)) return '0.0'
+    return value.toFixed(1)
+  }
   const formatDuration = () => {
     if (carData.tenure === 0) return '--'
     return durationToggle === 'months' ? `${carData.tenure * 12} months` : `${carData.tenure} years`
   }
 
   const getLastEMIDate = () => {
+    if (carData.tenure <= 0) return '--'
     const today = new Date()
     const lastEMIDate = new Date(today.getFullYear(), today.getMonth() + (carData.tenure * 12), today.getDate())
     return lastEMIDate.toLocaleDateString('en-IN', { 
@@ -78,8 +89,8 @@ export default function TotalCostDisplayV2({ carData, updateCarData }: TotalCost
   return (
     <div className="space-y-4">
 
-      {/* Smart Purchase Score - Show at top when all required fields filled */}
-      {isAllRequiredFieldsFilled && carData.carPrice > 0 && (
+      {/* Smart Purchase Score - Show at top when all required fields filled and valid calculations */}
+      {isAllRequiredFieldsFilled && carData.carPrice > 0 && carData.tenure > 0 && emi > 0 && (
         <motion.div 
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -155,7 +166,7 @@ export default function TotalCostDisplayV2({ carData, updateCarData }: TotalCost
                     20% Down Payment
                   </span>
                   <div className="flex items-center space-x-2">
-                    <span className="text-white font-bold text-sm">{downPaymentPercentage.toFixed(1)}%</span>
+                    <span className="text-white font-bold text-sm">{formatPercentage(downPaymentPercentage)}%</span>
                     {isDownPaymentOk ? (
                       <CheckCircle className="w-4 h-4 text-green-400" />
                     ) : (
@@ -192,7 +203,7 @@ export default function TotalCostDisplayV2({ carData, updateCarData }: TotalCost
                     Max 4 Years
                   </span>
                   <div className="flex items-center space-x-2">
-                    <span className="text-white font-bold text-sm">{carData.tenure}y</span>
+                    <span className="text-white font-bold text-sm">{carData.tenure || 0}y</span>
                     {isTenureOk ? (
                       <CheckCircle className="w-4 h-4 text-green-400" />
                     ) : (
@@ -229,7 +240,7 @@ export default function TotalCostDisplayV2({ carData, updateCarData }: TotalCost
                     Max 10% Income
                   </span>
                   <div className="flex items-center space-x-2">
-                    <span className="text-white font-bold text-sm">{expensePercentage.toFixed(1)}%</span>
+                    <span className="text-white font-bold text-sm">{formatPercentage(expensePercentage)}%</span>
                     {isExpenseOk ? (
                       <CheckCircle className="w-4 h-4 text-green-400" />
                     ) : (
@@ -355,7 +366,7 @@ export default function TotalCostDisplayV2({ carData, updateCarData }: TotalCost
                 <div className="flex justify-between items-center">
                   <span className="text-xs text-white/60">% of Income</span>
                   <span className={`text-xs font-bold ${expensePercentage <= 10 ? 'text-emerald-400' : 'text-red-400'}`}>
-                    {expensePercentage.toFixed(1)}%
+                    {formatPercentage(expensePercentage)}%
                   </span>
                 </div>
               </div>
@@ -508,6 +519,35 @@ export default function TotalCostDisplayV2({ carData, updateCarData }: TotalCost
           </div>
         </div>
       </motion.div>
+
+      {/* Payoff Loan Faster Button - Show only when EMI is calculated */}
+      {carData.carPrice > 0 && carData.tenure > 0 && (
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4 }}
+          className="mt-4"
+        >
+          <button
+            onClick={onShowPayoffOptions}
+            className="w-full bg-gradient-to-r from-emerald-600 via-cyan-600 to-purple-600 hover:from-emerald-700 hover:via-cyan-700 hover:to-purple-700 text-white py-4 px-6 rounded-2xl font-semibold transition-all duration-300 shadow-xl hover:shadow-2xl hover:scale-[1.02] group relative overflow-hidden"
+          >
+            {/* Animated background */}
+            <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/10 to-white/0 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+            
+            <div className="relative flex items-center justify-center space-x-3">
+              <Rocket className="w-5 h-5 text-white group-hover:animate-pulse" />
+              <span className="text-base">⚡ Pay Off Loan Faster</span>
+              <Zap className="w-4 h-4 text-yellow-300 group-hover:animate-bounce" />
+            </div>
+            
+            <div className="relative text-xs text-white/80 mt-1">
+              Save thousands in interest with smart payoff strategies
+            </div>
+          </button>
+        </motion.div>
+      )}
+
     </div>
   )
 }

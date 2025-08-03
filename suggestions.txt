@@ -1,2 +1,2 @@
-1. remove all folders except v2
-2. how to integrate ads for montetization ? don't make changes just give suggestions
+1. Once car price is selected, select Loan Tenure to 3 years
+2. In "Pay Off Loan Faster" section, put "Configure Your Strategy" just below "Loan Comparison: Original vs New" so that user can select amount and see 
