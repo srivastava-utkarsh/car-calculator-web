@@ -63,7 +63,7 @@ export default function FinancialFormV2({ carData, updateCarData, onNext, onBack
   return (
     <div className="space-y-8">
       {standalone && (
-        <div className="text-center space-y-3 mb-6">
+        <div className="hidden lg:block text-center space-y-3 mb-6">
           <div className="w-16 h-16 mx-auto bg-gradient-to-br from-purple-400 to-pink-400 rounded-2xl flex items-center justify-center mb-3">
             <Calculator className="w-8 h-8 text-white" />
           </div>
@@ -77,7 +77,7 @@ export default function FinancialFormV2({ carData, updateCarData, onNext, onBack
         <div className="space-y-2">
           <label className="flex items-center space-x-2 text-sm font-medium text-white">
             <Clock className="w-4 h-4 text-cyan-400" />
-            <span>Loan Tenure ({carData.tenure} years)</span>
+            <span>Loan Tenure ({carData.tenure || 0} years)</span>
           </label>
           
           <div className="space-y-3">
@@ -85,14 +85,14 @@ export default function FinancialFormV2({ carData, updateCarData, onNext, onBack
               type="range"
               min={minTenure}
               max={maxTenure}
-              value={carData.tenure}
+              value={carData.tenure || minTenure}
               onChange={(e) => {
                 const years = parseInt(e.target.value)
                 updateCarData({ tenure: years })
               }}
               className="w-full h-2 bg-white/20 rounded-lg appearance-none cursor-pointer"
               style={{
-                background: `linear-gradient(to right, ${carData.tenure <= 4 ? '#06b6d4' : '#ef4444'} 0%, ${carData.tenure <= 4 ? '#06b6d4' : '#ef4444'} ${((carData.tenure - minTenure) / (maxTenure - minTenure)) * 100}%, rgba(255,255,255,0.2) ${((carData.tenure - minTenure) / (maxTenure - minTenure)) * 100}%, rgba(255,255,255,0.2) 100%)`
+                background: `linear-gradient(to right, ${(carData.tenure || minTenure) <= 4 ? '#06b6d4' : '#ef4444'} 0%, ${(carData.tenure || minTenure) <= 4 ? '#06b6d4' : '#ef4444'} ${(((carData.tenure || minTenure) - minTenure) / (maxTenure - minTenure)) * 100}%, rgba(255,255,255,0.2) ${(((carData.tenure || minTenure) - minTenure) / (maxTenure - minTenure)) * 100}%, rgba(255,255,255,0.2) 100%)`
               }}
             />
             
@@ -163,7 +163,6 @@ export default function FinancialFormV2({ carData, updateCarData, onNext, onBack
         {isAdditionalDetailsMissing && (
           <div className="mb-4 bg-amber-500/20 backdrop-blur-md border border-amber-400/30 rounded-xl p-4 shadow-lg">
             <div className="flex items-start space-x-3">
-              <Info className="w-5 h-5 text-amber-400 mt-0.5 flex-shrink-0" />
               <div>
                 <h4 className="text-sm font-semibold text-amber-200 mb-1">
                   Complete Details for Full Analysis
@@ -187,9 +186,6 @@ export default function FinancialFormV2({ carData, updateCarData, onNext, onBack
               <div>
                 <h3 className="text-lg font-semibold text-white flex items-center">
                   Additional Details
-                  {isAdditionalDetailsMissing && (
-                    <Info className="w-4 h-4 ml-2 text-amber-400" />
-                  )}
                 </h3>
                 <p className="text-white/70 text-sm">Add processing fees, insurance and running costs</p>
               </div>

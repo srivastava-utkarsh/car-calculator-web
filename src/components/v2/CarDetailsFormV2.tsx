@@ -85,7 +85,7 @@ export default function CarDetailsFormV2({ carData, updateCarData, onNext, step,
   return (
     <div className="space-y-8">
       {standalone && (
-        <div className="text-center space-y-3 mb-6">
+        <div className="hidden lg:block text-center space-y-3 mb-6">
           <div className="w-16 h-16 mx-auto bg-gradient-to-br from-emerald-400 to-cyan-400 rounded-2xl flex items-center justify-center mb-3">
             <Car className="w-8 h-8 text-white" />
           </div>
