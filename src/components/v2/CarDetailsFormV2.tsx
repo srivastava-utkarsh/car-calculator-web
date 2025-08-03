@@ -94,10 +94,10 @@ export default function CarDetailsFormV2({ carData, updateCarData, onNext, step,
         </div>
       )}
       
-      <form onSubmit={handleSubmit} className="space-y-6">
+      <form onSubmit={handleSubmit} className="space-y-6" role="form" aria-label="Car details form">
         {/* Car Price */}
         <div className="space-y-2">
-          <label className="block text-base min-[375px]:text-lg font-medium text-white" style={{ lineHeight: '1.5' }}>
+          <label htmlFor="car-price-input" className="block text-base min-[375px]:text-lg font-medium text-white" style={{ lineHeight: '1.5' }}>
             Car Price
           </label>
           
@@ -123,6 +123,7 @@ export default function CarDetailsFormV2({ carData, updateCarData, onNext, step,
           <div className="relative">
             <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white/70 font-semibold">₹</span>
             <input
+              id="car-price-input"
               type="number"
               value={carData.carPrice || ''}
               onChange={(e) => handleCarPriceChange(e.target.value)}
@@ -132,10 +133,12 @@ export default function CarDetailsFormV2({ carData, updateCarData, onNext, step,
                   : 'border-white/20'
               }`}
               placeholder="Enter on-road car price"
+              aria-describedby={errors.carPrice ? "car-price-error" : undefined}
+              aria-invalid={!!errors.carPrice}
             />
           </div>
           {errors.carPrice && (
-            <p className="text-red-400 text-sm mt-1">{errors.carPrice}</p>
+            <p id="car-price-error" className="text-red-400 text-sm mt-1" role="alert">{errors.carPrice}</p>
           )}
         </div>
 

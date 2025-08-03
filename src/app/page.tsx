@@ -92,7 +92,7 @@ export default function HomePage() {
 
   // Render Version 2 - CRED-inspired fluid design
   return (
-      <div className="min-h-screen bg-black font-sans relative" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>
+      <main className="min-h-screen bg-black font-sans relative" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>
         {/* Header Navigation */}
         <header className="bg-black/95 backdrop-blur-md border-b border-white/10">
           <div className="container mx-auto px-6">
@@ -102,16 +102,18 @@ export default function HomePage() {
                 <div className="w-8 h-8 bg-white/10 backdrop-blur-md rounded-lg flex items-center justify-center border border-white/20">
                   <img 
                     src="/budgetgear_tranparent.png" 
-                    alt="BudgetGear Logo" 
+                    alt="BudgetGear - Car Finance Calculator Logo" 
                     className="w-5 h-5 object-contain opacity-90"
+                    width="20"
+                    height="20"
                   />
                 </div>
                 <span className="text-lg font-bold text-white opacity-95">BudgetGear</span>
               </div>
 
               {/* Navigation Links */}
-              <nav className="hidden md:flex items-center space-x-8">
-                <a href="#" className="text-white/90 hover:text-white transition-colors text-sm font-medium">
+              <nav className="hidden md:flex items-center space-x-8" role="navigation" aria-label="Main navigation">
+                <a href="#calculator" className="text-white/90 hover:text-white transition-colors text-sm font-medium">
                   Car Affordability Calculator
                 </a>
               </nav>
@@ -139,7 +141,7 @@ export default function HomePage() {
         <div className="absolute inset-0 bg-gradient-to-br from-gray-900/50 via-black to-gray-900/30 pointer-events-none"></div>
         
         {/* Hero Section with 20/4/10 Rule */}
-        <div className="relative pt-12 pb-8">
+        <section className="relative pt-12 pb-8" aria-labelledby="main-heading">
           <div className="container mx-auto px-6">
             <div className="max-w-6xl mx-auto text-center">
               {/* Main Heading */}
@@ -149,7 +151,7 @@ export default function HomePage() {
                 transition={{ duration: 0.8 }}
                 className="mb-8"
               >
-                <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight mb-4">
+                <h1 id="main-heading" className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight mb-4">
                   <span className="bg-gradient-to-r from-emerald-400 via-cyan-400 to-purple-400 bg-clip-text text-transparent">
                     Car Finance Calculator
                   </span>
@@ -161,20 +163,24 @@ export default function HomePage() {
 
             </div>
           </div>
-        </div>
+        </section>
 
         {/* Main Content Section - Fluid Layout */}
-        <div className="relative">
+        <section className="relative" id="calculator" aria-labelledby="calculator-heading">
           <div className="container mx-auto px-6">
             <div className="max-w-7xl mx-auto">
+              <h2 id="calculator-heading" className="sr-only">Car Finance Calculator Tool</h2>
               
               {/* Mobile Navigation Pills */}
-              <div className="lg:hidden mb-8">
+              <nav className="lg:hidden mb-8" aria-label="Calculator steps">
                 <div className="flex justify-center">
-                  <div className="inline-flex bg-white/5 backdrop-blur-md rounded-full border border-white/10 p-1">
+                  <div className="inline-flex bg-white/5 backdrop-blur-md rounded-full border border-white/10 p-1" role="tablist">
                     <button
                       className={`px-6 py-2 rounded-full text-sm font-medium transition-all duration-300 ${step === 1 ? 'bg-white/20 text-white shadow-lg' : 'text-white/60 hover:text-white/80'}`}
                       onClick={() => setStep(1)}
+                      role="tab"
+                      aria-selected={step === 1}
+                      aria-controls="step-1-panel"
                     >
                       Car Details
                     </button>
@@ -182,12 +188,15 @@ export default function HomePage() {
                       className={`px-6 py-2 rounded-full text-sm font-medium transition-all duration-300 ${step === 2 ? 'bg-white/20 text-white shadow-lg' : 'text-white/60 hover:text-white/80'} disabled:opacity-30`}
                       onClick={() => setStep(2)}
                       disabled={!carData.carPrice || carData.carPrice <= 0}
+                      role="tab"
+                      aria-selected={step === 2}
+                      aria-controls="step-2-panel"
                     >
                       Financial Details
                     </button>
                   </div>
                 </div>
-              </div>
+              </nav>
 
               {/* Content Grid - Fluid and Responsive */}
               <div className="grid lg:grid-cols-5 gap-8 lg:gap-12">
@@ -202,6 +211,8 @@ export default function HomePage() {
                       exit={{ opacity: 0, y: -20 }}
                       transition={{ duration: 0.4, ease: "easeOut" }}
                       className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-8 lg:p-10 shadow-2xl"
+                      role="tabpanel"
+                      aria-labelledby={step === 1 ? "step-1-tab" : step === 2 ? "step-2-tab" : "step-3-tab"}
                     >
                       {/* Desktop View - Show all forms stacked */}
                       <div className="hidden lg:block space-y-12">
@@ -261,7 +272,7 @@ export default function HomePage() {
 
                 {/* Live Preview Panel - Sticky on Desktop */}
                 {step !== 3 && (
-                  <div className="lg:col-span-2">
+                  <aside className="lg:col-span-2" aria-labelledby="results-heading">
                     <div className="lg:sticky lg:top-8">
                       <motion.div
                         initial={{ opacity: 0, x: 20 }}
@@ -269,18 +280,19 @@ export default function HomePage() {
                         transition={{ duration: 0.6, delay: 0.2 }}
                         className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-6 lg:p-8 shadow-2xl"
                       >
+                        <h3 id="results-heading" className="sr-only">Loan Calculation Results</h3>
                         <TotalCostDisplayV2 carData={carData} updateCarData={updateCarData} />
                       </motion.div>
                     </div>
-                  </div>
+                  </aside>
                 )}
               </div>
             </div>
           </div>
-        </div>
+        </section>
 
         {/* Bottom Spacing */}
         <div className="h-20 lg:h-32"></div>
-      </div>
+      </main>
     )
 }

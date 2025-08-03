@@ -1,4 +1,2 @@
-1. remove this text "20%down ≤4years ≤10%income"
-2. By default "48 months" is coming in period under "Smart Loan Insights". Make it empty by default
-3. "Car Affodability Calculator" link is very dim in header. Make it brighter, same for logo "BudgetGear"
-4. Remove all other versions except v2
+1. remove all folders except v2
+2. how to integrate ads for montetization ? don't make changes just give suggestions
