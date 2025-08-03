@@ -296,14 +296,14 @@ export default function HomePage() {
                       className={`py-2 sm:py-3 px-3 sm:px-4 font-medium text-sm flex-1 text-center ${step === 1 ? 'text-emerald-400 border-b-2 border-emerald-400' : 'text-gray-500'}`}
                       onClick={() => setStep(1)}
                     >
-                      Car Details
+                      Step 1 - Car Details
                     </button>
                     <button
                       className={`py-2 sm:py-3 px-3 sm:px-4 font-medium text-sm flex-1 text-center ${step === 2 ? 'text-emerald-400 border-b-2 border-emerald-400' : 'text-gray-500'} disabled:opacity-50`}
                       onClick={() => setStep(2)}
                       disabled={!carData.carPrice || carData.carPrice <= 0}
                     >
-                      Financial Details
+                      Step 2 - Financial Details
                     </button>
                   </div>
                 </div>

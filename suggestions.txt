@@ -1,1 +1,3 @@
-1. in mo
+1. don't add Fuel Cost to 10% Income by default.
+2. Show Fuel Cost as different expense by default. Give option to user to add Fuel Cost in 10% of income bracket or not.
+search internet on best

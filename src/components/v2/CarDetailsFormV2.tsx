@@ -84,13 +84,25 @@ export default function CarDetailsFormV2({ carData, updateCarData, onNext, step,
 
   return (
     <div className="space-y-8">
-      {standalone && (
+      {standalone ? (
         <div className="text-center space-y-3 mb-6">
           <div className="w-16 h-16 mx-auto bg-gradient-to-br from-emerald-400 to-cyan-400 rounded-2xl flex items-center justify-center mb-3">
             <Car className="w-8 h-8 text-white" />
           </div>
           <h2 className="text-2xl font-semibold text-white">Car Details</h2>
           <p className="text-gray-400">Enter your car information to get started</p>
+        </div>
+      ) : (
+        <div className="mb-4">
+          <div className="flex items-center space-x-3 mb-2">
+            <div className="w-10 h-10 bg-gradient-to-br from-emerald-400 to-cyan-400 rounded-xl flex items-center justify-center">
+              <Car className="w-5 h-5 text-white" />
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold text-white">Car Details</h3>
+              <p className="text-gray-400 text-sm">Enter your car information to get started</p>
+            </div>
+          </div>
         </div>
       )}
       

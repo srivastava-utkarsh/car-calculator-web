@@ -71,9 +71,16 @@ export default function FinancialFormV2({ carData, updateCarData, onNext, onBack
           <p className="text-gray-400">Enter your loan and financial information</p>
         </div>
       ) : (
-        <div className="lg:hidden mb-4">
-          <h3 className="text-lg font-semibold text-white">Loan Terms</h3>
-          <p className="text-gray-400 text-sm">Configure your loan details</p>
+        <div className="mb-4">
+          <div className="flex items-center space-x-3 mb-2">
+            <div className="w-10 h-10 bg-gradient-to-br from-purple-400 to-pink-400 rounded-xl flex items-center justify-center">
+              <Calculator className="w-5 h-5 text-white" />
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold text-white">Loan Terms</h3>
+              <p className="text-gray-400 text-sm">Configure your loan details</p>
+            </div>
+          </div>
         </div>
       )}
 
@@ -255,6 +262,20 @@ export default function FinancialFormV2({ carData, updateCarData, onNext, onBack
         </div>
 
       </form>
+
+      {/* Back Button - Only show on mobile standalone mode */}
+      {standalone && (
+        <div className="lg:hidden pt-4 border-t border-white/20">
+          <button
+            type="button"
+            onClick={onBack}
+            className="w-full bg-gray-700/50 backdrop-blur-md text-white py-3 sm:py-4 px-4 sm:px-6 rounded-lg sm:rounded-xl font-medium hover:bg-gray-600/50 transition-all duration-200 flex items-center justify-center space-x-2 border border-white/20 text-sm sm:text-base"
+          >
+            <ArrowLeft className="w-5 h-5" />
+            <span>Back to Car Details</span>
+          </button>
+        </div>
+      )}
     </div>
   )
 }
