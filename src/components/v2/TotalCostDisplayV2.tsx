@@ -66,6 +66,7 @@ export default function TotalCostDisplayV2({ carData, updateCarData }: TotalCost
 
   return (
     <div className="space-y-4">
+
       {/* Smart Purchase Score - Show at top when all required fields filled */}
       {isAllRequiredFieldsFilled && carData.carPrice > 0 && (
         <motion.div 
@@ -83,18 +84,17 @@ export default function TotalCostDisplayV2({ carData, updateCarData }: TotalCost
           </div>
           
           <div className="relative z-10">
-            <div className="flex items-center justify-between mb-2 sm:mb-3">
-              <div className="flex items-center space-x-2">
-                <div className={`w-6 h-6 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center shadow-md ${
+            <div className="flex items-start justify-between mb-2 sm:mb-3 gap-3">
+              <div className="flex items-center space-x-2 min-w-0 flex-1">
+                <div className={`w-6 h-6 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center shadow-md flex-shrink-0 ${
                   isAffordable 
                     ? 'bg-gradient-to-br from-green-500 to-emerald-500' 
                     : 'bg-gradient-to-br from-red-500 to-red-600'
                 }`}>
                   <Zap className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
                 </div>
-                <div>
-                  <h5 className="font-bold text-white text-base sm:text-lg tracking-tight">Smart Purchase Score</h5>
-                  <p className="text-white/70 text-xs">20/4/10 Financial Rule</p>
+                <div className="min-w-0 flex-1">
+                  <h5 className="font-bold text-white text-sm sm:text-base tracking-tight leading-tight">Affordability Score</h5>
                 </div>
               </div>
               
@@ -103,22 +103,22 @@ export default function TotalCostDisplayV2({ carData, updateCarData }: TotalCost
                 initial={{ scale: 0.8 }}
                 animate={{ scale: 1 }}
                 transition={{ type: "spring", stiffness: 200 }}
-                className={`px-2 sm:px-3 py-1 sm:py-1.5 rounded-md sm:rounded-lg text-xs font-bold shadow-md transition-all duration-200 hover:scale-105 ${
+                className={`px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg text-xs font-bold shadow-md transition-all duration-200 hover:scale-105 flex-shrink-0 ${
                   isAffordable 
                     ? 'bg-gradient-to-r from-green-500 to-emerald-500 text-white border border-green-300/50' 
                     : 'bg-gradient-to-r from-red-500 to-red-600 text-white border border-red-300/50'
                 }`}
               >
-                <div className="flex items-center space-x-1">
+                <div className="flex items-center justify-center space-x-1">
                   {isAffordable ? (
                     <>
-                      <CheckCircle className="w-3 h-3" />
-                      <span>EXCELLENT</span>
+                      <CheckCircle className="w-3 h-3 flex-shrink-0" />
+                      <span className="text-xs font-bold whitespace-nowrap leading-none">EXCELLENT</span>
                     </>
                   ) : (
                     <>
-                      <XCircle className="w-3 h-3" />
-                      <span>NEEDS REVIEW</span>
+                      <XCircle className="w-3 h-3 flex-shrink-0" />
+                      <span className="text-xs font-bold whitespace-nowrap leading-none">NEEDS REVIEW</span>
                     </>
                   )}
                 </div>
@@ -395,34 +395,34 @@ export default function TotalCostDisplayV2({ carData, updateCarData }: TotalCost
                 </div>
                 
                 {/* Toggle for including fuel in 10% rule */}
-                <div className="bg-blue-600/20 rounded-lg p-2 border border-blue-400/40">
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="text-xs text-blue-100 font-medium">Include in monthly budget?</span>
-                    <div className="flex items-center space-x-2">
-                      <span className={`text-xs ${carData.includeFuelInAffordability ? 'text-blue-300' : 'text-blue-400'}`}>
+                <div className="bg-blue-600/20 rounded-lg p-2 min-[375px]:p-3 border border-blue-400/40">
+                  <div className="flex items-center justify-between mb-2 gap-2">
+                    <span className="text-xs min-[375px]:text-sm text-blue-100 font-medium">Include in budget?</span>
+                    <div className="flex items-center space-x-2 flex-shrink-0">
+                      <span className={`text-xs hidden min-[375px]:inline ${carData.includeFuelInAffordability ? 'text-blue-300' : 'text-blue-400'}`}>
                         {carData.includeFuelInAffordability ? 'ON' : 'OFF'}
                       </span>
                       <button
                         onClick={() => updateCarData({ includeFuelInAffordability: !carData.includeFuelInAffordability })}
-                        className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-900 ${
+                        className={`relative inline-flex h-5 min-[375px]:h-6 w-9 min-[375px]:w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500/50 ${
                           carData.includeFuelInAffordability ? 'bg-blue-500' : 'bg-gray-600'
                         }`}
                         role="switch"
                         aria-checked={carData.includeFuelInAffordability}
-                        title={carData.includeFuelInAffordability 
-                          ? "Click to exclude fuel cost from monthly budget" 
-                          : "Click to include fuel cost in monthly budget"
+                        aria-label={carData.includeFuelInAffordability 
+                          ? "Exclude fuel cost from monthly budget calculation" 
+                          : "Include fuel cost in monthly budget calculation"
                         }
                       >
                         <span
-                          className={`inline-block h-3 w-3 transform rounded-full bg-white transition-transform ${
-                            carData.includeFuelInAffordability ? 'translate-x-5' : 'translate-x-1'
+                          className={`inline-block h-3 min-[375px]:h-4 w-3 min-[375px]:w-4 transform rounded-full bg-white transition-transform ${
+                            carData.includeFuelInAffordability ? 'translate-x-5 min-[375px]:translate-x-6' : 'translate-x-1'
                           }`}
                         />
                       </button>
                     </div>
                   </div>
-                  <p className="text-xs text-blue-300 opacity-80">
+                  <p className="text-xs text-blue-300 opacity-80 leading-relaxed">
                     {carData.includeFuelInAffordability 
                       ? "Fuel cost is included in your monthly budget calculation" 
                       : "Fuel cost is tracked separately from your budget"

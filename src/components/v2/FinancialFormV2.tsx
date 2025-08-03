@@ -267,18 +267,26 @@ export default function FinancialFormV2({ carData, updateCarData, onNext, onBack
 
       </form>
 
-      {/* Back Button - Only show on mobile standalone mode */}
+      {/* Mobile Sticky Action Bar - Only show on mobile standalone mode */}
       {standalone && (
-        <div className="lg:hidden pt-4 border-t border-white/20">
-          <button
-            type="button"
-            onClick={onBack}
-            className="w-full bg-gray-700/50 backdrop-blur-md text-white py-3 sm:py-4 px-4 sm:px-6 rounded-lg sm:rounded-xl font-medium hover:bg-gray-600/50 transition-all duration-200 flex items-center justify-center space-x-2 border border-white/20 text-sm sm:text-base"
-          >
-            <ArrowLeft className="w-5 h-5" />
-            <span>Back to Car Details</span>
-          </button>
+        <div className="min-[1024px]:hidden fixed bottom-0 left-0 right-0 bg-gray-900/95 backdrop-blur-md border-t border-gray-700/50 p-4 z-30">
+          <div className="flex gap-3">
+            <button
+              type="button"
+              onClick={onBack}
+              className="flex-1 min-h-[44px] min-[375px]:min-h-[48px] bg-gray-700/50 backdrop-blur-md text-white py-3 min-[375px]:py-4 px-4 min-[375px]:px-6 rounded-xl min-[375px]:rounded-2xl font-medium hover:bg-gray-600/50 focus:ring-4 focus:ring-gray-400/50 focus:outline-none transition-all duration-200 flex items-center justify-center space-x-2 border border-white/20 text-base min-[375px]:text-lg"
+              style={{ lineHeight: '1.5' }}
+            >
+              <ArrowLeft className="w-5 h-5 min-[375px]:w-6 min-[375px]:h-6" />
+              <span>Back</span>
+            </button>
+          </div>
         </div>
+      )}
+      
+      {/* Add bottom padding when sticky bar is visible */}
+      {standalone && (
+        <div className="min-[1024px]:hidden h-20"></div>
       )}
     </div>
   )

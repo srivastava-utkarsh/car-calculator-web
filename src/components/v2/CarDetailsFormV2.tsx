@@ -97,22 +97,23 @@ export default function CarDetailsFormV2({ carData, updateCarData, onNext, step,
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Car Price */}
         <div className="space-y-2">
-          <label className="block text-sm font-medium text-white">
+          <label className="block text-base min-[375px]:text-lg font-medium text-white" style={{ lineHeight: '1.5' }}>
             Car Price
           </label>
           
           {/* Preset Buttons */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4">
+          <div className="grid grid-cols-2 min-[375px]:grid-cols-2 min-[768px]:grid-cols-4 gap-3 min-[375px]:gap-4 mb-6">
             {carPresets.map((preset) => (
               <button
                 key={preset.value}
                 type="button"
                 onClick={() => handleCarPriceChange(preset.value.toString())}
-                className={`p-2 sm:p-3 rounded-lg sm:rounded-xl text-xs sm:text-sm font-semibold transition-all hover:scale-105 ${
+                className={`min-h-[44px] min-[375px]:min-h-[48px] p-3 min-[375px]:p-4 rounded-xl min-[375px]:rounded-2xl text-sm min-[375px]:text-base font-semibold transition-all hover:scale-105 focus:outline-none focus:ring-4 ${
                   carData.carPrice === preset.value
-                    ? 'bg-gradient-to-r from-emerald-400 to-cyan-400 text-white shadow-lg'
-                    : 'bg-white/20 text-white/80 hover:bg-white/30'
+                    ? 'bg-gradient-to-r from-emerald-400 to-cyan-400 text-white shadow-lg focus:ring-emerald-400/50'
+                    : 'bg-white/20 text-white/80 hover:bg-white/30 focus:ring-white/20'
                 }`}
+                style={{ lineHeight: '1.5' }}
               >
                 ₹{preset.label}
               </button>
@@ -139,11 +140,11 @@ export default function CarDetailsFormV2({ carData, updateCarData, onNext, step,
         </div>
 
         {/* Down Payment */}
-        <div className="space-y-2">
-          <label className="block text-sm font-medium text-white">
+        <div className="space-y-3">
+          <label className="block text-base min-[375px]:text-lg font-medium text-white" style={{ lineHeight: '1.5' }}>
             Down Payment
             {downPaymentPercentage > 0 && (
-              <span className="lg:hidden text-xs text-gray-400 ml-2">({downPaymentPercentage.toFixed(1)}%)</span>
+              <span className="min-[1024px]:hidden text-sm min-[375px]:text-base text-gray-400 ml-3">({downPaymentPercentage.toFixed(1)}%)</span>
             )}
           </label>
           
@@ -189,13 +190,12 @@ export default function CarDetailsFormV2({ carData, updateCarData, onNext, step,
 
         {/* Monthly Income - Required for calculations */}
         <div className="space-y-2">
-          <label className="flex items-center space-x-2 text-sm font-medium text-white">
-            <Calculator className="w-4 h-4 text-emerald-400" />
-            <span>Monthly Income</span>
-            <span className="text-xs text-emerald-300 bg-emerald-500/20 px-2 py-0.5 rounded-full">for affordability check</span>
+          <label className="block text-base min-[375px]:text-lg font-medium text-white" style={{ lineHeight: '1.5' }}>
+            Monthly Income
+            <span className="text-xs text-emerald-300 bg-emerald-500/20 px-2 py-0.5 rounded-full ml-2">for affordability check</span>
           </label>
           <div className="relative">
-            <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white/70 font-medium">₹</span>
+            <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white/70 font-semibold">₹</span>
             <input
               type="number"
               value={carData.monthlyIncome || ''}
@@ -211,14 +211,15 @@ export default function CarDetailsFormV2({ carData, updateCarData, onNext, step,
         </div>
 
         {/* Continue Button - Only show on mobile */}
-        <div className="lg:hidden">
+        <div className="min-[1024px]:hidden">
           <button
             type="submit"
             disabled={!carData.carPrice || carData.carPrice <= 0}
-            className="w-full bg-gradient-to-r from-emerald-600 to-cyan-600 text-white py-3 sm:py-4 px-4 sm:px-6 rounded-lg sm:rounded-xl font-medium hover:from-emerald-700 hover:to-cyan-700 transition-all duration-200 flex items-center justify-center space-x-2 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed hover:scale-[1.02] active:scale-[0.98] text-sm sm:text-base"
+            className="w-full min-h-[44px] min-[375px]:min-h-[48px] min-[768px]:min-h-[52px] bg-gradient-to-r from-emerald-600 to-cyan-600 text-white py-4 min-[375px]:py-4 min-[768px]:py-4 px-6 min-[375px]:px-8 rounded-xl min-[375px]:rounded-2xl font-medium hover:from-emerald-700 hover:to-cyan-700 focus:ring-4 focus:ring-emerald-400/50 focus:outline-none transition-all duration-200 flex items-center justify-center space-x-3 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed hover:scale-[1.02] active:scale-[0.98] text-base min-[375px]:text-lg"
+            style={{ lineHeight: '1.5' }}
           >
             <span>Continue to Loan Terms</span>
-            <ArrowRight className="w-5 h-5" />
+            <ArrowRight className="w-5 h-5 min-[375px]:w-6 min-[375px]:h-6" />
           </button>
         </div>
       </form>

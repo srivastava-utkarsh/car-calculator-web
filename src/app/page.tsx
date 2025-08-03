@@ -294,25 +294,48 @@ export default function HomePage() {
           </div>
         </header>
 
-        <div className="container mx-auto px-4 py-4 sm:py-6 lg:py-8">
-          <div className="flex flex-col lg:flex-row gap-4 lg:gap-6">
+        {/* 20/4/10 Financial Rule Education Section - Compact */}
+        <div className="container mx-auto px-4 py-2">
+          <div className="max-w-4xl mx-auto">
+            <div className="bg-gradient-to-r from-blue-500/15 to-purple-500/15 backdrop-blur-md rounded-lg border border-blue-400/20 p-3">
+              <div className="flex items-center space-x-3">
+                <div className="w-6 h-6 bg-gradient-to-br from-blue-500 to-purple-500 rounded flex items-center justify-center flex-shrink-0">
+                  <span className="text-white font-bold text-xs">20</span>
+                </div>
+                <div className="min-w-0 flex-1">
+                  <h3 className="font-semibold text-white text-sm mb-1">Smart Car Buying: The 20/4/10 Rule 🚗💡</h3>
+                  <div className="flex flex-wrap gap-2 text-xs">
+                    <span className="bg-white/10 rounded px-2 py-1 text-blue-200">20% Down</span>
+                    <span className="bg-white/10 rounded px-2 py-1 text-purple-200">≤4 Years</span>
+                    <span className="bg-white/10 rounded px-2 py-1 text-emerald-200">≤10% Income</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="container mx-auto px-4 py-6 min-[768px]:py-8 min-[1024px]:py-10 min-[1280px]:py-12">
+          <div className="flex flex-col min-[1024px]:flex-row gap-6 min-[1024px]:gap-4 min-[1280px]:gap-6">
             {/* Main Content - Combined Form */}
-            <div className="w-full lg:w-3/5">
-              <div className="max-w-2xl mx-auto">
+            <div className="w-full min-[1024px]:w-3/5 min-[1280px]:w-2/3">
+              <div className="max-w-none min-[768px]:max-w-2xl mx-auto">
 
                 {/* Mobile Tabs - Only show on mobile */}
-                <div className="lg:hidden mb-4 sm:mb-6">
+                <div className="min-[1024px]:hidden mb-6 min-[768px]:mb-8">
                   <div className="flex border-b border-gray-700">
                     <button
-                      className={`py-2 sm:py-3 px-3 sm:px-4 font-medium text-sm flex-1 text-center ${step === 1 ? 'text-emerald-400 border-b-2 border-emerald-400' : 'text-gray-500'}`}
+                      className={`py-4 px-4 min-[375px]:px-6 font-medium text-base min-h-[44px] flex-1 text-center transition-all duration-200 ${step === 1 ? 'text-emerald-400 border-b-2 border-emerald-400' : 'text-gray-500 hover:text-gray-300'}`}
                       onClick={() => setStep(1)}
+                      style={{ lineHeight: '1.5' }}
                     >
                       Step 1 - Car Details
                     </button>
                     <button
-                      className={`py-2 sm:py-3 px-3 sm:px-4 font-medium text-sm flex-1 text-center ${step === 2 ? 'text-emerald-400 border-b-2 border-emerald-400' : 'text-gray-500'} disabled:opacity-50`}
+                      className={`py-4 px-4 min-[375px]:px-6 font-medium text-base min-h-[44px] flex-1 text-center transition-all duration-200 ${step === 2 ? 'text-emerald-400 border-b-2 border-emerald-400' : 'text-gray-500 hover:text-gray-300'} disabled:opacity-50`}
                       onClick={() => setStep(2)}
                       disabled={!carData.carPrice || carData.carPrice <= 0}
+                      style={{ lineHeight: '1.5' }}
                     >
                       Step 2 - Financial Details
                     </button>
@@ -320,12 +343,12 @@ export default function HomePage() {
                 </div>
 
                 {/* Progress Bar - Only visible on mobile */}
-                <div className="mb-6 sm:mb-8 lg:hidden">
-                  <div className="flex justify-between items-center mb-2">
-                    <span className="text-xs sm:text-sm font-medium text-gray-400">Progress</span>
-                    <span className="text-xs sm:text-sm font-medium text-gray-400">{step} of {emiSteps.length}</span>
+                <div className="mb-8 min-[768px]:mb-10 min-[1024px]:hidden">
+                  <div className="flex justify-between items-center mb-3">
+                    <span className="text-sm min-[375px]:text-base font-medium text-gray-400" style={{ lineHeight: '1.5' }}>Progress</span>
+                    <span className="text-sm min-[375px]:text-base font-medium text-gray-400" style={{ lineHeight: '1.5' }}>{step} of {emiSteps.length}</span>
                   </div>
-                  <div className="bg-gray-800 rounded-full h-2 sm:h-3 overflow-hidden">
+                  <div className="bg-gray-800 rounded-full h-3 min-[375px]:h-4 overflow-hidden">
                     <div 
                       className="bg-gradient-to-r from-emerald-400 to-cyan-400 h-full transition-all duration-500"
                       style={{ width: `${(step / emiSteps.length) * 100}%` }}
@@ -341,10 +364,10 @@ export default function HomePage() {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -20 }}
                     transition={{ duration: 0.3 }}
-                    className="bg-gray-800/50 backdrop-blur-md rounded-xl sm:rounded-2xl shadow-2xl border border-gray-700/50 p-4 sm:p-6 lg:p-8 w-full"
+                    className="bg-gray-800/50 backdrop-blur-md rounded-xl min-[375px]:rounded-2xl shadow-2xl border border-gray-700/50 p-6 min-[375px]:p-8 min-[768px]:p-10 min-[1024px]:p-12 w-full"
                   >
                     {/* Desktop View - Show all forms in one column */}
-                    <div className="hidden lg:block space-y-8">
+                    <div className="hidden min-[1024px]:block space-y-10 min-[1280px]:space-y-12">
                       <CarDetailsFormV2 
                         carData={carData} 
                         updateCarData={updateCarData}
@@ -363,7 +386,7 @@ export default function HomePage() {
                     </div>
                     
                     {/* Mobile View - Show one form at a time */}
-                    <div className="lg:hidden">
+                    <div className="min-[1024px]:hidden">
                       {step === 1 && (
                         <CarDetailsFormV2 
                           carData={carData} 
@@ -400,11 +423,9 @@ export default function HomePage() {
 
             {/* Live Preview Panel */}
             {step !== 3 && (
-              <div className="w-full lg:w-2/5 mt-6 lg:mt-0">
-                <div className="lg:sticky lg:top-8 lg:h-[calc(100vh-4rem)] lg:overflow-y-auto">
-                  <div className="bg-gray-800/30 backdrop-blur-md rounded-xl sm:rounded-2xl shadow-2xl border border-gray-700/50 p-4 sm:p-6">
-                    <TotalCostDisplayV2 carData={carData} updateCarData={updateCarData} />
-                  </div>
+              <div className="w-full min-[1024px]:w-2/5 min-[1280px]:w-1/3 mt-8 min-[768px]:mt-10 min-[1024px]:mt-0">
+                <div className="bg-gray-800/30 backdrop-blur-md rounded-xl min-[375px]:rounded-2xl shadow-2xl border border-gray-700/50 p-6 min-[375px]:p-8 min-[768px]:p-10">
+                  <TotalCostDisplayV2 carData={carData} updateCarData={updateCarData} />
                 </div>
               </div>
             )}

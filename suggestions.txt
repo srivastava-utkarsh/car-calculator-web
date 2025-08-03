@@ -1,2 +1,1 @@
-1. header is fixed and page is scrolling inside it. Don't want this behaviour. Header should not be static.
-2. Remove Join and start button from header 
+1. make "Smart Car Buying: The 20/4/10 Rule 🚗💡" , small and compact. Its very big now
