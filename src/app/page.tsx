@@ -269,42 +269,27 @@ export default function HomePage() {
         </div>
 
         {/* Header Navigation */}
-        <header className="bg-gray-900/95 backdrop-blur-md border-b border-gray-700/50 sticky top-0 z-40">
+        <header style={{ 
+          background: 'linear-gradient(90deg, #232946 0%, #181824 100%)',
+          borderBottom: '1px solid #2d3748'
+        }}>
           <div className="container mx-auto px-4">
             <div className="flex items-center justify-between h-16">
               {/* Logo */}
               <div className="flex items-center space-x-3">
                 <img 
-                  src="/brand_img.png" 
+                  src="/budgetgear_tranparent.png" 
                   alt="BudgetGear Logo" 
                   className="w-8 h-8 object-contain"
                 />
-                <span className="text-xl font-bold text-white">BudgetGear</span>
+                <span className="text-xl font-bold" style={{ color: '#f8f9fa' }}>BudgetGear</span>
               </div>
 
               {/* Navigation Menu - Hidden on mobile */}
-              <nav className="hidden md:flex items-center space-x-8">
-                <a href="#" className="text-gray-300 hover:text-white transition-colors">Home Page</a>
-                <a href="#" className="text-gray-300 hover:text-white transition-colors">Calculator Tool</a>
-                <a href="#" className="text-white font-medium">Car Affordability Calculator</a>
-                <a href="#" className="text-gray-300 hover:text-white transition-colors">Car Listings</a>
-                <div className="relative group">
-                  <button className="text-gray-300 hover:text-white transition-colors flex items-center space-x-1">
-                    <span>More Info</span>
-                    <ChevronDown className="w-4 h-4" />
-                  </button>
-                </div>
+              <nav className="hidden md:flex items-center">
+                <span className="font-medium" style={{ color: '#38ce3c' }}>Car Affordability Calculator</span>
               </nav>
 
-              {/* Action Buttons */}
-              <div className="flex items-center space-x-3">
-                <button className="px-4 py-2 text-sm border border-gray-600 text-gray-300 hover:text-white hover:border-gray-500 transition-colors rounded-lg">
-                  Join
-                </button>
-                <button className="px-4 py-2 text-sm bg-white text-gray-900 hover:bg-gray-100 transition-colors rounded-lg font-medium">
-                  Start
-                </button>
-              </div>
             </div>
           </div>
         </header>

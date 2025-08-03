@@ -6,7 +6,6 @@ import {
   ArrowLeft, 
   RotateCcw, 
   TrendingUp, 
-  DollarSign, 
   Calendar, 
   PieChart,
   Download,
@@ -122,7 +121,7 @@ export default function ResultsDisplayV2({ carData, onBack, onRestart }: Results
             <div className="text-center">
               <div className="flex items-center justify-center space-x-3 mb-4">
                 <div className="w-12 h-12 bg-gradient-to-br from-emerald-400 to-cyan-400 rounded-2xl flex items-center justify-center">
-                  <DollarSign className="w-6 h-6 text-white" />
+                  <span className="text-white font-bold text-2xl">₹</span>
                 </div>
                 <h3 className="text-xl font-bold text-white">Monthly EMI</h3>
               </div>
@@ -204,7 +203,7 @@ export default function ResultsDisplayV2({ carData, onBack, onRestart }: Results
               className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-6 shadow-xl"
             >
               <div className="flex items-center space-x-3 mb-3">
-                <DollarSign className="w-6 h-6 text-orange-400" />
+                <span className="text-orange-400 font-bold text-2xl">₹</span>
                 <h4 className="font-semibold text-white">Down Payment</h4>
               </div>
               <p className="text-2xl font-bold text-orange-300">

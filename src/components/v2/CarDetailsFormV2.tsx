@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Car, DollarSign, ArrowRight, Sparkles, TrendingUp, Calculator } from 'lucide-react'
+import { Car, ArrowRight, Sparkles, TrendingUp, Calculator } from 'lucide-react'
 import { CarData } from '@/app/page'
 
 interface CarDetailsFormV2Props {

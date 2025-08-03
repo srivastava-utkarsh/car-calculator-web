@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { CarData } from '@/app/page'
-import { DollarSign, TrendingUp, Car, Fuel, CheckCircle, XCircle, Zap, Percent, Clock, Info } from 'lucide-react'
+import { TrendingUp, Car, Fuel, CheckCircle, XCircle, Zap, Percent, Clock, Info } from 'lucide-react'
 
 interface TotalCostDisplayV2Props {
   carData: CarData
@@ -140,7 +140,7 @@ export default function TotalCostDisplayV2({ carData, updateCarData }: TotalCost
               >
                 <div className="flex items-center justify-between mb-1">
                   <span className="text-white/90 font-medium flex items-center text-sm">
-                    <DollarSign className="w-3 h-3 mr-1 text-yellow-400" />
+                    <span className="text-yellow-400 mr-1 font-bold">₹</span>
                     20% Down Payment
                   </span>
                   <div className="flex items-center space-x-2">
@@ -354,7 +354,7 @@ export default function TotalCostDisplayV2({ carData, updateCarData }: TotalCost
           {/* Total Payment */}
           <div className="flex flex-col items-center bg-white/15 border border-white/20 rounded-lg p-2">
             <div className="flex items-center mb-1">
-              <DollarSign size={12} className="mr-1 text-purple-300"/>
+              <span className="text-purple-300 mr-1 font-bold text-xs">₹</span>
               <span className="text-white/90 font-medium">Total Payment</span>
             </div>
             <span className="font-bold text-white">{formatCurrency(totalPayment)}</span>
