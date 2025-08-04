@@ -81,7 +81,7 @@ export default function TotalCostDisplayV2({ carData, updateCarData, onShowPayof
     carData.monthlyIncome > 0,
     carData.kmPerMonth > 0,
     carData.fuelCostPerLiter > 0,
-    carData.insuranceAndMaintenance > 0
+    (carData.insuranceAndMaintenance || 0) > 0
   ];
   const completionPercentage = Math.round((allFields.filter(Boolean).length / allFields.length) * 100);
   
@@ -484,13 +484,13 @@ export default function TotalCostDisplayV2({ carData, updateCarData, onShowPayof
       </motion.div>
 
       {/* One-time Costs */}
-      {carData.insuranceAndMaintenance > 0 && (
+      {(carData.insuranceAndMaintenance || 0) > 0 && (
         <div className="mb-4">
           <h5 className="font-semibold text-white mb-2 text-sm">One-time Costs</h5>
           <div className="bg-white/5 backdrop-blur-xl border border-white/10 p-4 rounded-2xl shadow-xl hover:shadow-2xl hover:bg-white/10 transition-all duration-300">
             <div className="flex justify-between items-center">
               <span className="text-xs text-white/70">Insurance & Other Costs</span>
-              <span className="font-semibold text-white text-sm">{formatCurrency(carData.insuranceAndMaintenance)}</span>
+              <span className="font-semibold text-white text-sm">{formatCurrency(carData.insuranceAndMaintenance || 0)}</span>
             </div>
             <p className="text-xs text-white/50 mt-2 opacity-80">
               *Processing fees, insurance premiums and other upfront costs

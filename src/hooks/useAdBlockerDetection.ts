@@ -32,9 +32,9 @@ export const useAdBlockerDetection = () => {
         
         // Method 2: Check for common ad blocker properties
         const additionalChecks = 
-          // @ts-ignore
+          // @ts-expect-error - googletag may not be defined if ad blocker is active
           typeof window.googletag === 'undefined' &&
-          // @ts-ignore  
+          // @ts-expect-error - adsbygoogle may not be defined if ad blocker is active
           typeof window.adsbygoogle === 'undefined' &&
           // Check for blocked scripts
           !document.querySelector('script[src*="googletagmanager"]') &&

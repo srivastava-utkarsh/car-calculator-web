@@ -41,7 +41,7 @@ export default function AdBlockerNotification({ onDismiss }: AdBlockerNotificati
                 <div className="flex items-center justify-center sm:justify-start gap-2 mb-1">
                   <Heart className="w-4 h-4 text-pink-300" />
                   <span className="text-white font-semibold text-sm">
-                    We noticed you're using an ad blocker
+                    We noticed you&apos;re using an ad blocker
                   </span>
                 </div>
                 <p className="text-white/90 text-xs leading-relaxed">
@@ -76,7 +76,7 @@ export default function AdBlockerNotification({ onDismiss }: AdBlockerNotificati
                 className="flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-lg text-xs font-medium transition-all duration-200 border border-white/20"
               >
                 <Coffee className="w-3 h-3" />
-                <span>I'll consider it</span>
+                <span>I&apos;ll consider it</span>
               </button>
             </div>
           </div>

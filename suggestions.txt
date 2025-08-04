@@ -1,2 +1,7 @@
-1. Once car price is selected, select Loan Tenure to 3 years
-2. In "Pay Off Loan Faster" section, put "Configure Your Strategy" just below "Loan Comparison: Original vs New" so that user can select amount and see 
+1. remove text and icon "Car Details
+
+Enter your car information to get started"
+2. remove text and icon "Financial Details
+
+Enter your loan and financial information"
+3. do this for mobile and normal view

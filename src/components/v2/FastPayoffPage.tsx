@@ -192,8 +192,6 @@ export default function FastPayoffPage({ carData, onBack }: FastPayoffPageProps)
     }
   ]
 
-  // Quick amount buttons for prepayment
-  const quickAmounts = [50000, 100000, 200000, 300000]
 
   return (
     <div className="min-h-screen bg-black font-sans relative" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>
@@ -230,266 +228,274 @@ export default function FastPayoffPage({ carData, onBack }: FastPayoffPageProps)
         <div className="max-w-7xl mx-auto">
           
           {/* Current Loan Summary */}
-          <div className="mb-8 bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-6">
-            <h2 className="text-white font-semibold mb-4">Current Loan Overview</h2>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
-              <div>
-                <span className="text-white/60">Loan Amount</span>
-                <div className="text-white font-semibold">{formatCurrency(loanAmount)}</div>
+          <div className="mb-8 bg-gradient-to-br from-blue-500/15 via-purple-500/10 to-cyan-500/15 backdrop-blur-xl rounded-2xl border border-blue-400/30 p-6 shadow-2xl hover:shadow-blue-500/20 transition-all duration-300">
+            <div className="flex items-center mb-6">
+              <div className="w-10 h-10 bg-gradient-to-br from-blue-400 to-cyan-400 rounded-xl flex items-center justify-center shadow-lg mr-4">
+                <Calculator className="w-5 h-5 text-white" />
               </div>
               <div>
-                <span className="text-white/60">Monthly EMI</span>
-                <div className="text-white font-semibold">{formatCurrency(currentEMI)}</div>
+                <h2 className="text-white font-bold text-lg">Showing Calculation for Currently Selected EMI</h2>
+                <p className="text-blue-200/80 text-sm">Based on your current loan parameters</p>
               </div>
-              <div>
-                <span className="text-white/60">Tenure</span>
-                <div className="text-white font-semibold">{formatTenure(remainingTenure)}</div>
+            </div>
+            
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+              <div className="bg-white/10 backdrop-blur-md rounded-xl p-4 border border-white/20 hover:bg-white/15 transition-all duration-200">
+                <div className="flex items-center mb-2">
+                  <div className="w-2 h-2 bg-emerald-400 rounded-full mr-2"></div>
+                  <span className="text-white/70 text-sm font-medium">Loan Amount</span>
+                </div>
+                <div className="text-white font-bold text-lg">{formatCurrency(loanAmount)}</div>
               </div>
-              <div>
-                <span className="text-white/60">Interest Rate</span>
-                <div className="text-white font-semibold">{carData.interestRate}% p.a.</div>
+              
+              <div className="bg-white/10 backdrop-blur-md rounded-xl p-4 border border-white/20 hover:bg-white/15 transition-all duration-200">
+                <div className="flex items-center mb-2">
+                  <div className="w-2 h-2 bg-cyan-400 rounded-full mr-2"></div>
+                  <span className="text-white/70 text-sm font-medium">Monthly EMI</span>
+                </div>
+                <div className="text-white font-bold text-lg">{formatCurrency(currentEMI)}</div>
+              </div>
+              
+              <div className="bg-white/10 backdrop-blur-md rounded-xl p-4 border border-white/20 hover:bg-white/15 transition-all duration-200">
+                <div className="flex items-center mb-2">
+                  <div className="w-2 h-2 bg-purple-400 rounded-full mr-2"></div>
+                  <span className="text-white/70 text-sm font-medium">Tenure</span>
+                </div>
+                <div className="text-white font-bold text-lg">{formatTenure(remainingTenure)}</div>
+              </div>
+              
+              <div className="bg-white/10 backdrop-blur-md rounded-xl p-4 border border-white/20 hover:bg-white/15 transition-all duration-200">
+                <div className="flex items-center mb-2">
+                  <div className="w-2 h-2 bg-yellow-400 rounded-full mr-2"></div>
+                  <span className="text-white/70 text-sm font-medium">Interest Rate</span>
+                </div>
+                <div className="text-white font-bold text-lg">{carData.interestRate}% p.a.</div>
               </div>
             </div>
           </div>
 
-          <div className="grid lg:grid-cols-5 gap-8">
-            
-            {/* Left Panel - Calculator Options */}
-            <div className="lg:col-span-2">
-              {/* Tab Navigation */}
-              <div className="mb-6">
-                <h3 className="text-white font-semibold mb-4">Choose Your Strategy</h3>
-                <div className="space-y-3">
-                  {tabs.map((tab) => {
-                    const Icon = tab.icon
-                    return (
-                      <button
-                        key={tab.id}
-                        onClick={() => setActiveTab(tab.id)}
-                        className={`w-full p-4 text-left rounded-xl transition-all border ${
-                          activeTab === tab.id
-                            ? 'bg-white/10 border-emerald-400/50 shadow-lg'
-                            : 'bg-white/5 border-white/10 hover:bg-white/10'
-                        }`}
-                      >
-                        <div className="flex items-center space-x-3">
-                          <Icon className={`w-5 h-5 ${activeTab === tab.id ? 'text-emerald-400' : 'text-white/60'}`} />
-                          <div>
-                            <div className={`font-medium ${activeTab === tab.id ? 'text-white' : 'text-white/80'}`}>
-                              {tab.title}
-                            </div>
-                            <div className="text-xs text-white/50">{tab.description}</div>
-                          </div>
-                        </div>
-                      </button>
-                    )
-                  })}
-                </div>
+          {/* Loan Comparison Section */}
+          <div className="mb-8 bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-6">
+            <h3 className="text-white font-semibold mb-6 flex items-center">
+              <Calculator className="w-5 h-5 mr-2 text-emerald-400" />
+              Loan Comparison: Original vs New
+            </h3>
+
+            {/* Configure Your Strategy - Compact Box */}
+            <div className="mb-6 bg-gradient-to-r from-emerald-500/10 to-cyan-500/10 backdrop-blur-md rounded-xl border border-emerald-400/30 p-5">
+              <h4 className="text-white font-medium mb-3 flex items-center text-xs">
+                <Zap className="w-3 h-3 mr-2 text-emerald-400" />
+                Configure Your Strategy
+              </h4>
+              
+              {/* Strategy Tabs - Compact */}
+              <div className="flex bg-white/10 rounded-lg p-1 mb-5 space-x-1">
+                {tabs.map((tab) => {
+                  const Icon = tab.icon
+                  return (
+                    <button
+                      key={tab.id}
+                      onClick={() => setActiveTab(tab.id)}
+                      className={`flex-1 flex items-center justify-center space-x-2 px-3 py-2 rounded-md text-xs font-medium transition-all ${
+                        activeTab === tab.id
+                          ? 'bg-emerald-500 text-white shadow-md'
+                          : 'text-white/70 hover:text-white hover:bg-white/10'
+                      }`}
+                    >
+                      <Icon className="w-3 h-3" />
+                      <span className="hidden sm:inline">{tab.title}</span>
+                    </button>
+                  )
+                })}
               </div>
 
-              {/* Calculator Inputs */}
-              <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-6">
-                <h4 className="text-white font-semibold mb-4">Configure Your Strategy</h4>
-                
-                {/* Prepayment Calculator */}
+              {/* Strategy Input - Inline */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 {activeTab === 'prepayment' && (
-                  <div className="space-y-4">
-                    <div>
-                      <label className="block text-white font-medium mb-3">
-                        Lump Sum Amount
-                      </label>
+                  <>
+                    <div className="md:col-span-2">
+                      <label className="block text-white/80 text-xs font-medium mb-2">Prepayment Amount</label>
                       
                       {/* Quick Amount Buttons */}
-                      <div className="grid grid-cols-2 gap-2 mb-4">
-                        {quickAmounts.map((amount) => (
+                      <div className="grid grid-cols-4 gap-2 mb-3">
+                        {[50000, 100000, 200000, 300000].map((amount) => (
                           <button
                             key={amount}
                             onClick={() => setPrepaymentAmount(amount)}
-                            className={`p-3 rounded-lg text-sm font-medium transition-all ${
+                            className={`p-2 rounded-md text-xs font-medium transition-all ${
                               prepaymentAmount === amount
-                                ? 'bg-emerald-500 text-white'
-                                : 'bg-white/10 text-white/80 hover:bg-white/20'
+                                ? 'bg-emerald-500 text-white shadow-md'
+                                : 'bg-white/10 text-white/70 hover:bg-white/20 hover:text-white'
                             }`}
                           >
-                            {formatCurrency(amount)}
+                            {amount >= 100000 ? `₹${amount/100000}L` : `₹${amount/1000}K`}
                           </button>
                         ))}
                       </div>
                       
-                      {/* Custom Amount Input */}
                       <div className="relative">
-                        <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white/70 font-semibold">₹</span>
+                        <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/70 text-sm">₹</span>
                         <input
                           type="number"
                           value={prepaymentAmount}
                           onChange={(e) => setPrepaymentAmount(Number(e.target.value) || 0)}
-                          className="w-full pl-8 pr-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-emerald-400"
-                          placeholder="Enter custom amount"
+                          className="w-full pl-6 pr-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white text-sm placeholder-white/50 focus:outline-none focus:ring-1 focus:ring-emerald-400"
+                          placeholder="Enter amount"
                         />
                       </div>
                     </div>
-                  </div>
+                    <div className="flex items-end">
+                      <div className="text-center w-full">
+                        <div className="text-xs text-white/60 mb-1">Time Saved</div>
+                        <div className="text-emerald-400 font-bold text-sm">{prepaymentResult.monthsReduced} months</div>
+                      </div>
+                    </div>
+                  </>
                 )}
 
-                {/* Step Up EMI Calculator */}
                 {activeTab === 'stepup' && (
-                  <div className="space-y-4">
-                    <div>
-                      <label className="block text-white font-medium mb-3">
-                        New Monthly EMI
-                      </label>
-                      <p className="text-white/60 text-sm mb-4">
-                        Current EMI: {formatCurrency(currentEMI)}
-                      </p>
+                  <>
+                    <div className="md:col-span-2">
+                      <label className="block text-white/80 text-xs font-medium mb-2">New Monthly EMI</label>
+                      <div className="text-white/60 text-xs mb-2">Current EMI: {formatCurrency(currentEMI)}</div>
                       
-                      <div className="relative mb-4">
-                        <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white/70 font-semibold">₹</span>
+                      <div className="relative">
+                        <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/70 text-sm">₹</span>
                         <input
                           type="number"
                           value={newEMI}
                           onChange={(e) => setNewEMI(Number(e.target.value) || 0)}
-                          className="w-full pl-8 pr-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-cyan-400"
-                          placeholder="Enter new EMI amount"
+                          className="w-full pl-6 pr-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white text-sm placeholder-white/50 focus:outline-none focus:ring-1 focus:ring-cyan-400"
+                          placeholder="Enter new EMI"
                         />
                       </div>
-                      
-                      {/* EMI Slider */}
-                      <input
-                        type="range"
-                        min={Math.ceil(currentEMI / 1000) * 1000}
-                        max={Math.min(loanAmount, currentEMI * 3)}
-                        step="1000"
-                        value={newEMI}
-                        onChange={(e) => setNewEMI(Number(e.target.value))}
-                        className="w-full h-2 bg-white/20 rounded-lg appearance-none cursor-pointer"
-                      />
-                      <div className="flex justify-between text-xs text-white/60 mt-2">
-                        <span>{formatCurrency(Math.ceil(currentEMI / 1000) * 1000)}</span>
-                        <span>{formatCurrency(Math.min(loanAmount, currentEMI * 3))}</span>
-                      </div>
-                    </div>
-                  </div>
-                )}
-
-                {/* Shorter Tenure Calculator */}
-                {activeTab === 'tenure' && (
-                  <div className="space-y-4">
-                    <div>
-                      <label className="block text-white font-medium mb-3">
-                        New Loan Tenure
-                      </label>
-                      <p className="text-white/60 text-sm mb-4">
-                        Current Tenure: {formatTenure(remainingTenure)}
-                      </p>
-                      
-                      {/* Tenure Slider */}
-                      <div className="space-y-4">
+                      <div className="mt-2">
                         <input
                           type="range"
-                          min="6"
-                          max={Math.max(6, remainingTenure - 6)}
-                          step="6"
-                          value={Math.min(newTenure, Math.max(6, remainingTenure - 6))}
-                          onChange={(e) => setNewTenure(Number(e.target.value))}
-                          className="w-full h-2 bg-white/20 rounded-lg appearance-none cursor-pointer"
+                          min={Math.ceil(currentEMI / 1000) * 1000}
+                          max={Math.min(loanAmount, currentEMI * 3)}
+                          step="1000"
+                          value={newEMI}
+                          onChange={(e) => setNewEMI(Number(e.target.value))}
+                          className="w-full h-1 bg-white/20 rounded-lg appearance-none cursor-pointer"
                         />
-                        <div className="flex justify-between text-xs text-white/60">
-                          <span>6 months</span>
-                          <span className="text-white font-semibold">{formatTenure(newTenure)}</span>
-                          <span>{formatTenure(Math.max(6, remainingTenure - 6))}</span>
-                        </div>
                       </div>
                     </div>
-                  </div>
+                    <div className="flex items-end">
+                      <div className="text-center w-full">
+                        <div className="text-xs text-white/60 mb-1">Time Saved</div>
+                        <div className="text-cyan-400 font-bold text-sm">{stepUpResult.monthsReduced} months</div>
+                      </div>
+                    </div>
+                  </>
+                )}
+
+                {activeTab === 'tenure' && (
+                  <>
+                    <div className="md:col-span-2">
+                      <label className="block text-white/80 text-xs font-medium mb-2">New Loan Tenure</label>
+                      <div className="text-white/60 text-xs mb-2">Current: {formatTenure(remainingTenure)}</div>
+                      <input
+                        type="range"
+                        min="6"
+                        max={Math.max(6, remainingTenure - 6)}
+                        step="6"
+                        value={Math.min(newTenure, Math.max(6, remainingTenure - 6))}
+                        onChange={(e) => setNewTenure(Number(e.target.value))}
+                        className="w-full h-1 bg-white/20 rounded-lg appearance-none cursor-pointer"
+                      />
+                      <div className="flex justify-between text-xs text-white/60 mt-1">
+                        <span>6m</span>
+                        <span className="text-white font-semibold">{formatTenure(newTenure)}</span>
+                        <span>{formatTenure(Math.max(6, remainingTenure - 6))}</span>
+                      </div>
+                    </div>
+                    <div className="flex items-end">
+                      <div className="text-center w-full">
+                        <div className="text-xs text-white/60 mb-1">New EMI</div>
+                        <div className="text-purple-400 font-bold text-sm">{formatCurrency(shorterTenureResult.newEMI)}</div>
+                      </div>
+                    </div>
+                  </>
                 )}
               </div>
             </div>
 
-            {/* Right Panel - Comparison View */}
-            <div className="lg:col-span-3">
-              <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-6">
-                <h3 className="text-white font-semibold mb-6 flex items-center">
-                  <Calculator className="w-5 h-5 mr-2 text-emerald-400" />
-                  Loan Comparison: Original vs New
-                </h3>
-
-                {/* Comparison Cards */}
-                <div className="grid md:grid-cols-2 gap-6">
-                  
-                  {/* Original Loan Card */}
-                  <div className="bg-white/5 rounded-xl border border-white/10 p-5">
-                    <h4 className="text-white font-semibold mb-4 flex items-center">
-                      <div className="w-3 h-3 bg-red-400 rounded-full mr-2"></div>
-                      Current Loan
-                    </h4>
-                    <div className="space-y-3 text-sm">
-                      <div className="flex justify-between">
-                        <span className="text-white/60">Monthly EMI</span>
-                        <span className="text-white font-semibold">{formatCurrency(comparisonData.original.emi)}</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-white/60">Tenure</span>
-                        <span className="text-white font-semibold">{formatTenure(comparisonData.original.tenure)}</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-white/60">Total Interest</span>
-                        <span className="text-white font-semibold">{formatCurrency(comparisonData.original.totalInterest)}</span>
-                      </div>
-                      <div className="flex justify-between border-t border-white/20 pt-3">
-                        <span className="text-white/60">Total Payment</span>
-                        <span className="text-white font-bold">{formatCurrency(comparisonData.original.totalPayment)}</span>
-                      </div>
-                    </div>
+            {/* Comparison Cards */}
+            <div className="grid md:grid-cols-2 gap-6">
+              
+              {/* Current Loan Card */}
+              <div className="bg-white/5 rounded-xl border border-white/10 p-5">
+                <h4 className="text-white font-semibold mb-4 flex items-center">
+                  <div className="w-3 h-3 bg-red-400 rounded-full mr-2"></div>
+                  Current Loan
+                </h4>
+                <div className="space-y-3 text-sm">
+                  <div className="flex justify-between">
+                    <span className="text-white/60">Monthly EMI</span>
+                    <span className="text-white font-semibold">{formatCurrency(comparisonData.original.emi)}</span>
                   </div>
-
-                  {/* New Loan Card */}
-                  <div className="bg-gradient-to-br from-emerald-500/10 to-cyan-500/10 rounded-xl border border-emerald-400/30 p-5">
-                    <h4 className="text-white font-semibold mb-4 flex items-center">
-                      <div className="w-3 h-3 bg-emerald-400 rounded-full mr-2"></div>
-                      Optimized Loan
-                    </h4>
-                    <div className="space-y-3 text-sm">
-                      <div className="flex justify-between">
-                        <span className="text-white/60">Monthly EMI</span>
-                        <span className="text-emerald-300 font-semibold">{formatCurrency(comparisonData.new.emi)}</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-white/60">Tenure</span>
-                        <span className="text-emerald-300 font-semibold">{formatTenure(comparisonData.new.tenure)}</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-white/60">Total Interest</span>
-                        <span className="text-emerald-300 font-semibold">{formatCurrency(comparisonData.new.totalInterest)}</span>
-                      </div>
-                      <div className="flex justify-between border-t border-emerald-400/30 pt-3">
-                        <span className="text-white/60">Total Payment</span>
-                        <span className="text-emerald-300 font-bold">{formatCurrency(comparisonData.new.totalPayment)}</span>
-                      </div>
-                    </div>
+                  <div className="flex justify-between">
+                    <span className="text-white/60">Tenure</span>
+                    <span className="text-white font-semibold">{formatTenure(comparisonData.original.tenure)}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-white/60">Total Interest</span>
+                    <span className="text-white font-semibold">{formatCurrency(comparisonData.original.totalInterest)}</span>
+                  </div>
+                  <div className="flex justify-between border-t border-white/20 pt-3">
+                    <span className="text-white/60">Total Payment</span>
+                    <span className="text-white font-bold">{formatCurrency(comparisonData.original.totalPayment)}</span>
                   </div>
                 </div>
+              </div>
 
-                {/* Savings Summary */}
-                <div className="mt-6 bg-gradient-to-r from-green-500/20 to-emerald-500/20 rounded-xl border border-green-400/30 p-5">
-                  <h4 className="text-white font-semibold mb-4 flex items-center">
-                    <CheckCircle className="w-5 h-5 mr-2 text-green-400" />
-                    Your Savings
-                  </h4>
-                  <div className="grid md:grid-cols-2 gap-4 text-sm">
-                    <div className="flex justify-between">
-                      <span className="text-white/60">Interest Saved</span>
-                      <span className="text-green-400 font-bold text-base">{formatCurrency(comparisonData.new.savings)}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-white/60">Time Saved</span>
-                      <span className="text-green-400 font-bold text-base">{formatTenure(comparisonData.new.monthsReduced)}</span>
-                    </div>
+              {/* Optimized Loan Card */}
+              <div className="bg-gradient-to-br from-emerald-500/10 to-cyan-500/10 rounded-xl border border-emerald-400/30 p-5">
+                <h4 className="text-white font-semibold mb-4 flex items-center">
+                  <div className="w-3 h-3 bg-emerald-400 rounded-full mr-2"></div>
+                  Optimized Loan
+                </h4>
+                <div className="space-y-3 text-sm">
+                  <div className="flex justify-between">
+                    <span className="text-white/60">Monthly EMI</span>
+                    <span className="text-emerald-300 font-semibold">{formatCurrency(comparisonData.new.emi)}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-white/60">Tenure</span>
+                    <span className="text-emerald-300 font-semibold">{formatTenure(comparisonData.new.tenure)}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-white/60">Total Interest</span>
+                    <span className="text-emerald-300 font-semibold">{formatCurrency(comparisonData.new.totalInterest)}</span>
+                  </div>
+                  <div className="flex justify-between border-t border-emerald-400/30 pt-3">
+                    <span className="text-white/60">Total Payment</span>
+                    <span className="text-emerald-300 font-bold">{formatCurrency(comparisonData.new.totalPayment)}</span>
                   </div>
                 </div>
+              </div>
+            </div>
 
+            {/* Savings Summary */}
+            <div className="mt-6 bg-gradient-to-r from-green-500/20 to-emerald-500/20 rounded-xl border border-green-400/30 p-5">
+              <h4 className="text-white font-semibold mb-4 flex items-center">
+                <CheckCircle className="w-5 h-5 mr-2 text-green-400" />
+                Your Savings
+              </h4>
+              <div className="grid md:grid-cols-2 gap-4 text-sm">
+                <div className="flex justify-between">
+                  <span className="text-white/60">Interest Saved</span>
+                  <span className="text-green-400 font-bold text-base">{formatCurrency(comparisonData.new.savings)}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-white/60">Time Saved</span>
+                  <span className="text-green-400 font-bold text-base">{formatTenure(comparisonData.new.monthsReduced)}</span>
+                </div>
               </div>
             </div>
           </div>
+
         </div>
       </div>
     </div>
