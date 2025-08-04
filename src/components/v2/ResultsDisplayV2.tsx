@@ -149,19 +149,19 @@ export default function ResultsDisplayV2({ carData, onBack, onRestart }: Results
             </div>
           </motion.div>
 
-          {/* Quick Stats Cards */}
-          <div className="lg:col-span-2 grid grid-cols-2 gap-4">
+          {/* Quick Stats Cards - Reduced spacing */}
+          <div className="lg:col-span-2 grid grid-cols-2 gap-3">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
-              className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-6 shadow-xl"
+              className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-4 shadow-xl"
             >
-              <div className="flex items-center space-x-3 mb-3">
-                <TrendingUp className="w-6 h-6 text-blue-400" />
-                <h4 className="font-semibold text-white">Total Interest</h4>
+              <div className="flex items-center space-x-2 mb-2">
+                <TrendingUp className="w-5 h-5 text-blue-400" />
+                <h4 className="font-semibold text-white text-sm">Total Interest</h4>
               </div>
-              <p className="text-2xl font-bold text-blue-300">
+              <p className="text-xl font-bold text-blue-300">
                 ₹{totalInterest.toLocaleString('en-IN', { maximumFractionDigits: 0 })}
               </p>
             </motion.div>
@@ -170,13 +170,13 @@ export default function ResultsDisplayV2({ carData, onBack, onRestart }: Results
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 }}
-              className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-6 shadow-xl"
+              className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-4 shadow-xl"
             >
-              <div className="flex items-center space-x-3 mb-3">
-                <Calendar className="w-6 h-6 text-purple-400" />
-                <h4 className="font-semibold text-white">Total Payment</h4>
+              <div className="flex items-center space-x-2 mb-2">
+                <Calendar className="w-5 h-5 text-purple-400" />
+                <h4 className="font-semibold text-white text-sm">Total Payment</h4>
               </div>
-              <p className="text-2xl font-bold text-purple-300">
+              <p className="text-xl font-bold text-purple-300">
                 ₹{totalPayment.toLocaleString('en-IN', { maximumFractionDigits: 0 })}
               </p>
             </motion.div>
@@ -185,13 +185,13 @@ export default function ResultsDisplayV2({ carData, onBack, onRestart }: Results
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4 }}
-              className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-6 shadow-xl"
+              className="bg-gradient-to-br from-green-600/30 to-green-500/20 backdrop-blur-md border-2 border-green-400/40 rounded-2xl p-5 shadow-xl"
             >
-              <div className="flex items-center space-x-3 mb-3">
-                <PieChart className="w-6 h-6 text-green-400" />
-                <h4 className="font-semibold text-white">Loan Amount</h4>
+              <div className="flex items-center space-x-2 mb-2">
+                <PieChart className="w-5 h-5 text-green-200" />
+                <h4 className="font-semibold text-green-100 text-sm">Loan Amount</h4>
               </div>
-              <p className="text-2xl font-bold text-green-300">
+              <p className="text-xl font-bold text-green-100">
                 ₹{loanAmount.toLocaleString('en-IN', { maximumFractionDigits: 0 })}
               </p>
             </motion.div>
@@ -200,16 +200,16 @@ export default function ResultsDisplayV2({ carData, onBack, onRestart }: Results
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.5 }}
-              className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-6 shadow-xl"
+              className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-4 shadow-xl"
             >
-              <div className="flex items-center space-x-3 mb-3">
-                <span className="text-orange-400 font-bold text-2xl">₹</span>
-                <h4 className="font-semibold text-white">Down Payment</h4>
+              <div className="flex items-center space-x-2 mb-2">
+                <span className="text-orange-400 font-bold text-xl">₹</span>
+                <h4 className="font-semibold text-white text-sm">Down Payment</h4>
               </div>
-              <p className="text-2xl font-bold text-orange-300">
+              <p className="text-xl font-bold text-orange-300">
                 ₹{carData.downPayment.toLocaleString('en-IN')}
               </p>
-              <p className="text-orange-300/70 text-sm">
+              <p className="text-orange-300/70 text-xs">
                 {downPaymentPercentage.toFixed(1)}% of car price
               </p>
             </motion.div>

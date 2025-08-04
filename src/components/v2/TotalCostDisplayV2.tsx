@@ -335,15 +335,15 @@ export default function TotalCostDisplayV2({ carData, updateCarData }: TotalCost
             {monthlyFuelCost > 0 ? (
               <>
                 <div className="flex justify-between items-center">
-                  <span className="text-base text-gray-200 font-medium">Fuel Cost</span>
-                  <span className="font-semibold text-gray-100 text-lg">{formatCurrency(monthlyFuelCost)}</span>
+                  <span className="text-sm text-gray-200 font-medium">Fuel Cost</span>
+                  <span className="font-semibold text-gray-100 text-base">{formatCurrency(monthlyFuelCost)}</span>
                 </div>
                 
                 {/* Toggle for including fuel in budget */}
                 <div className="flex items-center justify-between gap-2">
-                  <span className="text-base text-gray-200 font-medium">Include in budget?</span>
+                  <span className="text-sm text-gray-200 font-medium">Include in budget?</span>
                   <div className="flex items-center space-x-2">
-                    <span className={`text-base font-medium ${carData.includeFuelInAffordability ? 'text-gray-200' : 'text-gray-400'}`}>
+                    <span className={`text-sm font-medium ${carData.includeFuelInAffordability ? 'text-gray-200' : 'text-gray-400'}`}>
                       {carData.includeFuelInAffordability ? 'ON' : 'OFF'}
                     </span>
                     <button
@@ -368,7 +368,7 @@ export default function TotalCostDisplayV2({ carData, updateCarData }: TotalCost
                   <div className="mt-3 pt-3 border-t border-slate-700/40">
                     <div className="flex justify-between items-center">
                       <span className="text-sm text-gray-300">Processing Fee + Insurance + Others</span>
-                      <span className="font-semibold text-gray-100 text-base">{formatCurrency(carData.insuranceAndMaintenance || 0)}</span>
+                      <span className="font-semibold text-gray-100 text-sm">{formatCurrency(carData.insuranceAndMaintenance || 0)}</span>
                     </div>
                     <p className="text-xs text-gray-400 mt-1">*Not included in budget calculations</p>
                   </div>
@@ -401,8 +401,8 @@ export default function TotalCostDisplayV2({ carData, updateCarData }: TotalCost
             {carData.monthlyIncome > 0 && monthlyFuelCost > 0 && (
               <div className="mt-3 pt-3 border-t border-slate-700/40">
                 <div className="flex justify-between items-center">
-                  <span className="text-base text-gray-300">% of Income</span>
-                  <span className={`text-base font-bold ${expensePercentage <= 10 ? 'text-emerald-300' : 'text-red-300'}`}>
+                  <span className="text-sm text-gray-300">% of Income</span>
+                  <span className={`text-sm font-bold ${expensePercentage <= 10 ? 'text-emerald-300' : 'text-red-300'}`}>
                     {formatPercentage(expensePercentage)}%
                   </span>
                 </div>
@@ -411,22 +411,22 @@ export default function TotalCostDisplayV2({ carData, updateCarData }: TotalCost
           </div>
         </div>
 
-        {/* Compact Loan Details Grid */}
-        <div className="grid grid-cols-2 gap-3 text-sm">
-          {/* Period with toggle */}
-          <div className="flex flex-col items-center bg-slate-800/60 border border-slate-700/30 rounded-lg p-3">
-            <div className="flex items-center mb-1">
+        {/* Compact Loan Details Grid - Reduced spacing */}
+        <div className="grid grid-cols-3 gap-2 text-sm">
+          {/* Period with toggle - Enhanced visibility */}
+          <div className="flex flex-col items-center bg-slate-800/60 border border-slate-700/30 rounded-lg p-2">
+            <div className="flex items-center mb-0.5">
               <Clock size={12} className="mr-1 text-cyan-300"/>
-              <span className="text-gray-200 font-bold text-sm">Period</span>
+              <span className="text-gray-200 font-bold text-xs">Period</span>
             </div>
             <div className="flex items-center space-x-1">
-              <span className="font-bold text-gray-100 text-base">{formatDuration()}</span>
+              <span className="font-bold text-gray-100 text-sm">{formatDuration()}</span>
               <div className="flex bg-slate-700/50 rounded-full p-0.5">
                 <button
                   onClick={() => setDurationToggle('years')}
-                  className={`text-sm px-1 py-0.5 rounded-full transition-all duration-200 font-bold ${
+                  className={`text-xs px-1.5 py-0.5 rounded-full transition-all duration-200 font-bold ${
                     durationToggle === 'years' 
-                      ? 'bg-gray-100 text-slate-700 shadow-sm' 
+                      ? 'bg-cyan-400 text-slate-800 shadow-sm' 
                       : 'text-gray-300 hover:bg-slate-600/50'
                   }`}
                 >
@@ -434,9 +434,9 @@ export default function TotalCostDisplayV2({ carData, updateCarData }: TotalCost
                 </button>
                 <button
                   onClick={() => setDurationToggle('months')}
-                  className={`text-sm px-1 py-0.5 rounded-full transition-all duration-200 font-bold ${
+                  className={`text-xs px-1.5 py-0.5 rounded-full transition-all duration-200 font-bold ${
                     durationToggle === 'months' 
-                      ? 'bg-gray-100 text-slate-700 shadow-sm' 
+                      ? 'bg-cyan-400 text-slate-800 shadow-sm' 
                       : 'text-gray-300 hover:bg-slate-600/50'
                   }`}
                 >
@@ -447,30 +447,33 @@ export default function TotalCostDisplayV2({ carData, updateCarData }: TotalCost
           </div>
 
           {/* Interest Rate */}
-          <div className="flex flex-col items-center bg-slate-800/60 border border-slate-700/30 rounded-lg p-3">
-            <div className="flex items-center mb-1">
+          <div className="flex flex-col items-center bg-slate-800/60 border border-slate-700/30 rounded-lg p-2">
+            <div className="flex items-center mb-0.5">
               <Percent size={12} className="mr-1 text-red-300"/>
-              <span className="text-gray-200 font-bold text-sm">Interest</span>
+              <span className="text-gray-200 font-bold text-xs">Interest</span>
             </div>
-            <span className="font-bold text-gray-100 text-base">{carData.interestRate}%</span>
+            <span className="font-bold text-gray-100 text-sm">{carData.interestRate}%</span>
           </div>
 
-          {/* Interest Cost */}
-          <div className="flex flex-col items-center bg-slate-800/60 border border-slate-700/30 rounded-lg p-3">
+          {/* Total Payment - Made bigger and more visible as 3rd column */}
+          <div className="flex flex-col items-center bg-gradient-to-br from-purple-600/40 to-purple-500/30 border-2 border-purple-400/50 rounded-lg p-3 shadow-lg">
             <div className="flex items-center mb-1">
+              <span className="text-purple-200 mr-1 font-bold text-sm">₹</span>
+              <span className="text-purple-100 font-bold text-sm">Total Payment</span>
+            </div>
+            <span className="font-bold text-purple-100 text-lg">{formatCurrency(totalPayment)}</span>
+            <span className="text-purple-200 text-xs mt-1">Principal + Interest</span>
+          </div>
+        </div>
+
+        {/* Second row for Interest Cost - Reduced spacing */}
+        <div className="grid grid-cols-1 gap-2 text-sm mt-2">
+          <div className="flex flex-col items-center bg-slate-800/60 border border-slate-700/30 rounded-lg p-2">
+            <div className="flex items-center mb-0.5">
               <TrendingUp size={12} className="mr-1 text-yellow-300"/>
-              <span className="text-gray-200 font-bold text-sm">Interest Cost</span>
+              <span className="text-gray-200 font-bold text-xs">Interest Cost</span>
             </div>
-            <span className="font-bold text-gray-100 text-base">{formatCurrency(totalInterest)}</span>
-          </div>
-
-          {/* Total Payment */}
-          <div className="flex flex-col items-center bg-slate-800/60 border border-slate-700/30 rounded-lg p-3">
-            <div className="flex items-center mb-1">
-              <span className="text-purple-300 mr-1 font-bold text-xs">₹</span>
-              <span className="text-gray-200 font-bold text-sm">Total Payment</span>
-            </div>
-            <span className="font-bold text-gray-100 text-base">{formatCurrency(totalPayment)}</span>
+            <span className="font-bold text-gray-100 text-sm">{formatCurrency(totalInterest)}</span>
           </div>
         </div>
 
