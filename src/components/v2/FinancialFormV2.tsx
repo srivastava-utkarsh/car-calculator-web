@@ -191,12 +191,6 @@ export default function FinancialFormV2({ carData, updateCarData, monthlyIncomeI
             </div>
           </div>
           
-          {/* Validation message */}
-          <div className="bg-blue-500/10 border border-blue-400/20 rounded-lg p-2">
-            <p className="text-blue-300 text-xs">
-              💡 Interest rate must be between 5% and 15%. Values outside this range will be automatically adjusted.
-            </p>
-          </div>
         </div>
       </div>
 
@@ -232,14 +226,10 @@ export default function FinancialFormV2({ carData, updateCarData, monthlyIncomeI
                 max={carData.carPrice}
                 value={carData.insuranceAndMaintenance || ''}
                 onChange={(e) => updateCarData({ insuranceAndMaintenance: parseFloat(e.target.value) || 0 })}
-                placeholder="Enter monthly processing fee, insurance & other costs"
+placeholder=""
                 className="w-full pl-8 pr-4 py-3 bg-white/10 backdrop-blur-md border border-white/20 rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all"
               />
             </div>
-            <p className="text-xs text-white/60 flex items-center">
-              <span className="w-1 h-1 bg-purple-400 rounded-full mr-2"></span>
-              Include processing fees, insurance or any other costs
-            </p>
           </div>
 
           {/* Calculate Monthly Running Cost Section */}
@@ -273,6 +263,11 @@ export default function FinancialFormV2({ carData, updateCarData, monthlyIncomeI
                     }
                     
                     updateCarData({ kmPerMonth: km })
+                    
+                    // Auto-enable "Include in budget?" toggle when both fuel inputs are filled
+                    if (km > 0 && carData.fuelCostPerLiter > 0 && !carData.includeFuelInAffordability) {
+                      updateCarData({ includeFuelInAffordability: true })
+                    }
                   }}
                   onKeyPress={(e) => {
                     if (!/[0-9.]/.test(e.key) && e.key !== 'Backspace' && e.key !== 'Delete') {
@@ -307,6 +302,11 @@ export default function FinancialFormV2({ carData, updateCarData, monthlyIncomeI
                       }
                       
                       updateCarData({ fuelCostPerLiter: fuelCost })
+                      
+                      // Auto-enable "Include in budget?" toggle when both fuel inputs are filled
+                      if (fuelCost > 0 && carData.kmPerMonth > 0 && !carData.includeFuelInAffordability) {
+                        updateCarData({ includeFuelInAffordability: true })
+                      }
                     }}
                     onKeyPress={(e) => {
                       if (!/[0-9.]/.test(e.key) && e.key !== 'Backspace' && e.key !== 'Delete') {

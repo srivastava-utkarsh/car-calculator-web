@@ -1,3 +1,2 @@
-1. remove text "💡 Interest rate must be between 5% and 15%. Values outside this range will be automatically adjusted."
-2. "Calculate Monthly Running Cost" panel is not highlighed with florecent when click on "add fuel cost". Fix It
-3. 
+1. modify to some UX friendly content for "Consider adjusting terms for better financial health"
+2. modify to some UX friendly content for "This purchase aligns with the 20/4/10 rule - smart financing!"

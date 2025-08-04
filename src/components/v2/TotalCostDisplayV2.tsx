@@ -13,6 +13,9 @@ interface TotalCostDisplayV2Props {
 export default function TotalCostDisplayV2({ carData, updateCarData }: TotalCostDisplayV2Props) {
   const [durationToggle, setDurationToggle] = useState<'months' | 'years'>('months')
   
+  // Auto-turn on "Include in budget?" toggle when fuel cost is calculated
+  const monthlyFuelCost = carData.kmPerMonth && carData.fuelCostPerLiter ? (carData.kmPerMonth / 15) * carData.fuelCostPerLiter : 0
+  
   const calculateEMI = (principal: number, rate: number, years: number) => {
     if (principal <= 0 || rate <= 0 || years <= 0) return 0
     const monthlyRate = rate / (12 * 100)
@@ -26,7 +29,6 @@ export default function TotalCostDisplayV2({ carData, updateCarData }: TotalCost
   const emi = carData.tenure > 0 ? calculateEMI(loanAmount, carData.interestRate, carData.tenure) : 0
   const totalInterest = carData.tenure > 0 && emi > 0 ? (emi * carData.tenure * 12) - loanAmount : 0
   const totalPayment = loanAmount + totalInterest
-  const monthlyFuelCost = carData.kmPerMonth && carData.fuelCostPerLiter ? (carData.kmPerMonth / 15) * carData.fuelCostPerLiter : 0
   
   // Monthly car expenses calculation for 20/4/10 rule
   // Including EMI and optionally fuel (insurance moved to one-time costs)
@@ -284,8 +286,8 @@ export default function TotalCostDisplayV2({ carData, updateCarData }: TotalCost
             </div>
             <p className="font-medium text-xs leading-relaxed text-white/80">
               {isAffordable 
-                ? 'This purchase aligns with the 20/4/10 rule - smart financing!' 
-                : 'Consider adjusting terms for better financial health'
+                ? 'Perfect! Your car purchase fits comfortably within your budget.' 
+                : 'Try adjusting your down payment or loan term for a better fit.'
               }
             </p>
           </motion.div>
@@ -333,7 +335,7 @@ export default function TotalCostDisplayV2({ carData, updateCarData }: TotalCost
             {monthlyFuelCost > 0 ? (
               <>
                 <div className="flex justify-between items-center">
-                  <span className="text-base text-gray-200 font-medium">Fuel Cost (Separate)</span>
+                  <span className="text-base text-gray-200 font-medium">Fuel Cost</span>
                   <span className="font-semibold text-gray-100 text-lg">{formatCurrency(monthlyFuelCost)}</span>
                 </div>
                 
@@ -361,12 +363,16 @@ export default function TotalCostDisplayV2({ carData, updateCarData }: TotalCost
                   </div>
                 </div>
                 
-                <p className="text-base text-gray-300 leading-relaxed">
-                  {carData.includeFuelInAffordability 
-                    ? "Fuel cost is included in your budget calculation" 
-                    : "Fuel cost is tracked separately from your budget"
-                  }
-                </p>
+                {/* Show processing fee below Include in budget? when filled */}
+                {(carData.insuranceAndMaintenance || 0) > 0 && (
+                  <div className="mt-3 pt-3 border-t border-slate-700/40">
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-gray-300">Processing Fee + Insurance + Others</span>
+                      <span className="font-semibold text-gray-100 text-base">{formatCurrency(carData.insuranceAndMaintenance || 0)}</span>
+                    </div>
+                    <p className="text-xs text-gray-400 mt-1">*Not included in budget calculations</p>
+                  </div>
+                )}
                 
               </>
             ) : (
@@ -377,11 +383,11 @@ export default function TotalCostDisplayV2({ carData, updateCarData }: TotalCost
                     const section = document.querySelector('[data-section="monthly-running-cost"]')
                     if (section) {
                       section.scrollIntoView({ behavior: 'smooth', block: 'center' })
-                      // Add temporary highlight
-                      section.classList.add('border-lime-400/40', 'shadow-lg', 'shadow-lime-400/20', 'bg-lime-400/10')
+                      // Add temporary fluorescent highlight
+                      section.classList.add('!border-lime-400/80', '!shadow-lg', '!shadow-lime-400/40', '!bg-lime-400/20', 'transition-all', 'duration-300')
                       setTimeout(() => {
-                        section.classList.remove('border-lime-400/40', 'shadow-lg', 'shadow-lime-400/20', 'bg-lime-400/10')
-                      }, 3000)
+                        section.classList.remove('!border-lime-400/80', '!shadow-lg', '!shadow-lime-400/40', '!bg-lime-400/20', 'transition-all', 'duration-300')
+                      }, 4000)
                     }
                   }}
                   className="px-4 py-2 bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-300 hover:text-cyan-200 rounded-lg cursor-pointer transition-colors duration-200 mb-2 border border-cyan-500/30"
@@ -483,21 +489,6 @@ export default function TotalCostDisplayV2({ carData, updateCarData }: TotalCost
         )}
       </motion.div>
 
-      {/* One-time Costs */}
-      {(carData.insuranceAndMaintenance || 0) > 0 && (
-        <div className="mb-4">
-          <h5 className="font-semibold text-white mb-2 text-sm">One-time Costs</h5>
-          <div className="bg-white/5 backdrop-blur-xl border border-white/10 p-4 rounded-2xl shadow-xl hover:shadow-2xl hover:bg-white/10 transition-all duration-300">
-            <div className="flex justify-between items-center">
-              <span className="text-xs text-white/70">Insurance & Other Costs</span>
-              <span className="font-semibold text-white text-sm">{formatCurrency(carData.insuranceAndMaintenance || 0)}</span>
-            </div>
-            <p className="text-xs text-white/50 mt-2 opacity-80">
-              *Processing fees, insurance premiums and other upfront costs
-            </p>
-          </div>
-        </div>
-      )}
 
 
       {/* Additional Info - Compact */}
