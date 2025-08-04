@@ -1,13 +1,18 @@
 'use client'
 
+import React, { useRef, useEffect } from 'react'
 import { CarData } from '@/app/page'
 
 interface FinancialFormV2Props {
   carData: CarData
   updateCarData: (updates: Partial<CarData>) => void
+  monthlyIncomeInputRef?: React.RefObject<HTMLInputElement | null>
 }
 
-export default function FinancialFormV2({ carData, updateCarData }: FinancialFormV2Props) {
+export default function FinancialFormV2({ carData, updateCarData, monthlyIncomeInputRef }: FinancialFormV2Props) {
+  
+  const kmInputRef = useRef<HTMLInputElement>(null)
+  const fuelCostInputRef = useRef<HTMLInputElement>(null)
   
   const calculateEMI = (principal: number, rate: number, years: number) => {
     if (principal <= 0 || rate <= 0 || years <= 0) return 0
@@ -17,9 +22,18 @@ export default function FinancialFormV2({ carData, updateCarData }: FinancialFor
            (Math.pow(1 + monthlyRate, months) - 1)
   }
 
-  const loanAmount = carData.carPrice - carData.downPayment
-  const emi = calculateEMI(loanAmount, carData.interestRate, carData.tenure)
-  const totalPayment = emi * carData.tenure * 12
+  // Auto-focus logic based on the requirements
+  useEffect(() => {
+    const emi = calculateEMI(carData.carPrice - carData.downPayment, carData.interestRate, carData.tenure)
+    
+    // If fuel inputs are filled but no EMI, focus on monthly income
+    if (carData.kmPerMonth > 0 && carData.fuelCostPerLiter > 0 && emi === 0 && carData.monthlyIncome === 0 && monthlyIncomeInputRef) {
+      setTimeout(() => {
+        monthlyIncomeInputRef.current?.focus()
+      }, 100)
+    }
+  }, [carData, monthlyIncomeInputRef])
+
   
   const maxTenure = 7
   const minTenure = 1
@@ -117,10 +131,31 @@ export default function FinancialFormV2({ carData, updateCarData }: FinancialFor
           <input
             type="number"
             step="0.1"
+            min="5"
+            max="15"
             value={carData.interestRate}
-            onChange={(e) => updateCarData({ interestRate: parseFloat(e.target.value) || 8 })}
+            onChange={(e) => {
+              const value = parseFloat(e.target.value);
+              if (isNaN(value)) {
+                updateCarData({ interestRate: 8 });
+              } else if (value < 5) {
+                updateCarData({ interestRate: 5 });
+              } else if (value > 15) {
+                updateCarData({ interestRate: 15 });
+              } else {
+                updateCarData({ interestRate: value });
+              }
+            }}
+            onBlur={(e) => {
+              // Additional validation on blur to handle edge cases
+              const value = parseFloat(e.target.value);
+              if (isNaN(value) || value < 5 || value > 15) {
+                const clampedValue = isNaN(value) ? 8 : Math.max(5, Math.min(15, value));
+                updateCarData({ interestRate: clampedValue });
+              }
+            }}
             className="w-full px-4 py-3 bg-white/10 backdrop-blur-md border border-white/20 rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-red-400 focus:border-transparent transition-all"
-            placeholder="Custom interest rate"
+            placeholder="Interest rate (5-15%)"
           />
           
           {/* Interest Rate Slider */}
@@ -154,6 +189,13 @@ export default function FinancialFormV2({ carData, updateCarData }: FinancialFor
               <span>10%</span>
               <span>15%</span>
             </div>
+          </div>
+          
+          {/* Validation message */}
+          <div className="bg-blue-500/10 border border-blue-400/20 rounded-lg p-2">
+            <p className="text-blue-300 text-xs">
+              💡 Interest rate must be between 5% and 15%. Values outside this range will be automatically adjusted.
+            </p>
           </div>
         </div>
       </div>
@@ -200,10 +242,13 @@ export default function FinancialFormV2({ carData, updateCarData }: FinancialFor
             </p>
           </div>
 
-          {/* Monthly Running Cost Section */}
-          <div className="bg-white/5 rounded-lg p-4 border border-white/10">
+          {/* Calculate Monthly Running Cost Section */}
+          <div 
+            data-section="monthly-running-cost"
+            className="bg-white/5 rounded-lg p-4 border border-white/10 transition-all duration-300"
+          >
             <h4 className="text-sm font-semibold text-white mb-3">
-              Monthly Running Cost
+              Calculate Monthly Running Cost
             </h4>
             
             <div className="space-y-4">
@@ -211,6 +256,7 @@ export default function FinancialFormV2({ carData, updateCarData }: FinancialFor
               <div className="space-y-2">
                 <label className="text-sm text-white/80">Estimated KM Driven Per Month</label>
                 <input
+                  ref={kmInputRef}
                   type="number"
                   min="1"
                   max="20000"
@@ -233,7 +279,7 @@ export default function FinancialFormV2({ carData, updateCarData }: FinancialFor
                       e.preventDefault()
                     }
                   }}
-                  placeholder="Enter km per month"
+                  placeholder="Click here to fill km per month"
                   className="w-full px-4 py-3 bg-white/10 backdrop-blur-md border border-white/20 rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-transparent transition-all"
                 />
               </div>
@@ -244,6 +290,7 @@ export default function FinancialFormV2({ carData, updateCarData }: FinancialFor
                 <div className="relative">
                   <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white/70 font-medium">₹</span>
                   <input
+                    ref={fuelCostInputRef}
                     type="number"
                     min="1"
                     max="300"

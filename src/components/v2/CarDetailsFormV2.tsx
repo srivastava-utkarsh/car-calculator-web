@@ -1,13 +1,29 @@
 'use client'
 
+import React from 'react'
 import { CarData } from '@/app/page'
 
 interface CarDetailsFormV2Props {
   carData: CarData
   updateCarData: (updates: Partial<CarData>) => void
+  monthlyIncomeInputRef?: React.RefObject<HTMLInputElement | null>
 }
 
-export default function CarDetailsFormV2({ carData, updateCarData }: CarDetailsFormV2Props) {
+export default function CarDetailsFormV2({ carData, updateCarData, monthlyIncomeInputRef }: CarDetailsFormV2Props) {
+
+  // Removed auto-fill of car price - let user choose explicitly
+  
+  // Check if all required fields except Monthly Income are filled
+  const allOtherFieldsFilled = carData.carPrice > 0 && carData.downPayment >= 0 && carData.tenure > 0
+  const monthlyIncomeEmpty = carData.monthlyIncome === 0
+  const shouldHighlightMonthlyIncome = allOtherFieldsFilled && monthlyIncomeEmpty
+  
+  // Auto-focus Monthly Income when all other required fields are filled
+  React.useEffect(() => {
+    if (shouldHighlightMonthlyIncome && monthlyIncomeInputRef?.current) {
+      monthlyIncomeInputRef.current.focus()
+    }
+  }, [shouldHighlightMonthlyIncome, monthlyIncomeInputRef])
 
   // Preset car price options
   const carPresets = [
@@ -176,11 +192,21 @@ export default function CarDetailsFormV2({ carData, updateCarData }: CarDetailsF
       </div>
 
       {/* Monthly Income - Required for calculations */}
-      <div className="space-y-3">
+      <div className={`space-y-3 p-3 rounded-lg transition-all duration-300 ${
+        shouldHighlightMonthlyIncome 
+          ? 'border-lime-400/40 shadow-lg shadow-lime-400/20 bg-lime-400/10 border' 
+          : ''
+      }`}>
         <label className="block text-base min-[375px]:text-lg font-medium text-white" style={{ lineHeight: '1.5' }}>
           3. Monthly Income
-          <span className="text-xs text-emerald-300 bg-emerald-500/20 px-2 py-0.5 rounded-full ml-2">for affordability check</span>
+          <span className="text-xs text-emerald-300 bg-emerald-500/20 px-2 py-0.5 rounded-full ml-2">Affordability Check</span>
         </label>
+        {shouldHighlightMonthlyIncome && (
+          <div className="text-red-300 text-sm font-medium flex items-center">
+            <span className="w-1 h-1 bg-red-400 rounded-full mr-2"></span>
+            This field is mandatory to proceed
+          </div>
+        )}
         <div className="relative">
           <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white/70 font-semibold">₹</span>
           <input
@@ -189,6 +215,7 @@ export default function CarDetailsFormV2({ carData, updateCarData }: CarDetailsF
             max="100000000"
             required
             value={carData.monthlyIncome || ''}
+            ref={monthlyIncomeInputRef}
             onChange={(e) => {
               const numericValue = e.target.value.replace(/[^0-9.]/g, '')
               let income = parseFloat(numericValue) || 0
@@ -206,7 +233,11 @@ export default function CarDetailsFormV2({ carData, updateCarData }: CarDetailsF
               }
             }}
             placeholder="Enter your monthly income"
-            className="w-full pl-8 pr-4 py-3 sm:py-4 bg-white/10 backdrop-blur-md border border-white/20 rounded-lg sm:rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-transparent transition-all text-base"
+            className={`w-full pl-8 pr-4 py-3 sm:py-4 bg-white/10 backdrop-blur-md border rounded-lg sm:rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-transparent transition-all text-base ${
+              shouldHighlightMonthlyIncome 
+                ? 'border-lime-400/60' 
+                : 'border-white/20'
+            }`}
           />
         </div>
         <p className="text-sm text-white/70 flex items-center mt-3">

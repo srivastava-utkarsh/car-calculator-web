@@ -1,14 +1,14 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ChevronDown } from 'lucide-react'
+import Image from 'next/image'
 // Import Version 2 components
 import CarDetailsFormV2 from '@/components/v2/CarDetailsFormV2'
 import FinancialFormV2 from '@/components/v2/FinancialFormV2'
 import ResultsDisplayV2 from '@/components/v2/ResultsDisplayV2'
 import TotalCostDisplayV2 from '@/components/v2/TotalCostDisplayV2'
-import FastPayoffPage from '@/components/v2/FastPayoffPage'
 
 export interface CarData {
   carPrice: number
@@ -28,7 +28,7 @@ export interface CarData {
 export default function HomePage() {
   const [showResults, setShowResults] = useState(false) // Toggle results view
   const [selectedVersion, setSelectedVersion] = useState('v2') // Version selector
-  const [showPayoffPage, setShowPayoffPage] = useState(false) // Navigation state for payoff page
+  const monthlyIncomeInputRef = useRef<HTMLInputElement>(null)
 
   // Handle scroll effect for background image
   useEffect(() => {
@@ -68,16 +68,6 @@ export default function HomePage() {
   }
 
   const hideResultsView = () => setShowResults(false)
-  
-  // Function to navigate to payoff page
-  const showPayoffOptions = () => {
-    setShowPayoffPage(true)
-  }
-  
-  // Function to return to main calculator (preserves all data)
-  const returnToCalculator = () => {
-    setShowPayoffPage(false)
-  }
 
   const restart = () => {
     setShowResults(false)
@@ -114,15 +104,6 @@ export default function HomePage() {
     })
   }
 
-  // Show Fast Payoff Page if navigation state is active
-  if (showPayoffPage) {
-    return (
-      <FastPayoffPage 
-        carData={carData}
-        onBack={returnToCalculator}
-      />
-    )
-  }
 
   // Render Version 2 - CRED-inspired fluid design
   return (
@@ -134,12 +115,12 @@ export default function HomePage() {
               {/* Logo */}
               <div className="flex items-center space-x-3">
                 <div className="w-8 h-8 bg-white/10 backdrop-blur-md rounded-lg flex items-center justify-center border border-white/20">
-                  <img 
+                  <Image 
                     src="/budgetgear_tranparent.png" 
                     alt="BudgetGear - Car Finance Calculator Logo" 
                     className="w-5 h-5 object-contain opacity-90"
-                    width="20"
-                    height="20"
+                    width={20}
+                    height={20}
                   />
                 </div>
                 <span className="text-lg font-bold text-white opacity-95">BudgetGear</span>
@@ -210,10 +191,12 @@ export default function HomePage() {
                           <CarDetailsFormV2 
                             carData={carData} 
                             updateCarData={updateCarData}
+                            monthlyIncomeInputRef={monthlyIncomeInputRef}
                           />
                           <FinancialFormV2 
                             carData={carData} 
                             updateCarData={updateCarData}
+                            monthlyIncomeInputRef={monthlyIncomeInputRef}
                           />
                         </div>
                       </motion.div>
@@ -246,7 +229,7 @@ export default function HomePage() {
                       className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-6 lg:p-8 shadow-2xl"
                     >
                       <h3 id="results-heading" className="sr-only">Loan Calculation Results</h3>
-                      <TotalCostDisplayV2 carData={carData} updateCarData={updateCarData} onShowPayoffOptions={showPayoffOptions} />
+                      <TotalCostDisplayV2 carData={carData} updateCarData={updateCarData} />
                     </motion.div>
                   </div>
                 </aside>

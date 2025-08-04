@@ -3,15 +3,14 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { CarData } from '@/app/page'
-import { TrendingUp, CheckCircle, XCircle, Zap, Percent, Clock, Info, Rocket } from 'lucide-react'
+import { TrendingUp, CheckCircle, XCircle, Zap, Percent, Clock, Info } from 'lucide-react'
 
 interface TotalCostDisplayV2Props {
   carData: CarData
   updateCarData: (updates: Partial<CarData>) => void
-  onShowPayoffOptions?: () => void
 }
 
-export default function TotalCostDisplayV2({ carData, updateCarData, onShowPayoffOptions }: TotalCostDisplayV2Props) {
+export default function TotalCostDisplayV2({ carData, updateCarData }: TotalCostDisplayV2Props) {
   const [durationToggle, setDurationToggle] = useState<'months' | 'years'>('months')
   
   const calculateEMI = (principal: number, rate: number, years: number) => {
@@ -293,102 +292,18 @@ export default function TotalCostDisplayV2({ carData, updateCarData, onShowPayof
         </motion.div>
       )}
 
-      {/* Monthly Car Expenses */}
-      <div className="mb-4">
-        <h5 className="font-semibold text-white mb-2 text-sm">Monthly Car Expenses</h5>
-        <div className={`p-4 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 ${
-          completionPercentage === 100 
-            ? 'bg-gradient-to-br from-emerald-500/15 via-green-500/10 to-emerald-600/15 border-emerald-400/30 shadow-emerald-500/20 ring-1 ring-emerald-400/20 backdrop-blur-xl hover:bg-gradient-to-br hover:from-emerald-500/20 hover:via-green-500/15 hover:to-emerald-600/20' 
-            : 'bg-white/5 backdrop-blur-xl border border-white/10 hover:bg-white/10'
-        }`}>
-          <div className="space-y-1.5">
-            <div className="flex justify-between items-center">
-              <span className="text-xs text-white/70">EMI Payment</span>
-              <span className="font-semibold text-white text-sm">{formatCurrency(emi)}</span>
-            </div>
-            
-            {/* Fuel Cost Section with Toggle */}
-            {monthlyFuelCost > 0 && (
-              <div className="space-y-2 pt-2 border-t border-white/20">
-                <div className="flex justify-between items-center">
-                  <span className="text-xs text-white/70">Fuel Cost (Separate)</span>
-                  <span className="font-semibold text-white text-sm">{formatCurrency(monthlyFuelCost)}</span>
-                </div>
-                
-                {/* Toggle for including fuel in 10% rule */}
-                <div className="bg-white/5 rounded-lg p-2 min-[375px]:p-3 border border-white/10">
-                  <div className="flex items-center justify-between mb-2 gap-2">
-                    <span className="text-xs min-[375px]:text-sm text-white/80 font-medium">Include in budget?</span>
-                    <div className="flex items-center space-x-2 flex-shrink-0">
-                      <span className={`text-xs hidden min-[375px]:inline ${carData.includeFuelInAffordability ? 'text-white/70' : 'text-white/50'}`}>
-                        {carData.includeFuelInAffordability ? 'ON' : 'OFF'}
-                      </span>
-                      <button
-                        onClick={() => updateCarData({ includeFuelInAffordability: !carData.includeFuelInAffordability })}
-                        className={`relative inline-flex h-5 min-[375px]:h-6 w-9 min-[375px]:w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500/50 ${
-                          carData.includeFuelInAffordability ? 'bg-blue-500' : 'bg-gray-600'
-                        }`}
-                        role="switch"
-                        aria-checked={carData.includeFuelInAffordability}
-                        aria-label={carData.includeFuelInAffordability 
-                          ? "Exclude fuel cost from monthly budget calculation" 
-                          : "Include fuel cost in monthly budget calculation"
-                        }
-                      >
-                        <span
-                          className={`inline-block h-3 min-[375px]:h-4 w-3 min-[375px]:w-4 transform rounded-full bg-white transition-transform ${
-                            carData.includeFuelInAffordability ? 'translate-x-5 min-[375px]:translate-x-6' : 'translate-x-1'
-                          }`}
-                        />
-                      </button>
-                    </div>
-                  </div>
-                  <p className="text-xs text-white/60 opacity-80 leading-relaxed">
-                    {carData.includeFuelInAffordability 
-                      ? "Fuel cost is included in your monthly budget calculation" 
-                      : "Fuel cost is tracked separately from your budget"
-                    }
-                  </p>
-                </div>
-              </div>
-            )}
-            
-            <div className="border-t border-white/20 pt-1.5">
-              <div className="flex justify-between items-center">
-                <span className="text-sm font-semibold text-white">
-                  Total Monthly Budget {monthlyFuelCost > 0 && !carData.includeFuelInAffordability && '(excluding fuel)'}
-                </span>
-                <span className="font-bold text-base text-white">{formatCurrency(totalMonthlyCarExpenses)}</span>
-              </div>
-            </div>
-            {carData.monthlyIncome > 0 && (
-              <div className="mt-1 pt-1 border-t border-white/20">
-                <div className="flex justify-between items-center">
-                  <span className="text-xs text-white/60">% of Income</span>
-                  <span className={`text-xs font-bold ${expensePercentage <= 10 ? 'text-emerald-400' : 'text-red-400'}`}>
-                    {formatPercentage(expensePercentage)}%
-                  </span>
-                </div>
-              </div>
-            )}
-          </div>
-          <p className="text-xs text-white/50 mt-2 opacity-80">
-            *Insurance & maintenance costs moved to one-time costs section
-          </p>
-        </div>
-      </div>
 
       <div className="flex items-center justify-between mb-3">
-        <h4 className="font-semibold text-white text-sm">Smart Loan Insights</h4>
+        <h4 className="font-semibold text-white text-sm">Final Monthly Summary</h4>
         <div className="flex items-center space-x-2">
           <div className={`w-2 h-2 rounded-full ${completionPercentage === 100 ? 'bg-green-400' : completionPercentage >= 66 ? 'bg-yellow-400' : 'bg-red-400'}`}></div>
-          <span className="text-xs text-white/70">{completionPercentage}% Complete</span>
+          <span className="text-sm font-bold text-white/80">{completionPercentage}% Complete</span>
         </div>
       </div>
       
       {/* Loan Summary - Compact Display */}
       <motion.div 
-        className={`bg-gradient-to-br from-white/5 to-white/2 backdrop-blur-xl border border-white/10 text-white p-6 rounded-2xl mb-6 shadow-2xl transition-all duration-300 hover:scale-[1.02] ${
+        className={`bg-gradient-to-br from-slate-800/40 to-slate-900/30 backdrop-blur-xl border border-slate-700/30 text-gray-100 p-6 rounded-2xl mb-6 shadow-2xl transition-all duration-300 hover:scale-[1.02] ${
           completionPercentage === 100 
             ? 'shadow-emerald-500/10 ring-1 ring-emerald-400/20' 
             : 'shadow-black/10 hover:shadow-black/20'
@@ -397,41 +312,126 @@ export default function TotalCostDisplayV2({ carData, updateCarData, onShowPayof
         transition={{ duration: 0.6, repeat: 0 }}
       >
         {/* Main EMI Display */}
-        <div className="text-center mb-3 pb-3 border-b border-white/30">
-          <p className="text-xs text-white/70 mb-1 font-medium">
+        <div className="text-center mb-3 pb-3 border-b border-slate-700/40">
+          <p className="text-sm text-gray-300 mb-1 font-medium">
             Monthly EMI {completionPercentage === 100 && '✨'}
           </p>
-          <p className="text-2xl font-bold tracking-tight text-white">{formatCurrency(emi)}</p>
-          <p className="text-xs text-white/50 mt-1">Ends: {getLastEMIDate()}</p>
+          <p className="text-3xl font-bold tracking-tight text-gray-100">{formatCurrency(emi)}</p>
+          {monthlyFuelCost > 0 && carData.includeFuelInAffordability && (
+            <div className="mt-2 pt-2 border-t border-slate-700/20">
+              <p className="text-sm text-emerald-300 mb-1">Including Fuel Cost</p>
+              <p className="text-2xl font-bold text-emerald-200">{formatCurrency(totalMonthlyCarExpenses)}</p>
+              <p className="text-xs text-gray-400 mt-1">EMI ({formatCurrency(emi)}) + Fuel ({formatCurrency(monthlyFuelCost)})</p>
+            </div>
+          )}
+          <p className="text-sm text-gray-400 mt-1">Ends: {getLastEMIDate()}</p>
+        </div>
+
+        {/* Fuel Cost Integration - Always show */}
+        <div className="mb-3 pb-3 border-b border-slate-700/40">
+          <div className="bg-slate-800/50 rounded-lg p-4 space-y-3 border border-slate-700/20">
+            {monthlyFuelCost > 0 ? (
+              <>
+                <div className="flex justify-between items-center">
+                  <span className="text-base text-gray-200 font-medium">Fuel Cost (Separate)</span>
+                  <span className="font-semibold text-gray-100 text-lg">{formatCurrency(monthlyFuelCost)}</span>
+                </div>
+                
+                {/* Toggle for including fuel in budget */}
+                <div className="flex items-center justify-between gap-2">
+                  <span className="text-base text-gray-200 font-medium">Include in budget?</span>
+                  <div className="flex items-center space-x-2">
+                    <span className={`text-base font-medium ${carData.includeFuelInAffordability ? 'text-gray-200' : 'text-gray-400'}`}>
+                      {carData.includeFuelInAffordability ? 'ON' : 'OFF'}
+                    </span>
+                    <button
+                      onClick={() => updateCarData({ includeFuelInAffordability: !carData.includeFuelInAffordability })}
+                      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500/50 ${
+                        carData.includeFuelInAffordability ? 'bg-blue-500' : 'bg-gray-600'
+                      }`}
+                      role="switch"
+                      aria-checked={carData.includeFuelInAffordability}
+                    >
+                      <span
+                        className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                          carData.includeFuelInAffordability ? 'translate-x-6' : 'translate-x-1'
+                        }`}
+                      />
+                    </button>
+                  </div>
+                </div>
+                
+                <p className="text-base text-gray-300 leading-relaxed">
+                  {carData.includeFuelInAffordability 
+                    ? "Fuel cost is included in your budget calculation" 
+                    : "Fuel cost is tracked separately from your budget"
+                  }
+                </p>
+                
+              </>
+            ) : (
+              <div className="text-center py-4">
+                <button 
+                  onClick={() => {
+                    // Scroll to the Monthly Running Cost section
+                    const section = document.querySelector('[data-section="monthly-running-cost"]')
+                    if (section) {
+                      section.scrollIntoView({ behavior: 'smooth', block: 'center' })
+                      // Add temporary highlight
+                      section.classList.add('border-lime-400/40', 'shadow-lg', 'shadow-lime-400/20', 'bg-lime-400/10')
+                      setTimeout(() => {
+                        section.classList.remove('border-lime-400/40', 'shadow-lg', 'shadow-lime-400/20', 'bg-lime-400/10')
+                      }, 3000)
+                    }
+                  }}
+                  className="px-4 py-2 bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-300 hover:text-cyan-200 rounded-lg cursor-pointer transition-colors duration-200 mb-2 border border-cyan-500/30"
+                >
+                  + Add Fuel Cost
+                </button>
+              </div>
+            )}
+            
+            {/* Show percentage of income */}
+            {carData.monthlyIncome > 0 && monthlyFuelCost > 0 && (
+              <div className="mt-3 pt-3 border-t border-slate-700/40">
+                <div className="flex justify-between items-center">
+                  <span className="text-base text-gray-300">% of Income</span>
+                  <span className={`text-base font-bold ${expensePercentage <= 10 ? 'text-emerald-300' : 'text-red-300'}`}>
+                    {formatPercentage(expensePercentage)}%
+                  </span>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Compact Loan Details Grid */}
-        <div className="grid grid-cols-2 gap-3 text-xs">
+        <div className="grid grid-cols-2 gap-3 text-sm">
           {/* Period with toggle */}
-          <div className="flex flex-col items-center bg-white/15 border border-white/20 rounded-lg p-2">
+          <div className="flex flex-col items-center bg-slate-800/60 border border-slate-700/30 rounded-lg p-3">
             <div className="flex items-center mb-1">
               <Clock size={12} className="mr-1 text-cyan-300"/>
-              <span className="text-white/90 font-bold">Period</span>
+              <span className="text-gray-200 font-bold text-sm">Period</span>
             </div>
             <div className="flex items-center space-x-1">
-              <span className="font-bold text-white">{formatDuration()}</span>
-              <div className="flex bg-white/25 rounded-full p-0.5">
+              <span className="font-bold text-gray-100 text-base">{formatDuration()}</span>
+              <div className="flex bg-slate-700/50 rounded-full p-0.5">
                 <button
                   onClick={() => setDurationToggle('years')}
-                  className={`text-xs px-1 py-0.5 rounded-full transition-all duration-200 font-bold ${
+                  className={`text-sm px-1 py-0.5 rounded-full transition-all duration-200 font-bold ${
                     durationToggle === 'years' 
-                      ? 'bg-white text-slate-700 shadow-sm' 
-                      : 'text-white/80 hover:bg-white/30'
+                      ? 'bg-gray-100 text-slate-700 shadow-sm' 
+                      : 'text-gray-300 hover:bg-slate-600/50'
                   }`}
                 >
                   Y
                 </button>
                 <button
                   onClick={() => setDurationToggle('months')}
-                  className={`text-xs px-1 py-0.5 rounded-full transition-all duration-200 font-bold ${
+                  className={`text-sm px-1 py-0.5 rounded-full transition-all duration-200 font-bold ${
                     durationToggle === 'months' 
-                      ? 'bg-white text-slate-700 shadow-sm' 
-                      : 'text-white/80 hover:bg-white/30'
+                      ? 'bg-gray-100 text-slate-700 shadow-sm' 
+                      : 'text-gray-300 hover:bg-slate-600/50'
                   }`}
                 >
                   M
@@ -441,30 +441,30 @@ export default function TotalCostDisplayV2({ carData, updateCarData, onShowPayof
           </div>
 
           {/* Interest Rate */}
-          <div className="flex flex-col items-center bg-white/15 border border-white/20 rounded-lg p-2">
+          <div className="flex flex-col items-center bg-slate-800/60 border border-slate-700/30 rounded-lg p-3">
             <div className="flex items-center mb-1">
               <Percent size={12} className="mr-1 text-red-300"/>
-              <span className="text-white/90 font-bold">Interest</span>
+              <span className="text-gray-200 font-bold text-sm">Interest</span>
             </div>
-            <span className="font-bold text-white">{carData.interestRate}%</span>
+            <span className="font-bold text-gray-100 text-base">{carData.interestRate}%</span>
           </div>
 
           {/* Interest Cost */}
-          <div className="flex flex-col items-center bg-white/15 border border-white/20 rounded-lg p-2">
+          <div className="flex flex-col items-center bg-slate-800/60 border border-slate-700/30 rounded-lg p-3">
             <div className="flex items-center mb-1">
               <TrendingUp size={12} className="mr-1 text-yellow-300"/>
-              <span className="text-white/90 font-bold">Interest Cost</span>
+              <span className="text-gray-200 font-bold text-sm">Interest Cost</span>
             </div>
-            <span className="font-bold text-white">{formatCurrency(totalInterest)}</span>
+            <span className="font-bold text-gray-100 text-base">{formatCurrency(totalInterest)}</span>
           </div>
 
           {/* Total Payment */}
-          <div className="flex flex-col items-center bg-white/15 border border-white/20 rounded-lg p-2">
+          <div className="flex flex-col items-center bg-slate-800/60 border border-slate-700/30 rounded-lg p-3">
             <div className="flex items-center mb-1">
               <span className="text-purple-300 mr-1 font-bold text-xs">₹</span>
-              <span className="text-white/90 font-bold">Total Payment</span>
+              <span className="text-gray-200 font-bold text-sm">Total Payment</span>
             </div>
-            <span className="font-bold text-white">{formatCurrency(totalPayment)}</span>
+            <span className="font-bold text-gray-100 text-base">{formatCurrency(totalPayment)}</span>
           </div>
         </div>
 
@@ -520,33 +520,6 @@ export default function TotalCostDisplayV2({ carData, updateCarData, onShowPayof
         </div>
       </motion.div>
 
-      {/* Payoff Loan Faster Button - Show only when EMI is calculated */}
-      {carData.carPrice > 0 && carData.tenure > 0 && (
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
-          className="mt-4"
-        >
-          <button
-            onClick={onShowPayoffOptions}
-            className="w-full bg-gradient-to-r from-emerald-600 via-cyan-600 to-purple-600 hover:from-emerald-700 hover:via-cyan-700 hover:to-purple-700 text-white py-4 px-6 rounded-2xl font-semibold transition-all duration-300 shadow-xl hover:shadow-2xl hover:scale-[1.02] group relative overflow-hidden"
-          >
-            {/* Animated background */}
-            <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/10 to-white/0 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
-            
-            <div className="relative flex items-center justify-center space-x-3">
-              <Rocket className="w-5 h-5 text-white group-hover:animate-pulse" />
-              <span className="text-base">⚡ Pay Off Loan Faster</span>
-              <Zap className="w-4 h-4 text-yellow-300 group-hover:animate-bounce" />
-            </div>
-            
-            <div className="relative text-xs text-white/80 mt-1">
-              Save thousands in interest with smart payoff strategies
-            </div>
-          </button>
-        </motion.div>
-      )}
 
     </div>
   )
