@@ -204,10 +204,28 @@ export default function FinancialFormV2({ carData, updateCarData, monthlyIncomeI
           <input
             type="number"
             min="0"
-            max={carData.carPrice}
+            max="200000"
             value={carData.insuranceAndMaintenance || ''}
-            onChange={(e) => updateCarData({ insuranceAndMaintenance: parseFloat(e.target.value) || 0 })}
-            placeholder=""
+            onChange={(e) => {
+              const value = e.target.value
+              const numericValue = parseFloat(value) || 0
+              
+              // Validate range: 0 to 200,000
+              if (numericValue < 0 || numericValue > 200000) {
+                return // Don't update if outside valid range
+              }
+              
+              updateCarData({ insuranceAndMaintenance: numericValue })
+            }}
+            onBlur={(e) => {
+              const value = parseFloat(e.target.value) || 0
+              // Clamp value to valid range on blur
+              const clampedValue = Math.max(0, Math.min(200000, value))
+              if (clampedValue !== value) {
+                updateCarData({ insuranceAndMaintenance: clampedValue })
+              }
+            }}
+            placeholder="Enter Processing Fee,Insurance or Other Expenses"
             className="w-full pl-8 pr-4 py-2.5 bg-white/10 backdrop-blur-md border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all text-base"
           />
         </div>

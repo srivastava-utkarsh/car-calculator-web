@@ -9,6 +9,7 @@ import CarDetailsFormV2 from '@/components/v2/CarDetailsFormV2'
 import FinancialFormV2 from '@/components/v2/FinancialFormV2'
 import ResultsDisplayV2 from '@/components/v2/ResultsDisplayV2'
 import TotalCostDisplayV2 from '@/components/v2/TotalCostDisplayV2'
+import CostDistributionChart from '@/components/v2/CostDistributionChart'
 
 export interface CarData {
   carPrice: number
@@ -198,6 +199,15 @@ export default function HomePage() {
                   </div>
                 </aside>
               </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Cost Distribution Chart Section */}
+        <section className="relative z-10 mt-12">
+          <div className="container mx-auto px-4">
+            <div className="max-w-4xl mx-auto">
+              <CostDistributionChart carData={carData} />
             </div>
           </div>
         </section>
