@@ -20,6 +20,9 @@ const config: Config = {
         'neo': '8px 8px 0px 0px #000000',
         'neo-sm': '4px 4px 0px 0px #000000',
         'neo-lg': '12px 12px 0px 0px #000000',
+      },
+      dropShadow: {
+        'glow': '0 0 20px rgba(251, 146, 60, 0.5)',
       }
     },
   },

@@ -98,26 +98,26 @@ export default function HomePage() {
   return (
       <main className="min-h-screen bg-black font-sans relative" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>
         {/* Header Navigation */}
-        <header className="bg-black/95 backdrop-blur-md border-b border-white/10">
-          <div className="container mx-auto px-6">
-            <div className="flex items-center justify-between h-16">
-              {/* Logo */}
-              <div className="flex items-center space-x-4">
-                <div className="w-12 h-12 bg-white/10 backdrop-blur-md rounded-xl flex items-center justify-center border border-white/20 shadow-xl">
+        <header className="bg-black border-b border-white/5">
+          <div className="container mx-auto px-6 lg:px-8">
+            <div className="flex items-center justify-between h-20">
+              {/* Logo - Far Left Positioning */}
+              <div className="flex items-center space-x-3">
+                <div className="w-10 h-10 flex items-center justify-center">
                   <Image 
                     src="/bck-logo.svg" 
-                    alt="BudgetGear - Car Finance Calculator Logo" 
-                    className="w-8 h-8 object-contain"
-                    width={32}
-                    height={32}
+                    alt="BudgetGear Logo" 
+                    className="w-10 h-10 object-contain"
+                    width={40}
+                    height={40}
                   />
                 </div>
-                <span className="text-2xl font-bold text-white">BudgetGear</span>
+                <span className="text-2xl font-extrabold bg-gradient-to-r from-emerald-400 via-cyan-400 to-blue-400 bg-clip-text text-transparent tracking-tight drop-shadow-lg">BudgetGear</span>
               </div>
 
-              {/* Navigation Links */}
-              <nav className="hidden md:flex items-center space-x-8" role="navigation" aria-label="Main navigation">
-                <a href="#calculator" className="text-white font-bold hover:text-gray-200 transition-colors text-lg">
+              {/* Navigation Menu - Far Right */}
+              <nav className="hidden md:flex items-center" role="navigation" aria-label="Main navigation">
+                <a href="#calculator" className="bg-gradient-to-r from-orange-400 via-pink-400 to-purple-500 bg-clip-text text-transparent font-bold text-lg tracking-wide transition-all duration-300 px-4 py-2 rounded-lg hover:scale-105 hover:drop-shadow-glow">
                   Car Affordability Calculator
                 </a>
               </nav>
