@@ -79,8 +79,8 @@ export const metadata: Metadata = {
     google: 'google-site-verification-code-here',
   },
   icons: {
-    icon: "/budget_gear_logo.ico",
-    shortcut: "/budget_gear_logo.ico",
+    icon: "/bck-co-logo.ico",
+    shortcut: "/bck-co-logo.ico",
     apple: "/brand_img.png",
   },
 };
@@ -121,7 +121,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <link rel="icon" href="/budget_gear_logo.ico" sizes="any" />
+        <link rel="icon" href="/bck-co-logo.ico" sizes="any" />
         <link rel="icon" href="/brand_img.png" type="image/png" />
         <link rel="apple-touch-icon" href="/brand_img.png" />
         <script
