@@ -1,2 +1,8 @@
-1. modify to some UX friendly content for "Consider adjusting terms for better financial health"
-2. modify to some UX friendly content for "This purchase aligns with the 20/4/10 rule - smart financing!"
+1. show affordability panel on right side with empty value, if all required params are not filled.
+2. remove "Include in budget?" toggle, if values are filled then always show "Including Fuel Cost"
+3. remove "Fuel Cost"
+4. Remove icon just left to "Affordability Score" text
+5. rename "Affordability Score" to "Can you afford?" and display "YES" or "NO"
+6. remove "Needs Review
+Try adjusting your down payment or loan term for a better fit." text
+7. align "Total Payment", "Interest","Period" and "Interest Cost" in UX friendly way

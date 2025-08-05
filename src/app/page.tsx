@@ -166,13 +166,13 @@ export default function HomePage() {
 
         {/* Main Content Section - Fluid Layout */}
         <section className="relative z-10 pt-16" id="calculator" aria-labelledby="calculator-heading">
-          <div className="container mx-auto px-6">
+          <div className="container mx-auto px-4">
             <div className="max-w-7xl mx-auto">
               <h2 id="calculator-heading" className="sr-only">Car Finance Calculator Tool</h2>
               
 
-              {/* Content Grid - Fluid and Responsive */}
-              <div className="grid lg:grid-cols-5 gap-8 lg:gap-12">
+              {/* Content Grid - Fluid and Responsive with reduced spacing */}
+              <div className="grid lg:grid-cols-5 gap-6 lg:gap-8">
                 
                 {/* Main Form Section */}
                 <div className="lg:col-span-3">
