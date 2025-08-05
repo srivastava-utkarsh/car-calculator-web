@@ -10,6 +10,7 @@ import FinancialFormV2 from '@/components/v2/FinancialFormV2'
 import ResultsDisplayV2 from '@/components/v2/ResultsDisplayV2'
 import TotalCostDisplayV2 from '@/components/v2/TotalCostDisplayV2'
 import CostDistributionChart from '@/components/v2/CostDistributionChart'
+import EducationalSummary from '@/components/v2/EducationalSummary'
 
 export interface CarData {
   carPrice: number
@@ -103,25 +104,30 @@ export default function HomePage() {
           <div className="container mx-auto px-6 lg:px-8">
             <div className="flex items-center justify-between h-20">
               {/* Logo - Far Left Positioning */}
-              <div className="flex items-center space-x-3">
-                <div className="w-16 h-16 flex items-center justify-center">
+              <div className="flex items-center space-x-2 sm:space-x-3 flex-shrink-0">
+                <div className="w-10 h-10 sm:w-16 sm:h-16 flex items-center justify-center">
                   <Image 
                     src="/bck-logo.svg" 
                     alt="BudgetGear Logo" 
-                    className="w-16 h-16 object-contain"
+                    className="w-10 h-10 sm:w-16 sm:h-16 object-contain"
                     width={64}
                     height={64}
                   />
                 </div>
-                <span className="text-2xl font-extrabold text-white tracking-tight">BudgetGear</span>
+                <span className="text-base sm:text-2xl font-extrabold text-white tracking-tight flex items-center">BudgetGear</span>
               </div>
 
-              {/* Navigation Menu - Far Right */}
-              <nav className="hidden md:flex items-center" role="navigation" aria-label="Main navigation">
-                <a href="#calculator" className="text-white/90 hover:text-white font-semibold text-base tracking-wide transition-colors duration-200 px-4 py-2 rounded-lg hover:bg-white/5">
-                  Car Affordability Calculator
-                </a>
-              </nav>
+              {/* Navigation Menu - Center with proper spacing */}
+              <div className="flex-1 flex justify-center px-4">
+                <nav className="flex items-center" role="navigation" aria-label="Main navigation">
+                  <a href="#calculator" className="text-white font-bold text-xs sm:text-base tracking-wide transition-colors duration-200 px-1 sm:px-4 py-2 hover:text-white/80 text-center">
+                    Car Affordability Calculator
+                  </a>
+                </nav>
+              </div>
+
+              {/* Empty div for balance */}
+              <div className="w-20 sm:w-32 flex-shrink-0"></div>
             </div>
           </div>
         </header>
@@ -211,6 +217,9 @@ export default function HomePage() {
             </div>
           </div>
         </section>
+
+        {/* Educational Summary Section */}
+        <EducationalSummary carData={carData} />
 
         {/* Footer - Important Note - Static at page end */}
         <footer className="relative z-10 mt-16 mb-8">
