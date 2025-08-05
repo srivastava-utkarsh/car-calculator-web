@@ -31,21 +31,6 @@ export default function HomePage() {
   const [selectedVersion, setSelectedVersion] = useState('v2') // Version selector
   const monthlyIncomeInputRef = useRef<HTMLInputElement>(null)
 
-  // Handle scroll effect for background image
-  useEffect(() => {
-    const handleScroll = () => {
-      const educationBg = document.getElementById('education-bg')
-      if (educationBg) {
-        // Fade out as user scrolls down to calculator section
-        const scrollRatio = Math.min(window.scrollY / 400, 1)
-        const opacity = Math.max(0, 0.4 - (scrollRatio * 0.4))
-        educationBg.style.opacity = opacity.toString()
-      }
-    }
-
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
   const [carData, setCarData] = useState<CarData>({
     carPrice: 0,
     downPayment: 0,
@@ -117,22 +102,22 @@ export default function HomePage() {
           <div className="container mx-auto px-6">
             <div className="flex items-center justify-between h-16">
               {/* Logo */}
-              <div className="flex items-center space-x-3">
-                <div className="w-8 h-8 bg-white/10 backdrop-blur-md rounded-lg flex items-center justify-center border border-white/20">
+              <div className="flex items-center space-x-4">
+                <div className="w-12 h-12 bg-white/10 backdrop-blur-md rounded-xl flex items-center justify-center border border-white/20 shadow-xl">
                   <Image 
-                    src="/budgetgear_tranparent.png" 
+                    src="/bck-logo.svg" 
                     alt="BudgetGear - Car Finance Calculator Logo" 
-                    className="w-5 h-5 object-contain opacity-90"
-                    width={20}
-                    height={20}
+                    className="w-8 h-8 object-contain"
+                    width={32}
+                    height={32}
                   />
                 </div>
-                <span className="text-lg font-bold text-white opacity-95">BudgetGear</span>
+                <span className="text-2xl font-bold text-white">BudgetGear</span>
               </div>
 
               {/* Navigation Links */}
               <nav className="hidden md:flex items-center space-x-8" role="navigation" aria-label="Main navigation">
-                <a href="#calculator" className="text-white/90 hover:text-white transition-colors text-sm font-medium">
+                <a href="#calculator" className="text-white font-bold hover:text-gray-200 transition-colors text-lg">
                   Car Affordability Calculator
                 </a>
               </nav>
@@ -159,17 +144,8 @@ export default function HomePage() {
         {/* Immersive Background Gradient */}
         <div className="absolute inset-0 bg-gradient-to-br from-gray-900/50 via-black to-gray-900/30 pointer-events-none"></div>
         
-        {/* Background Education Image - Only until calculator starts */}
-        <div className="absolute top-0 left-0 right-0 z-0 pointer-events-none" style={{ height: '60vh' }}>
-          <div 
-            id="education-bg"
-            className="absolute inset-0 bg-[url('/education_blk.png')] bg-cover bg-center bg-no-repeat opacity-40 transition-opacity duration-500 ease-out"
-          ></div>
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/20 to-black"></div>
-        </div>
-
         {/* Main Content Section - Fluid Layout */}
-        <section className="relative z-10 pt-16" id="calculator" aria-labelledby="calculator-heading">
+        <section className="relative z-10 pt-8" id="calculator" aria-labelledby="calculator-heading">
           <div className="container mx-auto px-4">
             <div className="max-w-6xl mx-auto">
               <h2 id="calculator-heading" className="sr-only">Car Finance Calculator Tool</h2>
@@ -242,8 +218,26 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* Bottom Spacing */}
-        <div className="h-20 lg:h-32"></div>
+        {/* Footer - Important Note - Static at page end */}
+        <footer className="relative z-10 mt-16 mb-8">
+          <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+            <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-xl p-4 shadow-lg">
+              <div className="flex items-start space-x-3">
+                <div className="flex-shrink-0 w-5 h-5 bg-white/10 rounded-full flex items-center justify-center mt-0.5">
+                  <svg className="w-3 h-3 text-white/50" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                  </svg>
+                </div>
+                <div className="flex-1">
+                  <p className="font-medium text-white/90 mb-1 text-sm">Important Note</p>
+                  <p className="text-white/70 leading-relaxed text-sm">
+                    Calculations are indicative. Actual rates may vary by lender and credit profile.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </footer>
       </main>
     )
 }

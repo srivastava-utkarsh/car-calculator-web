@@ -90,9 +90,7 @@ export default function TotalCostDisplayV2({ carData, updateCarData: _updateCarD
     <div className="space-y-3">
 
       {/* Smart Purchase Score - Always show, but with empty state when required fields not filled */}
-        <motion.div 
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
+        <div 
           className={`relative p-3 sm:p-4 rounded-lg sm:rounded-xl border backdrop-blur-xl shadow-xl mb-3 sm:mb-4 transition-all duration-300 hover:shadow-xl hover:scale-[1.01] overflow-hidden ${
             !isAllRequiredFieldsFilled || carData.carPrice <= 0 || carData.tenure <= 0 || emi <= 0
               ? 'bg-gradient-to-br from-gray-500/10 via-gray-500/5 to-gray-600/10 border-gray-400/20 shadow-gray-500/10'
@@ -118,38 +116,24 @@ export default function TotalCostDisplayV2({ carData, updateCarData: _updateCarD
                 </div>
               </div>
               
-              {/* Score badge - YES/NO display */}
-              <motion.div 
-                initial={{ scale: 0.8 }}
-                animate={{ scale: 1 }}
-                transition={{ type: "spring", stiffness: 200 }}
-                className={`px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg text-xs font-bold shadow-md transition-all duration-200 hover:scale-105 flex-shrink-0 ${
-                  !isAllRequiredFieldsFilled || carData.carPrice <= 0 || carData.tenure <= 0 || emi <= 0
-                    ? 'bg-gradient-to-r from-gray-500 to-gray-600 text-white border border-gray-300/50'
-                    : isAffordable 
-                      ? 'bg-gradient-to-r from-green-500 to-emerald-500 text-white border border-green-300/50' 
-                      : 'bg-gradient-to-r from-red-500 to-red-600 text-white border border-red-300/50'
-                }`}
-              >
-                <div className="flex items-center justify-center space-x-1">
+              {/* Score display - YES/NO in big text */}
+              <div className="flex-shrink-0">
+                <div className="flex items-center justify-center">
                   {!isAllRequiredFieldsFilled || carData.carPrice <= 0 || carData.tenure <= 0 || emi <= 0 ? (
-                    <span className="text-xs font-bold whitespace-nowrap leading-none">--</span>
+                    <span className="text-3xl font-bold text-gray-400 leading-none">--</span>
                   ) : isAffordable ? (
-                    <span className="text-xs font-bold whitespace-nowrap leading-none">YES</span>
+                    <span className="text-3xl font-bold text-green-400 leading-none">YES</span>
                   ) : (
-                    <span className="text-xs font-bold whitespace-nowrap leading-none">NO</span>
+                    <span className="text-3xl font-bold text-red-400 leading-none">NO</span>
                   )}
                 </div>
-              </motion.div>
+              </div>
             </div>
           
             {/* Compact rule indicators */}
             <div className="space-y-1 text-sm">
               {/* 20% Down Payment Rule */}
-              <motion.div 
-                initial={{ x: -20, opacity: 0 }}
-                animate={{ x: 0, opacity: 1 }}
-                transition={{ delay: 0.1 }}
+              <div 
                 className={`relative p-2 sm:p-3 rounded-md sm:rounded-lg border transition-all duration-300 hover:scale-[1.01] ${
                   isDownPaymentOk 
                     ? 'bg-slate-100/10 border-green-200/30 hover:bg-slate-100/15' 
@@ -171,22 +155,17 @@ export default function TotalCostDisplayV2({ carData, updateCarData: _updateCarD
                   </div>
                 </div>
                 <div className="w-full bg-white/15 rounded-full h-1.5 overflow-hidden">
-                  <motion.div 
-                    initial={{ width: 0 }}
-                    animate={{ width: `${Math.min(downPaymentPercentage, 100)}%` }}
-                    transition={{ duration: 0.8, delay: 0.2 }}
-                    className={`h-full rounded-full ${
+                  <div 
+                    style={{ width: `${Math.min(downPaymentPercentage, 100)}%` }}
+                    className={`h-full rounded-full transition-all duration-500 ${
                       isDownPaymentOk ? 'bg-gradient-to-r from-green-400 to-emerald-500' : 'bg-gradient-to-r from-red-400 to-red-500'
                     }`}
                   />
                 </div>
-              </motion.div>
+              </div>
               
               {/* 4 Year Tenure Rule */}
-              <motion.div 
-                initial={{ x: -20, opacity: 0 }}
-                animate={{ x: 0, opacity: 1 }}
-                transition={{ delay: 0.2 }}
+              <div 
                 className={`relative p-2 sm:p-3 rounded-md sm:rounded-lg border transition-all duration-300 hover:scale-[1.01] ${
                   isTenureOk 
                     ? 'bg-slate-100/10 border-green-200/30 hover:bg-slate-100/15' 
@@ -208,22 +187,17 @@ export default function TotalCostDisplayV2({ carData, updateCarData: _updateCarD
                   </div>
                 </div>
                 <div className="w-full bg-white/15 rounded-full h-1.5 overflow-hidden">
-                  <motion.div 
-                    initial={{ width: 0 }}
-                    animate={{ width: `${(carData.tenure / 7) * 100}%` }}
-                    transition={{ duration: 0.8, delay: 0.3 }}
-                    className={`h-full rounded-full ${
+                  <div 
+                    style={{ width: `${(carData.tenure / 7) * 100}%` }}
+                    className={`h-full rounded-full transition-all duration-500 ${
                       isTenureOk ? 'bg-gradient-to-r from-green-400 to-emerald-500' : 'bg-gradient-to-r from-red-400 to-red-500'
                     }`}
                   />
                 </div>
-              </motion.div>
+              </div>
               
               {/* 10% Income Rule */}
-              <motion.div 
-                initial={{ x: -20, opacity: 0 }}
-                animate={{ x: 0, opacity: 1 }}
-                transition={{ delay: 0.3 }}
+              <div 
                 className={`relative p-2 sm:p-3 rounded-md sm:rounded-lg border transition-all duration-300 hover:scale-[1.01] ${
                   isExpenseOk 
                     ? 'bg-slate-100/10 border-green-200/30 hover:bg-slate-100/15' 
@@ -245,20 +219,18 @@ export default function TotalCostDisplayV2({ carData, updateCarData: _updateCarD
                   </div>
                 </div>
                 <div className="w-full bg-white/15 rounded-full h-1.5 overflow-hidden">
-                  <motion.div 
-                    initial={{ width: 0 }}
-                    animate={{ width: `${Math.min(expensePercentage, 100)}%` }}
-                    transition={{ duration: 0.8, delay: 0.4 }}
-                    className={`h-full rounded-full ${
+                  <div 
+                    style={{ width: `${Math.min(expensePercentage, 100)}%` }}
+                    className={`h-full rounded-full transition-all duration-500 ${
                       isExpenseOk ? 'bg-gradient-to-r from-green-400 to-emerald-500' : 'bg-gradient-to-r from-red-400 to-red-500'
                     }`}
                   />
                 </div>
-              </motion.div>
+              </div>
             </div>
           </div>
 
-        </motion.div>
+        </div>
 
 
       <div className="flex items-center justify-between mb-3">
@@ -294,22 +266,18 @@ export default function TotalCostDisplayV2({ carData, updateCarData: _updateCarD
           {/* Fuel Cost Integration - Compact */}
           {monthlyFuelCost > 0 ? (
             <div className="bg-gradient-to-r from-emerald-500/20 to-green-500/20 border border-emerald-400/30 rounded-xl p-3 mb-3">
-              <p className="text-emerald-300 font-medium mb-1 text-xs tracking-wide">Including Fuel Expense</p>
-              <div className="text-2xl font-bold text-emerald-100 mb-2">
+              <h3 className="text-sm font-medium text-emerald-300 mb-1 tracking-wide">Overall Monthly Expense</h3>
+              <div className="text-3xl font-bold text-emerald-100 mb-3 tracking-tight">
                 {formatCurrency(totalMonthlyCarExpenses)}
               </div>
-              <div className="bg-emerald-500/10 rounded-lg p-2 text-xs">
-                <div className="flex justify-between items-center text-emerald-200">
-                  <span>EMI</span>
-                  <span className="font-semibold">{formatCurrency(emi)}</span>
+              <div className="bg-emerald-500/10 rounded-lg p-3 space-y-2">
+                <div className="flex justify-between items-center">
+                  <span className="text-emerald-200 font-medium text-sm">EMI</span>
+                  <span className="font-bold text-emerald-100 text-lg">{formatCurrency(emi)}</span>
                 </div>
-                <div className="flex justify-between items-center text-emerald-200 mt-1">
-                  <span>Fuel</span>
-                  <span className="font-semibold">{formatCurrency(monthlyFuelCost)}</span>
-                </div>
-                <div className="border-t border-emerald-400/20 mt-1 pt-1 flex justify-between items-center text-emerald-100 font-bold">
-                  <span>Total Monthly</span>
-                  <span>{formatCurrency(totalMonthlyCarExpenses)}</span>
+                <div className="flex justify-between items-center">
+                  <span className="text-emerald-200 font-medium text-sm">Fuel</span>
+                  <span className="font-bold text-emerald-100 text-lg">{formatCurrency(monthlyFuelCost)}</span>
                 </div>
               </div>
             </div>
@@ -336,11 +304,26 @@ export default function TotalCostDisplayV2({ carData, updateCarData: _updateCarD
             </div>
           )}
 
-          {/* Loan Duration Info */}
-          <div className="bg-slate-700/20 rounded-lg p-2">
-            <p className="text-gray-300 font-medium text-xs mb-1">Loan Duration</p>
-            <p className="text-gray-400 text-sm">Ends on <span className="font-semibold text-gray-200">{getLastEMIDate()}</span></p>
-          </div>
+          {/* Insurance + Others - One-time cost */}
+          {(carData.insuranceAndMaintenance || 0) > 0 && (
+            <div className="bg-blue-500/10 border border-blue-400/20 rounded-lg p-3 mb-3">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <div className="w-8 h-8 bg-blue-500/20 rounded-full flex items-center justify-center">
+                    <Info size={14} className="text-blue-300"/>
+                  </div>
+                  <div>
+                    <div className="text-blue-100 font-semibold text-sm">Insurance + Others</div>
+                    <div className="text-blue-300 text-xs">One-time additional costs</div>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <div className="text-lg font-bold text-blue-100">{formatCurrency(carData.insuranceAndMaintenance || 0)}</div>
+                </div>
+              </div>
+            </div>
+          )}
+
         </div>
 
 
@@ -348,20 +331,20 @@ export default function TotalCostDisplayV2({ carData, updateCarData: _updateCarD
         <div className="border-t border-slate-700/30 pt-3">
           <h4 className="text-gray-200 font-medium mb-3 text-sm tracking-wide">Loan Breakdown</h4>
           
-          {/* Interest Rate */}
-          <div className="bg-red-500/10 border border-red-400/20 rounded-lg p-3 mb-3">
+          {/* Loan Duration Info */}
+          <div className="bg-slate-500/10 border border-slate-400/20 rounded-lg p-3 mb-3">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-2">
-                <div className="w-8 h-8 bg-red-500/20 rounded-full flex items-center justify-center">
-                  <Percent size={14} className="text-red-300"/>
+                <div className="w-8 h-8 bg-slate-500/20 rounded-full flex items-center justify-center">
+                  <Clock size={14} className="text-slate-300"/>
                 </div>
                 <div>
-                  <div className="text-red-100 font-semibold text-sm">Interest Rate</div>
-                  <div className="text-red-300 text-xs">Annual percentage rate</div>
+                  <div className="text-slate-100 font-semibold text-sm">Loan Duration</div>
+                  <div className="text-slate-300 text-xs">Loan completion date</div>
                 </div>
               </div>
               <div className="text-right">
-                <div className="text-lg font-bold text-red-100">{carData.interestRate}%</div>
+                <div className="text-lg font-bold text-slate-100">{getLastEMIDate()}</div>
               </div>
             </div>
           </div>
@@ -404,6 +387,42 @@ export default function TotalCostDisplayV2({ carData, updateCarData: _updateCarD
                     M
                   </button>
                 </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Interest Rate */}
+          <div className="bg-red-500/10 border border-red-400/20 rounded-lg p-3 mb-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-2">
+                <div className="w-8 h-8 bg-red-500/20 rounded-full flex items-center justify-center">
+                  <Percent size={14} className="text-red-300"/>
+                </div>
+                <div>
+                  <div className="text-red-100 font-semibold text-sm">Interest Rate</div>
+                  <div className="text-red-300 text-xs">Annual percentage rate</div>
+                </div>
+              </div>
+              <div className="text-right">
+                <div className="text-lg font-bold text-red-100">{carData.interestRate}%</div>
+              </div>
+            </div>
+          </div>
+
+          {/* Principal Amount */}
+          <div className="bg-green-500/10 border border-green-400/20 rounded-lg p-3 mb-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-2">
+                <div className="w-8 h-8 bg-green-500/20 rounded-full flex items-center justify-center">
+                  <span className="text-green-300 font-bold text-sm">₹</span>
+                </div>
+                <div>
+                  <div className="text-green-100 font-semibold text-sm">Principal Amount</div>
+                  <div className="text-green-300 text-xs">Loan amount after down payment</div>
+                </div>
+              </div>
+              <div className="text-right">
+                <div className="text-lg font-bold text-green-100">{formatCurrency(loanAmount)}</div>
               </div>
             </div>
           </div>
@@ -463,25 +482,7 @@ export default function TotalCostDisplayV2({ carData, updateCarData: _updateCarD
 
 
 
-      {/* Additional Info - Compact */}
-      <motion.div 
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.3 }}
-        className="mt-3 p-4 bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl text-xs text-white/70 shadow-xl hover:shadow-2xl hover:bg-white/10 transition-all duration-300 group"
-      >
-        <div className="flex items-start space-x-2">
-          <div className="flex-shrink-0 w-5 h-5 bg-white/10 rounded-full flex items-center justify-center mt-0.5 group-hover:bg-white/20 transition-colors">
-            <Info size={10} className="text-white/50" />
-          </div>
-          <div className="flex-1">
-            <p className="font-medium text-white/80 mb-0.5 text-xs">Important Note</p>
-            <p className="text-white/60 leading-relaxed text-xs">
-              Calculations are indicative. Actual rates may vary by lender and credit profile.
-            </p>
-          </div>
-        </div>
-      </motion.div>
+
 
 
     </div>
