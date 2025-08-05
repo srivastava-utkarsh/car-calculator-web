@@ -22,6 +22,7 @@ export interface CarData {
   insuranceAndMaintenance?: number
   monthlySavings?: number
   includeFuelInAffordability?: boolean
+  monthlyFuelExpense?: number
 }
 
 
@@ -55,7 +56,8 @@ export default function HomePage() {
     fuelCostPerLiter: 0,
     monthlyIncome: 0,
     insuranceAndMaintenance: 0,
-    includeFuelInAffordability: false
+    includeFuelInAffordability: false,
+    monthlyFuelExpense: 0
   })
 
   const versions = [
@@ -81,7 +83,8 @@ export default function HomePage() {
       fuelCostPerLiter: 0,
       monthlyIncome: 0,
       insuranceAndMaintenance: 0,
-      includeFuelInAffordability: false
+      includeFuelInAffordability: false,
+      monthlyFuelExpense: 0
     })
   }
 
@@ -100,7 +103,8 @@ export default function HomePage() {
       fuelCostPerLiter: 0,
       monthlyIncome: 0,
       insuranceAndMaintenance: 0,
-      includeFuelInAffordability: false
+      includeFuelInAffordability: false,
+      monthlyFuelExpense: 0
     })
   }
 
@@ -167,15 +171,15 @@ export default function HomePage() {
         {/* Main Content Section - Fluid Layout */}
         <section className="relative z-10 pt-16" id="calculator" aria-labelledby="calculator-heading">
           <div className="container mx-auto px-4">
-            <div className="max-w-7xl mx-auto">
+            <div className="max-w-6xl mx-auto">
               <h2 id="calculator-heading" className="sr-only">Car Finance Calculator Tool</h2>
               
 
-              {/* Content Grid - Fluid and Responsive with reduced spacing */}
-              <div className="grid lg:grid-cols-5 gap-6 lg:gap-8">
+              {/* Content Grid - More compact layout */}
+              <div className="grid lg:grid-cols-7 gap-4 lg:gap-6">
                 
-                {/* Main Form Section */}
-                <div className="lg:col-span-3">
+                {/* Main Form Section - Reduced width */}
+                <div className="lg:col-span-4 max-w-2xl">
                   <AnimatePresence mode="wait">
                     {!showResults ? (
                       <motion.div
@@ -184,10 +188,10 @@ export default function HomePage() {
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -20 }}
                         transition={{ duration: 0.4, ease: "easeOut" }}
-                        className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-6 sm:p-8 lg:p-10 shadow-2xl"
+                        className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-3 sm:p-4 lg:p-5 shadow-2xl"
                       >
                         {/* Unified Form View - Single responsive design for all screen sizes */}
-                        <div className="space-y-8">
+                        <div className="space-y-6">
                           <CarDetailsFormV2 
                             carData={carData} 
                             updateCarData={updateCarData}
@@ -207,7 +211,7 @@ export default function HomePage() {
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -20 }}
                         transition={{ duration: 0.4, ease: "easeOut" }}
-                        className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-6 sm:p-8 lg:p-10 shadow-2xl"
+                        className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-3 sm:p-4 lg:p-5 shadow-2xl"
                       >
                         <ResultsDisplayV2 
                           carData={carData}
@@ -219,14 +223,14 @@ export default function HomePage() {
                   </AnimatePresence>
                 </div>
 
-                {/* Live Preview Panel - Sticky on Desktop */}
-                <aside className="lg:col-span-2" aria-labelledby="results-heading">
+                {/* Live Preview Panel - Reduced width */}
+                <aside className="lg:col-span-3 max-w-md" aria-labelledby="results-heading">
                   <div className="lg:sticky lg:top-8">
                     <motion.div
                       initial={{ opacity: 0, x: 20 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ duration: 0.6, delay: 0.2 }}
-                      className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-6 lg:p-8 shadow-2xl"
+                      className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-3 lg:p-4 shadow-2xl"
                     >
                       <h3 id="results-heading" className="sr-only">Loan Calculation Results</h3>
                       <TotalCostDisplayV2 carData={carData} updateCarData={updateCarData} />

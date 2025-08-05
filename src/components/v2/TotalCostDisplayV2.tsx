@@ -13,8 +13,8 @@ interface TotalCostDisplayV2Props {
 export default function TotalCostDisplayV2({ carData, updateCarData: _updateCarData }: TotalCostDisplayV2Props) {
   const [durationToggle, setDurationToggle] = useState<'months' | 'years'>('months')
   
-  // Auto-turn on "Include in budget?" toggle when fuel cost is calculated
-  const monthlyFuelCost = carData.kmPerMonth && carData.fuelCostPerLiter ? (carData.kmPerMonth / 15) * carData.fuelCostPerLiter : 0
+  // Use monthly fuel expense from form input
+  const monthlyFuelCost = carData.monthlyFuelExpense || 0
   
   const calculateEMI = (principal: number, rate: number, years: number) => {
     if (principal <= 0 || rate <= 0 || years <= 0) return 0
@@ -80,21 +80,20 @@ export default function TotalCostDisplayV2({ carData, updateCarData: _updateCarD
     carData.carPrice > 0,
     carData.downPayment >= 0,
     carData.monthlyIncome > 0,
-    carData.kmPerMonth > 0,
-    carData.fuelCostPerLiter > 0,
-    (carData.insuranceAndMaintenance || 0) > 0
+    (carData.insuranceAndMaintenance || 0) > 0,
+    (carData.monthlyFuelExpense || 0) > 0
   ];
   const completionPercentage = Math.round((allFields.filter(Boolean).length / allFields.length) * 100);
   
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
 
       {/* Smart Purchase Score - Always show, but with empty state when required fields not filled */}
         <motion.div 
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className={`relative p-4 sm:p-6 rounded-xl sm:rounded-2xl border backdrop-blur-xl shadow-2xl mb-4 sm:mb-6 transition-all duration-300 hover:shadow-2xl hover:scale-[1.02] overflow-hidden ${
+          className={`relative p-3 sm:p-4 rounded-lg sm:rounded-xl border backdrop-blur-xl shadow-xl mb-3 sm:mb-4 transition-all duration-300 hover:shadow-xl hover:scale-[1.01] overflow-hidden ${
             !isAllRequiredFieldsFilled || carData.carPrice <= 0 || carData.tenure <= 0 || emi <= 0
               ? 'bg-gradient-to-br from-gray-500/10 via-gray-500/5 to-gray-600/10 border-gray-400/20 shadow-gray-500/10'
               : isAffordable 
@@ -112,7 +111,7 @@ export default function TotalCostDisplayV2({ carData, updateCarData: _updateCarD
           </div>
           
           <div className="relative z-10">
-            <div className="flex items-start justify-between mb-2 sm:mb-3 gap-3">
+            <div className="flex items-start justify-between mb-2 gap-2">
               <div className="flex items-center space-x-2 min-w-0 flex-1">
                 <div className="min-w-0 flex-1">
                   <h5 className="font-bold text-white text-sm sm:text-base tracking-tight leading-tight">Can you afford?</h5>
@@ -145,7 +144,7 @@ export default function TotalCostDisplayV2({ carData, updateCarData: _updateCarD
             </div>
           
             {/* Compact rule indicators */}
-            <div className="space-y-1.5 sm:space-y-2 text-sm">
+            <div className="space-y-1 text-sm">
               {/* 20% Down Payment Rule */}
               <motion.div 
                 initial={{ x: -20, opacity: 0 }}
@@ -280,94 +279,170 @@ export default function TotalCostDisplayV2({ carData, updateCarData: _updateCarD
         animate={completionPercentage === 100 ? { scale: [1, 1.02, 1] } : {}}
         transition={{ duration: 0.6, repeat: 0 }}
       >
-        {/* Main EMI Display */}
-        <div className="text-center mb-3 pb-3 border-b border-slate-700/40">
-          <p className="text-sm text-gray-300 mb-1 font-medium">
-            Monthly EMI {completionPercentage === 100 && '✨'}
-          </p>
-          <p className="text-3xl font-bold tracking-tight text-gray-100">{formatCurrency(emi)}</p>
-          {monthlyFuelCost > 0 && (
-            <div className="mt-2 pt-2 border-t border-slate-700/20">
-              <p className="text-sm text-emerald-300 mb-1">Including Fuel Cost</p>
-              <p className="text-2xl font-bold text-emerald-200">{formatCurrency(totalMonthlyCarExpenses)}</p>
-              <p className="text-base text-gray-400 mt-1 font-medium">EMI ({formatCurrency(emi)}) + Fuel ({formatCurrency(monthlyFuelCost)})</p>
+        {/* Main EMI Display - Proportional UX */}
+        <div className="text-center mb-4">
+          {/* Primary EMI Section */}
+          <div className="mb-3">
+            <h3 className="text-sm font-medium text-gray-300 mb-1 tracking-wide">
+              Monthly EMI {completionPercentage === 100 && '✨'}
+            </h3>
+            <div className="text-3xl font-bold text-white mb-2 tracking-tight">
+              {formatCurrency(emi)}
+            </div>
+          </div>
+
+          {/* Fuel Cost Integration - Compact */}
+          {monthlyFuelCost > 0 ? (
+            <div className="bg-gradient-to-r from-emerald-500/20 to-green-500/20 border border-emerald-400/30 rounded-xl p-3 mb-3">
+              <p className="text-emerald-300 font-medium mb-1 text-xs tracking-wide">Including Fuel Expense</p>
+              <div className="text-2xl font-bold text-emerald-100 mb-2">
+                {formatCurrency(totalMonthlyCarExpenses)}
+              </div>
+              <div className="bg-emerald-500/10 rounded-lg p-2 text-xs">
+                <div className="flex justify-between items-center text-emerald-200">
+                  <span>EMI</span>
+                  <span className="font-semibold">{formatCurrency(emi)}</span>
+                </div>
+                <div className="flex justify-between items-center text-emerald-200 mt-1">
+                  <span>Fuel</span>
+                  <span className="font-semibold">{formatCurrency(monthlyFuelCost)}</span>
+                </div>
+                <div className="border-t border-emerald-400/20 mt-1 pt-1 flex justify-between items-center text-emerald-100 font-bold">
+                  <span>Total Monthly</span>
+                  <span>{formatCurrency(totalMonthlyCarExpenses)}</span>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className="bg-gradient-to-r from-cyan-500/10 to-blue-500/10 border border-cyan-400/20 rounded-xl p-3 mb-3">
+              <button
+                onClick={() => {
+                  const fuelExpenseElement = document.getElementById('monthly-fuel-expense');
+                  if (fuelExpenseElement) {
+                    fuelExpenseElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    setTimeout(() => {
+                      const input = fuelExpenseElement.querySelector('input');
+                      if (input) input.focus();
+                    }, 500);
+                  }
+                }}
+                className="w-full p-2 text-cyan-300 hover:text-cyan-200 transition-all duration-200 cursor-pointer bg-cyan-500/10 hover:bg-cyan-500/20 rounded-lg border border-cyan-400/20 hover:border-cyan-400/40 outline-none"
+              >
+                <div className="flex items-center justify-center space-x-2">
+                  <span className="text-xs font-medium">+ Add Fuel Expense</span>
+                </div>
+                <p className="text-xs text-cyan-400/80 mt-1">Get your complete monthly car cost</p>
+              </button>
             </div>
           )}
-          <p className="text-base text-gray-400 mt-1 font-medium">Ends: {getLastEMIDate()}</p>
+
+          {/* Loan Duration Info */}
+          <div className="bg-slate-700/20 rounded-lg p-2">
+            <p className="text-gray-300 font-medium text-xs mb-1">Loan Duration</p>
+            <p className="text-gray-400 text-sm">Ends on <span className="font-semibold text-gray-200">{getLastEMIDate()}</span></p>
+          </div>
         </div>
 
 
-        {/* Loan Details - Clean Layout */}
-        <div className="space-y-1.5">
+        {/* Loan Details - Compact Layout */}
+        <div className="border-t border-slate-700/30 pt-3">
+          <h4 className="text-gray-200 font-medium mb-3 text-sm tracking-wide">Loan Breakdown</h4>
+          
           {/* Interest Rate */}
-          <div className="flex justify-between items-center py-1">
-            <div className="flex items-center space-x-1.5">
-              <div className="w-6 h-6 bg-red-500/20 rounded-lg flex items-center justify-center">
-                <Percent size={12} className="text-red-300"/>
+          <div className="bg-red-500/10 border border-red-400/20 rounded-lg p-3 mb-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-2">
+                <div className="w-8 h-8 bg-red-500/20 rounded-full flex items-center justify-center">
+                  <Percent size={14} className="text-red-300"/>
+                </div>
+                <div>
+                  <div className="text-red-100 font-semibold text-sm">Interest Rate</div>
+                  <div className="text-red-300 text-xs">Annual percentage rate</div>
+                </div>
               </div>
-              <span className="text-gray-200 font-medium text-base">Interest</span>
-            </div>
-            <span className="font-medium text-gray-100 text-lg">{carData.interestRate}%</span>
-          </div>
-
-          {/* Period with toggle */}
-          <div className="flex justify-between items-center py-1">
-            <div className="flex items-center space-x-1.5">
-              <div className="w-6 h-6 bg-cyan-500/20 rounded-lg flex items-center justify-center">
-                <Clock size={12} className="text-cyan-300"/>
-              </div>
-              <span className="text-gray-200 font-medium text-base">Period</span>
-            </div>
-            <div className="flex items-center space-x-1.5">
-              <span className="font-medium text-gray-100 text-lg">{formatDuration()}</span>
-              <div className="flex bg-slate-700/50 rounded-full p-0.5">
-                <button
-                  onClick={() => setDurationToggle('years')}
-                  className={`text-xs px-2 py-1 rounded-full transition-all duration-200 font-bold min-w-[24px] ${
-                    durationToggle === 'years' 
-                      ? 'bg-cyan-400 text-slate-800 shadow-sm' 
-                      : 'text-gray-300 hover:bg-slate-600/50'
-                  }`}
-                >
-                  Y
-                </button>
-                <button
-                  onClick={() => setDurationToggle('months')}
-                  className={`text-xs px-2 py-1 rounded-full transition-all duration-200 font-bold min-w-[24px] ${
-                    durationToggle === 'months' 
-                      ? 'bg-cyan-400 text-slate-800 shadow-sm' 
-                      : 'text-gray-300 hover:bg-slate-600/50'
-                  }`}
-                >
-                  M
-                </button>
+              <div className="text-right">
+                <div className="text-lg font-bold text-red-100">{carData.interestRate}%</div>
               </div>
             </div>
           </div>
 
-          {/* Interest Cost */}
-          <div className="flex justify-between items-center py-1">
-            <div className="flex items-center space-x-1.5">
-              <div className="w-6 h-6 bg-yellow-500/20 rounded-lg flex items-center justify-center">
-                <TrendingUp size={12} className="text-yellow-300"/>
+          {/* Loan Period */}
+          <div className="bg-cyan-500/10 border border-cyan-400/20 rounded-lg p-3 mb-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-2">
+                <div className="w-8 h-8 bg-cyan-500/20 rounded-full flex items-center justify-center">
+                  <Clock size={14} className="text-cyan-300"/>
+                </div>
+                <div>
+                  <div className="text-cyan-100 font-semibold text-sm">Loan Period</div>
+                  <div className="text-cyan-300 text-xs">Repayment duration</div>
+                </div>
               </div>
-              <span className="text-gray-200 font-medium text-base">Interest Cost</span>
+              <div className="text-right flex items-center space-x-2">
+                <div className="text-lg font-bold text-cyan-100">
+                  {durationToggle === 'months' ? `${carData.tenure * 12}m` : `${carData.tenure}y`}
+                </div>
+                <div className="flex bg-slate-700/50 rounded-full p-0.5">
+                  <button
+                    onClick={() => setDurationToggle('years')}
+                    className={`text-xs px-1.5 py-0.5 rounded-full transition-all duration-200 font-bold ${
+                      durationToggle === 'years' 
+                        ? 'bg-cyan-400 text-slate-800 shadow-sm' 
+                        : 'text-gray-300 hover:bg-slate-600/50'
+                    }`}
+                  >
+                    Y
+                  </button>
+                  <button
+                    onClick={() => setDurationToggle('months')}
+                    className={`text-xs px-1.5 py-0.5 rounded-full transition-all duration-200 font-bold ${
+                      durationToggle === 'months' 
+                        ? 'bg-cyan-400 text-slate-800 shadow-sm' 
+                        : 'text-gray-300 hover:bg-slate-600/50'
+                    }`}
+                  >
+                    M
+                  </button>
+                </div>
+              </div>
             </div>
-            <span className="font-medium text-gray-100 text-lg">{formatCurrency(totalInterest)}</span>
           </div>
 
-          {/* Total Payment - Highlighted */}
-          <div className="flex justify-between items-center bg-gradient-to-br from-purple-600/40 to-purple-500/30 border-2 border-purple-400/50 rounded-xl p-3 shadow-lg mt-4">
-            <div className="flex items-center space-x-2">
-              <div className="w-6 h-6 bg-purple-500/30 rounded-lg flex items-center justify-center">
-                <span className="text-purple-200 font-bold text-sm">₹</span>
+          {/* Interest Cost */}  
+          <div className="bg-yellow-500/10 border border-yellow-400/20 rounded-lg p-3 mb-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-2">
+                <div className="w-8 h-8 bg-yellow-500/20 rounded-full flex items-center justify-center">
+                  <TrendingUp size={14} className="text-yellow-300"/>
+                </div>
+                <div>
+                  <div className="text-yellow-100 font-semibold text-sm">Total Interest</div>
+                  <div className="text-yellow-300 text-xs">Amount paid over principal</div>
+                </div>
               </div>
-              <div className="flex flex-col">
-                <span className="text-purple-100 font-semibold text-base">Total Payment</span>
-                <span className="text-purple-200 text-xs">Principal + Interest</span>
+              <div className="text-right">
+                <div className="text-lg font-bold text-yellow-100">{formatCurrency(totalInterest)}</div>
               </div>
             </div>
-            <span className="font-bold text-purple-100 text-xl">{formatCurrency(totalPayment)}</span>
+          </div>
+
+          {/* Total Payment - Compact */}
+          <div className="bg-gradient-to-br from-purple-600/30 to-indigo-600/30 border border-purple-400/40 rounded-lg p-3 shadow-lg">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-3">
+                <div className="w-8 h-8 bg-purple-500/30 rounded-full flex items-center justify-center">
+                  <span className="text-purple-200 font-bold text-sm">₹</span>
+                </div>
+                <div>
+                  <div className="text-purple-100 font-bold text-base">Total Payment</div>
+                  <div className="text-purple-300 text-xs">Principal + Interest</div>
+                </div>
+              </div>
+              <div className="text-right">
+                <div className="text-xl font-bold text-purple-100">{formatCurrency(totalPayment)}</div>
+                <div className="text-purple-300 text-xs mt-0.5">Over {formatDuration()}</div>
+              </div>
+            </div>
           </div>
         </div>
 

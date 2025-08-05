@@ -121,14 +121,14 @@ export default function CarDetailsFormV2({ carData, updateCarData, monthlyIncome
                 e.preventDefault()
               }
             }}
-            className="w-full pl-8 pr-4 py-3 sm:py-4 bg-white/10 backdrop-blur-md border border-white/20 rounded-lg sm:rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-transparent transition-all text-base"
+            className="w-full pl-8 pr-4 py-2.5 bg-white/10 backdrop-blur-md border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-transparent transition-all text-base"
             placeholder="Enter on-road car price"
           />
         </div>
       </div>
 
       {/* Down Payment */}
-      <div className="space-y-3">
+      <div className="space-y-2">
         <div className="flex items-center justify-between mb-2">
           <label className="text-base min-[375px]:text-lg font-medium text-white" style={{ lineHeight: '1.5' }}>
             2. Down Payment
@@ -185,14 +185,14 @@ export default function CarDetailsFormV2({ carData, updateCarData, monthlyIncome
                 e.preventDefault()
               }
             }}
-            className="w-full pl-8 pr-4 py-2 sm:py-3 bg-white/10 backdrop-blur-md border border-white/20 rounded-lg sm:rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-transparent transition-all text-sm sm:text-base"
+            className="w-full pl-8 pr-4 py-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-transparent transition-all text-base"
             placeholder="Enter down payment"
           />
         </div>
       </div>
 
       {/* Monthly Income - Required for calculations */}
-      <div className={`space-y-3 p-3 rounded-lg transition-all duration-300 ${
+      <div className={`space-y-2 p-2.5 rounded-lg transition-all duration-300 ${
         shouldHighlightMonthlyIncome 
           ? 'border-lime-400/40 shadow-lg shadow-lime-400/20 bg-lime-400/10 border' 
           : ''
@@ -233,7 +233,7 @@ export default function CarDetailsFormV2({ carData, updateCarData, monthlyIncome
               }
             }}
             placeholder="Enter your monthly income"
-            className={`w-full pl-8 pr-4 py-3 sm:py-4 bg-white/10 backdrop-blur-md border rounded-lg sm:rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-transparent transition-all text-base ${
+            className={`w-full pl-8 pr-4 py-2.5 bg-white/10 backdrop-blur-md border rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-transparent transition-all text-base ${
               shouldHighlightMonthlyIncome 
                 ? 'border-lime-400/60' 
                 : 'border-white/20'
@@ -252,7 +252,7 @@ export default function CarDetailsFormV2({ carData, updateCarData, monthlyIncome
   return (
     <div className="space-y-8">
       
-      <div className="space-y-6" role="form" aria-label="Car details form">
+      <div className="space-y-5" role="form" aria-label="Car details form">
         {formContent}
       </div>
     </div>

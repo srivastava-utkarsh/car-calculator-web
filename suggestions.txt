@@ -1,8 +1,125 @@
-1. show affordability panel on right side with empty value, if all required params are not filled.
-2. remove "Include in budget?" toggle, if values are filled then always show "Including Fuel Cost"
-3. remove "Fuel Cost"
-4. Remove icon just left to "Affordability Score" text
-5. rename "Affordability Score" to "Can you afford?" and display "YES" or "NO"
-6. remove "Needs Review
-Try adjusting your down payment or loan term for a better fit." text
-7. align "Total Payment", "Interest","Period" and "Interest Cost" in UX friendly way
+To achieve **left and right panels each occupying exactly 30% of the container width**, you should use Tailwind’s utility classes with either [arbitrary values](https://tailwindcss.com/docs/width#arbitrary-values) for width or, for grid layouts, use the `basis-*`, `w-*`, or custom grid column configurations.
+
+### **Recommended Config for 30%/40%/30% Layout (Left/Middle/Right)**
+
+If you want **left 30%**, **right 30%**, and optionally a center “main” region with the remaining 40%, here’s how you can do it:
+
+#### **Option 1: Flexbox with Width Fraction Utilities (Easiest for Percentage)**
+Use `flex` and set each part’s width individually:
+
+```html
+
+  
+    
+      
+      
+        Left (30%)
+      
+      
+      
+        Main (40%)
+      
+      
+      
+        Right (30%)
+      
+    
+  
+
+```
+- `w-[30%]` assigns 30% width (arbitrary Tailwind width).
+- `flex-1` fills remaining space (40% if used).
+
+#### **Option 2: CSS Grid with Custom Column Template**
+Let’s say you want exactly three columns, with col1/col3 at 30% and the middle at 40%:
+
+```html
+
+  
+    
+      
+      
+        Left (30%)
+      
+      
+      
+        Main (40%)
+      
+      
+      
+        Right (30%)
+      
+    
+  
+
+```
+You can inject the `style` attribute or use Tailwind’s **arbitrary grid template** format:
+
+```html
+
+  
+
+```
+
+### **Tailwind Utility Config (Copy-paste):**
+
+**HTML for Flex version:**
+```html
+
+  
+    
+      Left
+      Main
+      Right
+    
+  
+
+```
+
+**HTML for Grid version:**
+```html
+
+  
+    
+      Left
+      Main
+      Right
+    
+  
+
+```
+Or with 1fr for flexible center:
+```html
+
+  
+
+```
+
+### **Responsive Example:** 
+
+Use the normal stacked `grid-cols-1` on mobile and switch to the custom grid on large screens:
+
+```html
+
+  Left
+  Main
+  Right
+
+```
+
+## **Summary Table: Tailwind Classes**
+
+| Element         | Tailwind Classes Example                             |
+|-----------------|-----------------------------------------------------|
+| Container div   | `mx-auto max-w-5xl w-full`                          |
+| Layout grid     | `grid grid-cols-1 lg:[grid-template-columns:30%_1fr_30%]`  |
+| Left Panel      | `p-6 bg-blue-100`                                   |
+| Right Panel     | `p-6 bg-green-100`                                  |
+| Main (center)   | `p-6 bg-gray-100`                                   |
+
+### **Key Point:**
+- For **custom widths like 30%**, use Tailwind’s arbitrary value syntax:  
+  - `w-[30%]` (for flex children)  
+  - `[grid-template-columns:30%_1fr_30%]` (for grid container)
+
+**Pick the approach (Flex or Grid) that fits your content and responsive needs!**

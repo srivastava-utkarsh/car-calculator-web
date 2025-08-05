@@ -208,14 +208,14 @@ export default function Demo2Page() {
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-6 mb-8"
+            className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-4 mb-6"
           >
             <h2 className="text-lg font-bold text-white mb-6 flex items-center space-x-2">
               <DollarSign className="w-5 h-5" />
               <span>Loan Parameters</span>
             </h2>
             
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
               <div>
                 <label className="block text-sm font-medium text-white/80 mb-2">
                   Loan Amount
@@ -224,7 +224,7 @@ export default function Demo2Page() {
                   type="number"
                   value={loanData.principal}
                   onChange={(e) => updateLoanData('principal', Number(e.target.value))}
-                  className="w-full bg-white/10 border border-white/20 rounded-lg px-4 py-3 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                  className="w-full bg-white/10 border border-white/20 rounded-lg px-4 py-2 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
                   placeholder="Enter loan amount"
                 />
                 <p className="text-xs text-white/60 mt-1">{formatCurrency(loanData.principal)}</p>
@@ -239,7 +239,7 @@ export default function Demo2Page() {
                   step="0.1"
                   value={loanData.interestRate}
                   onChange={(e) => updateLoanData('interestRate', Number(e.target.value))}
-                  className="w-full bg-white/10 border border-white/20 rounded-lg px-4 py-3 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                  className="w-full bg-white/10 border border-white/20 rounded-lg px-4 py-2 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
                   placeholder="8.5"
                 />
               </div>
@@ -252,7 +252,7 @@ export default function Demo2Page() {
                   type="number"
                   value={loanData.tenure}
                   onChange={(e) => updateLoanData('tenure', Number(e.target.value))}
-                  className="w-full bg-white/10 border border-white/20 rounded-lg px-4 py-3 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                  className="w-full bg-white/10 border border-white/20 rounded-lg px-4 py-2 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
                   placeholder="25"
                 />
               </div>
@@ -265,7 +265,7 @@ export default function Demo2Page() {
                   type="number"
                   value={loanData.prepaymentAmount}
                   onChange={(e) => updateLoanData('prepaymentAmount', Number(e.target.value))}
-                  className="w-full bg-white/10 border border-white/20 rounded-lg px-4 py-3 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                  className="w-full bg-white/10 border border-white/20 rounded-lg px-4 py-2 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
                   placeholder="50000"
                 />
                 <p className="text-xs text-white/60 mt-1">{formatCurrency(loanData.prepaymentAmount)}</p>
@@ -278,7 +278,7 @@ export default function Demo2Page() {
                 <select
                   value={loanData.prepaymentFrequency}
                   onChange={(e) => updateLoanData('prepaymentFrequency', Number(e.target.value))}
-                  className="w-full bg-white/10 border border-white/20 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                  className="w-full bg-white/10 border border-white/20 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
                 >
                   <option value={12} className="bg-black">Yearly</option>
                   <option value={6} className="bg-black">Half-yearly</option>

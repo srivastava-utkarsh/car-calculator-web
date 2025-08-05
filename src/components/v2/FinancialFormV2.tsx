@@ -154,7 +154,7 @@ export default function FinancialFormV2({ carData, updateCarData, monthlyIncomeI
                 updateCarData({ interestRate: clampedValue });
               }
             }}
-            className="w-full px-4 py-3 bg-white/10 backdrop-blur-md border border-white/20 rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-red-400 focus:border-transparent transition-all"
+            className="w-full px-4 py-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-red-400 focus:border-transparent transition-all"
             placeholder="Interest rate (5-15%)"
           />
           
@@ -194,132 +194,58 @@ export default function FinancialFormV2({ carData, updateCarData, monthlyIncomeI
         </div>
       </div>
 
-      {/* Additional Details Section - Fixed Display */}
-      <div className="space-y-4">
-        <h3 className="text-lg font-semibold text-white">
-          6. Additional Details
-        </h3>
-        
-        {/* Smart Purchase Score Completion Notice - Smaller Box */}
-        {isAdditionalDetailsMissing && (
-          <div className="bg-amber-500/15 border border-amber-400/20 rounded-lg p-3">
-            <h4 className="text-xs font-medium text-amber-200 mb-1">
-              Complete Details for Full Analysis
-            </h4>
-            <p className="text-amber-300 text-xs">
-              Add fuel costs, km/month, and insurance details ({missingAdditionalCount}/3 filled) to get your complete Smart Purchase Score analysis.
-            </p>
-          </div>
-        )}
-        
-        <div className="space-y-6">
-          {/* Consolidated Input for Processing Fee + Insurance + Others */}
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-white">
-              Processing Fee + Insurance + Others
-            </label>
-            <div className="relative">
-              <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white/70 font-medium">₹</span>
-              <input
-                type="number"
-                min="0"
-                max={carData.carPrice}
-                value={carData.insuranceAndMaintenance || ''}
-                onChange={(e) => updateCarData({ insuranceAndMaintenance: parseFloat(e.target.value) || 0 })}
-placeholder=""
-                className="w-full pl-8 pr-4 py-3 bg-white/10 backdrop-blur-md border border-white/20 rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all"
-              />
-            </div>
-          </div>
+      {/* Processing Fee + Insurance + Others */}
+      <div className="space-y-2">
+        <label className="text-base min-[375px]:text-lg font-medium text-white" style={{ lineHeight: '1.5' }}>
+          6. Processing Fee + Insurance + Others
+        </label>
+        <div className="relative">
+          <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white/70 font-semibold">₹</span>
+          <input
+            type="number"
+            min="0"
+            max={carData.carPrice}
+            value={carData.insuranceAndMaintenance || ''}
+            onChange={(e) => updateCarData({ insuranceAndMaintenance: parseFloat(e.target.value) || 0 })}
+            placeholder=""
+            className="w-full pl-8 pr-4 py-2.5 bg-white/10 backdrop-blur-md border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all text-base"
+          />
+        </div>
+      </div>
 
-          {/* Calculate Monthly Running Cost Section */}
-          <div 
-            data-section="monthly-running-cost"
-            className="bg-white/5 rounded-lg p-4 border border-white/10 transition-all duration-300"
-          >
-            <h4 className="text-sm font-semibold text-white mb-3">
-              Calculate Monthly Running Cost
-            </h4>
-            
-            <div className="space-y-4">
-              {/* KM Driven Per Month */}
-              <div className="space-y-2">
-                <label className="text-sm text-white/80">Estimated KM Driven Per Month</label>
-                <input
-                  ref={kmInputRef}
-                  type="number"
-                  min="1"
-                  max="20000"
-                  value={carData.kmPerMonth || ''}
-                  onChange={(e) => {
-                    const numericValue = e.target.value.replace(/[^0-9.]/g, '')
-                    let km = parseFloat(numericValue) || 0
-                    
-                    // Enforce limits
-                    if (km > 20000) {
-                      km = 20000
-                    } else if (km < 0) {
-                      km = 0
-                    }
-                    
-                    updateCarData({ kmPerMonth: km })
-                    
-                    // Auto-enable "Include in budget?" toggle when both fuel inputs are filled
-                    if (km > 0 && carData.fuelCostPerLiter > 0 && !carData.includeFuelInAffordability) {
-                      updateCarData({ includeFuelInAffordability: true })
-                    }
-                  }}
-                  onKeyPress={(e) => {
-                    if (!/[0-9.]/.test(e.key) && e.key !== 'Backspace' && e.key !== 'Delete') {
-                      e.preventDefault()
-                    }
-                  }}
-                  placeholder="Click here to fill km per month"
-                  className="w-full px-4 py-3 bg-white/10 backdrop-blur-md border border-white/20 rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-transparent transition-all"
-                />
-              </div>
-
-              {/* Fuel Cost Per Liter */}
-              <div className="space-y-2">
-                <label className="text-sm text-white/80">Fuel Cost Per Liter</label>
-                <div className="relative">
-                  <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white/70 font-medium">₹</span>
-                  <input
-                    ref={fuelCostInputRef}
-                    type="number"
-                    min="1"
-                    max="300"
-                    value={carData.fuelCostPerLiter || ''}
-                    onChange={(e) => {
-                      const numericValue = e.target.value.replace(/[^0-9.]/g, '')
-                      let fuelCost = parseFloat(numericValue) || 0
-                      
-                      // Enforce limits
-                      if (fuelCost > 300) {
-                        fuelCost = 300
-                      } else if (fuelCost < 0) {
-                        fuelCost = 0
-                      }
-                      
-                      updateCarData({ fuelCostPerLiter: fuelCost })
-                      
-                      // Auto-enable "Include in budget?" toggle when both fuel inputs are filled
-                      if (fuelCost > 0 && carData.kmPerMonth > 0 && !carData.includeFuelInAffordability) {
-                        updateCarData({ includeFuelInAffordability: true })
-                      }
-                    }}
-                    onKeyPress={(e) => {
-                      if (!/[0-9.]/.test(e.key) && e.key !== 'Backspace' && e.key !== 'Delete') {
-                        e.preventDefault()
-                      }
-                    }}
-                    placeholder="Enter fuel cost per liter"
-                    className="w-full pl-8 pr-4 py-3 bg-white/10 backdrop-blur-md border border-white/20 rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-transparent transition-all"
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
+      {/* Monthly Fuel Expense */}
+      <div className="space-y-2" id="monthly-fuel-expense">
+        <label className="text-base min-[375px]:text-lg font-medium text-white" style={{ lineHeight: '1.5' }}>
+          7. Monthly Fuel Expense
+        </label>
+        <div className="relative">
+          <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white/70 font-semibold">₹</span>
+          <input
+            type="number"
+            min="1"
+            max="100000"
+            value={carData.monthlyFuelExpense || ''}
+            onChange={(e) => {
+              const numericValue = e.target.value.replace(/[^0-9.]/g, '')
+              let expense = parseFloat(numericValue) || 0
+              
+              // Enforce limits
+              if (expense > 100000) {
+                expense = 100000
+              } else if (expense < 0) {
+                expense = 0
+              }
+              
+              updateCarData({ monthlyFuelExpense: expense })
+            }}
+            onKeyPress={(e) => {
+              if (!/[0-9.]/.test(e.key) && e.key !== 'Backspace' && e.key !== 'Delete') {
+                e.preventDefault()
+              }
+            }}
+            placeholder="Enter monthly fuel expense"
+            className="w-full pl-8 pr-4 py-2.5 bg-white/10 backdrop-blur-md border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-transparent transition-all text-base"
+          />
         </div>
       </div>
 
@@ -327,9 +253,9 @@ placeholder=""
   )
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
 
-      <div className="space-y-6">
+      <div className="space-y-4">
         {formContent}
       </div>
     </div>
