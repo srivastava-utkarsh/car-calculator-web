@@ -13,6 +13,8 @@ export interface PrepaymentResult {
   monthsReduced: number;
   interestSaved: number;
   totalSavings: number;
+  penaltyAmount?: number;
+  netSavings?: number;
 }
 
 export interface StepUpResult {
@@ -34,23 +36,32 @@ export interface ShorterTenureResult {
 /**
  * Calculate the impact of a lump sum prepayment (Reduce Tenure)
  * Formula from suggestions.txt: n = ln(EMI / (EMI - r * P_new)) / ln(1 + r)
+ * Includes penalty calculation for fixed-rate loans
  */
 export const calculatePrepaymentImpact = (
   loanDetails: LoanDetails,
-  prepaymentAmount: number
+  prepaymentAmount: number,
+  loanType: 'fixed' | 'floating' = 'floating',
+  penaltyRate: number = 0
 ): PrepaymentResult => {
   const { principal, monthlyEMI, monthlyRate, remainingTenure } = loanDetails;
   
   // Step 1: Remaining Principal after prepayment
   const newPrincipal = principal - prepaymentAmount;
   
+  // Calculate penalty amount for fixed-rate loans
+  const penaltyAmount = loanType === 'fixed' ? (prepaymentAmount * penaltyRate / 100) : 0;
+  
   if (newPrincipal <= 0) {
+    const totalInterestSaved = calculateRemainingInterest(loanDetails);
     return {
       newTenureMonths: 0,
       newTenureYears: 0,
       monthsReduced: remainingTenure,
-      interestSaved: calculateRemainingInterest(loanDetails),
-      totalSavings: calculateRemainingInterest(loanDetails)
+      interestSaved: totalInterestSaved,
+      totalSavings: totalInterestSaved,
+      penaltyAmount,
+      netSavings: totalInterestSaved - penaltyAmount
     };
   }
   
@@ -64,13 +75,16 @@ export const calculatePrepaymentImpact = (
   const originalInterest = calculateRemainingInterest(loanDetails);
   const newInterest = calculateTotalInterest(newPrincipal, monthlyEMI, newTenureMonths);
   const interestSaved = originalInterest - newInterest;
+  const netSavings = interestSaved - penaltyAmount;
   
   return {
     newTenureMonths,
     newTenureYears: Math.ceil(newTenureMonths / 12),
     monthsReduced,
     interestSaved,
-    totalSavings: interestSaved
+    totalSavings: interestSaved,
+    penaltyAmount,
+    netSavings
   };
 };
 

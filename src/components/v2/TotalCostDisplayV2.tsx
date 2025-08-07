@@ -478,6 +478,7 @@ export default function TotalCostDisplayV2({ carData, updateCarData: _updateCarD
             </div>
           </div>
         )}
+
       </motion.div>
 
 

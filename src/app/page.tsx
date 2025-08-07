@@ -1,9 +1,10 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ChevronDown } from 'lucide-react'
+import { PiggyBank, TrendingUp, Clock } from 'lucide-react'
 import Image from 'next/image'
+import { useRouter } from 'next/navigation'
 // Import Version 2 components
 import CarDetailsFormV2 from '@/components/v2/CarDetailsFormV2'
 import FinancialFormV2 from '@/components/v2/FinancialFormV2'
@@ -25,13 +26,15 @@ export interface CarData {
   monthlySavings?: number
   includeFuelInAffordability?: boolean
   monthlyFuelExpense?: number
+  loanType?: 'fixed' | 'floating'
+  prepaymentPenaltyRate?: number
 }
 
 
 export default function HomePage() {
   const [showResults, setShowResults] = useState(false) // Toggle results view
-  const [selectedVersion, setSelectedVersion] = useState('v2') // Version selector
   const monthlyIncomeInputRef = useRef<HTMLInputElement>(null)
+  const router = useRouter()
 
   const [carData, setCarData] = useState<CarData>({
     carPrice: 0,
@@ -47,10 +50,6 @@ export default function HomePage() {
     monthlyFuelExpense: 0
   })
 
-  const versions = [
-    { id: 'v2', name: 'Version 2 - Modern Cards', description: 'Card-based design with glassmorphism' }
-  ]
-
 
   const updateCarData = (updates: Partial<CarData>) => {
     setCarData(prev => ({ ...prev, ...updates }))
@@ -59,26 +58,6 @@ export default function HomePage() {
   const hideResultsView = () => setShowResults(false)
 
   const restart = () => {
-    setShowResults(false)
-    setCarData({
-      carPrice: 0,
-      downPayment: 0,
-      interestRate: 8,
-      tenure: 0,
-      processingFee: 0,
-      kmPerMonth: 0,
-      fuelCostPerLiter: 0,
-      monthlyIncome: 0,
-      insuranceAndMaintenance: 0,
-      includeFuelInAffordability: false,
-      monthlyFuelExpense: 0
-    })
-  }
-
-
-  // Reset state when switching versions
-  const handleVersionChange = (versionId: string) => {
-    setSelectedVersion(versionId)
     setShowResults(false)
     setCarData({
       carPrice: 0,
@@ -208,6 +187,81 @@ export default function HomePage() {
             </div>
           </div>
         </section>
+
+        {/* Smart Prepayment Section */}
+        {carData.carPrice > 0 && carData.downPayment >= 0 && carData.tenure > 0 && (
+          <section className="relative z-10 mt-12">
+            <div className="container mx-auto px-4">
+              <div className="max-w-4xl mx-auto">
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 0.3 }}
+                  className="bg-gradient-to-r from-emerald-500/10 via-green-500/5 to-emerald-600/10 backdrop-blur-xl rounded-3xl border border-emerald-400/20 p-8 shadow-2xl hover:shadow-emerald-500/10 transition-all duration-500"
+                >
+                  <div className="text-center">
+                    <div className="flex justify-center mb-4">
+                      <div className="w-16 h-16 bg-emerald-500/20 rounded-2xl flex items-center justify-center">
+                        <PiggyBank className="w-8 h-8 text-emerald-400" />
+                      </div>
+                    </div>
+                    <h3 className="text-white font-bold text-2xl mb-3">Ready to Save on Interest?</h3>
+                    <p className="text-white/70 text-lg mb-6 max-w-2xl mx-auto">
+                      Discover how strategic prepayments can reduce your loan tenure by years and save lakhs in interest payments
+                    </p>
+                    
+                    {/* Benefits Preview */}
+                    <div className="grid md:grid-cols-2 gap-4 mb-8">
+                      <div className="bg-white/5 rounded-2xl p-4 border border-emerald-400/20">
+                        <div className="flex items-center space-x-3">
+                          <div className="w-10 h-10 bg-emerald-500/20 rounded-xl flex items-center justify-center">
+                            <Clock className="w-5 h-5 text-emerald-400" />
+                          </div>
+                          <div className="text-left">
+                            <div className="text-emerald-300 font-semibold text-sm">Reduce Tenure</div>
+                            <div className="text-white/70 text-xs">Finish loan 3-5 years earlier</div>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="bg-white/5 rounded-2xl p-4 border border-emerald-400/20">
+                        <div className="flex items-center space-x-3">
+                          <div className="w-10 h-10 bg-emerald-500/20 rounded-xl flex items-center justify-center">
+                            <TrendingUp className="w-5 h-5 text-emerald-400" />
+                          </div>
+                          <div className="text-left">
+                            <div className="text-emerald-300 font-semibold text-sm">Massive Savings</div>
+                            <div className="text-white/70 text-xs">Save ₹10L+ in interest</div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <button
+                      onClick={() => {
+                        const params = new URLSearchParams({
+                          carPrice: (carData.carPrice || 0).toString(),
+                          downPayment: (carData.downPayment || 0).toString(),
+                          interestRate: (carData.interestRate || 8).toString(),
+                          tenure: (carData.tenure || 0).toString()
+                        })
+                        window.open(`/prepayment?${params.toString()}`, '_blank')
+                      }}
+                      className="group inline-flex items-center space-x-4 bg-gradient-to-r from-emerald-500 to-green-500 hover:from-emerald-600 hover:to-green-600 text-white font-bold px-8 py-4 rounded-2xl transition-all duration-300 shadow-lg hover:shadow-2xl hover:shadow-emerald-500/25 transform hover:scale-105 hover:-translate-y-1"
+                    >
+                      <PiggyBank className="w-6 h-6 group-hover:rotate-12 transition-transform duration-300" />
+                      <span className="text-lg">Calculate Smart Prepayment</span>
+                      <div className="w-2 h-2 bg-white/30 rounded-full group-hover:w-8 group-hover:h-2 transition-all duration-300"></div>
+                    </button>
+                    
+                    <p className="text-emerald-200/60 text-sm mt-4">
+                      Free analysis • No hidden charges • Instant results
+                    </p>
+                  </div>
+                </motion.div>
+              </div>
+            </div>
+          </section>
+        )}
 
         {/* Cost Distribution Chart Section */}
         <section className="relative z-10 mt-12">
