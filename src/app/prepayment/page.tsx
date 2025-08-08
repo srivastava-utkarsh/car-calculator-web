@@ -587,381 +587,222 @@ function PrepaymentCalculator() {
                   transition={{ duration: 0.4, delay: 0.2 }}
                   className="space-y-6"
                 >
-                {/* Strategy Information */}
-                <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-4 mb-6 shadow-2xl">
-                  <h3 className="text-white font-bold text-lg mb-4 flex items-center space-x-2">
-                    <Target className="w-5 h-5 text-emerald-400" />
-                    <span>Prepayment Strategy</span>
-                  </h3>
-                  
-                  <div className="bg-emerald-500/10 rounded-xl p-4 border border-emerald-400/30">
-                    <div className="flex items-center space-x-3 mb-2">
-                      <Clock className="w-5 h-5 text-emerald-400" />
-                      <div className="text-emerald-300 text-xs font-medium">
-                        Optimized Strategy
-                      </div>
-                    </div>
-                    <h4 className="font-semibold text-lg mb-1 text-emerald-300">
-                      Reduce Loan Tenure
-                    </h4>
-                    <p className="text-xs text-emerald-200/80">
-                      Keep EMI same, finish loan faster with maximum interest savings
-                    </p>
-                  </div>
-                  
-                  {/* Prepayment Configuration - Moved here */}
-                  <div className="mt-6">
-                    <h4 className="text-white font-medium text-sm mb-4 flex items-center space-x-2">
-                      <DollarSign className="w-4 h-4 text-yellow-400" />
-                      <span>Prepayment Details</span>
-                    </h4>
-                    
-                    <div className="space-y-4">
-                      {/* Frequency Selection */}
-                      <div>
-                        <label className="block text-white/80 text-sm font-medium mb-3">Payment Frequency</label>
-                        <div className="flex bg-white/5 rounded-xl p-1 border border-white/20">
-                          <button
-                            onClick={() => setPrepaymentFrequency('yearly')}
-                            className={`flex-1 py-2 px-3 rounded-lg font-medium transition-all duration-200 ${
-                              prepaymentFrequency === 'yearly'
-                                ? 'bg-white/20 text-white shadow-sm'
-                                : 'text-white/70 hover:text-white hover:bg-white/10'
-                            }`}
-                          >
-                            Yearly
-                          </button>
-                          <button
-                            onClick={() => setPrepaymentFrequency('monthly')}
-                            className={`flex-1 py-2 px-3 rounded-lg font-medium transition-all duration-200 ${
-                              prepaymentFrequency === 'monthly'
-                                ? 'bg-white/20 text-white shadow-sm'
-                                : 'text-white/70 hover:text-white hover:bg-white/10'
-                            }`}
-                          >
-                            Monthly
-                          </button>
-                        </div>
-                      </div>
-
-                      {/* Prepayment Amount Input */}
-                      <div>
-                        <label className="block text-white/80 text-sm font-medium mb-3">
-                          {prepaymentFrequency === 'yearly' ? 'Yearly' : 'Monthly'} Prepayment Amount
-                        </label>
-                        <div className="relative">
-                          <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white/60 font-medium">₹</span>
-                          <input
-                            type="number"
-                            value={prepaymentAmount}
-                            onChange={(e) => setPrepaymentAmount(parseFloat(e.target.value) || 0)}
-                            className="w-full bg-white/10 border border-white/20 rounded-xl pl-8 pr-4 py-3 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500/50 backdrop-blur-sm"
-                            placeholder={`Enter ${prepaymentFrequency} amount`}
-                          />
-                        </div>
-                        <p className="text-white/60 text-xs mt-2">
-                          Suggested: {formatCurrency(loanData.loanAmount * (prepaymentFrequency === 'yearly' ? 0.1 : 0.008))}
-                        </p>
-                      </div>
-                      
-                      {/* Simple Penalty Input */}
-                      <div>
-                        <label className="block text-white/80 text-sm font-medium mb-3">Prepayment Penalty (if any)</label>
-                        <div className="relative">
-                          <input
-                            type="number"
-                            step="0.1"
-                            min="0"
-                            max="5"
-                            value={penaltyRate}
-                            onChange={(e) => {
-                              const value = parseFloat(e.target.value);
-                              if (isNaN(value)) {
-                                setPenaltyRate(0);
-                              } else if (value < 0) {
-                                setPenaltyRate(0);
-                              } else if (value > 5) {
-                                setPenaltyRate(5);
-                              } else {
-                                setPenaltyRate(value);
-                              }
-                            }}
-                            className="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50"
-                            placeholder="0 for most loans"
-                          />
-                          <span className="absolute right-3 top-1/2 transform -translate-y-1/2 text-white/60 font-medium">%</span>
-                        </div>
-                        <p className="text-white/60 text-xs mt-1">
-                          Most floating rate loans have 0% penalty (RBI guidelines)
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Impact Analysis - New Summary Style */}
-                <div className="bg-gradient-to-br from-teal-500/10 via-teal-600/5 to-emerald-500/10 backdrop-blur-xl rounded-3xl border border-teal-400/20 p-6 mb-6 shadow-2xl">
-                  <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-white font-bold text-lg flex items-center space-x-2">
-                      <Zap className="w-5 h-5 text-yellow-400" />
-                      <span>Impact Analysis</span>
-                    </h3>
-                    
-                    {/* Tenure Display Toggle */}
-                    <div className="flex bg-white/5 rounded-lg p-1 border border-white/20">
-                      <button
-                        onClick={() => setTenureDisplayFormat('years')}
-                        className={`px-3 py-1 rounded text-xs font-medium transition-all duration-200 ${
-                          tenureDisplayFormat === 'years'
-                            ? 'bg-white/20 text-white shadow-sm'
-                            : 'text-white/70 hover:text-white hover:bg-white/10'
-                        }`}
-                      >
-                        Years
-                      </button>
-                      <button
-                        onClick={() => setTenureDisplayFormat('months')}
-                        className={`px-3 py-1 rounded text-xs font-medium transition-all duration-200 ${
-                          tenureDisplayFormat === 'months'
-                            ? 'bg-white/20 text-white shadow-sm'
-                            : 'text-white/70 hover:text-white hover:bg-white/10'
-                        }`}
-                      >
-                        Months
-                      </button>
-                    </div>
-                  </div>
                 
                 {results ? (
-                  <div className="space-y-8">
-                    {/* Before Section */}
-                    <div className="bg-gradient-to-r from-red-500/10 to-red-600/20 rounded-2xl border border-red-400/30 overflow-hidden">
-                      <div className="bg-red-500/20 px-6 py-3 border-b border-red-400/30">
-                        <h3 className="text-red-100 font-bold text-xl text-center">Before</h3>
+                  /* Hero Summary Card - Before vs After Comparison */
+                  <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 shadow-2xl overflow-hidden">
+                    <div className="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-white/10">
+                      {/* Without Prepayment */}
+                      <div className="p-6 text-center">
+                        <h3 className="text-gray-400 text-base font-medium mb-4">Without Prepayment</h3>
+                        <div className="text-white text-4xl font-bold mb-2">{formatTenure(loanData.tenure)}</div>
                       </div>
-                      <div className="p-6 space-y-4">
-                        <div className="flex justify-between items-center">
-                          <span className="text-red-200 text-lg font-medium">Your Tenure</span>
-                          <span className="text-white text-2xl font-bold">{formatTenure(loanData.tenure)}</span>
-                        </div>
-                        <div className="flex justify-between items-center">
-                          <span className="text-red-200 text-lg font-medium">Your Interest paid</span>
-                          <span className="text-white text-2xl font-bold">{formatCurrency(results.originalInterest)}</span>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* After Section */}
-                    <div className="bg-gradient-to-r from-emerald-500/10 to-emerald-600/20 rounded-2xl border border-emerald-400/30 overflow-hidden">
-                      <div className="bg-emerald-500/20 px-6 py-3 border-b border-emerald-400/30">
-                        <h3 className="text-emerald-100 font-bold text-xl text-center">After</h3>
-                      </div>
-                      <div className="p-6 space-y-4">
-                        <div className="flex justify-between items-center">
-                          <span className="text-emerald-200 text-lg font-medium">Your Tenure</span>
-                          <span className="text-white text-2xl font-bold">{formatTenure(results.newTenure)}</span>
-                        </div>
-                        <div className="flex justify-between items-center">
-                          <span className="text-emerald-200 text-lg font-medium">Your Interest paid</span>
-                          <span className="text-white text-2xl font-bold">{formatCurrency(results.interestPaid)}</span>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Summary Banner */}
-                    <div className="bg-gradient-to-r from-amber-400/20 via-yellow-400/20 to-orange-400/20 rounded-2xl border border-amber-400/40 p-6">
-                      <div className="text-center">
-                        <p className="text-amber-100 text-lg mb-2">
-                          Your loan finishes <span className="font-bold text-amber-200">
-                            {(() => {
-                              const monthsSaved = results.monthsSaved || 0;
-                              if (tenureDisplayFormat === 'months') {
-                                return `${monthsSaved} months`;
-                              } else {
-                                const years = Math.floor(monthsSaved / 12);
-                                const remainingMonths = monthsSaved % 12;
-                                if (years === 0) {
-                                  return `${remainingMonths} months`;
-                                } else if (remainingMonths === 0) {
-                                  return `${years} years`;
-                                } else {
-                                  return `${years} years ${remainingMonths} months`;
-                                }
-                              }
-                            })()} faster
-                          </span> and interest saved by you is <span className="font-bold text-2xl text-amber-200">
-                            {formatCurrency(
-                              penaltyRate > 0 && results.penaltyAmount 
-                                ? Math.max(0, results.amountSaved - results.penaltyAmount)
-                                : results.amountSaved
-                            )}
-                          </span>
-                        </p>
-                        {penaltyRate > 0 && results.penaltyAmount && results.penaltyAmount > 0 && (
-                          <p className="text-amber-200/80 text-sm mt-2">
-                            (After deducting ₹{formatCurrency(results.penaltyAmount).replace('₹', '')} penalty)
-                          </p>
-                        )}
-                      </div>
-                    </div>
-
-                    {/* EMI Note */}
-                    <div className="bg-blue-500/10 rounded-xl border border-blue-400/30 p-4">
-                      <div className="text-center">
-                        <p className="text-blue-200 text-sm">
-                          Note: Your EMI of <span className="font-bold">{formatCurrency(loanData.emi)}</span> remains the same.
-                        </p>
-                      </div>
-                    </div>
-
-                    {/* Old vs New Comparison Table */}
-                    <div className="bg-white/5 rounded-2xl p-6 border border-white/10">
-                      <h4 className="text-white font-semibold mb-4 flex items-center justify-between">
-                        <span className="flex items-center space-x-2">
-                          <span>Before vs After Prepayment</span>
-                          <div className="px-2 py-1 bg-green-500/20 rounded text-xs text-green-300 border border-green-500/30">RBI Verified</div>
-                        </span>
-                      </h4>
                       
+                      {/* With Prepayment */}
+                      <div className="p-6 text-center">
+                        <h3 className="text-gray-400 text-base font-medium mb-4">With Prepayment</h3>
+                        <div className="text-white text-4xl font-bold mb-2">{formatTenure(results.newTenure)}</div>
+                      </div>
+                    </div>
+                    
+                    {/* Savings Summary */}
+                    <div className="bg-white/5 border-t border-white/10 p-6 text-center">
+                      <div className="flex items-center justify-center space-x-2 mb-2">
+                        <div className="w-8 h-8 bg-green-500/20 rounded-full flex items-center justify-center">
+                          <span className="text-green-400 text-xl font-bold">₹</span>
+                        </div>
+                        <span className="text-white text-lg">You save </span>
+                        <span className="text-green-400 text-2xl font-bold">
+                          ₹{Math.round(
+                            penaltyRate > 0 && results.penaltyAmount 
+                              ? Math.max(0, results.amountSaved - results.penaltyAmount)
+                              : results.amountSaved
+                          ).toLocaleString('en-IN')}
+                        </span>
+                      </div>
+                      <p className="text-gray-300 text-sm">
+                        and finish <span className="font-semibold">
+                          {(() => {
+                            const monthsSaved = results.monthsSaved || 0;
+                            const years = Math.floor(monthsSaved / 12);
+                            const remainingMonths = monthsSaved % 12;
+                            if (years === 0) {
+                              return `${remainingMonths} month${remainingMonths !== 1 ? 's' : ''}`;
+                            } else if (remainingMonths === 0) {
+                              return `${years} year${years !== 1 ? 's' : ''}`;
+                            } else {
+                              return `${years} year${years !== 1 ? 's' : ''} ${remainingMonths} month${remainingMonths !== 1 ? 's' : ''}`;
+                            }
+                          })()}
+                        </span> earlier
+                      </p>
+                    </div>
+                  </div>
+                ) : null}
+
+                {/* Collapsible Loan Details Section */}
+                <details className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 shadow-2xl">
+                  <summary className="cursor-pointer p-6 select-none">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-2">
+                        <svg className="w-5 h-5 text-white/70" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clipRule="evenodd" />
+                        </svg>
+                        <h3 className="text-white font-bold text-lg">Loan Details</h3>
+                      </div>
+                      <svg className="w-5 h-5 text-white/70 transform transition-transform" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+                      </svg>
+                    </div>
+                  </summary>
+                  
+                  <div className="px-6 pb-6 border-t border-white/10">
+                    {results ? (
                       <div className="overflow-x-auto">
-                        <table className="w-full">
+                        <table className="w-full mt-4">
                           <thead>
                             <tr className="border-b border-white/20">
-                              <th className="text-left text-white/80 text-sm font-medium py-3 px-2">Metric</th>
-                              <th className="text-center text-red-300 text-sm font-medium py-3 px-2">Without Prepayment</th>
-                              <th className="text-center text-emerald-300 text-sm font-medium py-3 px-2">With Prepayment</th>
-                              <th className="text-center text-blue-300 text-sm font-medium py-3 px-2">Difference</th>
+                              <th className="text-left text-white/80 text-sm font-medium py-3">Metric</th>
+                              <th className="text-center text-white/80 text-sm font-medium py-3">Before</th>
+                              <th className="text-center text-white/80 text-sm font-medium py-3">After</th>
+                              <th className="text-center text-green-400 text-sm font-medium py-3">Savings</th>
                             </tr>
                           </thead>
-                          <tbody>
+                          <tbody className="text-sm">
                             <tr className="border-b border-white/10">
-                              <td className="text-white/90 py-3 px-2 font-medium">Loan Tenure</td>
-                              <td className="text-red-200 py-3 px-2 text-center">{formatTenure(loanData.tenure)}</td>
-                              <td className="text-emerald-200 py-3 px-2 text-center">{formatTenure(results.newTenure)}</td>
-                              <td className="text-blue-200 py-3 px-2 text-center">
-                                -{(() => {
+                              <td className="py-3 text-white">Loan Tenure</td>
+                              <td className="py-3 text-center text-white">{formatTenure(loanData.tenure)}</td>
+                              <td className="py-3 text-center text-white">{formatTenure(results.newTenure)}</td>
+                              <td className="py-3 text-center text-green-400 font-medium">
+                                {(() => {
                                   const monthsSaved = results.monthsSaved || 0;
-                                  if (tenureDisplayFormat === 'months') {
-                                    return `${monthsSaved} months`;
+                                  const years = Math.floor(monthsSaved / 12);
+                                  const remainingMonths = monthsSaved % 12;
+                                  if (years === 0) {
+                                    return `${remainingMonths} month${remainingMonths !== 1 ? 's' : ''}`;
+                                  } else if (remainingMonths === 0) {
+                                    return `${years} year${years !== 1 ? 's' : ''}`;
                                   } else {
-                                    const years = Math.floor(monthsSaved / 12);
-                                    const remainingMonths = monthsSaved % 12;
-                                    if (years === 0) {
-                                      return `${remainingMonths} months`;
-                                    } else if (remainingMonths === 0) {
-                                      return `${years} years`;
-                                    } else {
-                                      return `${years} years ${remainingMonths} months`;
-                                    }
+                                    return `${years} year${years !== 1 ? 's' : ''} ${remainingMonths} month${remainingMonths !== 1 ? 's' : ''}`;
                                   }
                                 })()}
                               </td>
                             </tr>
                             <tr className="border-b border-white/10">
-                              <td className="text-white/90 py-3 px-2 font-medium">Monthly EMI</td>
-                              <td className="text-red-200 py-3 px-2 text-center">{formatCurrency(loanData.emi)}</td>
-                              <td className="text-emerald-200 py-3 px-2 text-center">{formatCurrency(loanData.emi)}</td>
-                              <td className="text-blue-200 py-3 px-2 text-center">No change</td>
+                              <td className="py-3 text-white">Interest Paid</td>
+                              <td className="py-3 text-center text-white">{formatCurrency(results.originalInterest)}</td>
+                              <td className="py-3 text-center text-white">{formatCurrency(results.interestPaid)}</td>
+                              <td className="py-3 text-center text-green-400 font-medium">₹{(results.originalInterest - results.interestPaid).toLocaleString('en-IN')}</td>
                             </tr>
                             <tr className="border-b border-white/10">
-                              <td className="text-white/90 py-3 px-2 font-medium">Total Cost to You</td>
-                              <td className="text-red-200 py-3 px-2 text-center">{formatCurrency(results.originalTotalAmount)}</td>
-                              <td className="text-emerald-200 py-3 px-2 text-center">
-                                {formatCurrency(results.totalAmountPaid)}
-                              </td>
-                              <td className="text-blue-200 py-3 px-2 text-center">
-                                {(() => {
-                                  const difference = results.originalTotalAmount - results.totalAmountPaid;
-                                  return difference >= 0 
-                                    ? `-${formatCurrency(difference)}`
-                                    : `+${formatCurrency(Math.abs(difference))}`;
-                                })()}
-                              </td>
-                            </tr>
-                            <tr className="border-b border-white/10">
-                              <td className="text-white/90 py-3 px-2 font-medium">Interest Paid</td>
-                              <td className="text-red-200 py-3 px-2 text-center">{formatCurrency(results.originalInterest)}</td>
-                              <td className="text-emerald-200 py-3 px-2 text-center">{formatCurrency(results.interestPaid)}</td>
-                              <td className="text-blue-200 py-3 px-2 text-center">
-                                {(() => {
-                                  const difference = results.originalInterest - results.interestPaid;
-                                  return difference >= 0 
-                                    ? `-${formatCurrency(difference)}`
-                                    : `+${formatCurrency(Math.abs(difference))}`;
-                                })()}
-                              </td>
-                            </tr>
-                            {penaltyRate > 0 && results.penaltyAmount && results.penaltyAmount > 0 && (
-                              <tr className="border-b border-white/10 bg-orange-500/10">
-                                <td className="text-white/90 py-3 px-2 font-medium">Prepayment Penalty</td>
-                                <td className="text-red-200 py-3 px-2 text-center">₹0</td>
-                                <td className="text-orange-200 py-3 px-2 text-center">{formatCurrency(results.penaltyAmount)}</td>
-                                <td className="text-orange-200 py-3 px-2 text-center">+{formatCurrency(results.penaltyAmount)}</td>
-                              </tr>
-                            )}
-                            <tr className="bg-emerald-500/20 border border-emerald-400/40">
-                              <td className="text-emerald-100 py-4 px-2 font-bold">Total Savings</td>
-                              <td className="text-center py-4 px-2">-</td>
-                              <td className="text-center py-4 px-2">-</td>
-                              <td className="text-emerald-100 py-4 px-2 text-center font-bold text-lg">
-                                {(() => {
-                                  // If prepayment is 0, savings will be 0
-                                  if (prepaymentAmount === 0) {
-                                    return "₹0";
-                                  }
-                                  
-                                  // Show net savings after penalty deduction
-                                  const netSavingsAmount = penaltyRate > 0 && results.penaltyAmount 
-                                    ? Math.max(0, results.amountSaved - results.penaltyAmount) 
-                                    : results.amountSaved;
-                                  return formatCurrency(Math.max(0, netSavingsAmount));
-                                })()}
-                              </td>
+                              <td className="py-3 text-white">Monthly EMI</td>
+                              <td className="py-3 text-center text-white">{formatCurrency(loanData.emi)}</td>
+                              <td className="py-3 text-center text-white">{formatCurrency(loanData.emi)}</td>
+                              <td className="py-3 text-center text-gray-400">—</td>
                             </tr>
                           </tbody>
                         </table>
-                      </div>
-                      
-                      <div className="mt-4 space-y-3">
-                        {penaltyRate > 0 && results.penaltyAmount && results.penaltyAmount > 0 && (
-                          <div className="p-3 bg-orange-500/10 rounded-lg border border-orange-400/30">
-                            <p className="text-orange-200 text-xs">
-                              * Net savings calculated after deducting {penaltyRate}% prepayment penalty
-                            </p>
-                          </div>
-                        )}
                         
-                        <div className="p-3 bg-emerald-500/10 rounded-lg border border-emerald-400/30">
-                          <p className="text-emerald-200 text-xs font-medium mb-2">💡 How prepayment saves you money:</p>
-                          <p className="text-emerald-200 text-xs leading-relaxed">
-                            {(() => {
-                              const reducedMonths = Math.round(results.newTenure * 12);
-                              // Calculate net savings after penalty
-                              const interestSaved = results.amountSaved; // This is interest savings
-                              const penaltyAmount = results.penaltyAmount || 0;
-                              const netSavingsAmount = Math.max(0, interestSaved - penaltyAmount);
-                              
-                              return (
-                                <>
-                                  • <strong>Without prepayment:</strong> ₹{formatCurrency(results.originalTotalAmount).replace('₹', '')} over {loanData.tenure * 12} months<br/>
-                                  • <strong>With prepayment:</strong> ₹{formatCurrency(results.totalAmountPaid).replace('₹', '')} over {reducedMonths} months<br/>
-                                  • <strong>Net savings:</strong> ₹{formatCurrency(netSavingsAmount).replace('₹', '')} + finish {results.monthsSaved || 0} months earlier!
-                                </>
-                              );
-                            })()}
+                        <div className="mt-4 p-3 bg-white/5 rounded-lg border border-white/10">
+                          <p className="text-white/70 text-xs">
+                            Savings calculated after prepayment penalty
                           </p>
                         </div>
                       </div>
+                    ) : (
+                      <div className="mt-4 text-center py-8">
+                        <p className="text-white/60">Configure your prepayment to see detailed breakdown</p>
+                      </div>
+                    )}
+                  </div>
+                </details>
+
+                {/* Prepayment Configuration */}
+                <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-6 shadow-2xl">
+                  <h3 className="text-white font-bold text-lg mb-6 flex items-center space-x-2">
+                    <DollarSign className="w-5 h-5 text-emerald-400" />
+                    <span>Prepayment Configuration</span>
+                  </h3>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {/* Prepayment Amount */}
+                    <div>
+                      <label className="block text-white/80 text-sm font-medium mb-3">
+                        {prepaymentFrequency === 'yearly' ? 'Yearly' : 'Monthly'} Prepayment Amount
+                      </label>
+                      <div className="relative">
+                        <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/60 font-medium">₹</span>
+                        <input
+                          type="number"
+                          value={prepaymentAmount}
+                          onChange={(e) => setPrepaymentAmount(parseFloat(e.target.value) || 0)}
+                          className="w-full bg-white/10 border border-white/20 rounded-xl pl-8 pr-4 py-3 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500/50"
+                          placeholder={`Enter ${prepaymentFrequency} amount`}
+                        />
+                      </div>
+                    </div>
+                    
+                    {/* Frequency Selection */}
+                    <div>
+                      <label className="block text-white/80 text-sm font-medium mb-3">Payment Frequency</label>
+                      <div className="flex bg-white/10 rounded-xl p-1 border border-white/20">
+                        <button
+                          onClick={() => setPrepaymentFrequency('yearly')}
+                          className={`flex-1 py-2 px-3 rounded-lg font-medium transition-all duration-200 ${
+                            prepaymentFrequency === 'yearly'
+                              ? 'bg-white/20 text-white shadow-sm'
+                              : 'text-white/70 hover:text-white hover:bg-white/10'
+                          }`}
+                        >
+                          Yearly
+                        </button>
+                        <button
+                          onClick={() => setPrepaymentFrequency('monthly')}
+                          className={`flex-1 py-2 px-3 rounded-lg font-medium transition-all duration-200 ${
+                            prepaymentFrequency === 'monthly'
+                              ? 'bg-white/20 text-white shadow-sm'
+                              : 'text-white/70 hover:text-white hover:bg-white/10'
+                          }`}
+                        >
+                          Monthly
+                        </button>
+                      </div>
                     </div>
                   </div>
-                ) : (
-                  <div className="text-center py-12">
-                    <Calculator className="w-16 h-16 text-white/30 mx-auto mb-4" />
-                    <p className="text-white/60">Configure your prepayment to see RBI-compliant calculations</p>
-                    <p className="text-white/40 text-sm mt-2">Prepayments applied after scheduled EMI as per RBI guidelines</p>
+                  
+                  {/* Penalty Input */}
+                  <div className="mt-6">
+                    <label className="block text-white/80 text-sm font-medium mb-3">Prepayment Penalty (if any)</label>
+                    <div className="relative max-w-xs">
+                      <input
+                        type="number"
+                        step="0.1"
+                        min="0"
+                        max="5"
+                        value={penaltyRate}
+                        onChange={(e) => {
+                          const value = parseFloat(e.target.value);
+                          if (isNaN(value)) {
+                            setPenaltyRate(0);
+                          } else if (value < 0) {
+                            setPenaltyRate(0);
+                          } else if (value > 5) {
+                            setPenaltyRate(5);
+                          } else {
+                            setPenaltyRate(value);
+                          }
+                        }}
+                        className="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50"
+                        placeholder="0 for most loans"
+                      />
+                      <span className="absolute right-3 top-1/2 transform -translate-y-1/2 text-white/60 font-medium">%</span>
+                    </div>
+                    <p className="text-white/60 text-xs mt-2">
+                      Most floating rate loans have 0% penalty (RBI guidelines)
+                    </p>
                   </div>
-                )}
                 </div>
+
 
                 </motion.div>
               </div>

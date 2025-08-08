@@ -1,2 +1,99 @@
-remove loan type sections.Simply give input for putting penalty(if any)                                                                                   │
-move prepayment details for yearly or monthly just below Reduce loan tenure.
+Got it — I see your current EMI pre-payment calculator design. Right now, it has a lot of good data but it feels heavy and segmented in a way that forces the user to jump between blocks. The main issues are:
+
+* **Too many boxes with different backgrounds and colors** → visual overload.
+* **Repetitive information** → tenure and EMI values appear multiple times.
+* **Impact analysis buried** → the most important insight (“you save ₹X and finish Y months earlier”) should be the first thing they see.
+* **Numbers not visually prioritized** → the key figures don't “pop” enough.
+
+Here’s how I’d redesign it into a **clean, compact, and intuitive** layout:
+
+---
+
+## **Layout Strategy**
+
+### 1️⃣ Hero Summary Card at the Top
+
+* Show **before vs after** in a **side-by-side comparison** (split card or table) so users see changes instantly.
+* Highlight **total savings** and **time saved** as the hero numbers in big bold fonts.
+
+Example:
+
+```
+----------------------------------------------------
+| Without Prepayment     | With Prepayment         |
+----------------------------------------------------
+| Tenure: 3 yrs          | 2 yrs 11 months         |
+| Interest: ₹1,02,487    | ₹98,227                 |
+----------------------------------------------------
+  💰 You save ₹4,260 and finish 1 month earlier
+```
+
+* Use **green for savings** and **light gray for base values**.
+
+---
+
+### 2️⃣ Inputs in a Single Collapsible Panel
+
+* All loan details and prepayment strategy inputs go in **one clean form panel** (accordion style), e.g.:
+
+  * Loan amount
+  * EMI (auto-calculated, read-only)
+  * Interest rate
+  * Tenure
+  * Prepayment amount + frequency
+  * Prepayment penalty
+* Keep it compact with **two-column form fields**.
+
+---
+
+### 3️⃣ Visual Timeline for Tenure Change
+
+* Add a small **horizontal progress bar** or timeline showing:
+
+```
+[████████████████████] 3 yrs (Before)
+[██████████████████  ] 2 yrs 11 mo (After)
+```
+
+* This gives a quick, visual sense of how much earlier the loan finishes.
+
+---
+
+### 4️⃣ Simplified Impact Section
+
+* Instead of repeating EMI and cost in multiple boxes, use **one clear table**:
+
+```
+Metric              Before        After         Savings
+---------------------------------------------------------
+Tenure              3 yrs         2 yrs 11 mo   1 month
+Interest Paid       ₹1,02,487     ₹98,227       ₹4,260
+Monthly EMI         ₹25,069       ₹25,069       -
+```
+
+* Savings column in green for instant recognition.
+
+---
+
+### 5️⃣ Minimal Color Palette
+
+* **Primary**: White background with dark text for clarity.
+* **Accent**: Single savings color (green or teal) for anything “good” and red only if it’s a loss or penalty.
+* **Avoid multiple gradient backgrounds**; they make it feel cluttered.
+
+---
+
+### 6️⃣ Microcopy for Clarity
+
+* Small notes under results like:
+
+  > “Savings calculated after prepayment penalty”
+  > “EMI remains unchanged; tenure reduces”
+* Keep them subtle (lighter gray, small font).
+
+---
+
+### 7️⃣ Optional — Interactive Toggle
+
+* Toggle button: **“Reduce EMI”** vs **“Reduce Tenure”**
+* Changes instantly reflected in the “After” column.
