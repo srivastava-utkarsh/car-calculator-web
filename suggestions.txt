@@ -1,3 +1,2 @@
-1. modify "Choose Your Strategy" layout and keep it same as "Your Current Loan". 
-2. below it show "Loan Type" in same layout.
-3. below Loan type show "Impact Analysis". Instead of showing "RBI Compliant Breakdown" in list format, show old vs new in tabular format , so that it's easy for user to understand
+remove loan type sections.Simply give input for putting penalty(if any)                                                                                   │
+move prepayment details for yearly or monthly just below Reduce loan tenure.

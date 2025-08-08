@@ -1,0 +1,185 @@
+Here is a **clean, copy-paste-ready block** with all key Google Sheet formulas, clear explanations, and direct JavaScript equivalents—suitable for code documentation, development, or embedding into other projects.
+
+***
+
+```
+================================================================================
+GOOGLE SHEETS LOAN/PREPAYMENT FORMULAS - COPY/PASTE REFERENCE
+================================================================================
+
+# 1. EMI CALCULATION
+
+## Google Sheets / Excel:
+=-PMT(AnnualRate/12, TenureMonths, Principal)
+
+## JavaScript:
+function PMT(rate, nper, pv) {
+  if (rate === 0) return pv / nper;
+  return (pv * rate * Math.pow(1 + rate, nper)) / (Math.pow(1 + rate, nper) - 1);
+}
+// Usage:
+const monthlyRate = annualRate / 12 / 100;
+const emi = PMT(monthlyRate, totalMonths, principal);
+
+
+# 2. AMORTIZATION PER MONTH
+
+## Google Sheets:
+[InterestPayment]  = [OutstandingBalancePrev] * (AnnualRate/12)
+[PrincipalPayment] = [EMI] - [InterestPayment]
+[OutstandingBalanceNew] = [OutstandingBalancePrev] - [PrincipalPayment]
+
+## JavaScript:
+let interestPayment = balance * monthlyRate;
+let principalPayment = emi - interestPayment;
+balance = balance - principalPayment;
+
+
+# 3. PREPAYMENT APPLICATION
+
+## Google Sheets (PREPAY BEFORE EMI - common method):
+If MOD(MonthRow, PrepayFreq) = 0 Then
+  [OutstandingBalance] = [OutstandingBalance] - PrepaymentAmount
+End If
+
+## JavaScript:
+if ((month % prepayFreq) === 0 && balance > 0) {
+  let actualPrepay = Math.min(prepay, balance);
+  balance -= actualPrepay;
+}
+
+
+# 4. FULL AMORTIZATION LOOP (JS STYLE)
+
+let month = 0, totalInterest = 0, totalPaid = 0;
+while(balance > 1 && month  0) {
+    let actualPrepay = Math.min(prepay, balance);
+    balance -= actualPrepay;
+  }
+  let interest = balance * monthlyRate;
+  let principalPart = Math.min(emi - interest, balance);
+  balance -= principalPart;
+  totalInterest += interest;
+  totalPaid += principalPart + interest;
+  // (Optionally apply prepayment here if prepay-after-EMI style)
+}
+
+# 5. SUMMARY CALCULATIONS
+
+## Google Sheets
+Total Amount Paid:      =SUM(EMI_Col) + SUM(Prepayment_Col)
+Total Interest Paid:    =SUM(Interest_Col)
+Amount Saved:           =TotalInterest_NoPrepay - TotalInterest_WithPrepay
+
+## JavaScript:
+const amountSaved = origInterest - totalInterest;  // origInterest is calculated from normal EMI schedule
+
+================================================================================
+
+# Notes:
+- All formulas use absolute values for money (outflows as positive).
+- For “Reduce Tenure” strategy, run loop until balance  1 && m <= tenureMonths + 60; ++m) {
+    // Optionally apply prepayment?
+    // ... see above ...
+    let interest = balance * monthlyRate;
+    let principalPaid = Math.min(emi - interest, balance);
+    // Store month, interest, principal, balance, prepay etc.
+    results.push({month: m, interest, principalPaid, emi, prepay: 0, opening: balance});
+    balance -= principalPaid;
+  }
+  return results;
+}
+
+================================================================================
+```
+
+
+
+Here’s a focused analysis and up-to-date banking industry audit (2025) based on the attached report, your previous logic, and current practices at top Indian banks/NBFCs:
+
+***
+
+## 1. **High Impact: PREPAYMENT APPLICATION TIMING**
+
+**What does the report say?**
+- **Current code:** Prepayment is applied AFTER EMI. Interest that month is charged on the larger balance.
+- **Suggestion/Sheets style:** Prepayment applied BEFORE EMI. Interest that month is charged after principal is reduced—this yields *higher* interest savings for the borrower.
+
+**What do Indian banks/NBFCs do?**  
+- **BEST PRACTICE & INDUSTRY STANDARD:**  
+  - **Prepayment is ALWAYS applied before the next interest calculation for the new period**—that is, as soon as the extra money is received, principal is reduced immediately, and the next EMI’s interest is calculated on the lower balance.[1][2][3][4][5]
+  - **RBI**: Has not mandated "pre-EMI" vs "post-EMI," but all major bank/NBFC calculators (HDFC, ICICI, SBI, Bajaj, BoB, etc.) and their support docs show interest saving calculated by applying prepayment *immediately* before the next interest accrual.  
+  - **Practical explanation:** If you deposit a lump sum on Jan 14, interest from the next EMI cycle (Feb 1) is calculated on your reduced balance.
+  - As a result, **prepay-before-EMI is the most accurate and most customer-friendly approach**—and how almost all reputable banks’ calculators simulate it today.
+
+**Action:**  
+- **Move your prepayment logic to "before EMI/interest accrual"** in the amortization loop for both “reduce tenure” and “reduce EMI” modes.
+- This matches well-tested industry practice and regulatory expectation for *how savings are presented*.
+
+***
+
+## 2. **Medium Impact: PREPAYMENT FREQUENCY LOGIC**
+
+**What does the report say?**
+- Code currently applies monthly prepayment by default, only yearly via a separate flag, and the check isn’t modular.
+- Inaccuracy can creep in if logic doesn’t fully respect the user-input frequency (e.g., every X months, arbitrary months).
+
+**What do Indian banks/NBFCs do?**
+- **HDFC, SBI, ICICI, Axis, Bajaj, Bank of Baroda, and others:**  
+  - Allow prepayment at intervals as allowed in the agreement: monthly, quarterly, yearly, or custom scheduled (bonus months, festival, etc.).[3][6][1]
+  - Frequency check is straightforward: **if (currentMonth % prepayFrequency === 0)**, then apply prepayment. Advanced calculators let the user input an array of months for ad hoc prepayments.
+  - Banks may put operational limits (minimum ₹25,000, or once per quarter in some fixed loans), but mathematically, **the frequency is applied using modulo checks for regular intervals**.
+
+**Action:**
+- **Standardize your prepayment logic** to:  
+  ```js
+  if ((month % prepayFrequency) === 0 && balance > 0) {
+      let actualPrepay = Math.min(prepay, balance);
+      balance -= actualPrepay;
+  }
+  ```
+- Optionally, provide custom scheduling for advanced users.
+
+***
+
+## 3. **Current Best Practices: Top Banks & NBFCs**
+
+- **All leading Indian banks (HDFC, SBI, ICICI, Axis, BoB) and NBFCs (Bajaj, L&T, PNBHF, LICHFL, Tata Cap, etc.) now:**
+  - Prepayment, when made, is applied *immediately to principal*, and the next EMI's interest is calculated on the lower outstanding.[4][5][6][7][1][3]
+  - Part-prepayment can be made at any permitted frequency—more flexible for floating rate and for fixed rate after a lock-in.[6][8]
+  - Schedule is recalculated accordingly, and customer is shown actual interest/time saved.
+  - Most customer-facing calculators show a **month-by-month table with the prepayment deducted prior to interest for that period**.
+
+***
+
+## 4. **Summary Table**
+
+| Aspect                         | Current Code | Best Practice / Top Banks       | Recommendation                           |
+|---------------------------------|--------------|---------------------------------|------------------------------------------|
+| Prepayment Timing               | After EMI    | *Before* EMI/interest accrual   | **Switch to before EMI calculation**     |
+| Prepayment Frequency Logic      | Hardcoded/Flag| Modulo (month % freq == 0)     | **Standardize on modulo/flexible input** |
+| Amortization Table Display      | After-deduction | Pre-deduction/pre-EMI         | **Show after prepay, interest recalced** |
+
+***
+
+## 5. **Recommended Solutions**
+1. **SIGNIFICANT:**
+   - Apply prepayment BEFORE that month's EMI/interest calculation.
+   - This will increase calculated borrower savings and match reality/customer expectation and all major Indian online calculators.
+2. **MODULAR:**
+   - Use a frequency check like `if (month % prepayFrequency === 0)` for all prepayment scheduling.
+
+
+
+***
+
+### **Citations and Real-World Examples**
+- RBI Prepayment Charges Directions 2025[9][10][11][12][13]
+- HDFC, ICICI, SBI, Axis, Bank of Baroda online and offline calculators[5][7][8][14][1][6]
+- Bajaj, PNB, L&T, Tata, LIC, Ujjivan customer guides and T&Cs[8][6]
+
+***
+
+**Bottom line:**  
+**Applying prepayment before EMI calculation is the gold standard for accuracy and customer transparency. All major Indian financial institutions apply and display it in this manner for interest savings/max benefit calculators.**  
+Switching your code's logic per above will bring your tool in line with India’s top-performing banks, NBFCs, and RBI-aligned consumer fairness.
