@@ -56,17 +56,6 @@ export default function TotalCostDisplayV2({ carData, updateCarData: _updateCarD
     return durationToggle === 'months' ? `${carData.tenure * 12} months` : `${carData.tenure} years`
   }
 
-  const formatTenure = (tenureInYears: number) => {
-    if (tenureInYears === 0) return '--'
-    const years = Math.floor(tenureInYears)
-    const months = Math.round((tenureInYears % 1) * 12)
-    if (months === 0) {
-      return `${years} years`
-    } else {
-      return `${years} years ${months} months`
-    }
-  }
-
   const getLastEMIDate = () => {
     if (carData.tenure <= 0) return '--'
     const today = new Date()
@@ -244,167 +233,253 @@ export default function TotalCostDisplayV2({ carData, updateCarData: _updateCarD
         </div>
 
 
-      {/* New Boxed Summary Format matching suggestions.txt */}
-      <div className="bg-gradient-to-br from-slate-800/50 to-slate-900/40 backdrop-blur-xl border-2 border-slate-600/30 text-gray-100 rounded-2xl shadow-2xl overflow-hidden">
-        {/* Header with completion status */}
-        <div className="bg-gradient-to-r from-emerald-500/20 to-green-500/20 border-b border-slate-600/30 p-4">
-          <div className="flex items-center justify-between">
-            <h3 className="text-white font-bold text-lg">
-              Car Summary
-            </h3>
-            <div className="flex items-center space-x-2">
-              <div className={`w-3 h-3 rounded-full ${completionPercentage === 100 ? 'bg-green-400' : completionPercentage >= 66 ? 'bg-yellow-400' : 'bg-red-400'}`}></div>
-              <span className="text-white font-bold">{completionPercentage}% Complete</span>
-            </div>
-          </div>
+      <div className="flex items-center justify-between mb-3">
+        <h4 className="font-semibold text-white text-sm">Final Monthly Summary</h4>
+        <div className="flex items-center space-x-2">
+          <div className={`w-2 h-2 rounded-full ${completionPercentage === 100 ? 'bg-green-400' : completionPercentage >= 66 ? 'bg-yellow-400' : 'bg-red-400'}`}></div>
+          <span className="text-sm font-bold text-white/80">{completionPercentage}% Complete</span>
         </div>
-        
-        {/* Main Summary Content */}
-        <div className="p-4 space-y-4">
-          {/* EMI and Fuel Section */}
-          <div className="space-y-2">
-            <div className="flex justify-between items-center py-2">
-              <span className="text-white font-medium">EMI:</span>
-              <span className="text-white font-bold text-lg">{formatCurrency(emi)}/mo</span>
-            </div>
-            <div className="flex justify-between items-center py-2">
-              <span className="text-white font-medium">Fuel:</span>
-              <span className="text-white font-bold text-lg">{formatCurrency(monthlyFuelCost)}/mo</span>
+      </div>
+      
+      {/* Loan Summary - Compact Display */}
+      <motion.div 
+        className={`bg-gradient-to-br from-slate-800/40 to-slate-900/30 backdrop-blur-xl border border-slate-700/30 text-gray-100 p-6 rounded-2xl mb-6 shadow-2xl transition-all duration-300 hover:scale-[1.02] ${
+          completionPercentage === 100 
+            ? 'shadow-emerald-500/10 ring-1 ring-emerald-400/20' 
+            : 'shadow-black/10 hover:shadow-black/20'
+        }`}
+        animate={completionPercentage === 100 ? { scale: [1, 1.02, 1] } : {}}
+        transition={{ duration: 0.6, repeat: 0 }}
+      >
+        {/* Main EMI Display - Proportional UX */}
+        <div className="text-center mb-4">
+          {/* Primary EMI Section */}
+          <div className="mb-3">
+            <h3 className="text-sm font-medium text-gray-300 mb-1 tracking-wide">
+              Monthly EMI {completionPercentage === 100 && '✨'}
+            </h3>
+            <div className="text-3xl font-bold text-white mb-2 tracking-tight">
+              {formatCurrency(emi)}
             </div>
           </div>
 
-          
-          {/* Total Monthly Outgo */}
-          <div className="border-t border-slate-600/30 pt-3 mt-3">
-            <div className="flex justify-between items-center py-2 bg-slate-700/30 rounded-lg px-3">
-              <span className="text-white font-bold text-lg">Total Monthly Outgo:</span>
-              <span className="text-white font-bold text-xl">{formatCurrency(totalMonthlyCarExpenses)}</span>
+          {/* Fuel Cost Integration - Compact */}
+          {monthlyFuelCost > 0 ? (
+            <div className="bg-gradient-to-r from-emerald-500/20 to-green-500/20 border border-emerald-400/30 rounded-xl p-3 mb-3">
+              <h3 className="text-sm font-medium text-emerald-300 mb-1 tracking-wide">Overall Monthly Expense</h3>
+              <div className="text-3xl font-bold text-emerald-100 mb-3 tracking-tight">
+                {formatCurrency(totalMonthlyCarExpenses)}
+              </div>
+              <div className="bg-emerald-500/10 rounded-lg p-3 space-y-2">
+                <div className="flex justify-between items-center">
+                  <span className="text-emerald-200 font-medium text-sm">EMI</span>
+                  <span className="font-bold text-emerald-100 text-lg">{formatCurrency(emi)}</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-emerald-200 font-medium text-sm">Fuel</span>
+                  <span className="font-bold text-emerald-100 text-lg">{formatCurrency(monthlyFuelCost)}</span>
+                </div>
+              </div>
             </div>
-          </div>
+          ) : (
+            <div className="bg-gradient-to-r from-cyan-500/10 to-blue-500/10 border border-cyan-400/20 rounded-xl p-3 mb-3">
+              <button
+                onClick={() => {
+                  const fuelExpenseElement = document.getElementById('monthly-fuel-expense');
+                  if (fuelExpenseElement) {
+                    fuelExpenseElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    setTimeout(() => {
+                      const input = fuelExpenseElement.querySelector('input');
+                      if (input) input.focus();
+                    }, 500);
+                  }
+                }}
+                className="w-full p-2 text-cyan-300 hover:text-cyan-200 transition-all duration-200 cursor-pointer bg-cyan-500/10 hover:bg-cyan-500/20 rounded-lg border border-cyan-400/20 hover:border-cyan-400/40 outline-none"
+              >
+                <div className="flex items-center justify-center space-x-2">
+                  <span className="text-xs font-medium">+ Add Fuel Expense</span>
+                </div>
+                <p className="text-xs text-cyan-400/80 mt-1">Get your complete monthly car cost</p>
+              </button>
+            </div>
+          )}
 
-          
-          {/* One-time Fees */}
+          {/* Insurance + Others - One-time cost */}
           {(carData.insuranceAndMaintenance || 0) > 0 && (
-            <div className="border-t border-slate-600/30 pt-3 mt-3">
-              <div className="flex justify-between items-center py-2">
-                <span className="text-white font-medium">One-time Fees:</span>
-                <span className="text-white font-bold">{formatCurrency(carData.insuranceAndMaintenance || 0)} (Insurance/Others)</span>
+            <div className="bg-blue-500/10 border border-blue-400/20 rounded-lg p-3 mb-3">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <div className="w-8 h-8 bg-blue-500/20 rounded-full flex items-center justify-center">
+                    <Info size={14} className="text-blue-300"/>
+                  </div>
+                  <div>
+                    <div className="text-blue-100 font-semibold text-sm">Insurance + Others</div>
+                    <div className="text-blue-300 text-xs">One-time additional costs</div>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <div className="text-lg font-bold text-blue-100">{formatCurrency(carData.insuranceAndMaintenance || 0)}</div>
+                </div>
               </div>
             </div>
           )}
+
+        </div>
+
+
+        {/* Loan Details - Compact Layout */}
+        <div className="border-t border-slate-700/30 pt-3">
+          <h4 className="text-gray-200 font-medium mb-3 text-sm tracking-wide">Loan Breakdown</h4>
           
-          {/* Loan Snapshot and Timeline Grid */}
-          <div className="border-t border-slate-600/30 pt-4 mt-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {/* Loan Snapshot */}
-              <div>
-                <h4 className="text-white font-bold mb-3 flex items-center space-x-1">
-                  <span>🔎</span>
-                  <span>Loan Snapshot</span>
-                </h4>
-                <div className="space-y-2">
-                  <div className="flex justify-between">
-                    <span className="text-gray-300">Loan Amt:</span>
-                    <span className="text-white font-bold">{formatCurrency(loanAmount)}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-300">Tenure:</span>
-                    <span className="text-white font-bold">{formatDuration()}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-300">Interest:</span>
-                    <span className="text-white font-bold">{carData.interestRate}%</span>
-                  </div>
-                </div>
-              </div>
-              
-              {/* Timeline */}
-              <div>
-                <h4 className="text-white font-bold mb-3 flex items-center space-x-1">
-                  <span>📆</span>
-                  <span>Timeline</span>
-                </h4>
-                <div className="space-y-2">
-                  <div className="flex justify-between">
-                    <span className="text-gray-300">Start:</span>
-                    <span className="text-white font-bold">{new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-300">End:</span>
-                    <span className="text-white font-bold">{getLastEMIDate()}</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          
-          {/* At a glance section */}
-          <div className="border-t border-slate-600/30 pt-4 mt-4">
-            <h4 className="text-white font-bold mb-3 flex items-center space-x-1">
-              <span>💡</span>
-              <span>At a glance:</span>
-            </h4>
-            <div className="space-y-2">
-              <div className="flex items-center space-x-2">
-                <span className="text-white">•</span>
-                <span className="text-gray-300">Total Interest:</span>
-                <span className="text-white font-bold">{formatCurrency(totalInterest)}</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <span className="text-white">•</span>
-                <span className="text-gray-300">Total Payment:</span>
-                <span className="text-white font-bold">{formatCurrency(totalPayment)}</span>
-              </div>
-            </div>
-          </div>
-          
-          {/* Tenure toggle and fuel charge section */}
-          <div className="border-t border-slate-600/30 pt-4 mt-4 space-y-3">
-            {/* Tenure Toggle */}
+          {/* Loan Duration Info */}
+          <div className="bg-slate-500/10 border border-slate-400/20 rounded-lg p-3 mb-3">
             <div className="flex items-center justify-between">
-              <span className="text-white font-medium">Tenure Display:</span>
-              <div className="flex bg-slate-700/50 rounded-lg p-1 border border-slate-600/50">
-                <button
-                  onClick={() => setDurationToggle('months')}
-                  className={`px-3 py-1 rounded-md text-sm font-medium transition-all duration-200 ${
-                    durationToggle === 'months'
-                      ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-400/30'
-                      : 'text-gray-300 hover:text-white'
-                  }`}
-                >
-                  Months
-                </button>
-                <button
-                  onClick={() => setDurationToggle('years')}
-                  className={`px-3 py-1 rounded-md text-sm font-medium transition-all duration-200 ${
-                    durationToggle === 'years'
-                      ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-400/30'
-                      : 'text-gray-300 hover:text-white'
-                  }`}
-                >
-                  Years
-                </button>
+              <div className="flex items-center space-x-2">
+                <div className="w-8 h-8 bg-slate-500/20 rounded-full flex items-center justify-center">
+                  <Clock size={14} className="text-slate-300"/>
+                </div>
+                <div>
+                  <div className="text-slate-100 font-semibold text-sm">Loan Duration</div>
+                  <div className="text-slate-300 text-xs">Loan completion date</div>
+                </div>
+              </div>
+              <div className="text-right">
+                <div className="text-lg font-bold text-slate-100">{getLastEMIDate()}</div>
               </div>
             </div>
-            
-            {/* Add fuel charge option when not selected */}
-            {(!carData.monthlyFuelExpense || carData.monthlyFuelExpense === 0) && (
-              <div className="bg-yellow-500/10 border border-yellow-400/30 rounded-lg p-3">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-2">
-                    <span className="text-yellow-400">⛽</span>
-                    <span className="text-white font-medium">Add Fuel Charge</span>
-                  </div>
-                  <button className="bg-yellow-500/20 hover:bg-yellow-500/30 text-yellow-400 font-medium px-3 py-1 rounded-lg transition-all duration-200 text-sm">
-                    + Add
+          </div>
+
+          {/* Loan Period */}
+          <div className="bg-cyan-500/10 border border-cyan-400/20 rounded-lg p-3 mb-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-2">
+                <div className="w-8 h-8 bg-cyan-500/20 rounded-full flex items-center justify-center">
+                  <Clock size={14} className="text-cyan-300"/>
+                </div>
+                <div>
+                  <div className="text-cyan-100 font-semibold text-sm">Loan Period</div>
+                  <div className="text-cyan-300 text-xs">Repayment duration</div>
+                </div>
+              </div>
+              <div className="text-right flex items-center space-x-2">
+                <div className="text-lg font-bold text-cyan-100">
+                  {durationToggle === 'months' ? `${carData.tenure * 12}m` : `${carData.tenure}y`}
+                </div>
+                <div className="flex bg-slate-700/50 rounded-full p-0.5">
+                  <button
+                    onClick={() => setDurationToggle('years')}
+                    className={`text-xs px-1.5 py-0.5 rounded-full transition-all duration-200 font-bold ${
+                      durationToggle === 'years' 
+                        ? 'bg-cyan-400 text-slate-800 shadow-sm' 
+                        : 'text-gray-300 hover:bg-slate-600/50'
+                    }`}
+                  >
+                    Y
+                  </button>
+                  <button
+                    onClick={() => setDurationToggle('months')}
+                    className={`text-xs px-1.5 py-0.5 rounded-full transition-all duration-200 font-bold ${
+                      durationToggle === 'months' 
+                        ? 'bg-cyan-400 text-slate-800 shadow-sm' 
+                        : 'text-gray-300 hover:bg-slate-600/50'
+                    }`}
+                  >
+                    M
                   </button>
                 </div>
-                <p className="text-gray-300 text-sm mt-1">Include monthly fuel costs for a complete picture</p>
               </div>
-            )}
+            </div>
+          </div>
+
+          {/* Interest Rate */}
+          <div className="bg-red-500/10 border border-red-400/20 rounded-lg p-3 mb-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-2">
+                <div className="w-8 h-8 bg-red-500/20 rounded-full flex items-center justify-center">
+                  <Percent size={14} className="text-red-300"/>
+                </div>
+                <div>
+                  <div className="text-red-100 font-semibold text-sm">Interest Rate</div>
+                  <div className="text-red-300 text-xs">Annual percentage rate</div>
+                </div>
+              </div>
+              <div className="text-right">
+                <div className="text-lg font-bold text-red-100">{carData.interestRate}%</div>
+              </div>
+            </div>
+          </div>
+
+          {/* Principal Amount */}
+          <div className="bg-green-500/10 border border-green-400/20 rounded-lg p-3 mb-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-2">
+                <div className="w-8 h-8 bg-green-500/20 rounded-full flex items-center justify-center">
+                  <span className="text-green-300 font-bold text-sm">₹</span>
+                </div>
+                <div>
+                  <div className="text-green-100 font-semibold text-sm">Principal Amount</div>
+                  <div className="text-green-300 text-xs">Loan amount after down payment</div>
+                </div>
+              </div>
+              <div className="text-right">
+                <div className="text-lg font-bold text-green-100">{formatCurrency(loanAmount)}</div>
+              </div>
+            </div>
+          </div>
+
+          {/* Interest Cost */}  
+          <div className="bg-yellow-500/10 border border-yellow-400/20 rounded-lg p-3 mb-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-2">
+                <div className="w-8 h-8 bg-yellow-500/20 rounded-full flex items-center justify-center">
+                  <TrendingUp size={14} className="text-yellow-300"/>
+                </div>
+                <div>
+                  <div className="text-yellow-100 font-semibold text-sm">Total Interest</div>
+                  <div className="text-yellow-300 text-xs">Amount paid over principal</div>
+                </div>
+              </div>
+              <div className="text-right">
+                <div className="text-lg font-bold text-yellow-100">{formatCurrency(totalInterest)}</div>
+              </div>
+            </div>
+          </div>
+
+          {/* Total Payment - Compact */}
+          <div className="bg-gradient-to-br from-purple-600/30 to-indigo-600/30 border border-purple-400/40 rounded-lg p-3 shadow-lg">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-3">
+                <div className="w-8 h-8 bg-purple-500/30 rounded-full flex items-center justify-center">
+                  <span className="text-purple-200 font-bold text-sm">₹</span>
+                </div>
+                <div>
+                  <div className="text-purple-100 font-bold text-base">Total Payment</div>
+                  <div className="text-purple-300 text-xs">Principal + Interest</div>
+                </div>
+              </div>
+              <div className="text-right">
+                <div className="text-xl font-bold text-purple-100">{formatCurrency(totalPayment)}</div>
+                <div className="text-purple-300 text-xs mt-0.5">Over {formatDuration()}</div>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
+
+        {/* Processing Fee - One-time cost */}
+        {carData.processingFee > 0 && (
+          <div className="mt-3 pt-3 border-t border-white/20">
+            <div className="flex justify-between items-center bg-orange-500/30 backdrop-blur-md rounded-lg p-2">
+              <span className="text-xs text-orange-100 flex items-center font-medium">
+                <Info size={12} className="mr-1 text-orange-200"/>
+                Processing Fee
+                <span className="ml-1 text-xs text-orange-200 bg-orange-500/40 px-1.5 py-0.5 rounded-full">one-time</span>
+              </span>
+              <span className="font-bold text-orange-100 text-sm">{formatCurrency(carData.processingFee)}</span>
+            </div>
+          </div>
+        )}
+
+      </motion.div>
 
 
 
