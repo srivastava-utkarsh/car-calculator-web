@@ -27,10 +27,10 @@ export default function CarDetailsFormV2({ carData, updateCarData, monthlyIncome
 
   // Preset car price options
   const carPresets = [
-    { label: '5 Lakhs', value: 500000 },
-    { label: '10 Lakhs', value: 1000000 },
-    { label: '15 Lakhs', value: 1500000 },
-    { label: '20 Lakhs+', value: 2000000 }
+    { label: '5L', value: 500000 },
+    { label: '10L', value: 1000000 },
+    { label: '20L', value: 2000000 },
+    { label: '50L+', value: 5000000 }
   ]
 
   const handleCarPriceChange = (value: string) => {
@@ -79,30 +79,25 @@ export default function CarDetailsFormV2({ carData, updateCarData, monthlyIncome
         <div className="mb-4">
           <div className="flex items-center justify-between mb-3">
             <label htmlFor="car-price-input" className="text-base min-[375px]:text-lg font-medium text-white" style={{ lineHeight: '1.5' }}>
-              1. Car Price
+              Car Price
             </label>
-          </div>
-          
-          {/* Preset Buttons - Mobile-First Design */}
-          <div className="flex gap-2 mb-3 overflow-x-auto scrollbar-hide">
-            {carPresets.map((preset) => (
-              <button
-                key={preset.value}
-                type="button"
-                onClick={() => handleCarPriceChange(preset.value.toString())}
-                className={`flex-shrink-0 min-h-[32px] px-3 py-1.5 rounded-full text-xs font-medium transition-all duration-200 hover:scale-105 focus:outline-none focus:ring-2 active:scale-95 ${
-                  carData.carPrice === preset.value
-                    ? 'bg-emerald-600 text-white shadow-md focus:ring-emerald-400/50'
-                    : 'bg-white/10 text-white/90 border border-white/20 hover:bg-white/20 hover:border-white/30 focus:ring-white/30'
-                }`}
-                style={{ 
-                  lineHeight: '1.2',
-                  minWidth: '60px'
-                }}
-              >
-                ₹{preset.label}
-              </button>
-            ))}
+            {/* Compact Price Selection Buttons */}
+            <div className="flex gap-1">
+              {carPresets.map((preset) => (
+                <button
+                  key={preset.value}
+                  type="button"
+                  onClick={() => handleCarPriceChange(preset.value.toString())}
+                  className={`px-2 py-1 text-xs font-medium rounded-md transition-all duration-200 hover:scale-105 focus:outline-none focus:ring-1 active:scale-95 ${
+                    carData.carPrice === preset.value
+                      ? 'bg-emerald-500 text-white shadow-sm focus:ring-emerald-400/50'
+                      : 'bg-white/10 text-white/80 border border-white/20 hover:bg-emerald-500/20 hover:border-emerald-400/40 focus:ring-white/30'
+                  }`}
+                >
+                  {preset.label}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
         
@@ -131,7 +126,7 @@ export default function CarDetailsFormV2({ carData, updateCarData, monthlyIncome
       <div className="space-y-2">
         <div className="flex items-center justify-between mb-2">
           <label className="text-base min-[375px]:text-lg font-medium text-white" style={{ lineHeight: '1.5' }}>
-            2. Down Payment
+            Down Payment
           </label>
           {downPaymentPercentage > 0 && (
             <span className="text-sm text-cyan-300 font-medium">{downPaymentPercentage.toFixed(1)}% of car price</span>
@@ -191,59 +186,114 @@ export default function CarDetailsFormV2({ carData, updateCarData, monthlyIncome
         </div>
       </div>
 
-      {/* Monthly Income - Required for calculations */}
-      <div className={`space-y-2 p-2.5 rounded-lg transition-all duration-300 ${
-        shouldHighlightMonthlyIncome 
-          ? 'border-lime-400/40 shadow-lg shadow-lime-400/20 bg-lime-400/10 border' 
-          : ''
-      }`}>
-        <label className="block text-base min-[375px]:text-lg font-medium text-white" style={{ lineHeight: '1.5' }}>
-          3. Monthly Income
-          <span className="text-xs text-emerald-300 bg-emerald-500/20 px-2 py-0.5 rounded-full ml-2">Affordability Check</span>
-        </label>
-        {shouldHighlightMonthlyIncome && (
-          <div className="text-red-300 text-sm font-medium flex items-center">
-            <span className="w-1 h-1 bg-red-400 rounded-full mr-2"></span>
-            This field is mandatory to proceed
+      {/* Loan Tenure */}
+      <div className="space-y-2">
+        <div className="flex items-center justify-between mb-2">
+          <label className="text-base min-[375px]:text-lg font-medium text-white" style={{ lineHeight: '1.5' }}>
+            Loan Tenure
+          </label>
+          <span className="text-sm text-cyan-300 font-medium">{Math.round(carData.tenure || 3)} years</span>
+        </div>
+        
+        <div className="space-y-3">
+          <div className="relative group">
+            <input
+              type="range"
+              min="1"
+              max="7"
+              step="1"
+              value={carData.tenure || 3}
+              onChange={(e) => updateCarData({ tenure: parseInt(e.target.value) })}
+              className="w-full h-3 bg-white/20 rounded-full appearance-none cursor-pointer slider-enhanced transition-all duration-200 hover:h-4"
+              style={{
+                background: `linear-gradient(to right, ${(carData.tenure || 3) <= 4 ? '#06b6d4' : '#ef4444'} 0%, ${(carData.tenure || 3) <= 4 ? '#06b6d4' : '#ef4444'} ${(((carData.tenure || 3) - 1) / (7 - 1)) * 100}%, rgba(255,255,255,0.2) ${(((carData.tenure || 3) - 1) / (7 - 1)) * 100}%, rgba(255,255,255,0.2) 100%)`
+              }}
+            />
           </div>
-        )}
-        <div className="relative">
-          <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white/70 font-semibold">₹</span>
+          
+          <div className="flex justify-between text-xs text-white/60">
+            <span>1yr</span>
+            <span>2yr</span>
+            <span>3yr</span>
+            <span>4yr</span>
+            <span>5yr</span>
+            <span>6yr</span>
+            <span>7yr</span>
+          </div>
+          
+          {/* Warning for tenure > 4 years */}
+          {carData.tenure > 4 && (
+            <div className="bg-red-500/20 border border-red-400/50 rounded-2xl p-3">
+              <p className="text-red-300 text-xs">
+                ⚠️ You're going above the suggested 4-year limit. Consider reducing the tenure for better financial health.
+              </p>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Interest Rate */}
+      <div className="space-y-2">
+        <div className="flex items-center justify-between mb-2">
+          <label className="text-base min-[375px]:text-lg font-medium text-white" style={{ lineHeight: '1.5' }}>
+            Interest Rate
+          </label>
+          <span className="text-sm text-cyan-300 font-medium">{carData.interestRate}% per annum</span>
+        </div>
+        
+        <div className="space-y-3">
+          {/* Interest Rate Input */}
           <input
             type="number"
-            min="0"
-            max="100000000"
-            required
-            value={carData.monthlyIncome || ''}
-            ref={monthlyIncomeInputRef}
+            step="0.1"
+            min="5"
+            max="15"
+            value={carData.interestRate}
             onChange={(e) => {
-              const numericValue = e.target.value.replace(/[^0-9.]/g, '')
-              let income = parseFloat(numericValue) || 0
-              
-              // Enforce maximum limit
-              if (income > 100000000) {
-                income = 100000000
-              }
-              
-              updateCarData({ monthlyIncome: income })
-            }}
-            onKeyPress={(e) => {
-              if (!/[0-9.]/.test(e.key) && e.key !== 'Backspace' && e.key !== 'Delete') {
-                e.preventDefault()
+              const value = parseFloat(e.target.value);
+              if (isNaN(value)) {
+                updateCarData({ interestRate: 8 });
+              } else if (value < 5) {
+                updateCarData({ interestRate: 5 });
+              } else if (value > 15) {
+                updateCarData({ interestRate: 15 });
+              } else {
+                updateCarData({ interestRate: value });
               }
             }}
-            placeholder="Enter your monthly income"
-            className={`w-full pl-8 pr-4 py-2.5 bg-white/10 backdrop-blur-md border rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-transparent transition-all text-base ${
-              shouldHighlightMonthlyIncome 
-                ? 'border-lime-400/60' 
-                : 'border-white/20'
-            }`}
+            onBlur={(e) => {
+              const value = parseFloat(e.target.value);
+              if (isNaN(value) || value < 5 || value > 15) {
+                const clampedValue = isNaN(value) ? 8 : Math.max(5, Math.min(15, value));
+                updateCarData({ interestRate: clampedValue });
+              }
+            }}
+            className="w-full px-4 py-2.5 bg-white/10 backdrop-blur-md border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-red-400 focus:border-transparent transition-all text-base"
+            placeholder="Interest rate (5-15%)"
           />
+          
+          {/* Interest Rate Slider */}
+          <div className="relative group">
+            <input
+              type="range"
+              min="5"
+              max="15"
+              step="0.1"
+              value={carData.interestRate}
+              onChange={(e) => updateCarData({ interestRate: parseFloat(e.target.value) })}
+              className="w-full h-3 bg-white/20 rounded-full appearance-none cursor-pointer slider-enhanced transition-all duration-200 hover:h-4"
+              style={{
+                background: `linear-gradient(to right, #06b6d4 0%, #06b6d4 ${((carData.interestRate - 5) / (15 - 5)) * 100}%, rgba(255,255,255,0.2) ${((carData.interestRate - 5) / (15 - 5)) * 100}%, rgba(255,255,255,0.2) 100%)`
+              }}
+            />
+          </div>
+          
+          <div className="flex justify-between text-xs text-white/60">
+            <span>5%</span>
+            <span>10%</span>
+            <span>15%</span>
+          </div>
         </div>
-        <p className="text-sm text-white/70 flex items-center mt-3">
-          <span className="w-1.5 h-1.5 bg-emerald-400 rounded-full mr-3"></span>
-          Used to calculate the 10% rule: total car expenses should not exceed 10% of your income
-        </p>
       </div>
 
     </>
@@ -251,9 +301,17 @@ export default function CarDetailsFormV2({ carData, updateCarData, monthlyIncome
 
   return (
     <div className="space-y-8">
-      
-      <div className="space-y-5" role="form" aria-label="Car details form">
-        {formContent}
+      {/* STEP 1: Car & Loan Details */}
+      <div className="border border-white/10 rounded-2xl p-6 bg-white/5">
+        <div className="flex items-center mb-6">
+          <div className="w-8 h-8 bg-emerald-500 rounded-full flex items-center justify-center text-white font-bold text-sm mr-3">
+            1
+          </div>
+          <h3 className="text-lg font-bold text-white">Car & Loan Details</h3>
+        </div>
+        <div className="space-y-5" role="form" aria-label="Car details form">
+          {formContent}
+        </div>
       </div>
     </div>
   )
