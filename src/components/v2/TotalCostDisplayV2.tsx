@@ -332,7 +332,7 @@ export default function TotalCostDisplayV2({ carData, updateCarData: _updateCarD
           <h4 className="text-gray-200 font-medium mb-3 text-sm tracking-wide">Loan Breakdown</h4>
           
           {/* Loan Duration Info */}
-          <div className="bg-slate-500/10 border border-slate-400/20 rounded-lg p-3 mb-3">
+          <div className="p-3 mb-3" style={{backgroundColor: '#123458'}}>
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-2">
                 <div className="w-8 h-8 bg-slate-500/20 rounded-full flex items-center justify-center">
@@ -350,7 +350,7 @@ export default function TotalCostDisplayV2({ carData, updateCarData: _updateCarD
           </div>
 
           {/* Loan Period */}
-          <div className="bg-cyan-500/10 border border-cyan-400/20 rounded-lg p-3 mb-3">
+          <div className="p-3 mb-3" style={{backgroundColor: '#123458'}}>
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-2">
                 <div className="w-8 h-8 bg-cyan-500/20 rounded-full flex items-center justify-center">
@@ -392,7 +392,7 @@ export default function TotalCostDisplayV2({ carData, updateCarData: _updateCarD
           </div>
 
           {/* Interest Rate */}
-          <div className="bg-red-500/10 border border-red-400/20 rounded-lg p-3 mb-3">
+          <div className="p-3 mb-3" style={{backgroundColor: '#123458'}}>
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-2">
                 <div className="w-8 h-8 bg-red-500/20 rounded-full flex items-center justify-center">
@@ -410,7 +410,7 @@ export default function TotalCostDisplayV2({ carData, updateCarData: _updateCarD
           </div>
 
           {/* Principal Amount */}
-          <div className="bg-green-500/10 border border-green-400/20 rounded-lg p-3 mb-3">
+          <div className="p-3 mb-3" style={{backgroundColor: '#123458'}}>
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-2">
                 <div className="w-8 h-8 bg-green-500/20 rounded-full flex items-center justify-center">
@@ -428,7 +428,7 @@ export default function TotalCostDisplayV2({ carData, updateCarData: _updateCarD
           </div>
 
           {/* Interest Cost */}  
-          <div className="bg-yellow-500/10 border border-yellow-400/20 rounded-lg p-3 mb-3">
+          <div className="p-3 mb-3" style={{backgroundColor: '#123458'}}>
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-2">
                 <div className="w-8 h-8 bg-yellow-500/20 rounded-full flex items-center justify-center">
@@ -446,7 +446,7 @@ export default function TotalCostDisplayV2({ carData, updateCarData: _updateCarD
           </div>
 
           {/* Total Payment - Compact */}
-          <div className="bg-gradient-to-br from-purple-600/30 to-indigo-600/30 border border-purple-400/40 rounded-lg p-3 shadow-lg">
+          <div className="p-3 shadow-lg" style={{backgroundColor: '#123458'}}>
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-3">
                 <div className="w-8 h-8 bg-purple-500/30 rounded-full flex items-center justify-center">
