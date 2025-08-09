@@ -2,6 +2,8 @@
 
 import React, { useRef, useEffect } from 'react'
 import { CarData } from '@/app/page'
+import { useTheme } from '@/contexts/ThemeContext'
+import { getThemeStyles, themeClass } from '@/utils/themeStyles'
 
 interface FinancialFormV2Props {
   carData: CarData
@@ -10,6 +12,8 @@ interface FinancialFormV2Props {
 }
 
 export default function FinancialFormV2({ carData, updateCarData, monthlyIncomeInputRef }: FinancialFormV2Props) {
+  const { theme, isLight, isDark } = useTheme()
+  const themeStyles = getThemeStyles(theme)
   
   const kmInputRef = useRef<HTMLInputElement>(null)
   const fuelCostInputRef = useRef<HTMLInputElement>(null)
@@ -69,7 +73,7 @@ export default function FinancialFormV2({ carData, updateCarData, monthlyIncomeI
           ? 'border-lime-400/40 shadow-lg shadow-lime-400/20 bg-lime-400/10 border' 
           : ''
       }`}>
-        <label className="block text-base min-[375px]:text-lg font-medium text-white" style={{ lineHeight: '1.5' }}>
+        <label className={`block text-base min-[375px]:text-lg font-medium ${themeClass(themeStyles.primaryText, 'text-white', isLight)}`} style={{ lineHeight: '1.5' }}>
           5. Monthly Income
           <span className="text-xs text-emerald-300 bg-emerald-500/20 px-2 py-0.5 rounded-full ml-2">Affordability Check</span>
         </label>
@@ -80,7 +84,7 @@ export default function FinancialFormV2({ carData, updateCarData, monthlyIncomeI
           </div>
         )}
         <div className="relative">
-          <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white/70 font-semibold">₹</span>
+          <span className={`absolute left-4 top-1/2 transform -translate-y-1/2 font-semibold ${themeClass('text-slate-600', 'text-white/70', isLight)}`}>₹</span>
           <input
             type="number"
             min="0"
@@ -105,14 +109,20 @@ export default function FinancialFormV2({ carData, updateCarData, monthlyIncomeI
               }
             }}
             placeholder="Enter your monthly income"
-            className={`w-full pl-8 pr-4 py-2.5 bg-white/10 backdrop-blur-md border rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-transparent transition-all text-base ${
+            className={`w-full pl-8 pr-4 py-2.5 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-transparent transition-all text-base ${
+              themeClass(
+                'bg-white border text-slate-900 placeholder-slate-500',
+                'bg-white/10 backdrop-blur-md border text-white placeholder-white/50',
+                isLight
+              )
+            } ${
               shouldHighlightMonthlyIncome 
                 ? 'border-lime-400/60' 
-                : 'border-white/20'
+                : themeClass('border-slate-300', 'border-white/20', isLight)
             }`}
           />
         </div>
-        <p className="text-sm text-white/70 flex items-center mt-3">
+        <p className={`text-sm flex items-center mt-3 ${themeClass(themeStyles.secondaryText, 'text-white/70', isLight)}`}>
           <span className="w-1.5 h-1.5 bg-emerald-400 rounded-full mr-3"></span>
           Used to calculate the 10% rule: total car expenses should not exceed 10% of your income
         </p>
@@ -120,11 +130,11 @@ export default function FinancialFormV2({ carData, updateCarData, monthlyIncomeI
 
       {/* Processing Fee + Insurance + Others */}
       <div className="space-y-2">
-        <label className="text-base min-[375px]:text-lg font-medium text-white" style={{ lineHeight: '1.5' }}>
+        <label className={`text-base min-[375px]:text-lg font-medium ${themeClass(themeStyles.primaryText, 'text-white', isLight)}`} style={{ lineHeight: '1.5' }}>
           6. Processing Fee
         </label>
         <div className="relative">
-          <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white/70 font-semibold">₹</span>
+          <span className={`absolute left-4 top-1/2 transform -translate-y-1/2 font-semibold ${themeClass('text-slate-600', 'text-white/70', isLight)}`}>₹</span>
           <input
             type="number"
             min="0"
@@ -150,18 +160,24 @@ export default function FinancialFormV2({ carData, updateCarData, monthlyIncomeI
               }
             }}
             placeholder="Enter Processing Fee,Insurance or Other Expenses"
-            className="w-full pl-8 pr-4 py-2.5 bg-white/10 backdrop-blur-md border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all text-base"
+            className={`w-full pl-8 pr-4 py-2.5 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all text-base ${
+              themeClass(
+                'bg-white border border-slate-300 text-slate-900 placeholder-slate-500',
+                'bg-white/10 backdrop-blur-md border border-white/20 text-white placeholder-white/50',
+                isLight
+              )
+            }`}
           />
         </div>
       </div>
 
       {/* Monthly Fuel Expense */}
       <div className="space-y-2" id="monthly-fuel-expense">
-        <label className="text-base min-[375px]:text-lg font-medium text-white" style={{ lineHeight: '1.5' }}>
+        <label className={`text-base min-[375px]:text-lg font-medium ${themeClass(themeStyles.primaryText, 'text-white', isLight)}`} style={{ lineHeight: '1.5' }}>
           7. Fuel per Month
         </label>
         <div className="relative">
-          <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white/70 font-semibold">₹</span>
+          <span className={`absolute left-4 top-1/2 transform -translate-y-1/2 font-semibold ${themeClass('text-slate-600', 'text-white/70', isLight)}`}>₹</span>
           <input
             type="number"
             min="1"
@@ -186,7 +202,13 @@ export default function FinancialFormV2({ carData, updateCarData, monthlyIncomeI
               }
             }}
             placeholder="Enter monthly fuel expense"
-            className="w-full pl-8 pr-4 py-2.5 bg-white/10 backdrop-blur-md border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-transparent transition-all text-base"
+            className={`w-full pl-8 pr-4 py-2.5 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-transparent transition-all text-base ${
+              themeClass(
+                'bg-white border border-slate-300 text-slate-900 placeholder-slate-500',
+                'bg-white/10 backdrop-blur-md border border-white/20 text-white placeholder-white/50',
+                isLight
+              )
+            }`}
           />
         </div>
       </div>

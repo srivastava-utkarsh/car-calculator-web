@@ -5,6 +5,9 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { PiggyBank, TrendingUp, Clock } from 'lucide-react'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
+import { useTheme } from '@/contexts/ThemeContext'
+import { getThemeStyles, themeClass } from '@/utils/themeStyles'
+import ThemeToggle from '@/components/ThemeToggle'
 // Import Version 2 components
 import CarDetailsFormV2 from '@/components/v2/CarDetailsFormV2'
 import FinancialFormV2 from '@/components/v2/FinancialFormV2'
@@ -35,6 +38,8 @@ export default function HomePage() {
   const [showResults, setShowResults] = useState(false) // Toggle results view
   const monthlyIncomeInputRef = useRef<HTMLInputElement>(null)
   const router = useRouter()
+  const { theme, isLight, isDark } = useTheme()
+  const themeStyles = getThemeStyles(theme)
 
   const [carData, setCarData] = useState<CarData>({
     carPrice: 0,
@@ -75,11 +80,11 @@ export default function HomePage() {
   }
 
 
-  // Render Version 2 - CRED-inspired fluid design
+  // Render Version 2 - CRED-inspired fluid design with theme support
   return (
-      <main className="min-h-screen bg-black font-sans relative" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>
+      <main className={`min-h-screen font-sans relative ${isLight ? 'bg-gradient-to-br from-slate-50 via-white to-slate-50' : 'bg-black'}`} style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>
         {/* Header Navigation */}
-        <header className="bg-black border-b border-white/5">
+        <header className={isLight ? 'bg-white border-b border-slate-200/60' : 'bg-black border-b border-white/5'}>
           <div className="container mx-auto px-6 lg:px-8">
             <div className="flex items-center justify-between h-20">
               {/* Logo - Far Left Positioning */}
@@ -93,26 +98,28 @@ export default function HomePage() {
                     height={64}
                   />
                 </div>
-                <span className="text-base sm:text-2xl font-extrabold text-white tracking-tight flex items-center">BudgetGear</span>
+                <span className={`text-base sm:text-2xl font-extrabold tracking-tight flex items-center ${isLight ? 'text-slate-900' : 'text-white'}`}>BudgetGear</span>
               </div>
 
               {/* Navigation Menu - Center with proper spacing */}
               <div className="flex-1 flex justify-center px-4">
                 <nav className="flex items-center" role="navigation" aria-label="Main navigation">
-                  <a href="#calculator" className="text-white font-bold text-xs sm:text-base tracking-wide transition-colors duration-200 px-1 sm:px-4 py-2 hover:text-white/80 text-center">
+                  <a href="#calculator" className={`font-bold text-xs sm:text-base tracking-wide transition-colors duration-200 px-1 sm:px-4 py-2 text-center ${isLight ? 'text-slate-900 hover:text-slate-600' : 'text-white hover:text-white/80'}`}>
                     Car Affordability Calculator
                   </a>
                 </nav>
               </div>
 
-              {/* Empty div for balance */}
-              <div className="w-20 sm:w-32 flex-shrink-0"></div>
+              {/* Theme Toggle - Right side */}
+              <div className="flex items-center space-x-4">
+                <ThemeToggle />
+              </div>
             </div>
           </div>
         </header>
 
         {/* Immersive Background Gradient - exclude header */}
-        <div className="absolute top-20 left-0 right-0 bottom-0 bg-gradient-to-br from-gray-900/50 via-black to-gray-900/30 pointer-events-none"></div>
+        {isDark && <div className="absolute top-20 left-0 right-0 bottom-0 bg-gradient-to-br from-gray-900/50 via-black to-gray-900/30 pointer-events-none"></div>}
         
         {/* Main Content Section - Fluid Layout */}
         <section className="relative z-10 pt-8" id="calculator" aria-labelledby="calculator-heading">
@@ -134,7 +141,7 @@ export default function HomePage() {
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -20 }}
                         transition={{ duration: 0.4, ease: "easeOut" }}
-                        className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-3 sm:p-4 lg:p-5 shadow-2xl"
+                        className={`rounded-2xl p-3 sm:p-4 lg:p-5 ${isLight ? 'bg-white border border-slate-200/60 shadow-sm' : 'bg-white/5 backdrop-blur-xl border border-white/10 shadow-2xl'}`}
                       >
                         {/* Unified Form View - Single responsive design for all screen sizes */}
                         <div className="space-y-6">
@@ -157,7 +164,7 @@ export default function HomePage() {
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -20 }}
                         transition={{ duration: 0.4, ease: "easeOut" }}
-                        className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-3 sm:p-4 lg:p-5 shadow-2xl"
+                        className={`rounded-2xl p-3 sm:p-4 lg:p-5 ${isLight ? 'bg-white border border-slate-200/60 shadow-sm' : 'bg-white/5 backdrop-blur-xl border border-white/10 shadow-2xl'}`}
                       >
                         <ResultsDisplayV2 
                           carData={carData}
@@ -176,7 +183,7 @@ export default function HomePage() {
                       initial={{ opacity: 0, x: 20 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ duration: 0.6, delay: 0.2 }}
-                      className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-3 lg:p-4 shadow-2xl"
+                      className={`rounded-2xl p-3 lg:p-4 ${isLight ? 'bg-white border border-slate-200/60 shadow-sm' : 'bg-white/5 backdrop-blur-xl border border-white/10 shadow-2xl'}`}
                     >
                       <h3 id="results-heading" className="sr-only">Loan Calculation Results</h3>
                       <TotalCostDisplayV2 carData={carData} updateCarData={updateCarData} />
@@ -278,16 +285,16 @@ export default function HomePage() {
         {/* Footer - Important Note - Static at page end */}
         <footer className="relative z-10 mt-16 mb-8">
           <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-            <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-xl p-4 shadow-lg">
+            <div className={`rounded-xl p-4 shadow-lg ${isLight ? 'bg-white border border-slate-200/60' : 'bg-white/5 backdrop-blur-xl border border-white/10'}`}>
               <div className="flex items-start space-x-3">
-                <div className="flex-shrink-0 w-5 h-5 bg-white/10 rounded-full flex items-center justify-center mt-0.5">
-                  <svg className="w-3 h-3 text-white/50" fill="currentColor" viewBox="0 0 20 20">
+                <div className={`flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center mt-0.5 ${isLight ? 'bg-slate-200' : 'bg-white/10'}`}>
+                  <svg className={`w-3 h-3 ${isLight ? 'text-slate-600' : 'text-white/50'}`} fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
                   </svg>
                 </div>
                 <div className="flex-1">
-                  <p className="font-medium text-white/90 mb-1 text-sm">Important Note</p>
-                  <p className="text-white/70 leading-relaxed text-sm">
+                  <p className={`font-medium mb-1 text-sm ${isLight ? 'text-slate-900' : 'text-white/90'}`}>Important Note</p>
+                  <p className={`leading-relaxed text-sm ${isLight ? 'text-slate-700' : 'text-white/70'}`}>
                     Calculations are indicative. Actual rates may vary by lender and credit profile.
                   </p>
                 </div>
