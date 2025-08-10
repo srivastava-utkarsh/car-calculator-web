@@ -92,7 +92,7 @@ export default function TotalCostDisplayV2({ carData, updateCarData: _updateCarD
       const isInputFocused = activeElement && (
         activeElement.tagName === 'INPUT' || 
         activeElement.tagName === 'TEXTAREA' ||
-        activeElement.contentEditable === 'true'
+        (activeElement as HTMLElement).contentEditable === 'true'
       );
       
       // Only focus the panel if no input is currently focused
@@ -364,7 +364,7 @@ export default function TotalCostDisplayV2({ carData, updateCarData: _updateCarD
         <div className={`pt-3 ${themeClass('border-t border-slate-300/30', 'border-t border-slate-700/30', isLight)}`}>
           
           {/* Loan Details Section */}
-          <div className="mb-6">
+          <div className={`mb-6 p-3 rounded-lg border ${themeClass('border-slate-200 bg-slate-50/30', 'border-white/10 bg-white/5', isLight)}`}>
             <h4 className={`font-medium mb-3 text-sm tracking-wide ${themeClass(themeStyles.primaryText, 'text-gray-200', isLight)}`}>Loan Details</h4>
             
             <div className="grid grid-cols-1 gap-3">
@@ -449,7 +449,7 @@ export default function TotalCostDisplayV2({ carData, updateCarData: _updateCarD
           </div>
 
           {/* Overall EMI Details Section */}
-          <div className="mb-3">
+          <div className={`mb-3 p-3 rounded-lg border ${themeClass('border-slate-200 bg-slate-50/30', 'border-white/10 bg-white/5', isLight)}`}>
             <h4 className={`font-medium mb-3 text-sm tracking-wide ${themeClass(themeStyles.primaryText, 'text-gray-200', isLight)}`}>Overall EMI Details</h4>
             
             <div className="grid grid-cols-1 gap-3">

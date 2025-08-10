@@ -20,12 +20,11 @@ interface ThemeProviderProps {
 export function ThemeProvider({ children }: ThemeProviderProps) {
   const [theme, setTheme] = useState<Theme>('dark')
 
-  // Load theme from localStorage on component mount
+  // Always use dark theme - localStorage loading disabled
   useEffect(() => {
-    const savedTheme = localStorage.getItem('theme') as Theme | null
-    if (savedTheme) {
-      setTheme(savedTheme)
-    }
+    // Force dark theme and save to localStorage
+    setTheme('dark')
+    localStorage.setItem('theme', 'dark')
   }, [])
 
   // Save theme to localStorage whenever it changes

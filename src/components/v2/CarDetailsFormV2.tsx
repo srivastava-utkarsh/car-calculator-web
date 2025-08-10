@@ -32,7 +32,7 @@ export default function CarDetailsFormV2({ carData, updateCarData, monthlyIncome
       const isInputFocused = activeElement && (
         activeElement.tagName === 'INPUT' || 
         activeElement.tagName === 'TEXTAREA' ||
-        activeElement.contentEditable === 'true'
+        (activeElement as HTMLElement).contentEditable === 'true'
       );
       
       // Only focus monthly income input if no input is currently focused
@@ -64,7 +64,7 @@ export default function CarDetailsFormV2({ carData, updateCarData, monthlyIncome
     updateCarData({ carPrice: price })
     
     // Auto-calculate 20% down payment
-    const downPayment = price * 0.2
+    const downPayment = Math.round(price * 0.2)
     updateCarData({ downPayment })
     
     // Set default loan tenure to 3 years when car price is selected
@@ -75,8 +75,8 @@ export default function CarDetailsFormV2({ carData, updateCarData, monthlyIncome
 
   const handleDownPaymentChange = (value: string) => {
     // Allow only numbers and enforce limits
-    const numericValue = value.replace(/[^0-9.]/g, '')
-    let payment = parseFloat(numericValue) || 0
+    const numericValue = value.replace(/[^0-9]/g, '')
+    let payment = parseInt(numericValue) || 0
     
     // Enforce maximum limit (car price)
     if (payment > carData.carPrice) {
@@ -175,12 +175,12 @@ export default function CarDetailsFormV2({ carData, updateCarData, monthlyIncome
               type="range"
               min="0"
               max={carData.carPrice}
-              step="10000"
+              step="1000"
               value={carData.downPayment}
               onChange={(e) => handleDownPaymentChange(e.target.value)}
-              className="w-full h-3 bg-white/20 rounded-full appearance-none cursor-pointer slider-enhanced transition-all duration-200 hover:h-4"
+              className={`w-full h-3 rounded-full appearance-none cursor-pointer slider-enhanced transition-all duration-200 hover:h-4 ${isLight ? 'light-theme' : 'dark-theme'}`}
               style={{
-                background: `linear-gradient(to right, ${downPaymentPercentage >= 20 ? '#06b6d4' : '#f97316'} 0%, ${downPaymentPercentage >= 20 ? '#06b6d4' : '#f97316'} ${(carData.downPayment / carData.carPrice) * 100}%, rgba(255,255,255,0.2) ${(carData.downPayment / carData.carPrice) * 100}%, rgba(255,255,255,0.2) 100%)`
+                background: `linear-gradient(to right, ${downPaymentPercentage >= 20 ? '#06b6d4' : '#f97316'} 0%, ${downPaymentPercentage >= 20 ? '#06b6d4' : '#f97316'} ${(carData.downPayment / carData.carPrice) * 100}%, ${isLight ? '#e2e8f0' : 'rgba(255,255,255,0.2)'} ${(carData.downPayment / carData.carPrice) * 100}%, ${isLight ? '#e2e8f0' : 'rgba(255,255,255,0.2)'} 100%)`
               }}
             />
             {/* Value display tooltip */}
@@ -211,7 +211,7 @@ export default function CarDetailsFormV2({ carData, updateCarData, monthlyIncome
             value={carData.downPayment || ''}
             onChange={(e) => handleDownPaymentChange(e.target.value)}
             onKeyPress={(e) => {
-              if (!/[0-9.]/.test(e.key) && e.key !== 'Backspace' && e.key !== 'Delete') {
+              if (!/[0-9]/.test(e.key) && e.key !== 'Backspace' && e.key !== 'Delete') {
                 e.preventDefault()
               }
             }}
@@ -234,7 +234,7 @@ export default function CarDetailsFormV2({ carData, updateCarData, monthlyIncome
             3. Loan Tenure
           </label>
           {carData.tenure > 0 && (
-            <span className="text-lg text-cyan-300 font-bold">
+            <span className={`text-lg font-bold ${themeClass('text-cyan-600', 'text-cyan-300', isLight)}`}>
               {Math.round(carData.tenure || 0)} years
             </span>
           )}
@@ -253,9 +253,9 @@ export default function CarDetailsFormV2({ carData, updateCarData, monthlyIncome
                 const roundedYears = Math.round(rawValue)
                 updateCarData({ tenure: roundedYears })
               }}
-              className="w-full h-3 bg-white/20 rounded-full appearance-none cursor-pointer slider-enhanced transition-all duration-200 hover:h-4"
+              className={`w-full h-3 rounded-full appearance-none cursor-pointer slider-enhanced transition-all duration-200 hover:h-4 ${isLight ? 'light-theme' : 'dark-theme'}`}
               style={{
-                background: `linear-gradient(to right, ${(carData.tenure || 1) <= 4 ? '#06b6d4' : '#ef4444'} 0%, ${(carData.tenure || 1) <= 4 ? '#06b6d4' : '#ef4444'} ${(((carData.tenure || 1) - 1) / (7 - 1)) * 100}%, rgba(255,255,255,0.2) ${(((carData.tenure || 1) - 1) / (7 - 1)) * 100}%, rgba(255,255,255,0.2) 100%)`
+                background: `linear-gradient(to right, ${(carData.tenure || 1) <= 4 ? '#06b6d4' : '#ef4444'} 0%, ${(carData.tenure || 1) <= 4 ? '#06b6d4' : '#ef4444'} ${(((carData.tenure || 1) - 1) / (7 - 1)) * 100}%, ${isLight ? '#e2e8f0' : 'rgba(255,255,255,0.2)'} ${(((carData.tenure || 1) - 1) / (7 - 1)) * 100}%, ${isLight ? '#e2e8f0' : 'rgba(255,255,255,0.2)'} 100%)`
               }}
             />
             {/* Value display tooltip */}
@@ -297,7 +297,7 @@ export default function CarDetailsFormV2({ carData, updateCarData, monthlyIncome
           <label className={`text-base min-[375px]:text-lg font-medium ${themeClass(themeStyles.primaryText, 'text-white', isLight)}`} style={{ lineHeight: '1.5' }}>
             4. Interest Rate
           </label>
-          <span className="text-lg text-cyan-300 font-bold">{carData.interestRate}% per annum</span>
+          <span className={`text-lg font-bold ${themeClass('text-cyan-600', 'text-cyan-300', isLight)}`}>{carData.interestRate}% per annum</span>
         </div>
         
         <div className="space-y-3">
@@ -347,9 +347,9 @@ export default function CarDetailsFormV2({ carData, updateCarData, monthlyIncome
                 step="0.1"
                 value={carData.interestRate}
                 onChange={(e) => updateCarData({ interestRate: parseFloat(e.target.value) })}
-                className="w-full h-3 bg-white/20 rounded-full appearance-none cursor-pointer slider-enhanced transition-all duration-200 hover:h-4"
+                className={`w-full h-3 rounded-full appearance-none cursor-pointer slider-enhanced transition-all duration-200 hover:h-4 ${isLight ? 'light-theme' : 'dark-theme'}`}
                 style={{
-                  background: `linear-gradient(to right, #06b6d4 0%, #06b6d4 ${((carData.interestRate - 5) / (15 - 5)) * 100}%, rgba(255,255,255,0.2) ${((carData.interestRate - 5) / (15 - 5)) * 100}%, rgba(255,255,255,0.2) 100%)`
+                  background: `linear-gradient(to right, #06b6d4 0%, #06b6d4 ${((carData.interestRate - 5) / (15 - 5)) * 100}%, ${isLight ? '#e2e8f0' : 'rgba(255,255,255,0.2)'} ${((carData.interestRate - 5) / (15 - 5)) * 100}%, ${isLight ? '#e2e8f0' : 'rgba(255,255,255,0.2)'} 100%)`
                 }}
               />
               {/* Value display tooltip */}
@@ -363,7 +363,7 @@ export default function CarDetailsFormV2({ carData, updateCarData, monthlyIncome
                 {carData.interestRate.toFixed(1)}%
               </div>
             </div>
-            <div className="flex justify-between text-xs text-white/60 mt-1">
+            <div className={`flex justify-between text-xs mt-1 ${themeClass(themeStyles.mutedText, 'text-white/60', isLight)}`}>
               <span>5%</span>
               <span>10%</span>
               <span>15%</span>

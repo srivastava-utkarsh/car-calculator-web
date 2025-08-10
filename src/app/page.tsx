@@ -1,12 +1,12 @@
 'use client'
 
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { PiggyBank, TrendingUp, Clock, ChevronLeft, ChevronRight } from 'lucide-react'
 import Image from 'next/image'
 import { useTheme } from '@/contexts/ThemeContext'
 import { themeClass } from '@/utils/themeStyles'
-import ThemeToggle from '@/components/ThemeToggle'
+import Script from 'next/script'
 // Import Version 2 components
 import CarDetailsFormV2 from '@/components/v2/CarDetailsFormV2'
 import FinancialFormV2 from '@/components/v2/FinancialFormV2'
@@ -32,6 +32,37 @@ export interface CarData {
   prepaymentPenaltyRate?: number
 }
 
+
+// AdSense Component
+const AdSenseAd = ({ slot, format, style, responsive = true }: {
+  slot: string;
+  format?: string;
+  style?: React.CSSProperties;
+  responsive?: boolean;
+}) => {
+  useEffect(() => {
+    try {
+      // @ts-expect-error - AdSense global not typed
+      (window.adsbygoogle = window.adsbygoogle || []).push({});
+    } catch (err) {
+      console.error('AdSense error:', err);
+    }
+  }, []);
+
+  return (
+    <div className="text-center my-4">
+      <div className="text-xs text-gray-500 mb-2">Advertisement</div>
+      <ins
+        className="adsbygoogle"
+        style={{ display: 'block', ...style }}
+        data-ad-client="ca-pub-XXXXXXXXXXXXXXXXX" // Replace with your AdSense client ID
+        data-ad-slot={slot}
+        data-ad-format={format}
+        data-full-width-responsive={responsive ? 'true' : 'false'}
+      />
+    </div>
+  );
+};
 
 export default function HomePage() {
   const [showResults, setShowResults] = useState(false) // Toggle results view
@@ -81,6 +112,13 @@ export default function HomePage() {
   // Render Version 2 - CRED-inspired fluid design with theme support
   return (
       <main className={`min-h-screen font-sans relative ${isLight ? 'bg-gradient-to-br from-slate-50 via-white to-slate-50' : 'bg-black'}`} style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>
+        {/* AdSense Script */}
+        <Script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXXX"
+          crossOrigin="anonymous"
+          strategy="afterInteractive"
+        />
         {/* Header Navigation */}
         <header className={isLight ? 'bg-white border-b border-slate-200/60' : 'bg-black border-b border-white/5'}>
           <div className="container mx-auto px-6 lg:px-8">
@@ -108,9 +146,9 @@ export default function HomePage() {
                 </nav>
               </div>
 
-              {/* Theme Toggle - Right side */}
+              {/* Right side placeholder */}
               <div className="flex items-center space-x-4">
-                <ThemeToggle />
+                {/* Theme toggle hidden */}
               </div>
             </div>
           </div>
@@ -134,11 +172,11 @@ export default function HomePage() {
               </div>
 
               {/* Content Layout - Collapsible design */}
-              <div className="flex gap-4 lg:gap-6 relative">
+              <div className="flex flex-col lg:flex-row gap-4 lg:gap-6 relative">
                 
                 {/* Main Form Section - Collapsible */}
                 <motion.div 
-                  className={`transition-all duration-500 ease-in-out ${isLeftCollapsed ? 'w-16' : 'flex-1 lg:max-w-2xl'}`}
+                  className={`transition-all duration-500 ease-in-out ${isLeftCollapsed ? 'w-16 lg:w-16' : 'w-full lg:flex-1 lg:max-w-2xl'}`}
                   animate={{ width: isLeftCollapsed ? 64 : 'auto' }}
                 >
                   {isLeftCollapsed ? (
@@ -176,7 +214,7 @@ export default function HomePage() {
                               </h3>
                               <button
                                 onClick={() => setIsLeftCollapsed(true)}
-                                className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-all duration-200 hover:scale-105 font-medium text-sm ${isLight ? 'bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-slate-900' : 'bg-white/10 hover:bg-white/20 text-white/70 hover:text-white'}`}
+                                className={`hidden lg:flex items-center space-x-2 px-4 py-2 rounded-lg transition-all duration-200 hover:scale-105 font-medium text-sm ${isLight ? 'bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-slate-900' : 'bg-white/10 hover:bg-white/20 text-white/70 hover:text-white'}`}
                                 aria-label="Hide form panel"
                               >
                                 <span>Hide</span>
@@ -214,7 +252,7 @@ export default function HomePage() {
                               </h3>
                               <button
                                 onClick={() => setIsLeftCollapsed(true)}
-                                className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-all duration-200 hover:scale-105 font-medium text-sm ${isLight ? 'bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-slate-900' : 'bg-white/10 hover:bg-white/20 text-white/70 hover:text-white'}`}
+                                className={`hidden lg:flex items-center space-x-2 px-4 py-2 rounded-lg transition-all duration-200 hover:scale-105 font-medium text-sm ${isLight ? 'bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-slate-900' : 'bg-white/10 hover:bg-white/20 text-white/70 hover:text-white'}`}
                                 aria-label="Hide results panel"
                               >
                                 <span>Hide</span>
@@ -236,11 +274,11 @@ export default function HomePage() {
 
                 {/* Live Preview Panel - Expands when left is collapsed */}
                 <motion.aside 
-                  className={`transition-all duration-500 ease-in-out ${isLeftCollapsed ? 'flex-1' : 'w-80 lg:w-96'}`}
+                  className={`transition-all duration-500 ease-in-out ${isLeftCollapsed ? 'flex-1' : 'w-full lg:w-80 lg:w-96'}`}
                   aria-labelledby="results-heading"
                   animate={{ width: isLeftCollapsed ? '100%' : 'auto' }}
                 >
-                  <div className="lg:sticky lg:top-8">
+                  <div className="lg:sticky lg:top-8 space-y-4">
                     <motion.div
                       initial={{ opacity: 0, x: 20 }}
                       animate={{ opacity: 1, x: 0 }}
@@ -250,6 +288,15 @@ export default function HomePage() {
                       <h3 id="results-heading" className="sr-only">Loan Calculation Results</h3>
                       <TotalCostDisplayV2 carData={carData} updateCarData={updateCarData} />
                     </motion.div>
+                    
+                    {/* Desktop Sidebar Ad - 300x250 Medium Rectangle */}
+                    <div className="hidden lg:block">
+                      <AdSenseAd 
+                        slot="1234567892" 
+                        format="auto"
+                        style={{ width: '300px', height: '250px' }}
+                      />
+                    </div>
                   </div>
                 </motion.aside>
               </div>
@@ -332,6 +379,19 @@ export default function HomePage() {
           </section>
         )}
 
+        {/* In-Content Ad - 300x250 Medium Rectangle */}
+        <section className="relative z-10 mt-8">
+          <div className="container mx-auto px-4">
+            <div className="max-w-2xl mx-auto">
+              <AdSenseAd 
+                slot="1234567893" 
+                format="auto"
+                style={{ width: '300px', height: '250px', margin: '0 auto' }}
+              />
+            </div>
+          </div>
+        </section>
+
         {/* Cost Distribution Chart Section */}
         <section className="relative z-10 mt-12">
           <div className="container mx-auto px-4">
@@ -343,6 +403,28 @@ export default function HomePage() {
 
         {/* Educational Summary Section */}
         <EducationalSummary carData={carData} />
+
+        {/* Footer Ad - 728x90 Leaderboard */}
+        <section className="relative z-10 mt-12">
+          <div className="container mx-auto px-4">
+            <div className="max-w-4xl mx-auto">
+              <div className="hidden md:block">
+                <AdSenseAd 
+                  slot="1234567894" 
+                  format="auto"
+                  style={{ width: '728px', height: '90px', margin: '0 auto' }}
+                />
+              </div>
+              <div className="block md:hidden">
+                <AdSenseAd 
+                  slot="1234567895" 
+                  format="auto"
+                  style={{ width: '320px', height: '50px', margin: '0 auto' }}
+                />
+              </div>
+            </div>
+          </div>
+        </section>
 
         {/* Footer - Disclaimer - Static at page end */}
         <footer className="relative z-10 mt-16 mb-8">
@@ -364,6 +446,27 @@ export default function HomePage() {
             </div>
           </div>
         </footer>
+
+        {/* Sticky Bottom Mobile Ad - 320x50 Mobile Leaderboard */}
+        <div className="fixed bottom-0 left-0 right-0 z-50 block md:hidden bg-white shadow-lg border-t">
+          <div className="flex justify-between items-center p-2">
+            <AdSenseAd 
+              slot="1234567896" 
+              format="auto"
+              style={{ width: '320px', height: '50px', margin: '0 auto' }}
+            />
+            <button 
+              onClick={(e) => {
+                const stickyAd = e.currentTarget.parentElement?.parentElement;
+                if (stickyAd) stickyAd.style.display = 'none';
+              }}
+              className="text-gray-400 hover:text-gray-600 p-1 ml-2"
+              aria-label="Close ad"
+            >
+              ×
+            </button>
+          </div>
+        </div>
       </main>
     )
 }
