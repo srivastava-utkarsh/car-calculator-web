@@ -1,3 +1,53 @@
-Disclaimer
+Here are up-to-date, high-performing AdSense placements and sizes, including mobile. Use these as a testing baseline, then A/B with your audience and layout.
 
-This calculator is provided as a tool to assist in understanding the potential impacts of adjusting your EMI or loan tenure. It is intended for informational and educational purposes only and should not be considered as offering specific financial advice for your loan management decisions. The results and scenarios presented are approximations and should be used as a guide rather than definitive financial solutions. We recommend consulting with your financial advisor for personalised advice and to discuss the options and implications specific to your financial situation.
+Best-performing ad sizes
+- Desktop:
+  - 300×250 (Medium rectangle) — versatile, strong demand.[1][2]
+  - 336×280 (Large rectangle) — strong eCPMs, in-content/below articles.[2][1]
+  - 728×90 (Leaderboard) — header/footer branding, high viewability when near fold.[1][2]
+  - 300×600 (Half page) — very prominent, fast-growing impressions.[2][1]
+  - 970×250 (Billboard/pushdown) — premium/sponsorship slots.[2]
+
+- Mobile:
+  - 320×100 (Large mobile banner) — top performer for mobile banners.[3][1][2]
+  - 320×50 (Mobile leaderboard) — staple unit for top/bottom placements.[3][2]
+  - 300×250 (MREC) — in-content; can be above the fold if content remains visible.[4][5]
+  - 300×100 — alternative large mobile banner; often used in multi-size slots.[6]
+  - Interstitials 320×480 — full-screen, use sparingly and policy-compliant.[7][6]
+
+High-yield placement patterns
+- Above-the-fold (ATF) but not intrusive:
+  - Place a banner near the bottom of the first screen, just above the fold; this often maximizes viewability without pushing content down.[5]
+  - Avoid large units that push main content below the fold on mobile; ensure content remains clearly visible.[8][4]
+
+- In-content placements:
+  - 300×250 or 336×280 embedded between paragraphs or after intro; repeat once mid-article and once near the end for long posts.[1][2]
+  - On mobile, 300×250 within content performs very well; keep spacing so it’s clearly distinct from editorial content.[3][2]
+
+- Sticky/anchor:
+  - Mobile sticky 320×50 or 320×100 at bottom can perform strongly without blocking content; ensure close button and policy compliance.[9][3][2]
+
+- Sidebars (desktop):
+  - 300×600 sticky or 300×250 units in a sidebar that remains in view while scrolling improve viewability.[5][2]
+
+- Footer/top:
+  - 728×90 or 970×250 near the footer or just before comments/related posts for additional viewable impressions.[1][2]
+
+Policy and UX tips to protect revenue
+- Keep content visible on mobile; don’t let ads push primary content below the fold.[8]
+- Place ATF units slightly below top navigation or just above the fold for best viewability.[5]
+- Use responsive ad units and multi-size ad slots (e.g., 320×100 | 320×50; 336×280 | 300×250) to maximize fill [6][2].
+- Optimize speed; slow ads reduce viewability as users scroll past before render.[5]
+- Avoid deceptive placements; label ads clearly and keep spacing to prevent accidental clicks.[9][8]
+
+Starter layout (blog/article)
+- Mobile:
+  - Top: 320×100 under header if content remains visible.
+  - In-content 1: 300×250 after 1–2 paragraphs.
+  - Sticky bottom: 320×50/320×100 anchor.
+  - In-content 2: 300×250 near the end.
+
+- Desktop:
+  - Header: 728×90 or 970×250.
+  - Sidebar: sticky 300×600 + 300×250.
+  - In-content: 300×250 after intro, and another near the end.

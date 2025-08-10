@@ -2,11 +2,10 @@
 
 import { useState, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { PiggyBank, TrendingUp, Clock } from 'lucide-react'
+import { PiggyBank, TrendingUp, Clock, ChevronLeft, ChevronRight } from 'lucide-react'
 import Image from 'next/image'
-import { useRouter } from 'next/navigation'
 import { useTheme } from '@/contexts/ThemeContext'
-import { getThemeStyles, themeClass } from '@/utils/themeStyles'
+import { themeClass } from '@/utils/themeStyles'
 import ThemeToggle from '@/components/ThemeToggle'
 // Import Version 2 components
 import CarDetailsFormV2 from '@/components/v2/CarDetailsFormV2'
@@ -36,10 +35,9 @@ export interface CarData {
 
 export default function HomePage() {
   const [showResults, setShowResults] = useState(false) // Toggle results view
+  const [isLeftCollapsed, setIsLeftCollapsed] = useState(false) // Collapsible state
   const monthlyIncomeInputRef = useRef<HTMLInputElement>(null)
-  const router = useRouter()
-  const { theme, isLight, isDark } = useTheme()
-  const themeStyles = getThemeStyles(theme)
+  const { isLight, isDark } = useTheme()
 
   const [carData, setCarData] = useState<CarData>({
     carPrice: 0,
@@ -135,56 +133,113 @@ export default function HomePage() {
                 </p>
               </div>
 
-              {/* Content Grid - More compact layout */}
-              <div className="grid lg:grid-cols-7 gap-4 lg:gap-6">
+              {/* Content Layout - Collapsible design */}
+              <div className="flex gap-4 lg:gap-6 relative">
                 
-                {/* Main Form Section - Reduced width */}
-                <div className="lg:col-span-4 max-w-2xl">
-                  <AnimatePresence mode="wait">
-                    {!showResults ? (
-                      <motion.div
-                        key="form"
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -20 }}
-                        transition={{ duration: 0.4, ease: "easeOut" }}
-                        className={`rounded-2xl p-3 sm:p-4 lg:p-5 ${isLight ? 'bg-white border border-slate-200/60 shadow-sm' : 'bg-white/5 backdrop-blur-xl border border-white/10 shadow-2xl'}`}
+                {/* Main Form Section - Collapsible */}
+                <motion.div 
+                  className={`transition-all duration-500 ease-in-out ${isLeftCollapsed ? 'w-16' : 'flex-1 lg:max-w-2xl'}`}
+                  animate={{ width: isLeftCollapsed ? 64 : 'auto' }}
+                >
+                  {isLeftCollapsed ? (
+                    // Collapsed State - Small Label
+                    <div className={`h-full rounded-2xl p-3 ${isLight ? 'bg-white border border-slate-200/60 shadow-sm' : 'bg-white/5 backdrop-blur-xl border border-white/10 shadow-2xl'} flex flex-col items-center justify-center space-y-6 min-h-[400px]`}>
+                      <button
+                        onClick={() => setIsLeftCollapsed(false)}
+                        className={`p-3 rounded-xl transition-all duration-200 hover:scale-110 shadow-lg ${isLight ? 'bg-blue-50 hover:bg-blue-100 text-blue-600 border border-blue-200' : 'bg-blue-500/20 hover:bg-blue-500/30 text-blue-400 border border-blue-400/30'}`}
+                        aria-label="Show calculator panel"
+                        title="Show Calculator"
                       >
-                        {/* Unified Form View - Single responsive design for all screen sizes */}
-                        <div className="space-y-6">
-                          <CarDetailsFormV2 
-                            carData={carData} 
-                            updateCarData={updateCarData}
-                            monthlyIncomeInputRef={monthlyIncomeInputRef}
-                          />
-                          <FinancialFormV2 
-                            carData={carData} 
-                            updateCarData={updateCarData}
-                            monthlyIncomeInputRef={monthlyIncomeInputRef}
-                          />
-                        </div>
-                      </motion.div>
-                    ) : (
-                      <motion.div
-                        key="results"
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -20 }}
-                        transition={{ duration: 0.4, ease: "easeOut" }}
-                        className={`rounded-2xl p-3 sm:p-4 lg:p-5 ${isLight ? 'bg-white border border-slate-200/60 shadow-sm' : 'bg-white/5 backdrop-blur-xl border border-white/10 shadow-2xl'}`}
-                      >
-                        <ResultsDisplayV2 
-                          carData={carData}
-                          onBack={hideResultsView}
-                          onRestart={restart}
-                        />
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </div>
+                        <ChevronRight className="w-6 h-6" />
+                      </button>
+                      <div className={`text-xs font-bold tracking-wider transform -rotate-90 whitespace-nowrap ${isLight ? 'text-slate-600' : 'text-white/70'}`}>
+                        CALCULATOR
+                      </div>
+                    </div>
+                  ) : (
+                    // Expanded State - Full Form
+                    <div className="relative">
+                      <AnimatePresence mode="wait">
+                        {!showResults ? (
+                          <motion.div
+                            key="form"
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -20 }}
+                            transition={{ duration: 0.4, ease: "easeOut" }}
+                            className={`rounded-2xl p-3 sm:p-4 lg:p-5 ${isLight ? 'bg-white border border-slate-200/60 shadow-sm' : 'bg-white/5 backdrop-blur-xl border border-white/10 shadow-2xl'}`}
+                          >
+                            {/* Collapse Button */}
+                            <div className="flex justify-between items-center mb-4">
+                              <h3 className={`text-lg font-semibold ${isLight ? 'text-slate-900' : 'text-white'}`}>
+                                Car Finance Calculator
+                              </h3>
+                              <button
+                                onClick={() => setIsLeftCollapsed(true)}
+                                className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-all duration-200 hover:scale-105 font-medium text-sm ${isLight ? 'bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-slate-900' : 'bg-white/10 hover:bg-white/20 text-white/70 hover:text-white'}`}
+                                aria-label="Hide form panel"
+                              >
+                                <span>Hide</span>
+                                <ChevronLeft className="w-4 h-4" />
+                              </button>
+                            </div>
+                            
+                            {/* Unified Form View - Single responsive design for all screen sizes */}
+                            <div className="space-y-6">
+                              <CarDetailsFormV2 
+                                carData={carData} 
+                                updateCarData={updateCarData}
+                                monthlyIncomeInputRef={monthlyIncomeInputRef}
+                              />
+                              <FinancialFormV2 
+                                carData={carData} 
+                                updateCarData={updateCarData}
+                                monthlyIncomeInputRef={monthlyIncomeInputRef}
+                              />
+                            </div>
+                          </motion.div>
+                        ) : (
+                          <motion.div
+                            key="results"
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -20 }}
+                            transition={{ duration: 0.4, ease: "easeOut" }}
+                            className={`rounded-2xl p-3 sm:p-4 lg:p-5 ${isLight ? 'bg-white border border-slate-200/60 shadow-sm' : 'bg-white/5 backdrop-blur-xl border border-white/10 shadow-2xl'}`}
+                          >
+                            {/* Collapse Button */}
+                            <div className="flex justify-between items-center mb-4">
+                              <h3 className={`text-lg font-semibold ${isLight ? 'text-slate-900' : 'text-white'}`}>
+                                Calculation Results
+                              </h3>
+                              <button
+                                onClick={() => setIsLeftCollapsed(true)}
+                                className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-all duration-200 hover:scale-105 font-medium text-sm ${isLight ? 'bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-slate-900' : 'bg-white/10 hover:bg-white/20 text-white/70 hover:text-white'}`}
+                                aria-label="Hide results panel"
+                              >
+                                <span>Hide</span>
+                                <ChevronLeft className="w-4 h-4" />
+                              </button>
+                            </div>
+                            
+                            <ResultsDisplayV2 
+                              carData={carData}
+                              onBack={hideResultsView}
+                              onRestart={restart}
+                            />
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
+                  )}
+                </motion.div>
 
-                {/* Live Preview Panel - Reduced width */}
-                <aside className="lg:col-span-3 max-w-md" aria-labelledby="results-heading">
+                {/* Live Preview Panel - Expands when left is collapsed */}
+                <motion.aside 
+                  className={`transition-all duration-500 ease-in-out ${isLeftCollapsed ? 'flex-1' : 'w-80 lg:w-96'}`}
+                  aria-labelledby="results-heading"
+                  animate={{ width: isLeftCollapsed ? '100%' : 'auto' }}
+                >
                   <div className="lg:sticky lg:top-8">
                     <motion.div
                       initial={{ opacity: 0, x: 20 }}
@@ -196,7 +251,7 @@ export default function HomePage() {
                       <TotalCostDisplayV2 carData={carData} updateCarData={updateCarData} />
                     </motion.div>
                   </div>
-                </aside>
+                </motion.aside>
               </div>
             </div>
           </div>
