@@ -248,15 +248,13 @@ export default function TotalCostDisplayV2({ carData, updateCarData: _updateCarD
       {/* Loan Summary - Compact Display */}
       <motion.div 
         className={`p-6 rounded-2xl mb-6 transition-all duration-300 hover:scale-[1.02] ${
-          themeClass(
-            `${themeStyles.cardBg} ${themeStyles.primaryText}`,
-            'bg-gradient-to-br from-slate-800/40 to-slate-900/30 backdrop-blur-xl border border-slate-700/30 text-gray-100 shadow-2xl',
-            isLight
-          )
+          isLight 
+            ? 'bg-white border border-slate-200/60 text-slate-900 shadow-sm'
+            : 'bg-gradient-to-br from-slate-800/40 to-slate-900/30 backdrop-blur-xl border border-slate-700/30 text-gray-100 shadow-2xl'
         } ${
           completionPercentage === 100 
-            ? themeClass('ring-1 ring-emerald-500/30', 'shadow-emerald-500/10 ring-1 ring-emerald-400/20', isLight)
-            : themeClass('hover:shadow-lg', 'shadow-black/10 hover:shadow-black/20', isLight)
+            ? (isLight ? 'ring-1 ring-emerald-500/30' : 'shadow-emerald-500/10 ring-1 ring-emerald-400/20')
+            : (isLight ? 'hover:shadow-lg' : 'shadow-black/10 hover:shadow-black/20')
         }`}
         animate={completionPercentage === 100 ? { scale: [1, 1.02, 1] } : {}}
         transition={{ duration: 0.6, repeat: 0 }}
