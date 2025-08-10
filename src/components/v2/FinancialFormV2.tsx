@@ -30,13 +30,17 @@ export default function FinancialFormV2({ carData, updateCarData, monthlyIncomeI
   useEffect(() => {
     const emi = calculateEMI(carData.carPrice - carData.downPayment, carData.interestRate, carData.tenure)
     
-    // If fuel inputs are filled but no EMI, focus on monthly income
+    // Only auto-focus if the monthly income input is not currently focused
+    // This prevents focus stealing while user is typing
     if (carData.kmPerMonth > 0 && carData.fuelCostPerLiter > 0 && emi === 0 && carData.monthlyIncome === 0 && monthlyIncomeInputRef) {
-      setTimeout(() => {
-        monthlyIncomeInputRef.current?.focus()
-      }, 100)
+      const isInputFocused = document.activeElement === monthlyIncomeInputRef.current
+      if (!isInputFocused) {
+        setTimeout(() => {
+          monthlyIncomeInputRef.current?.focus()
+        }, 100)
+      }
     }
-  }, [carData, monthlyIncomeInputRef])
+  }, [carData.kmPerMonth, carData.fuelCostPerLiter, carData.carPrice, carData.downPayment, carData.interestRate, carData.tenure, monthlyIncomeInputRef])
 
   
   const maxTenure = 7

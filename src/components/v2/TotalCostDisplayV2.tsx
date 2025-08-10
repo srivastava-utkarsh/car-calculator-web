@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { motion } from 'framer-motion'
 import { CarData } from '@/app/page'
 import { TrendingUp, CheckCircle, XCircle, Percent, Clock, Info } from 'lucide-react'
@@ -53,6 +53,8 @@ export default function TotalCostDisplayV2({ carData, updateCarData: _updateCarD
   
   const formatPercentage = (value: number) => {
     if (isNaN(value) || !isFinite(value)) return '0.0'
+    if (value < 1 && value > 0) return '< 1'
+    if (value > 100) return '> 100'
     return value.toFixed(1)
   }
   const formatDuration = () => {
@@ -78,6 +80,28 @@ export default function TotalCostDisplayV2({ carData, updateCarData: _updateCarD
     carData.monthlyIncome > 0
   ];
   const isAllRequiredFieldsFilled = requiredFields.every(Boolean);
+
+  // Auto-focus the afford panel when all mandatory fields are completed
+  // Only focus if no input is currently focused to prevent interrupting user input
+  React.useEffect(() => {
+    if (isAllRequiredFieldsFilled && carData.tenure > 0 && emi > 0) {
+      const affordPanel = document.getElementById('afford-panel');
+      const activeElement = document.activeElement;
+      
+      // Check if the currently focused element is an input field
+      const isInputFocused = activeElement && (
+        activeElement.tagName === 'INPUT' || 
+        activeElement.tagName === 'TEXTAREA' ||
+        activeElement.contentEditable === 'true'
+      );
+      
+      // Only focus the panel if no input is currently focused
+      if (affordPanel && !isInputFocused) {
+        affordPanel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        affordPanel.focus();
+      }
+    }
+  }, [isAllRequiredFieldsFilled, carData.tenure, emi]);
   
   // Calculate completion percentage for all fields
   const allFields = [
@@ -95,7 +119,9 @@ export default function TotalCostDisplayV2({ carData, updateCarData: _updateCarD
 
       {/* Smart Purchase Score - Always show, but with empty state when required fields not filled */}
         <div 
-          className={`relative p-3 sm:p-4 rounded-lg sm:rounded-xl border backdrop-blur-xl shadow-xl mb-3 sm:mb-4 transition-all duration-300 hover:shadow-xl hover:scale-[1.01] overflow-hidden ${
+          id="afford-panel"
+          tabIndex={-1}
+          className={`relative p-3 sm:p-4 rounded-lg sm:rounded-xl border backdrop-blur-xl shadow-xl mb-3 sm:mb-4 transition-all duration-300 hover:shadow-xl hover:scale-[1.01] overflow-hidden focus:outline-none focus:ring-2 focus:ring-blue-400/50 ${
             !isAllRequiredFieldsFilled || carData.carPrice <= 0 || carData.tenure <= 0 || emi <= 0
               ? 'bg-gradient-to-br from-gray-500/10 via-gray-500/5 to-gray-600/10 border-gray-400/20 shadow-gray-500/10'
               : isAffordable 
@@ -113,24 +139,23 @@ export default function TotalCostDisplayV2({ carData, updateCarData: _updateCarD
           </div>
           
           <div className="relative z-10">
-            <div className="flex items-start justify-between mb-2 gap-2">
-              <div className="flex items-center space-x-2 min-w-0 flex-1">
-                <div className="min-w-0 flex-1">
-                  <h5 className={`font-bold text-sm sm:text-base tracking-tight leading-tight ${themeClass(themeStyles.primaryText, 'text-white', isLight)}`}>Can you afford?</h5>
-                </div>
+            <div className="flex items-center justify-between mb-2">
+              {/* Left side - "Can you afford?" text */}
+              <div className="flex items-center">
+                <h5 className={`font-bold text-sm sm:text-base tracking-tight leading-tight ${themeClass(themeStyles.primaryText, 'text-white', isLight)}`}>
+                  Can you afford?
+                </h5>
               </div>
               
-              {/* Score display - YES/NO in big text */}
-              <div className="flex-shrink-0">
-                <div className="flex items-center justify-center">
-                  {!isAllRequiredFieldsFilled || carData.carPrice <= 0 || carData.tenure <= 0 || emi <= 0 ? (
-                    <span className="text-3xl font-bold text-gray-400 leading-none">--</span>
-                  ) : isAffordable ? (
-                    <span className="text-3xl font-bold text-green-400 leading-none">YES</span>
-                  ) : (
-                    <span className="text-3xl font-bold text-red-400 leading-none">NO</span>
-                  )}
-                </div>
+              {/* Right side - Centered budget status display */}
+              <div className="flex items-center justify-center">
+                {!isAllRequiredFieldsFilled || carData.carPrice <= 0 || carData.tenure <= 0 || emi <= 0 ? (
+                  <span className="text-2xl font-bold text-gray-400 leading-none">--</span>
+                ) : isAffordable ? (
+                  <span className="text-2xl font-bold text-green-400 leading-none">In Your Budget</span>
+                ) : (
+                  <span className="text-2xl font-bold text-red-400 leading-none">Out of Budget</span>
+                )}
               </div>
             </div>
           
@@ -335,139 +360,152 @@ export default function TotalCostDisplayV2({ carData, updateCarData: _updateCarD
         </div>
 
 
-        {/* Loan Details - Compact Layout */}
+        {/* Loan Breakdown - Redesigned into Loan and Money sections */}
         <div className={`pt-3 ${themeClass('border-t border-slate-300/30', 'border-t border-slate-700/30', isLight)}`}>
-          <h4 className={`font-medium mb-3 text-sm tracking-wide ${themeClass(themeStyles.primaryText, 'text-gray-200', isLight)}`}>Loan Breakdown</h4>
           
-          {/* Loan Duration Info */}
-          <div className="p-3 mb-3" style={{backgroundColor: isLight ? '#f8fafc' : '#123458'}}>
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-2">
-                <div className={`w-8 h-8 rounded-full flex items-center justify-center ${themeClass('bg-slate-300/50', 'bg-slate-500/20', isLight)}`}>
-                  <Clock size={14} className={themeClass('text-slate-600', 'text-slate-300', isLight)}/>
-                </div>
-                <div>
-                  <div className={`font-semibold text-sm ${themeClass('text-slate-700', 'text-slate-100', isLight)}`}>Loan Duration</div>
-                  <div className={`text-xs ${themeClass('text-slate-500', 'text-slate-300', isLight)}`}>Loan completion date</div>
+          {/* Loan Details Section */}
+          <div className="mb-6">
+            <h4 className={`font-medium mb-3 text-sm tracking-wide ${themeClass(themeStyles.primaryText, 'text-gray-200', isLight)}`}>Loan Details</h4>
+            
+            <div className="grid grid-cols-1 gap-3">
+              {/* Loan Duration Info */}
+              <div className="p-3 rounded-2xl" style={{backgroundColor: isLight ? '#f8fafc' : '#123458'}}>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-2">
+                    <div className={`w-8 h-8 rounded-full flex items-center justify-center ${themeClass('bg-slate-300/50', 'bg-slate-500/20', isLight)}`}>
+                      <Clock size={14} className={themeClass('text-slate-600', 'text-slate-300', isLight)}/>
+                    </div>
+                    <div>
+                      <div className={`font-semibold text-sm ${themeClass('text-slate-700', 'text-slate-100', isLight)}`}>Loan Duration</div>
+                      <div className={`text-xs ${themeClass('text-slate-500', 'text-slate-300', isLight)}`}>Loan completion date</div>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <div className={`text-lg font-bold ${themeClass('text-slate-800', 'text-slate-100', isLight)}`}>{getLastEMIDate()}</div>
+                  </div>
                 </div>
               </div>
-              <div className="text-right">
-                <div className={`text-lg font-bold ${themeClass('text-slate-800', 'text-slate-100', isLight)}`}>{getLastEMIDate()}</div>
+
+              {/* Loan Period */}
+              <div className="p-3 rounded-2xl" style={{backgroundColor: isLight ? '#f0f9ff' : '#123458'}}>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-2">
+                    <div className={`w-8 h-8 rounded-full flex items-center justify-center ${themeClass('bg-blue-200/50', 'bg-cyan-500/20', isLight)}`}>
+                      <Clock size={14} className={themeClass('text-blue-600', 'text-cyan-300', isLight)}/>
+                    </div>
+                    <div>
+                      <div className={`font-semibold text-sm ${themeClass('text-blue-700', 'text-cyan-100', isLight)}`}>Loan Period</div>
+                      <div className={`text-xs ${themeClass('text-blue-500', 'text-cyan-300', isLight)}`}>Repayment duration</div>
+                    </div>
+                  </div>
+                  <div className="text-right flex items-center space-x-2">
+                    <div className={`text-lg font-bold ${themeClass('text-blue-800', 'text-cyan-100', isLight)}`}>
+                      {durationToggle === 'months' ? `${carData.tenure * 12}m` : `${carData.tenure}y`}
+                    </div>
+                    <div className="flex bg-slate-700/50 rounded-full p-0.5">
+                      <button
+                        onClick={() => setDurationToggle('years')}
+                        className={`text-xs px-1.5 py-0.5 rounded-full transition-all duration-200 font-bold ${
+                          durationToggle === 'years' 
+                            ? 'bg-cyan-400 text-slate-800 shadow-sm' 
+                            : 'text-gray-300 hover:bg-slate-600/50'
+                        }`}
+                      >
+                        Y
+                      </button>
+                      <button
+                        onClick={() => setDurationToggle('months')}
+                        className={`text-xs px-1.5 py-0.5 rounded-full transition-all duration-200 font-bold ${
+                          durationToggle === 'months' 
+                            ? 'bg-cyan-400 text-slate-800 shadow-sm' 
+                            : 'text-gray-300 hover:bg-slate-600/50'
+                        }`}
+                      >
+                        M
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Interest Rate */}
+              <div className="p-3 rounded-2xl" style={{backgroundColor: isLight ? '#fef2f2' : '#123458'}}>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-2">
+                    <div className="w-8 h-8 bg-red-500/20 rounded-full flex items-center justify-center">
+                      <Percent size={14} className="text-red-300"/>
+                    </div>
+                    <div>
+                      <div className="text-red-100 font-semibold text-sm">Interest Rate</div>
+                      <div className="text-red-300 text-xs">Annual percentage rate</div>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-lg font-bold text-red-100">{carData.interestRate}%</div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
 
-          {/* Loan Period */}
-          <div className="p-3 mb-3" style={{backgroundColor: isLight ? '#f0f9ff' : '#123458'}}>
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-2">
-                <div className={`w-8 h-8 rounded-full flex items-center justify-center ${themeClass('bg-blue-200/50', 'bg-cyan-500/20', isLight)}`}>
-                  <Clock size={14} className={themeClass('text-blue-600', 'text-cyan-300', isLight)}/>
-                </div>
-                <div>
-                  <div className={`font-semibold text-sm ${themeClass('text-blue-700', 'text-cyan-100', isLight)}`}>Loan Period</div>
-                  <div className={`text-xs ${themeClass('text-blue-500', 'text-cyan-300', isLight)}`}>Repayment duration</div>
-                </div>
-              </div>
-              <div className="text-right flex items-center space-x-2">
-                <div className={`text-lg font-bold ${themeClass('text-blue-800', 'text-cyan-100', isLight)}`}>
-                  {durationToggle === 'months' ? `${carData.tenure * 12}m` : `${carData.tenure}y`}
-                </div>
-                <div className="flex bg-slate-700/50 rounded-full p-0.5">
-                  <button
-                    onClick={() => setDurationToggle('years')}
-                    className={`text-xs px-1.5 py-0.5 rounded-full transition-all duration-200 font-bold ${
-                      durationToggle === 'years' 
-                        ? 'bg-cyan-400 text-slate-800 shadow-sm' 
-                        : 'text-gray-300 hover:bg-slate-600/50'
-                    }`}
-                  >
-                    Y
-                  </button>
-                  <button
-                    onClick={() => setDurationToggle('months')}
-                    className={`text-xs px-1.5 py-0.5 rounded-full transition-all duration-200 font-bold ${
-                      durationToggle === 'months' 
-                        ? 'bg-cyan-400 text-slate-800 shadow-sm' 
-                        : 'text-gray-300 hover:bg-slate-600/50'
-                    }`}
-                  >
-                    M
-                  </button>
+          {/* Overall EMI Details Section */}
+          <div className="mb-3">
+            <h4 className={`font-medium mb-3 text-sm tracking-wide ${themeClass(themeStyles.primaryText, 'text-gray-200', isLight)}`}>Overall EMI Details</h4>
+            
+            <div className="grid grid-cols-1 gap-3">
+              {/* Principal Amount */}
+              <div className="p-3 rounded-2xl" style={{backgroundColor: isLight ? '#f0fdf4' : '#123458'}}>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-2">
+                    <div className="w-8 h-8 bg-green-500/20 rounded-full flex items-center justify-center">
+                      <span className="text-green-300 font-bold text-sm">₹</span>
+                    </div>
+                    <div>
+                      <div className="text-green-100 font-semibold text-sm">Principal Amount</div>
+                      <div className="text-green-300 text-xs">Loan amount after down payment</div>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-lg font-bold text-green-100">{formatCurrency(loanAmount)}</div>
+                  </div>
                 </div>
               </div>
-            </div>
-          </div>
 
-          {/* Interest Rate */}
-          <div className="p-3 mb-3" style={{backgroundColor: isLight ? '#fef2f2' : '#123458'}}>
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-2">
-                <div className="w-8 h-8 bg-red-500/20 rounded-full flex items-center justify-center">
-                  <Percent size={14} className="text-red-300"/>
-                </div>
-                <div>
-                  <div className="text-red-100 font-semibold text-sm">Interest Rate</div>
-                  <div className="text-red-300 text-xs">Annual percentage rate</div>
+              {/* Interest Cost */}  
+              <div className="p-3 rounded-2xl" style={{backgroundColor: isLight ? '#fffbeb' : '#123458'}}>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-2">
+                    <div className="w-8 h-8 bg-yellow-500/20 rounded-full flex items-center justify-center">
+                      <TrendingUp size={14} className="text-yellow-300"/>
+                    </div>
+                    <div>
+                      <div className="text-yellow-100 font-semibold text-sm">Total Interest</div>
+                      <div className="text-yellow-300 text-xs">Amount paid over principal</div>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-lg font-bold text-yellow-100">{formatCurrency(totalInterest)}</div>
+                  </div>
                 </div>
               </div>
-              <div className="text-right">
-                <div className="text-lg font-bold text-red-100">{carData.interestRate}%</div>
-              </div>
-            </div>
-          </div>
 
-          {/* Principal Amount */}
-          <div className="p-3 mb-3" style={{backgroundColor: isLight ? '#f0fdf4' : '#123458'}}>
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-2">
-                <div className="w-8 h-8 bg-green-500/20 rounded-full flex items-center justify-center">
-                  <span className="text-green-300 font-bold text-sm">₹</span>
+              {/* Total Payment */}
+              <div className="p-3 shadow-lg rounded-2xl" style={{backgroundColor: isLight ? '#faf5ff' : '#123458'}}>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-8 h-8 bg-purple-500/30 rounded-full flex items-center justify-center">
+                      <span className="text-purple-200 font-bold text-sm">₹</span>
+                    </div>
+                    <div>
+                      <div className="text-purple-100 font-bold text-base">Total Payment</div>
+                      <div className="text-purple-300 text-xs">Principal + Interest</div>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-xl font-bold text-purple-100">{formatCurrency(totalPayment)}</div>
+                    <div className="text-purple-300 text-xs mt-0.5">Over {formatDuration()}</div>
+                  </div>
                 </div>
-                <div>
-                  <div className="text-green-100 font-semibold text-sm">Principal Amount</div>
-                  <div className="text-green-300 text-xs">Loan amount after down payment</div>
-                </div>
-              </div>
-              <div className="text-right">
-                <div className="text-lg font-bold text-green-100">{formatCurrency(loanAmount)}</div>
-              </div>
-            </div>
-          </div>
-
-          {/* Interest Cost */}  
-          <div className="p-3 mb-3" style={{backgroundColor: isLight ? '#fffbeb' : '#123458'}}>
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-2">
-                <div className="w-8 h-8 bg-yellow-500/20 rounded-full flex items-center justify-center">
-                  <TrendingUp size={14} className="text-yellow-300"/>
-                </div>
-                <div>
-                  <div className="text-yellow-100 font-semibold text-sm">Total Interest</div>
-                  <div className="text-yellow-300 text-xs">Amount paid over principal</div>
-                </div>
-              </div>
-              <div className="text-right">
-                <div className="text-lg font-bold text-yellow-100">{formatCurrency(totalInterest)}</div>
-              </div>
-            </div>
-          </div>
-
-          {/* Total Payment - Compact */}
-          <div className="p-3 shadow-lg" style={{backgroundColor: isLight ? '#faf5ff' : '#123458'}}>
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-3">
-                <div className="w-8 h-8 bg-purple-500/30 rounded-full flex items-center justify-center">
-                  <span className="text-purple-200 font-bold text-sm">₹</span>
-                </div>
-                <div>
-                  <div className="text-purple-100 font-bold text-base">Total Payment</div>
-                  <div className="text-purple-300 text-xs">Principal + Interest</div>
-                </div>
-              </div>
-              <div className="text-right">
-                <div className="text-xl font-bold text-purple-100">{formatCurrency(totalPayment)}</div>
-                <div className="text-purple-300 text-xs mt-0.5">Over {formatDuration()}</div>
               </div>
             </div>
           </div>

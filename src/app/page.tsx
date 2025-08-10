@@ -121,12 +121,19 @@ export default function HomePage() {
         {/* Immersive Background Gradient - exclude header */}
         {isDark && <div className="absolute top-20 left-0 right-0 bottom-0 bg-gradient-to-br from-gray-900/50 via-black to-gray-900/30 pointer-events-none"></div>}
         
+        
         {/* Main Content Section - Fluid Layout */}
-        <section className="relative z-10 pt-8" id="calculator" aria-labelledby="calculator-heading">
+        <section className="relative z-10 pt-4" id="calculator" aria-labelledby="calculator-heading">
           <div className="container mx-auto px-4">
             <div className="max-w-6xl mx-auto">
               <h2 id="calculator-heading" className="sr-only">Car Finance Calculator Tool</h2>
               
+              {/* Estimates Notice */}
+              <div className="text-left mb-4">
+                <p className={`text-xs ${themeClass('text-slate-600', 'text-white/60', isLight)} font-medium`}>
+                  * All calculations are estimates for informational purposes only
+                </p>
+              </div>
 
               {/* Content Grid - More compact layout */}
               <div className="grid lg:grid-cols-7 gap-4 lg:gap-6">
@@ -282,10 +289,10 @@ export default function HomePage() {
         {/* Educational Summary Section */}
         <EducationalSummary carData={carData} />
 
-        {/* Footer - Important Note - Static at page end */}
+        {/* Footer - Disclaimer - Static at page end */}
         <footer className="relative z-10 mt-16 mb-8">
           <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-            <div className={`rounded-xl p-4 shadow-lg ${isLight ? 'bg-white border border-slate-200/60' : 'bg-white/5 backdrop-blur-xl border border-white/10'}`}>
+            <div className={`rounded-xl p-6 shadow-lg ${isLight ? 'bg-white border border-slate-200/60' : 'bg-white/5 backdrop-blur-xl border border-white/10'}`}>
               <div className="flex items-start space-x-3">
                 <div className={`flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center mt-0.5 ${isLight ? 'bg-slate-200' : 'bg-white/10'}`}>
                   <svg className={`w-3 h-3 ${isLight ? 'text-slate-600' : 'text-white/50'}`} fill="currentColor" viewBox="0 0 20 20">
@@ -293,9 +300,9 @@ export default function HomePage() {
                   </svg>
                 </div>
                 <div className="flex-1">
-                  <p className={`font-medium mb-1 text-sm ${isLight ? 'text-slate-900' : 'text-white/90'}`}>Important Note</p>
+                  <p className={`font-medium mb-3 text-sm ${isLight ? 'text-slate-900' : 'text-white/90'}`}>Disclaimer</p>
                   <p className={`leading-relaxed text-sm ${isLight ? 'text-slate-700' : 'text-white/70'}`}>
-                    Calculations are indicative. Actual rates may vary by lender and credit profile.
+                    This car affordability calculator serves as a helpful tool to understand potential financial outcomes when planning your vehicle purchase. It is designed for informational and educational purposes only and does not constitute professional financial advice for your specific loan decisions. The calculations and projections shown are estimates and should be treated as general guidance rather than exact financial recommendations. For personalized advice tailored to your unique financial circumstances, we strongly encourage you to consult with a qualified financial advisor who can discuss the various options and their implications for your situation.
                   </p>
                 </div>
               </div>

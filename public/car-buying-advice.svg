@@ -1,0 +1,29 @@
+<svg width="800" height="160" viewBox="0 0 800 160" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background with gradient -->
+  <defs>
+    <linearGradient id="backgroundGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#f8fafc;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#e2e8f0;stop-opacity:1" />
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="rgba(0,0,0,0.1)"/>
+    </filter>
+  </defs>
+  
+  <!-- Main background -->
+  <rect width="800" height="160" rx="16" ry="16" fill="url(#backgroundGradient)" filter="url(#shadow)"/>
+  
+  <!-- Heading: "Buy Smart" -->
+  <text x="400" y="40" font-family="Inter, system-ui, -apple-system, sans-serif" font-size="28" font-weight="900" fill="#000000" text-anchor="middle">
+    Buy Smart
+  </text>
+  
+  <!-- Main text lines -->
+  <text x="400" y="70" font-family="Inter, system-ui, -apple-system, sans-serif" font-size="18" font-weight="400" fill="#000000" text-anchor="middle">
+    pay <tspan font-weight="700">20% down payment</tspan>, take a <tspan font-weight="700">loan for up to 4 years</tspan>, and keep all
+  </text>
+  
+  <text x="400" y="95" font-family="Inter, system-ui, -apple-system, sans-serif" font-size="18" font-weight="400" fill="#000000" text-anchor="middle">
+    car costs <tspan font-weight="700">under 10% of your monthly income</tspan>
+  </text>
+</svg>

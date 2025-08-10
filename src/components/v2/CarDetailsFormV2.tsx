@@ -23,9 +23,22 @@ export default function CarDetailsFormV2({ carData, updateCarData, monthlyIncome
   const shouldHighlightMonthlyIncome = allOtherFieldsFilled && monthlyIncomeEmpty
   
   // Auto-focus Monthly Income when all other required fields are filled
+  // Only focus if no input is currently focused to prevent interrupting user input
   React.useEffect(() => {
     if (shouldHighlightMonthlyIncome && monthlyIncomeInputRef?.current) {
-      monthlyIncomeInputRef.current.focus()
+      const activeElement = document.activeElement;
+      
+      // Check if the currently focused element is an input field
+      const isInputFocused = activeElement && (
+        activeElement.tagName === 'INPUT' || 
+        activeElement.tagName === 'TEXTAREA' ||
+        activeElement.contentEditable === 'true'
+      );
+      
+      // Only focus monthly income input if no input is currently focused
+      if (!isInputFocused) {
+        monthlyIncomeInputRef.current.focus();
+      }
     }
   }, [shouldHighlightMonthlyIncome, monthlyIncomeInputRef])
 
@@ -284,7 +297,7 @@ export default function CarDetailsFormV2({ carData, updateCarData, monthlyIncome
           <label className={`text-base min-[375px]:text-lg font-medium ${themeClass(themeStyles.primaryText, 'text-white', isLight)}`} style={{ lineHeight: '1.5' }}>
             4. Interest Rate
           </label>
-          <span className="text-sm text-cyan-300 font-medium">{carData.interestRate}% per annum</span>
+          <span className="text-lg text-cyan-300 font-bold">{carData.interestRate}% per annum</span>
         </div>
         
         <div className="space-y-3">
