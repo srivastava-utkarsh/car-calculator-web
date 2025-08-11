@@ -147,10 +147,10 @@ UI/UX CONSIDERATIONS
 'use client'
 
 import { useState, useEffect, Suspense } from 'react'
-import { motion } from 'framer-motion'
-import { ArrowLeft, Calculator, Clock, DollarSign, PiggyBank, Target, Zap } from 'lucide-react'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { Calculator } from 'lucide-react'
+import { useSearchParams } from 'next/navigation'
 import Image from 'next/image'
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend, BarChart, Bar } from 'recharts'
 
 interface LoanData {
   loanAmount: number
@@ -230,8 +230,8 @@ const calculateLoanDetails = (
   interestRate: number,
   tenure: number,
   prepaymentAmount: number,
-  prepaymentFrequency: 'monthly' | 'yearly',
-  loanType: 'fixed' | 'floating' = 'floating',
+  prepaymentFrequency: 'monthly' | 'quarterly' | 'yearly' | 'lumpsum',
+  _loanType: 'fixed' | 'floating' = 'floating',
   penaltyRate: number = 0
 ): PrepaymentResult & { amortizationSchedule?: Array<{month: number, emi: number, interest: number, principal: number, prepayment: number, balance: number}> } => {
   // Input validation
@@ -240,15 +240,20 @@ const calculateLoanDetails = (
       scenario: 'reduce_tenure',
       prepaymentAmount,
       newTenure: tenure,
-      totalAmountPaid: 0,
+      totalAmountPaid: loanAmount,
       interestPaid: 0,
       amountSaved: 0,
-      originalTotalAmount: 0,
+      originalTotalAmount: loanAmount,
       originalInterest: 0,
       penaltyAmount: 0,
       netSavings: 0
     }
   }
+
+  // Additional validation for reasonable values
+  if (interestRate > 50) interestRate = 50 // Cap at 50% annual
+  if (tenure > 30) tenure = 30 // Cap at 30 years
+  if (penaltyRate > 10) penaltyRate = 10 // Cap penalty at 10%
 
   // ========================================================================
   // BASELINE CALCULATIONS (Without Prepayment)
@@ -259,8 +264,11 @@ const calculateLoanDetails = (
   
   const monthlyRate = interestRate / (12 * 100)  // Convert annual rate to monthly decimal
   
-  // Prepayment frequency conversion: yearly=12 months, monthly=1 month
-  const prepayFreq = prepaymentFrequency === 'yearly' ? 12 : 1
+  // Prepayment frequency conversion: yearly=12, quarterly=3, monthly=1, lumpsum=first month only
+  const prepayFreq = prepaymentFrequency === 'yearly' ? 12 : 
+                    prepaymentFrequency === 'quarterly' ? 3 : 
+                    prepaymentFrequency === 'monthly' ? 1 : 
+                    999 // lumpsum - will be handled specially
   
   // ========================================================================
   // AMORTIZATION LOOP - "REDUCE TENURE" STRATEGY
@@ -292,7 +300,15 @@ const calculateLoanDetails = (
     let currentPrepayment = 0
     if (prepaymentAmount > 0 && remainingPrincipal > 1) {
       // Check if prepayment is due this month based on frequency
-      const shouldApplyPrepayment = (months % prepayFreq) === 0
+      let shouldApplyPrepayment = false
+      
+      if (prepaymentFrequency === 'lumpsum') {
+        // Lumpsum: Apply only in the first month
+        shouldApplyPrepayment = months === 1
+      } else {
+        // Periodic payments: Apply based on frequency
+        shouldApplyPrepayment = (months % prepayFreq) === 0
+      }
       
       if (shouldApplyPrepayment) {
         // Apply prepayment (cannot exceed remaining balance)
@@ -355,9 +371,9 @@ const calculateLoanDetails = (
   // FINAL CALCULATIONS AND RESULTS
   // ========================================================================
   
-  // Calculate penalty for fixed-rate loans (RBI allows up to 2-5%)
+  // Calculate penalty based on user input (regardless of loan type when penalty rate is set)
   const totalPrepaymentMade = totalPrepaymentsPaid
-  const penaltyAmount = loanType === 'fixed' ? (totalPrepaymentMade * penaltyRate / 100) : 0
+  const penaltyAmount = penaltyRate > 0 ? (totalPrepaymentMade * penaltyRate / 100) : 0
   
   // Calculate final results
   const newTenureYears = months / 12                                    // Actual tenure taken
@@ -369,22 +385,22 @@ const calculateLoanDetails = (
   return {
     scenario: 'reduce_tenure',
     prepaymentAmount,
-    newTenure: newTenureYears,
+    newTenure: Math.round(newTenureYears * 100) / 100, // Round to 2 decimal places
     totalAmountPaid: Math.round(totalAmountPaid),
     interestPaid: Math.round(totalInterestPaid),
-    amountSaved: Math.round(interestSavings),
+    amountSaved: Math.round(Math.max(0, interestSavings)), // Ensure non-negative
     originalTotalAmount: Math.round(originalTotalAmount),
     originalInterest: Math.round(originalInterest),
-    penaltyAmount: Math.round(penaltyAmount),
-    netSavings: Math.round(netSavings),
+    penaltyAmount: Math.round(Math.max(0, penaltyAmount)), // Ensure non-negative
+    netSavings: Math.round(Math.max(0, netSavings)), // Ensure non-negative
     amortizationSchedule,
-    monthsSaved
+    monthsSaved: Math.max(0, monthsSaved) // Ensure non-negative
   }
 }
 
 function PrepaymentCalculator() {
-  const router = useRouter()
   const searchParams = useSearchParams()
+  const [isLoading, setIsLoading] = useState(true)
   
   const [loanData, setLoanData] = useState<LoanData>({
     loanAmount: 0,
@@ -394,10 +410,9 @@ function PrepaymentCalculator() {
   })
   
   const [prepaymentAmount, setPrepaymentAmount] = useState(0)
-  const [prepaymentFrequency, setPrepaymentFrequency] = useState<'monthly' | 'yearly'>('yearly')
-  const selectedScenario = 'reduce_tenure'
+  const [prepaymentFrequency, setPrepaymentFrequency] = useState<'monthly' | 'quarterly' | 'yearly' | 'lumpsum'>('yearly')
   const [penaltyRate, setPenaltyRate] = useState(0)
-  const [tenureDisplayFormat, setTenureDisplayFormat] = useState<'years' | 'months'>('years')
+  const [tenureDisplayFormat] = useState<'years' | 'months'>('years')
 
   useEffect(() => {
     // Extract parameters from URL with safe parsing
@@ -420,6 +435,9 @@ function PrepaymentCalculator() {
     if (loanAmount > 0) {
       setPrepaymentAmount(Math.round(loanAmount * 0.02))
     }
+    
+    // Set loading to false after component is ready
+    setIsLoading(false)
   }, [searchParams])
 
   const results = loanData.loanAmount > 0 ? calculateLoanDetails(
@@ -450,21 +468,33 @@ function PrepaymentCalculator() {
     }
   }
 
+  if (isLoading) {
+    return (
+      <div style={{
+        background: '#0d1117',
+        color: '#e6ecf3',
+        minHeight: '100vh',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        fontFamily: 'Inter, system-ui, Segoe UI, Roboto, Arial'
+      }}>
+        <div style={{ textAlign: 'center' }}>
+          <div style={{ fontSize: '18px', marginBottom: '8px' }}>Loading Prepayment Calculator...</div>
+          <div style={{ fontSize: '14px', color: '#9ab1c9' }}>Analyzing your loan data</div>
+        </div>
+      </div>
+    )
+  }
+
   return (
-    <main className="min-h-screen bg-black font-sans relative" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>
-      {/* Header Navigation - Same as calculator page */}
+    <main className="min-h-screen font-sans relative bg-black" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>
+      {/* Header Navigation - Same as Car Affordability Page */}
       <header className="bg-black border-b border-white/5">
         <div className="container mx-auto px-6 lg:px-8">
           <div className="flex items-center justify-between h-20">
             {/* Logo - Far Left Positioning */}
             <div className="flex items-center space-x-2 sm:space-x-3 flex-shrink-0">
-              <button
-                onClick={() => router.back()}
-                className="flex items-center space-x-2 text-white/80 hover:text-white transition-all duration-200 bg-white/5 hover:bg-white/10 px-3 py-2 rounded-xl border border-white/10 hover:border-white/20"
-              >
-                <ArrowLeft className="w-4 h-4" />
-                <span className="text-sm font-medium">Back</span>
-              </button>
               <div className="w-10 h-10 sm:w-16 sm:h-16 flex items-center justify-center">
                 <Image 
                   src="/bck-logo.svg" 
@@ -474,364 +504,954 @@ function PrepaymentCalculator() {
                   height={64}
                 />
               </div>
-              <span className="text-base sm:text-2xl font-extrabold text-white tracking-tight flex items-center">BudgetGear</span>
+              <span className="text-base sm:text-2xl font-extrabold tracking-tight flex items-center text-white">BudgetGear</span>
             </div>
 
             {/* Navigation Menu - Center with proper spacing */}
             <div className="flex-1 flex justify-center px-4">
               <nav className="flex items-center" role="navigation" aria-label="Main navigation">
-                <h1 className="text-white font-bold text-xs sm:text-base tracking-wide flex items-center space-x-2">
-                  <PiggyBank className="w-5 h-5 text-emerald-400" />
-                  <span>Smart Prepayment Calculator</span>
-                </h1>
+                <span className="font-bold text-xs sm:text-base tracking-wide px-1 sm:px-4 py-2 text-center text-white">
+                  Prepayment Calculator
+                </span>
               </nav>
             </div>
 
-            {/* Empty div for balance */}
-            <div className="w-20 sm:w-32 flex-shrink-0"></div>
+            {/* Right side placeholder */}
+            <div className="flex items-center space-x-4">
+              {/* Theme toggle hidden */}
+            </div>
           </div>
         </div>
       </header>
 
-      {/* Immersive Background Gradient - exclude header */}
-      <div className="absolute top-20 left-0 right-0 bottom-0 bg-gradient-to-br from-gray-900/50 via-black to-gray-900/30 pointer-events-none"></div>
-
-      {/* Main Content Section - Compact Layout */}
-      <section className="relative z-10 pt-8" id="calculator">
-        <div className="container mx-auto px-4">
-          <div className="max-w-6xl mx-auto">
-            
-            {/* Current Loan Form - Editable */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4 }}
-              className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-4 mb-6 shadow-2xl"
-            >
-              <h2 className="text-white font-bold text-lg mb-4 flex items-center space-x-2">
-                <Calculator className="w-5 h-5 text-blue-400" />
-                <span>Your Current Loan</span>
-              </h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                <div className="bg-white/5 rounded-xl p-3 border border-blue-400/20">
-                  <label className="text-blue-300 text-xs font-medium mb-2 block">Loan Amount</label>
-                  <div className="relative">
-                    <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/60 font-medium">₹</span>
-                    <input
-                      type="number"
-                      value={loanData.loanAmount}
-                      onChange={(e) => {
-                        const newAmount = parseFloat(e.target.value) || 0
-                        const newEMI = newAmount > 0 ? calculateEMI(newAmount, loanData.interestRate, loanData.tenure) : 0
-                        setLoanData(prev => ({ ...prev, loanAmount: newAmount, emi: newEMI }))
-                      }}
-                      className="w-full bg-white/10 border border-blue-400/30 rounded-lg pl-8 pr-3 py-2 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50"
-                      placeholder="Enter amount"
-                    />
-                  </div>
-                </div>
-                <div className="bg-white/5 rounded-xl p-3 border border-emerald-400/20">
-                  <div className="text-emerald-300 text-xs font-medium mb-2">Monthly EMI</div>
-                  <div className="text-white text-lg font-bold">{formatCurrency(loanData.emi)}</div>
-                  <div className="text-emerald-200/60 text-xs mt-1">Auto-calculated</div>
-                </div>
-                <div className="bg-white/5 rounded-xl p-3 border border-purple-400/20">
-                  <label className="text-purple-300 text-xs font-medium mb-2 block">Interest Rate</label>
-                  <div className="relative">
-                    <input
-                      type="number"
-                      step="0.1"
-                      min="0.1"
-                      max="20"
-                      value={loanData.interestRate}
-                      onChange={(e) => {
-                        const newRate = Math.min(20, Math.max(0.1, parseFloat(e.target.value) || 8))
-                        const newEMI = loanData.loanAmount > 0 ? calculateEMI(loanData.loanAmount, newRate, loanData.tenure) : 0
-                        setLoanData(prev => ({ ...prev, interestRate: newRate, emi: newEMI }))
-                      }}
-                      className="w-full bg-white/10 border border-purple-400/30 rounded-lg px-3 py-2 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500/50"
-                      placeholder="Rate"
-                    />
-                    <span className="absolute right-3 top-1/2 transform -translate-y-1/2 text-white/60 font-medium">%</span>
-                  </div>
-                </div>
-                <div className="bg-white/5 rounded-xl p-3 border border-orange-400/20">
-                  <label className="text-orange-300 text-xs font-medium mb-2 block">Loan Tenure</label>
-                  <div className="relative">
-                    <input
-                      type="number"
-                      step="0.5"
-                      min="1"
-                      max="10"
-                      value={loanData.tenure}
-                      onChange={(e) => {
-                        const newTenure = Math.min(10, Math.max(1, parseFloat(e.target.value) || 5))
-                        const newEMI = loanData.loanAmount > 0 ? calculateEMI(loanData.loanAmount, loanData.interestRate, newTenure) : 0
-                        setLoanData(prev => ({ ...prev, tenure: newTenure, emi: newEMI }))
-                      }}
-                      className="w-full bg-white/10 border border-orange-400/30 rounded-lg px-3 py-2 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-orange-500/50 focus:border-orange-500/50"
-                      placeholder="Years"
-                    />
-                    <span className="absolute right-3 top-1/2 transform -translate-y-1/2 text-white/60 font-medium">yrs</span>
-                  </div>
-                </div>
+      {/* Main Content */}
+      <div style={{
+        background: '#0d1117',
+        color: '#e6ecf3',
+        minHeight: 'calc(100vh - 80px)',
+        fontFamily: 'Inter, system-ui, Segoe UI, Roboto, Arial',
+        fontSize: '15px',
+        lineHeight: '1.45'
+      }}>
+        <style jsx global>{`
+        :root {
+          --bg: #0d1117;
+          --panel: #121826;
+          --panel2: #0f1420;
+          --text: #e6ecf3;
+          --muted: #9ab1c9;
+          --border: #1b2230;
+          --accent: #4da3ff;
+          --pos: #22c55e;
+          --warn: #f59e0b;
+          --radius: 10px;
+          --gap: 12px;
+          --pad: 14px;
+        }
+        
+        * {
+          box-sizing: border-box;
+        }
+        
+        body {
+          margin: 0;
+          background: var(--bg);
+          color: var(--text);
+          font: 15px/1.45 Inter, system-ui, Segoe UI, Roboto, Arial;
+        }
+        
+        .wrap {
+          max-width: 1024px;
+          margin: 0 auto;
+          padding: 18px;
+        }
+        
+        h1 {
+          font-size: 18px;
+          margin: 0 0 10px;
+        }
+        
+        /* Cards and grids */
+        .card {
+          background: linear-gradient(180deg, var(--panel) 0%, var(--panel2) 100%);
+          border: 1px solid var(--border);
+          border-radius: var(--radius);
+          padding: var(--pad);
+        }
+        
+        .title {
+          font-size: 14px;
+          color: #cfe3ff;
+          margin-bottom: 8px;
+          font-weight: 600;
+        }
+        
+        .row {
+          display: grid;
+          gap: var(--gap);
+        }
+        
+        .grid-3 {
+          grid-template-columns: 1fr 1fr 1fr;
+        }
+        
+        @media (max-width: 900px) {
+          .grid-3 {
+            grid-template-columns: 1fr;
+          }
+        }
+        
+        /* Inputs compact */
+        .fields {
+          display: grid;
+          gap: var(--gap);
+        }
+        
+        .field {
+          display: flex;
+          flex-direction: column;
+          gap: 6px;
+        }
+        
+        .label {
+          font-size: 12px;
+          color: #cbd6e5;
+        }
+        
+        .ctrl {
+          display: flex;
+          gap: 8px;
+          align-items: center;
+          background: #0b1220;
+          border: 1px solid var(--border);
+          border-radius: 8px;
+          padding: 10px;
+        }
+        
+        input, select {
+          background: transparent;
+          border: 0;
+          outline: 0;
+          color: var(--text);
+          width: 100%;
+          font-size: 14px;
+          min-width: 0;
+          flex: 1;
+        }
+        
+        .prefix, .suffix {
+          font-size: 12px;
+          color: var(--muted);
+        }
+        
+        .subnote {
+          font-size: 12px;
+          color: #97a9bd;
+          margin-top: 8px;
+        }
+        
+        /* Comparison section */
+        .compare {
+          display: grid;
+          gap: var(--gap);
+        }
+        
+        @media(min-width: 900px) {
+          .compare {
+            grid-template-columns: 1fr 1fr;
+          }
+        }
+        
+        .panel {
+          border: 1px solid var(--border);
+          border-radius: var(--radius);
+          padding: 24px;
+          background: #0f1524;
+        }
+        
+        .kicker {
+          font-size: 14px;
+          color: #cbd6e5;
+          margin-bottom: 12px;
+          font-weight: 600;
+        }
+        
+        .big {
+          font-weight: 800;
+          font-size: 32px;
+          margin: 0 0 12px;
+        }
+        
+        .meta {
+          font-size: 16px;
+          color: var(--muted);
+          margin-bottom: 8px;
+        }
+        
+        .save {
+          color: var(--pos);
+          font-weight: 700;
+          font-size: 18px;
+        }
+        
+        .emi-line {
+          margin-top: 8px;
+          font-size: 16px;
+        }
+        
+        .emi-same {
+          color: #b7d7ff;
+        }
+        
+        .emi-diff .before {
+          color: #5e86ff;
+        }
+        
+        .emi-diff .after {
+          color: #22c55e;
+          font-weight: 600;
+        }
+        
+        /* Table compact */
+        table {
+          width: 100%;
+          border-collapse: separate;
+          border-spacing: 0;
+        }
+        
+        th, td {
+          padding: 10px 8px;
+          border-bottom: 1px solid var(--border);
+          text-align: left;
+        }
+        
+        th {
+          font-size: 11px;
+          letter-spacing: .4px;
+          color: #bcd1e6;
+          text-transform: uppercase;
+        }
+        
+        td {
+          font-size: 14px;
+        }
+        
+        .pos {
+          color: var(--pos);
+          font-weight: 600;
+        }
+        
+        .warn {
+          color: var(--warn);
+          font-weight: 600;
+        }
+        
+        /* Footer actions */
+        .bar {
+          display: flex;
+          gap: 8px;
+          justify-content: flex-end;
+          margin-top: 10px;
+        }
+        
+        .btn {
+          background: #0f2436;
+          border: 1px solid #18324a;
+          color: #cfe3ff;
+          padding: 8px 12px;
+          border-radius: 8px;
+          cursor: pointer;
+        }
+        
+        .btn--pri {
+          background: #0461e6;
+          border-color: #0c5ed1;
+          color: #fff;
+        }
+        
+        /* EMI Comparison Styles */
+        .emi-status {
+          padding: 8px 0;
+        }
+        
+        .emi-badge.same {
+          background: linear-gradient(135deg, #1a2c3a, #0f1f2a);
+          border: 1px solid #22c55e40;
+          border-radius: 8px;
+          padding: 12px 16px;
+          text-align: center;
+          margin-bottom: 8px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 12px;
+        }
+        
+        .emi-badge .emi-label {
+          font-size: 14px;
+          font-weight: 600;
+          color: #22c55e;
+        }
+        
+        .emi-badge .emi-amount {
+          font-size: 18px;
+          font-weight: 700;
+          color: #22c55e;
+        }
+        
+        .emi-note {
+          font-size: 14px;
+          color: var(--muted);
+          text-align: center;
+          line-height: 1.5;
+        }
+        
+        .emi-comparison {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 24px;
+          margin-bottom: 16px;
+        }
+        
+        .emi-item {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          padding: 16px;
+          border-radius: 8px;
+          background: var(--panel);
+          border: 1px solid var(--border);
+        }
+        
+        .emi-item.before {
+          border-color: #5e86ff;
+        }
+        
+        .emi-item.after {
+          border-color: #22c55e;
+        }
+        
+        .emi-item .emi-label {
+          font-size: 12px;
+          color: var(--muted);
+          margin-bottom: 6px;
+        }
+        
+        .emi-item .emi-amount {
+          font-size: 20px;
+          font-weight: 700;
+          color: var(--text);
+        }
+        
+        .emi-arrow {
+          font-size: 24px;
+          color: var(--accent);
+          font-weight: bold;
+        }
+        
+        .emi-difference {
+          text-align: center;
+          font-size: 14px;
+          color: var(--muted);
+        }
+        
+        .emi-difference .positive {
+          color: #22c55e;
+          font-weight: 600;
+        }
+        
+        .emi-difference .negative {
+          color: #ef4444;
+          font-weight: 600;
+        }
+      `}</style>
+      
+      <div className="wrap">
+        <h1>Loan Prepayment Calculator</h1>
+        
+        {/* Your Current Loan */}
+        <section className="card">
+          <div className="title">Your Current Loan</div>
+          <div className="fields grid-3">
+            <div className="field">
+              <div className="label">Loan Amount</div>
+              <div className="ctrl">
+                <span className="prefix">₹</span>
+                <input 
+                  type="number" 
+                  value={loanData.loanAmount || ''}
+                  onChange={(e) => {
+                    const newAmount = parseFloat(e.target.value) || 0
+                    const newEMI = newAmount > 0 ? calculateEMI(newAmount, loanData.interestRate, loanData.tenure) : 0
+                    setLoanData(prev => ({ ...prev, loanAmount: newAmount, emi: newEMI }))
+                  }}
+                  placeholder="800000" 
+                  aria-label="Loan Amount"
+                />
               </div>
-            </motion.div>
+              <div className="subnote">Enter principal outstanding</div>
+            </div>
+            <div className="field">
+              <div className="label">Interest Rate</div>
+              <div className="ctrl">
+                <input 
+                  type="number" 
+                  step="0.05" 
+                  min="0.1"
+                  max="20"
+                  value={loanData.interestRate || ''}
+                  onChange={(e) => {
+                    const newRate = Math.min(20, Math.max(0.1, parseFloat(e.target.value) || 8))
+                    const newEMI = loanData.loanAmount > 0 ? calculateEMI(loanData.loanAmount, newRate, loanData.tenure) : 0
+                    setLoanData(prev => ({ ...prev, interestRate: newRate, emi: newEMI }))
+                  }}
+                  placeholder="8.00" 
+                  aria-label="Interest Rate"
+                />
+                <span className="suffix">% p.a.</span>
+              </div>
+            </div>
+            <div className="field">
+              <div className="label">Loan Tenure</div>
+              <div className="ctrl">
+                <input 
+                  type="number" 
+                  step="0.5"
+                  min="1"
+                  max="10"
+                  value={loanData.tenure || ''}
+                  onChange={(e) => {
+                    const newTenure = Math.min(10, Math.max(1, parseFloat(e.target.value) || 5))
+                    const newEMI = loanData.loanAmount > 0 ? calculateEMI(loanData.loanAmount, loanData.interestRate, newTenure) : 0
+                    setLoanData(prev => ({ ...prev, tenure: newTenure, emi: newEMI }))
+                  }}
+                  placeholder="3" 
+                  aria-label="Loan Tenure Years"
+                />
+                <span className="suffix">years</span>
+              </div>
+            </div>
+          </div>
+        </section>
 
-            {/* Main Content Section */}
-            <div className="max-w-4xl mx-auto">
-              <div>
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.4, delay: 0.2 }}
-                  className="space-y-6"
+        {/* Prepayment Configuration */}
+        <section className="card" style={{marginTop: '12px'}}>
+          <div className="title">Prepayment Configuration</div>
+          <div className="fields grid-3">
+            <div className="field">
+              <div className="label">Frequency</div>
+              <div className="ctrl">
+                <select 
+                  aria-label="Prepayment Frequency"
+                  value={prepaymentFrequency === 'yearly' ? 'Yearly' : 
+                        prepaymentFrequency === 'quarterly' ? 'Quarterly' : 
+                        prepaymentFrequency === 'monthly' ? 'Monthly' : 'Lumpsum'}
+                  onChange={(e) => {
+                    const value = e.target.value
+                    setPrepaymentFrequency(
+                      value === 'Yearly' ? 'yearly' : 
+                      value === 'Quarterly' ? 'quarterly' : 
+                      value === 'Monthly' ? 'monthly' : 'lumpsum'
+                    )
+                  }}
                 >
-                
-                {results ? (
-                  /* Hero Summary Card - Before vs After Comparison */
-                  <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 shadow-2xl overflow-hidden">
-                    <div className="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-white/10">
-                      {/* Without Prepayment */}
-                      <div className="p-6 text-center">
-                        <h3 className="text-gray-400 text-base font-medium mb-4">Without Prepayment</h3>
-                        <div className="text-white text-4xl font-bold mb-2">{formatTenure(loanData.tenure)}</div>
-                      </div>
-                      
-                      {/* With Prepayment */}
-                      <div className="p-6 text-center">
-                        <h3 className="text-gray-400 text-base font-medium mb-4">With Prepayment</h3>
-                        <div className="text-white text-4xl font-bold mb-2">{formatTenure(results.newTenure)}</div>
-                      </div>
-                    </div>
-                    
-                    {/* Savings Summary */}
-                    <div className="bg-white/5 border-t border-white/10 p-6 text-center">
-                      <div className="flex items-center justify-center space-x-2 mb-2">
-                        <div className="w-8 h-8 bg-green-500/20 rounded-full flex items-center justify-center">
-                          <span className="text-green-400 text-xl font-bold">₹</span>
-                        </div>
-                        <span className="text-white text-lg">You save </span>
-                        <span className="text-green-400 text-2xl font-bold">
-                          ₹{Math.round(
-                            penaltyRate > 0 && results.penaltyAmount 
-                              ? Math.max(0, results.amountSaved - results.penaltyAmount)
-                              : results.amountSaved
-                          ).toLocaleString('en-IN')}
-                        </span>
-                      </div>
-                      <p className="text-gray-300 text-sm">
-                        and finish <span className="font-semibold">
-                          {(() => {
-                            const monthsSaved = results.monthsSaved || 0;
-                            const years = Math.floor(monthsSaved / 12);
-                            const remainingMonths = monthsSaved % 12;
-                            if (years === 0) {
-                              return `${remainingMonths} month${remainingMonths !== 1 ? 's' : ''}`;
-                            } else if (remainingMonths === 0) {
-                              return `${years} year${years !== 1 ? 's' : ''}`;
-                            } else {
-                              return `${years} year${years !== 1 ? 's' : ''} ${remainingMonths} month${remainingMonths !== 1 ? 's' : ''}`;
-                            }
-                          })()}
-                        </span> earlier
-                      </p>
-                    </div>
-                  </div>
-                ) : null}
+                  <option>Yearly</option>
+                  <option>Quarterly</option>
+                  <option>Monthly</option>
+                  <option>Lumpsum</option>
+                </select>
+              </div>
+            </div>
+            <div className="field">
+              <div className="label">
+                {prepaymentFrequency === 'yearly' ? 'Yearly' : 
+                 prepaymentFrequency === 'quarterly' ? 'Quarterly' : 
+                 prepaymentFrequency === 'monthly' ? 'Monthly' : 'Lumpsum'} Prepayment Amount
+              </div>
+              <div className="ctrl">
+                <span className="prefix">₹</span>
+                <input 
+                  type="number" 
+                  value={prepaymentAmount || ''}
+                  onChange={(e) => setPrepaymentAmount(parseFloat(e.target.value) || 0)}
+                  placeholder="16000" 
+                  aria-label="Prepayment Amount"
+                />
+              </div>
+            </div>
+            <div className="field">
+              <div className="label">Prepayment Penalty (if any)</div>
+              <div className="ctrl">
+                <input 
+                  type="number" 
+                  step="0.1" 
+                  min="0"
+                  max="5"
+                  value={penaltyRate || ''}
+                  onChange={(e) => {
+                    const value = parseFloat(e.target.value);
+                    if (isNaN(value)) {
+                      setPenaltyRate(0);
+                    } else if (value < 0) {
+                      setPenaltyRate(0);
+                    } else if (value > 5) {
+                      setPenaltyRate(5);
+                    } else {
+                      setPenaltyRate(value);
+                    }
+                  }}
+                  placeholder="0" 
+                  aria-label="Prepayment Penalty"
+                />
+                <span className="suffix">%</span>
+              </div>
+              <div className="subnote">Most floating‑rate loans have 0% penalty</div>
+            </div>
+          </div>
+        </section>
 
-                {/* Collapsible Loan Details Section */}
-                <details className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 shadow-2xl">
-                  <summary className="cursor-pointer p-6 select-none">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-2">
-                        <svg className="w-5 h-5 text-white/70" fill="currentColor" viewBox="0 0 20 20">
-                          <path fillRule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clipRule="evenodd" />
-                        </svg>
-                        <h3 className="text-white font-bold text-lg">Loan Details</h3>
-                      </div>
-                      <svg className="w-5 h-5 text-white/70 transform transition-transform" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
-                      </svg>
-                    </div>
-                  </summary>
-                  
-                  <div className="px-6 pb-6 border-t border-white/10">
-                    {results ? (
-                      <div className="overflow-x-auto">
-                        <table className="w-full mt-4">
-                          <thead>
-                            <tr className="border-b border-white/20">
-                              <th className="text-left text-white/80 text-sm font-medium py-3">Metric</th>
-                              <th className="text-center text-white/80 text-sm font-medium py-3">Before</th>
-                              <th className="text-center text-white/80 text-sm font-medium py-3">After</th>
-                              <th className="text-center text-green-400 text-sm font-medium py-3">Savings</th>
-                            </tr>
-                          </thead>
-                          <tbody className="text-sm">
-                            <tr className="border-b border-white/10">
-                              <td className="py-3 text-white">Loan Tenure</td>
-                              <td className="py-3 text-center text-white">{formatTenure(loanData.tenure)}</td>
-                              <td className="py-3 text-center text-white">{formatTenure(results.newTenure)}</td>
-                              <td className="py-3 text-center text-green-400 font-medium">
-                                {(() => {
-                                  const monthsSaved = results.monthsSaved || 0;
-                                  const years = Math.floor(monthsSaved / 12);
-                                  const remainingMonths = monthsSaved % 12;
-                                  if (years === 0) {
-                                    return `${remainingMonths} month${remainingMonths !== 1 ? 's' : ''}`;
-                                  } else if (remainingMonths === 0) {
-                                    return `${years} year${years !== 1 ? 's' : ''}`;
-                                  } else {
-                                    return `${years} year${years !== 1 ? 's' : ''} ${remainingMonths} month${remainingMonths !== 1 ? 's' : ''}`;
-                                  }
-                                })()}
-                              </td>
-                            </tr>
-                            <tr className="border-b border-white/10">
-                              <td className="py-3 text-white">Interest Paid</td>
-                              <td className="py-3 text-center text-white">{formatCurrency(results.originalInterest)}</td>
-                              <td className="py-3 text-center text-white">{formatCurrency(results.interestPaid)}</td>
-                              <td className="py-3 text-center text-green-400 font-medium">₹{(results.originalInterest - results.interestPaid).toLocaleString('en-IN')}</td>
-                            </tr>
-                            <tr className="border-b border-white/10">
-                              <td className="py-3 text-white">Monthly EMI</td>
-                              <td className="py-3 text-center text-white">{formatCurrency(loanData.emi)}</td>
-                              <td className="py-3 text-center text-white">{formatCurrency(loanData.emi)}</td>
-                              <td className="py-3 text-center text-gray-400">—</td>
-                            </tr>
-                          </tbody>
-                        </table>
-                        
-                        <div className="mt-4 p-3 bg-white/5 rounded-lg border border-white/10">
-                          <p className="text-white/70 text-xs">
-                            Savings calculated after prepayment penalty
-                          </p>
-                        </div>
-                      </div>
-                    ) : (
-                      <div className="mt-4 text-center py-8">
-                        <p className="text-white/60">Configure your prepayment to see detailed breakdown</p>
-                      </div>
-                    )}
-                  </div>
-                </details>
-
-                {/* Prepayment Configuration */}
-                <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-6 shadow-2xl">
-                  <h3 className="text-white font-bold text-lg mb-6 flex items-center space-x-2">
-                    <DollarSign className="w-5 h-5 text-emerald-400" />
-                    <span>Prepayment Configuration</span>
-                  </h3>
-                  
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {/* Prepayment Amount */}
-                    <div>
-                      <label className="block text-white/80 text-sm font-medium mb-3">
-                        {prepaymentFrequency === 'yearly' ? 'Yearly' : 'Monthly'} Prepayment Amount
-                      </label>
-                      <div className="relative">
-                        <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/60 font-medium">₹</span>
-                        <input
-                          type="number"
-                          value={prepaymentAmount}
-                          onChange={(e) => setPrepaymentAmount(parseFloat(e.target.value) || 0)}
-                          className="w-full bg-white/10 border border-white/20 rounded-xl pl-8 pr-4 py-3 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500/50"
-                          placeholder={`Enter ${prepaymentFrequency} amount`}
-                        />
-                      </div>
-                    </div>
-                    
-                    {/* Frequency Selection */}
-                    <div>
-                      <label className="block text-white/80 text-sm font-medium mb-3">Payment Frequency</label>
-                      <div className="flex bg-white/10 rounded-xl p-1 border border-white/20">
-                        <button
-                          onClick={() => setPrepaymentFrequency('yearly')}
-                          className={`flex-1 py-2 px-3 rounded-lg font-medium transition-all duration-200 ${
-                            prepaymentFrequency === 'yearly'
-                              ? 'bg-white/20 text-white shadow-sm'
-                              : 'text-white/70 hover:text-white hover:bg-white/10'
-                          }`}
-                        >
-                          Yearly
-                        </button>
-                        <button
-                          onClick={() => setPrepaymentFrequency('monthly')}
-                          className={`flex-1 py-2 px-3 rounded-lg font-medium transition-all duration-200 ${
-                            prepaymentFrequency === 'monthly'
-                              ? 'bg-white/20 text-white shadow-sm'
-                              : 'text-white/70 hover:text-white hover:bg-white/10'
-                          }`}
-                        >
-                          Monthly
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  {/* Penalty Input */}
-                  <div className="mt-6">
-                    <label className="block text-white/80 text-sm font-medium mb-3">Prepayment Penalty (if any)</label>
-                    <div className="relative max-w-xs">
-                      <input
-                        type="number"
-                        step="0.1"
-                        min="0"
-                        max="5"
-                        value={penaltyRate}
-                        onChange={(e) => {
-                          const value = parseFloat(e.target.value);
-                          if (isNaN(value)) {
-                            setPenaltyRate(0);
-                          } else if (value < 0) {
-                            setPenaltyRate(0);
-                          } else if (value > 5) {
-                            setPenaltyRate(5);
-                          } else {
-                            setPenaltyRate(value);
-                          }
-                        }}
-                        className="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50"
-                        placeholder="0 for most loans"
-                      />
-                      <span className="absolute right-3 top-1/2 transform -translate-y-1/2 text-white/60 font-medium">%</span>
-                    </div>
-                    <p className="text-white/60 text-xs mt-2">
-                      Most floating rate loans have 0% penalty (RBI guidelines)
-                    </p>
-                  </div>
+        {results && (
+          <>
+            {/* Comparison */}
+            <section className="card" style={{marginTop: '12px'}}>
+              <div className="title">Comparison</div>
+              <div className="compare">
+                {/* Without Prepayment */}
+                <div className="panel">
+                  <div className="kicker">Without Prepayment</div>
+                  <div className="big">{formatTenure(loanData.tenure)}</div>
+                  <div className="meta">Total interest: {formatCurrency(results.originalInterest)}</div>
+                  <div className="emi-line emi-same">EMI: {formatCurrency(loanData.emi)}</div>
                 </div>
+                
+                {/* With Prepayment */}
+                <div className="panel">
+                  <div className="kicker">With Prepayment</div>
+                  <div className="big">{formatTenure(results.newTenure)}</div>
+                  <div className="meta">
+                    You save <span className="save">
+                      {formatCurrency(
+                        penaltyRate > 0 && results.penaltyAmount 
+                          ? Math.max(0, results.amountSaved - results.penaltyAmount)
+                          : results.amountSaved
+                      )}
+                    </span> and finish {(() => {
+                      const monthsSaved = results.monthsSaved || 0;
+                      const years = Math.floor(monthsSaved / 12);
+                      const remainingMonths = monthsSaved % 12;
+                      if (years === 0) {
+                        return `${remainingMonths} month${remainingMonths !== 1 ? 's' : ''}`;
+                      } else if (remainingMonths === 0) {
+                        return `${years} year${years !== 1 ? 's' : ''}`;
+                      } else {
+                        return `${years} year${years !== 1 ? 's' : ''} ${remainingMonths} month${remainingMonths !== 1 ? 's' : ''}`;
+                      }
+                    })()} earlier
+                  </div>
+                  <div className="emi-line emi-same">EMI: {formatCurrency(loanData.emi)}</div>
+                </div>
+              </div>
+            </section>
 
+            {/* EMI Comparison */}
+            <section className="card" style={{marginTop: '12px'}}>
+              <div className="title">EMI Comparison</div>
+              {(() => {
+                const originalEMI = loanData.emi;
+                const newEMI = loanData.emi; // In "Reduce Tenure" strategy, EMI remains same
+                const isSame = Math.abs(originalEMI - newEMI) < 1; // Account for rounding
+                
+                return isSame ? (
+                  <div className="emi-status same">
+                    <div className="emi-badge same">
+                      <span className="emi-label">EMI Remains Same:</span>
+                      <span className="emi-amount">{formatCurrency(originalEMI)}</span>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="emi-status different">
+                    <div className="emi-comparison">
+                      <div className="emi-item before">
+                        <span className="emi-label">Before</span>
+                        <span className="emi-amount">{formatCurrency(originalEMI)}</span>
+                      </div>
+                      <div className="emi-arrow">→</div>
+                      <div className="emi-item after">
+                        <span className="emi-label">After</span>
+                        <span className="emi-amount">{formatCurrency(newEMI)}</span>
+                      </div>
+                    </div>
+                    <div className="emi-difference">
+                      <span>Difference: </span>
+                      <span className={newEMI < originalEMI ? 'positive' : 'negative'}>
+                        {formatCurrency(Math.abs(originalEMI - newEMI))}
+                        {newEMI < originalEMI ? ' less' : ' more'}
+                      </span>
+                    </div>
+                  </div>
+                );
+              })()}
+            </section>
 
-                </motion.div>
+            {/* Loan Comparison Chart */}
+            <section className="card" style={{marginTop: '12px'}}>
+              <div className="title">Loan Comparison Chart</div>
+              <div style={{height: '400px', width: '100%'}}>
+                {results ? (
+                  <ResponsiveContainer width="100%" height="100%">
+                  <BarChart
+                    data={(() => {
+                      // Safety check to ensure results exist
+                      if (!results) {
+                        return [
+                          { category: 'Loan Tenure', withoutPrepayment: 0, withPrepayment: 0 },
+                          { category: 'Total Interest', withoutPrepayment: 0, withPrepayment: 0 },
+                          { category: 'Total Cost to Customer', withoutPrepayment: 0, withPrepayment: 0 }
+                        ];
+                      }
+                      
+                      return [
+                        {
+                          category: 'Loan Tenure',
+                          withoutPrepayment: Math.max(0, loanData.tenure || 0),
+                          withPrepayment: Math.max(0, results.newTenure || 0),
+                          unit: 'years'
+                        },
+                        {
+                          category: 'Total Interest',
+                          withoutPrepayment: Math.max(0, Math.round((results.originalInterest || 0) / 1000)),
+                          withPrepayment: Math.max(0, Math.round((results.interestPaid || 0) / 1000)),
+                          unit: '₹ (in thousands)'
+                        },
+                        {
+                          category: 'Total Cost to Customer',
+                          withoutPrepayment: Math.max(0, Math.round((results.originalTotalAmount || 0) / 1000)),
+                          withPrepayment: Math.max(0, Math.round(((results.interestPaid || 0) + (loanData.loanAmount || 0) + (results.penaltyAmount || 0)) / 1000)),
+                          unit: '₹ (in thousands)'
+                        }
+                      ];
+                    })()}
+                    margin={{
+                      top: 20,
+                      right: 30,
+                      left: 20,
+                      bottom: 60
+                    }}
+                    barCategoryGap="20%"
+                  >
+                    <CartesianGrid strokeDasharray="3 3" stroke="#1b2230" />
+                    <XAxis 
+                      dataKey="category" 
+                      tick={{ fill: '#9ab1c9', fontSize: 12 }}
+                      angle={-45}
+                      textAnchor="end"
+                      height={80}
+                    />
+                    <YAxis 
+                      tick={{ fill: '#9ab1c9', fontSize: 12 }}
+                      axisLine={{ stroke: '#1b2230' }}
+                    />
+                    <Tooltip 
+                      contentStyle={{
+                        backgroundColor: '#0f1420',
+                        border: '1px solid #1b2230',
+                        borderRadius: '8px',
+                        color: '#e6ecf3'
+                      }}
+                      formatter={(value, name, props) => {
+                        const category = (props as {payload?: {category?: string}})?.payload?.category;
+                        const formattedValue = category === 'Loan Tenure' ? 
+                          `${value} years` : 
+                          `₹${((value as number) * 1000).toLocaleString('en-IN')}`;
+                        const label = name === 'withoutPrepayment' ? 'Without Prepayment' : 'With Prepayment';
+                        return [formattedValue, label];
+                      }}
+                    />
+                    <Legend 
+                      wrapperStyle={{ color: '#9ab1c9' }}
+                    />
+                    <Bar 
+                      dataKey="withoutPrepayment" 
+                      fill="#5e86ff" 
+                      name="Without Prepayment"
+                      radius={[4, 4, 0, 0]}
+                    />
+                    <Bar 
+                      dataKey="withPrepayment" 
+                      fill="#22c55e" 
+                      name="With Prepayment"
+                      radius={[4, 4, 0, 0]}
+                    />
+                  </BarChart>
+                </ResponsiveContainer>
+                ) : (
+                  <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', color: '#9ab1c9'}}>
+                    Enter loan details to see comparison chart
+                  </div>
+                )}
+              </div>
+              <div className="subnote" style={{textAlign: 'center', marginTop: '8px'}}>
+                Comparison showing the impact of prepayment on loan tenure, interest, and total cost to customer
+              </div>
+            </section>
+
+            {/* Monthly Payment Timeline Chart */}
+            <section className="card" style={{marginTop: '12px'}}>
+              <div className="title">Payment Timeline Comparison</div>
+              <div style={{height: '350px', width: '100%'}}>
+                {results ? (
+                  <ResponsiveContainer width="100%" height="100%">
+                  <LineChart
+                    data={(() => {
+                      // Safety checks to prevent errors
+                      if (!loanData.loanAmount || !loanData.interestRate || !loanData.tenure || !loanData.emi) {
+                        return [{ month: 0, withoutPrepayment: 0, withPrepayment: 0 }];
+                      }
+                      
+                      const maxMonths = Math.min(Math.ceil(loanData.tenure * 12), 120); // Cap at 10 years max
+                      const chartData = [];
+                      let withoutPrepaymentBalance = loanData.loanAmount;
+                      let withPrepaymentBalance = loanData.loanAmount;
+                      const monthlyRate = loanData.interestRate / (12 * 100);
+                      const originalEMI = loanData.emi;
+                      
+                      // Safety check for valid EMI
+                      if (originalEMI <= 0) {
+                        return [{ month: 0, withoutPrepayment: 0, withPrepayment: 0 }];
+                      }
+                      
+                      const prepayFreq = prepaymentFrequency === 'yearly' ? 12 : 
+                                        prepaymentFrequency === 'quarterly' ? 3 : 
+                                        prepaymentFrequency === 'monthly' ? 1 : 999;
+                      
+                      // Add initial data point
+                      chartData.push({
+                        month: 0,
+                        withoutPrepayment: Math.round(withoutPrepaymentBalance),
+                        withPrepayment: Math.round(withPrepaymentBalance)
+                      });
+                      
+                      for (let month = 1; month <= maxMonths && (withoutPrepaymentBalance > 1 || withPrepaymentBalance > 1); month++) {
+                        // Safety check to prevent infinite loop
+                        if (month > 240) break; // Max 20 years
+                        
+                        // Without prepayment calculation
+                        if (withoutPrepaymentBalance > 1 && originalEMI > 0) {
+                          const interest = withoutPrepaymentBalance * monthlyRate;
+                          const principal = Math.min(originalEMI - interest, withoutPrepaymentBalance);
+                          if (principal > 0) {
+                            withoutPrepaymentBalance = Math.max(0, withoutPrepaymentBalance - principal);
+                          }
+                        } else {
+                          withoutPrepaymentBalance = 0;
+                        }
+                        
+                        // With prepayment calculation
+                        if (withPrepaymentBalance > 1) {
+                          // Apply prepayment first
+                          if (prepaymentAmount > 0) {
+                            let shouldApplyPrepayment = false;
+                            if (prepaymentFrequency === 'lumpsum') {
+                              shouldApplyPrepayment = month === 1;
+                            } else if (prepayFreq < 999) {
+                              shouldApplyPrepayment = (month % prepayFreq) === 0;
+                            }
+                            
+                            if (shouldApplyPrepayment) {
+                              const prepayment = Math.min(prepaymentAmount, withPrepaymentBalance);
+                              withPrepaymentBalance = Math.max(0, withPrepaymentBalance - prepayment);
+                            }
+                          }
+                          
+                          // Then apply EMI
+                          if (withPrepaymentBalance > 1 && originalEMI > 0) {
+                            const interest = withPrepaymentBalance * monthlyRate;
+                            const principal = Math.min(originalEMI - interest, withPrepaymentBalance);
+                            if (principal > 0) {
+                              withPrepaymentBalance = Math.max(0, withPrepaymentBalance - principal);
+                            }
+                          } else {
+                            withPrepaymentBalance = 0;
+                          }
+                        }
+                        
+                        chartData.push({
+                          month,
+                          withoutPrepayment: Math.round(Math.max(0, withoutPrepaymentBalance)),
+                          withPrepayment: Math.round(Math.max(0, withPrepaymentBalance))
+                        });
+                        
+                        // Stop when both loans are paid off
+                        if (withoutPrepaymentBalance <= 1 && withPrepaymentBalance <= 1) break;
+                      }
+                      
+                      // Ensure we have at least some data
+                      if (chartData.length < 2) {
+                        chartData.push({ month: 1, withoutPrepayment: 0, withPrepayment: 0 });
+                      }
+                      
+                      return chartData;
+                    })()}
+                    margin={{
+                      top: 20,
+                      right: 30,
+                      left: 20,
+                      bottom: 20
+                    }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" stroke="#1b2230" />
+                    <XAxis 
+                      dataKey="month" 
+                      tick={{ fill: '#9ab1c9', fontSize: 12 }}
+                      label={{ value: 'Months', position: 'insideBottom', offset: -10, style: { textAnchor: 'middle', fill: '#9ab1c9' } }}
+                    />
+                    <YAxis 
+                      tick={{ fill: '#9ab1c9', fontSize: 12 }}
+                      axisLine={{ stroke: '#1b2230' }}
+                      label={{ value: 'Outstanding Balance (₹)', angle: -90, position: 'insideLeft', style: { textAnchor: 'middle', fill: '#9ab1c9' } }}
+                      tickFormatter={(value) => `₹${(value / 1000).toFixed(0)}k`}
+                    />
+                    <Tooltip 
+                      contentStyle={{
+                        backgroundColor: '#0f1420',
+                        border: '1px solid #1b2230',
+                        borderRadius: '8px',
+                        color: '#e6ecf3'
+                      }}
+                      formatter={(value: number, name: string) => [
+                        `₹${Number(value).toLocaleString('en-IN')}`,
+                        name === 'withoutPrepayment' ? 'Without Prepayment' : 'With Prepayment'
+                      ]}
+                      labelFormatter={(month) => `Month ${month}`}
+                    />
+                    <Legend 
+                      wrapperStyle={{ color: '#9ab1c9' }}
+                    />
+                    <Line 
+                      type="monotone" 
+                      dataKey="withoutPrepayment" 
+                      stroke="#5e86ff" 
+                      strokeWidth={2}
+                      name="Without Prepayment"
+                      dot={false}
+                    />
+                    <Line 
+                      type="monotone" 
+                      dataKey="withPrepayment" 
+                      stroke="#22c55e" 
+                      strokeWidth={2}
+                      name="With Prepayment"
+                      dot={false}
+                    />
+                  </LineChart>
+                </ResponsiveContainer>
+                ) : (
+                  <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', color: '#9ab1c9'}}>
+                    Enter loan details to see timeline chart
+                  </div>
+                )}
+              </div>
+              <div className="subnote" style={{textAlign: 'center', marginTop: '8px'}}>
+                Outstanding loan balance over time showing how prepayment accelerates loan payoff
+              </div>
+            </section>
+
+            {/* Loan Details */}
+            <section className="card" style={{marginTop: '12px'}}>
+              <div className="title">Loan Details</div>
+              <div style={{overflow: 'auto'}}>
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Metric</th>
+                      <th>Before</th>
+                      <th>After</th>
+                      <th>Savings</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Loan Tenure</td>
+                      <td>{formatTenure(loanData.tenure)}</td>
+                      <td>{formatTenure(results.newTenure)}</td>
+                      <td className="pos">
+                        {(() => {
+                          const monthsSaved = results.monthsSaved || 0;
+                          const years = Math.floor(monthsSaved / 12);
+                          const remainingMonths = monthsSaved % 12;
+                          if (years === 0) {
+                            return `${remainingMonths} month${remainingMonths !== 1 ? 's' : ''}`;
+                          } else if (remainingMonths === 0) {
+                            return `${years} year${years !== 1 ? 's' : ''}`;
+                          } else {
+                            return `${years} year${years !== 1 ? 's' : ''} ${remainingMonths} month${remainingMonths !== 1 ? 's' : ''}`;
+                          }
+                        })()}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Total Interest Paid</td>
+                      <td>{formatCurrency(results.originalInterest)}</td>
+                      <td>{formatCurrency(results.interestPaid)}</td>
+                      <td className="pos">{formatCurrency(results.originalInterest - results.interestPaid)}</td>
+                    </tr>
+                    <tr>
+                      <td>Monthly EMI</td>
+                      <td>{formatCurrency(loanData.emi)}</td>
+                      <td>{formatCurrency(loanData.emi)}</td>
+                      <td>—</td>
+                    </tr>
+                    <tr>
+                      <td>Prepayment Penalty</td>
+                      <td>—</td>
+                      <td>{formatCurrency(results.penaltyAmount || 0)}</td>
+                      <td className="warn">—</td>
+                    </tr>
+                    <tr>
+                      <td>Total Amount Paid</td>
+                      <td>{formatCurrency(results.originalTotalAmount)}</td>
+                      <td>{formatCurrency(results.totalAmountPaid)}</td>
+                      <td className="pos">
+                        {formatCurrency(
+                          penaltyRate > 0 && results.penaltyAmount 
+                            ? Math.max(0, results.amountSaved - results.penaltyAmount)
+                            : results.amountSaved
+                        )}
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div className="bar">
+                <button className="btn btn--pri" onClick={() => window.location.reload()}>Recalculate</button>
+              </div>
+            </section>
+          </>
+        )}
+        </div>
+
+        {/* Footer - Same as Car Affordability Page */}
+        <footer className="relative z-10 mt-16 mb-8">
+          <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+            <div className="rounded-xl p-6 shadow-lg bg-white/5 backdrop-blur-xl border border-white/10">
+              <div className="flex items-start space-x-3">
+                <div className="flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center mt-0.5 bg-white/10">
+                  <svg className="w-3 h-3 text-white/50" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                  </svg>
+                </div>
+                <div className="flex-1">
+                  <p className="font-medium mb-3 text-sm text-white/90">Disclaimer</p>
+                  <p className="leading-relaxed text-sm text-white/70">
+                    This prepayment calculator serves as a helpful tool to understand potential financial outcomes when planning your loan prepayments. It is designed for informational and educational purposes only and does not constitute professional financial advice for your specific loan decisions. The calculations and projections shown are estimates and should be treated as general guidance rather than exact financial recommendations. For personalized advice tailored to your unique financial circumstances, we strongly encourage you to consult with a qualified financial advisor who can discuss the various options and their implications for your situation.
+                  </p>
+                </div>
               </div>
             </div>
-
           </div>
-        </div>
-      </section>
-
-      {/* Footer - Compact like calculator page */}
-      <footer className="relative z-10 mt-12 mb-8">
-        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-          <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-xl p-4 shadow-lg">
-            <div className="flex items-start space-x-3">
-              <div className="flex-shrink-0 w-5 h-5 bg-white/10 rounded-full flex items-center justify-center mt-0.5">
-                <svg className="w-3 h-3 text-white/50" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
-                </svg>
-              </div>
-              <div className="flex-1">
-                <p className="font-medium text-white/90 mb-1 text-sm">Important Note</p>
-                <p className="text-white/70 leading-relaxed text-sm">
-                  RBI-compliant calculations. Actual rates may vary by lender. Fixed-rate loans may have prepayment penalties.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </footer>
+        </footer>
+      </div>
     </main>
   )
 }
