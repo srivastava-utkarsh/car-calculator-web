@@ -357,6 +357,51 @@ export default function TotalCostDisplayV2({ carData, updateCarData: _updateCarD
             </div>
           )}
 
+          {/* Yearly Cost Calculation */}
+          {(emi > 0 || monthlyFuelCost > 0 || (carData.insuranceAndMaintenance || 0) > 0) && (
+            <div className="bg-gradient-to-r from-purple-500/10 to-indigo-500/10 border border-purple-400/20 rounded-lg p-3 mb-3">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <div className="w-8 h-8 bg-purple-500/20 rounded-full flex items-center justify-center">
+                    <TrendingUp size={14} className="text-purple-300"/>
+                  </div>
+                  <div>
+                    <div className="text-purple-100 font-semibold text-sm">Yearly Cost</div>
+                    <div className="text-purple-300 text-xs">Total annual expense</div>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <div className="text-lg font-bold text-purple-100">
+                    {formatCurrency((totalMonthlyCarExpenses * 12) + (carData.insuranceAndMaintenance || 0))}
+                  </div>
+                </div>
+              </div>
+              {/* Breakdown */}
+              <div className="mt-2 pt-2 border-t border-purple-400/20">
+                <div className="space-y-1 text-xs">
+                  {emi > 0 && (
+                    <div className="flex justify-between text-purple-200">
+                      <span>EMI × 12:</span>
+                      <span>{formatCurrency(emi * 12)}</span>
+                    </div>
+                  )}
+                  {monthlyFuelCost > 0 && (
+                    <div className="flex justify-between text-purple-200">
+                      <span>Fuel × 12:</span>
+                      <span>{formatCurrency(monthlyFuelCost * 12)}</span>
+                    </div>
+                  )}
+                  {(carData.insuranceAndMaintenance || 0) > 0 && (
+                    <div className="flex justify-between text-purple-200">
+                      <span>Insurance + Others:</span>
+                      <span>{formatCurrency(carData.insuranceAndMaintenance || 0)}</span>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
+
         </div>
 
 

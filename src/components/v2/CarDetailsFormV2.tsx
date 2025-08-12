@@ -301,42 +301,6 @@ export default function CarDetailsFormV2({ carData, updateCarData, monthlyIncome
         </div>
         
         <div className="space-y-3">
-          <input
-            type="number"
-            step="0.1"
-            min="5"
-            max="15"
-            value={carData.interestRate}
-            onChange={(e) => {
-              const value = parseFloat(e.target.value);
-              if (isNaN(value)) {
-                updateCarData({ interestRate: 8 });
-              } else if (value < 5) {
-                updateCarData({ interestRate: 5 });
-              } else if (value > 15) {
-                updateCarData({ interestRate: 15 });
-              } else {
-                updateCarData({ interestRate: value });
-              }
-            }}
-            onBlur={(e) => {
-              // Additional validation on blur to handle edge cases
-              const value = parseFloat(e.target.value);
-              if (isNaN(value) || value < 5 || value > 15) {
-                const clampedValue = isNaN(value) ? 8 : Math.max(5, Math.min(15, value));
-                updateCarData({ interestRate: clampedValue });
-              }
-            }}
-            className={`w-full px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400 focus:border-transparent transition-all ${
-              themeClass(
-                'bg-white border border-slate-300 text-slate-900 placeholder-slate-500',
-                'bg-white/10 backdrop-blur-md border border-white/20 text-white placeholder-white/50',
-                isLight
-              )
-            }`}
-            placeholder="Interest rate (5-15%)"
-          />
-          
           {/* Interest Rate Slider */}
           <div className="relative group">
             <div className="relative">
