@@ -14,6 +14,16 @@ interface FinancialFormV2Props {
 export default function FinancialFormV2({ carData, updateCarData, monthlyIncomeInputRef }: FinancialFormV2Props) {
   const { theme, isLight, isDark } = useTheme()
   const themeStyles = getThemeStyles(theme)
+
+  // Helper function to format number with commas
+  const formatWithCommas = (num: number): string => {
+    return num.toLocaleString('en-IN')
+  }
+
+  // Helper function to remove commas and convert to number
+  const removeCommas = (str: string): string => {
+    return str.replace(/,/g, '')
+  }
   
   const kmInputRef = useRef<HTMLInputElement>(null)
   const fuelCostInputRef = useRef<HTMLInputElement>(null)
@@ -78,7 +88,7 @@ export default function FinancialFormV2({ carData, updateCarData, monthlyIncomeI
           : ''
       }`}>
         <label className={`block text-base min-[375px]:text-lg font-medium ${themeClass(themeStyles.primaryText, 'text-white', isLight)}`} style={{ lineHeight: '1.5' }}>
-          5. Monthly Income
+          Monthly Income
           <span className="text-xs text-emerald-300 bg-emerald-500/20 px-2 py-0.5 rounded-full ml-2">Affordability Check</span>
         </label>
         {shouldHighlightMonthlyIncome && (
@@ -90,14 +100,12 @@ export default function FinancialFormV2({ carData, updateCarData, monthlyIncomeI
         <div className="relative">
           <span className={`absolute left-4 top-1/2 transform -translate-y-1/2 font-semibold ${themeClass('text-slate-600', 'text-white/70', isLight)}`}>₹</span>
           <input
-            type="number"
-            min="0"
-            max="100000000"
+            type="text"
             required
-            value={carData.monthlyIncome || ''}
+            value={carData.monthlyIncome ? formatWithCommas(carData.monthlyIncome) : ''}
             ref={monthlyIncomeInputRef}
             onChange={(e) => {
-              const numericValue = e.target.value.replace(/[^0-9.]/g, '')
+              const numericValue = removeCommas(e.target.value).replace(/[^0-9.]/g, '')
               let income = parseFloat(numericValue) || 0
               
               // Enforce maximum limit
@@ -108,7 +116,7 @@ export default function FinancialFormV2({ carData, updateCarData, monthlyIncomeI
               updateCarData({ monthlyIncome: income })
             }}
             onKeyPress={(e) => {
-              if (!/[0-9.]/.test(e.key) && e.key !== 'Backspace' && e.key !== 'Delete') {
+              if (!/[0-9.,]/.test(e.key) && e.key !== 'Backspace' && e.key !== 'Delete') {
                 e.preventDefault()
               }
             }}
@@ -132,90 +140,187 @@ export default function FinancialFormV2({ carData, updateCarData, monthlyIncomeI
         </p>
       </div>
 
-      {/* Processing Fee + Insurance + Others */}
-      <div className="space-y-2">
-        <label className={`text-base min-[375px]:text-lg font-medium ${themeClass(themeStyles.primaryText, 'text-white', isLight)}`} style={{ lineHeight: '1.5' }}>
-          6. Insurance + Others
-        </label>
-        <div className="relative">
-          <span className={`absolute left-4 top-1/2 transform -translate-y-1/2 font-semibold ${themeClass('text-slate-600', 'text-white/70', isLight)}`}>₹</span>
-          <input
-            type="number"
-            min="0"
-            max="200000"
-            value={carData.insuranceAndMaintenance || ''}
-            onChange={(e) => {
-              const value = e.target.value
-              const numericValue = parseFloat(value) || 0
-              
-              // Validate range: 0 to 200,000
-              if (numericValue < 0 || numericValue > 200000) {
-                return // Don't update if outside valid range
-              }
-              
-              updateCarData({ insuranceAndMaintenance: numericValue })
-            }}
-            onBlur={(e) => {
-              const value = parseFloat(e.target.value) || 0
-              // Clamp value to valid range on blur
-              const clampedValue = Math.max(0, Math.min(200000, value))
-              if (clampedValue !== value) {
-                updateCarData({ insuranceAndMaintenance: clampedValue })
-              }
-            }}
-            placeholder="Enter Insurance, Processing Fee or Other Expenses"
-            className={`w-full pl-8 pr-4 py-2.5 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all text-base ${
-              themeClass(
-                'bg-white border border-slate-300 text-slate-900 placeholder-slate-500',
-                'bg-white/10 backdrop-blur-md border border-white/20 text-white placeholder-white/50',
-                isLight
-              )
-            }`}
-          />
+      {/* Operational Cost Section Header */}
+      <div className="flex items-center space-x-3 mb-4">
+        <h4 className={`text-lg font-semibold ${themeClass(themeStyles.primaryText, 'text-white', isLight)}`}>
+          Operational Cost
+        </h4>
+        <div className={`h-px w-16 ${themeClass('bg-slate-300', 'bg-white/30', isLight)}`}></div>
+      </div>
+
+      {/* Insurance Cost and Maintenance Cost Row */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        {/* Insurance Cost */}
+        <div className="space-y-2">
+          <label className={`text-sm font-medium ${themeClass(themeStyles.primaryText, 'text-white', isLight)}`} style={{ lineHeight: '1.5' }}>
+            Insurance Cost
+          </label>
+          <div className="relative">
+            <span className={`absolute left-4 top-1/2 transform -translate-y-1/2 font-semibold ${themeClass('text-slate-600', 'text-white/70', isLight)}`}>₹</span>
+            <input
+              type="text"
+              value={carData.insuranceAndMaintenance ? formatWithCommas(carData.insuranceAndMaintenance) : ''}
+              onChange={(e) => {
+                const numericValue = removeCommas(e.target.value).replace(/[^0-9]/g, '')
+                const value = parseFloat(numericValue) || 0
+                
+                // Validate range: 0 to 200,000
+                if (value < 0 || value > 200000) {
+                  return // Don't update if outside valid range
+                }
+                
+                updateCarData({ insuranceAndMaintenance: value })
+              }}
+              onKeyPress={(e) => {
+                if (!/[0-9,]/.test(e.key) && e.key !== 'Backspace' && e.key !== 'Delete') {
+                  e.preventDefault()
+                }
+              }}
+              onBlur={(e) => {
+                const numericValue = removeCommas(e.target.value).replace(/[^0-9]/g, '')
+                const value = parseFloat(numericValue) || 0
+                // Clamp value to valid range on blur
+                const clampedValue = Math.max(0, Math.min(200000, value))
+                if (clampedValue !== value) {
+                  updateCarData({ insuranceAndMaintenance: clampedValue })
+                }
+              }}
+              placeholder="Enter Insurance, Processing Fee or Other Expenses"
+              className={`w-full pl-8 pr-4 py-1.5 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all text-sm ${
+                themeClass(
+                  'bg-white border border-slate-300 text-slate-900 placeholder-slate-500',
+                  'bg-white/10 backdrop-blur-md border border-white/20 text-white placeholder-white/50',
+                  isLight
+                )
+              }`}
+            />
+          </div>
+        </div>
+
+        {/* Maintenance Cost (per year) */}
+        <div className="space-y-2">
+          <label className={`text-sm font-medium ${themeClass(themeStyles.primaryText, 'text-white', isLight)}`} style={{ lineHeight: '1.5' }}>
+            Maintenance Cost (per year)
+          </label>
+          <div className="relative">
+            <span className={`absolute left-4 top-1/2 transform -translate-y-1/2 font-semibold ${themeClass('text-slate-600', 'text-white/70', isLight)}`}>₹</span>
+            <input
+              type="text"
+              value={carData.maintenanceCostPerYear ? formatWithCommas(carData.maintenanceCostPerYear) : ''}
+              onChange={(e) => {
+                const numericValue = removeCommas(e.target.value).replace(/[^0-9.]/g, '')
+                let cost = parseFloat(numericValue) || 0
+                
+                // Enforce limits
+                if (cost > 500000) {
+                  cost = 500000
+                } else if (cost < 0) {
+                  cost = 0
+                }
+                
+                updateCarData({ maintenanceCostPerYear: cost })
+              }}
+              onKeyPress={(e) => {
+                if (!/[0-9.,]/.test(e.key) && e.key !== 'Backspace' && e.key !== 'Delete') {
+                  e.preventDefault()
+                }
+              }}
+              placeholder="Enter yearly maintenance cost"
+              className={`w-full pl-8 pr-4 py-1.5 rounded-md focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-transparent transition-all text-sm ${
+                themeClass(
+                  'bg-white border border-slate-300 text-slate-900 placeholder-slate-500',
+                  'bg-white/10 backdrop-blur-md border border-white/20 text-white placeholder-white/50',
+                  isLight
+                )
+              }`}
+            />
+          </div>
         </div>
       </div>
 
-      {/* Monthly Fuel Expense */}
-      <div className="space-y-2" id="monthly-fuel-expense">
-        <label className={`text-base min-[375px]:text-lg font-medium ${themeClass(themeStyles.primaryText, 'text-white', isLight)}`} style={{ lineHeight: '1.5' }}>
-          7. Monthly Fuel + Parking + Other charges
-        </label>
-        <div className="relative">
-          <span className={`absolute left-4 top-1/2 transform -translate-y-1/2 font-semibold ${themeClass('text-slate-600', 'text-white/70', isLight)}`}>₹</span>
-          <input
-            type="number"
-            min="1"
-            max="100000"
-            value={carData.monthlyFuelExpense || ''}
-            onChange={(e) => {
-              const numericValue = e.target.value.replace(/[^0-9.]/g, '')
-              let expense = parseFloat(numericValue) || 0
-              
-              // Enforce limits
-              if (expense > 100000) {
-                expense = 100000
-              } else if (expense < 0) {
-                expense = 0
-              }
-              
-              updateCarData({ monthlyFuelExpense: expense })
-            }}
-            onKeyPress={(e) => {
-              if (!/[0-9.]/.test(e.key) && e.key !== 'Backspace' && e.key !== 'Delete') {
-                e.preventDefault()
-              }
-            }}
-            placeholder="Enter monthly fuel, parking and other charges"
-            className={`w-full pl-8 pr-4 py-2.5 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-transparent transition-all text-base ${
-              themeClass(
-                'bg-white border border-slate-300 text-slate-900 placeholder-slate-500',
-                'bg-white/10 backdrop-blur-md border border-white/20 text-white placeholder-white/50',
-                isLight
-              )
-            }`}
-          />
+      {/* Monthly Fuel Expense and Parking Fee Row */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        {/* Monthly Fuel Expense */}
+        <div className="space-y-2" id="monthly-fuel-expense">
+          <label className={`text-sm font-medium ${themeClass(themeStyles.primaryText, 'text-white', isLight)}`} style={{ lineHeight: '1.5' }}>
+            Monthly Fuel Expense
+          </label>
+          <div className="relative">
+            <span className={`absolute left-4 top-1/2 transform -translate-y-1/2 font-semibold ${themeClass('text-slate-600', 'text-white/70', isLight)}`}>₹</span>
+            <input
+              type="text"
+              value={carData.monthlyFuelExpense ? formatWithCommas(carData.monthlyFuelExpense) : ''}
+              onChange={(e) => {
+                const numericValue = removeCommas(e.target.value).replace(/[^0-9.]/g, '')
+                let expense = parseFloat(numericValue) || 0
+                
+                // Enforce limits
+                if (expense > 100000) {
+                  expense = 100000
+                } else if (expense < 0) {
+                  expense = 0
+                }
+                
+                updateCarData({ monthlyFuelExpense: expense })
+              }}
+              onKeyPress={(e) => {
+                if (!/[0-9.,]/.test(e.key) && e.key !== 'Backspace' && e.key !== 'Delete') {
+                  e.preventDefault()
+                }
+              }}
+              placeholder="Enter monthly fuel expense"
+              className={`w-full pl-8 pr-4 py-1.5 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-transparent transition-all text-sm ${
+                themeClass(
+                  'bg-white border border-slate-300 text-slate-900 placeholder-slate-500',
+                  'bg-white/10 backdrop-blur-md border border-white/20 text-white placeholder-white/50',
+                  isLight
+                )
+              }`}
+            />
+          </div>
+        </div>
+
+        {/* Parking Fee */}
+        <div className="space-y-2">
+          <label className={`text-sm font-medium ${themeClass(themeStyles.primaryText, 'text-white', isLight)}`} style={{ lineHeight: '1.5' }}>
+            Parking Fee
+          </label>
+          <div className="relative">
+            <span className={`absolute left-4 top-1/2 transform -translate-y-1/2 font-semibold ${themeClass('text-slate-600', 'text-white/70', isLight)}`}>₹</span>
+            <input
+              type="text"
+              value={carData.parkingFee ? formatWithCommas(carData.parkingFee) : ''}
+              onChange={(e) => {
+                const numericValue = removeCommas(e.target.value).replace(/[^0-9.]/g, '')
+                let fee = parseFloat(numericValue) || 0
+                
+                // Enforce limits
+                if (fee > 50000) {
+                  fee = 50000
+                } else if (fee < 0) {
+                  fee = 0
+                }
+                
+                updateCarData({ parkingFee: fee })
+              }}
+              onKeyPress={(e) => {
+                if (!/[0-9.,]/.test(e.key) && e.key !== 'Backspace' && e.key !== 'Delete') {
+                  e.preventDefault()
+                }
+              }}
+              placeholder="Enter parking fee"
+              className={`w-full pl-8 pr-4 py-1.5 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all text-sm ${
+                themeClass(
+                  'bg-white border border-slate-300 text-slate-900 placeholder-slate-500',
+                  'bg-white/10 backdrop-blur-md border border-white/20 text-white placeholder-white/50',
+                  isLight
+                )
+              }`}
+            />
+          </div>
         </div>
       </div>
+
 
     </>
   )

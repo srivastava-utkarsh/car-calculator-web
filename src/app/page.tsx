@@ -30,6 +30,9 @@ export interface CarData {
   monthlyFuelExpense?: number
   loanType?: 'fixed' | 'floating'
   prepaymentPenaltyRate?: number
+  parkingFee?: number
+  maintenanceCostPerYear?: number
+  insuranceCostPerYear?: number
 }
 
 
@@ -81,7 +84,10 @@ export default function HomePage() {
     monthlyIncome: 0,
     insuranceAndMaintenance: 0,
     includeFuelInAffordability: false,
-    monthlyFuelExpense: 0
+    monthlyFuelExpense: 0,
+    parkingFee: 0,
+    maintenanceCostPerYear: 0,
+    insuranceCostPerYear: 0
   })
 
 
@@ -104,7 +110,10 @@ export default function HomePage() {
       monthlyIncome: 0,
       insuranceAndMaintenance: 0,
       includeFuelInAffordability: false,
-      monthlyFuelExpense: 0
+      monthlyFuelExpense: 0,
+      parkingFee: 0,
+      maintenanceCostPerYear: 0,
+      insuranceCostPerYear: 0
     })
   }
 
@@ -176,7 +185,7 @@ export default function HomePage() {
                 
                 {/* Main Form Section - Collapsible */}
                 <motion.div 
-                  className={`transition-all duration-500 ease-in-out ${isLeftCollapsed ? 'w-16 lg:w-16' : 'w-full lg:flex-1 lg:max-w-2xl'}`}
+                  className={`transition-all duration-500 ease-in-out ${isLeftCollapsed ? 'w-16 lg:w-16' : 'w-full lg:w-[600px] lg:flex-shrink-0'}`}
                   animate={{ width: isLeftCollapsed ? 64 : 'auto' }}
                 >
                   {isLeftCollapsed ? (
@@ -209,9 +218,12 @@ export default function HomePage() {
                           >
                             {/* Collapse Button */}
                             <div className="flex justify-between items-center mb-4">
-                              <h3 className={`text-lg font-semibold ${isLight ? 'text-slate-900' : 'text-white'}`}>
-                                Car Finance Calculator
-                              </h3>
+                              <div className="flex items-center space-x-3">
+                                <h3 className={`text-lg font-semibold ${isLight ? 'text-slate-900' : 'text-white'}`}>
+                                  Car Cost Details
+                                </h3>
+                                <div className={`h-px w-16 ${isLight ? 'bg-slate-300' : 'bg-white/30'}`}></div>
+                              </div>
                               <button
                                 onClick={() => setIsLeftCollapsed(true)}
                                 className={`hidden lg:flex items-center space-x-2 px-4 py-2 rounded-lg transition-all duration-200 hover:scale-105 font-medium text-sm ${isLight ? 'bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-slate-900' : 'bg-white/10 hover:bg-white/20 text-white/70 hover:text-white'}`}
@@ -274,7 +286,7 @@ export default function HomePage() {
 
                 {/* Live Preview Panel - Expands when left is collapsed */}
                 <motion.aside 
-                  className={`transition-all duration-500 ease-in-out ${isLeftCollapsed ? 'flex-1' : 'w-full lg:w-80 lg:w-96'}`}
+                  className={`transition-all duration-500 ease-in-out ${isLeftCollapsed ? 'flex-1' : 'w-full lg:w-[450px] lg:flex-shrink-0'}`}
                   aria-labelledby="results-heading"
                   animate={{ width: isLeftCollapsed ? '100%' : 'auto' }}
                 >

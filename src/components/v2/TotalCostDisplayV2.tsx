@@ -291,7 +291,7 @@ export default function TotalCostDisplayV2({ carData, updateCarData: _updateCarD
             <h3 className={`text-sm font-medium mb-1 tracking-wide ${themeClass(themeStyles.secondaryText, 'text-gray-300', isLight)}`}>
               Monthly EMI {completionPercentage === 100 && '✨'}
             </h3>
-            <div className={`text-3xl font-bold mb-2 tracking-tight ${themeClass(themeStyles.primaryText, 'text-white', isLight)}`}>
+            <div className={`text-3xl font-bold mb-2 tracking-tight min-w-[200px] text-center ${themeClass(themeStyles.primaryText, 'text-white', isLight)}`}>
               {formatCurrency(emi)}
             </div>
           </div>
@@ -300,17 +300,17 @@ export default function TotalCostDisplayV2({ carData, updateCarData: _updateCarD
           {monthlyFuelCost > 0 ? (
             <div className="bg-gradient-to-r from-emerald-500/20 to-green-500/20 border border-emerald-400/30 rounded-xl p-3 mb-3">
               <h3 className="text-sm font-medium text-emerald-300 mb-1 tracking-wide">Overall Monthly Expense</h3>
-              <div className="text-3xl font-bold text-emerald-100 mb-3 tracking-tight">
+              <div className="text-3xl font-bold text-emerald-100 mb-3 tracking-tight min-w-[200px] text-center">
                 {formatCurrency(totalMonthlyCarExpenses)}
               </div>
               <div className="bg-emerald-500/10 rounded-lg p-3 space-y-2">
                 <div className="flex justify-between items-center">
                   <span className="text-emerald-200 font-medium text-sm">EMI</span>
-                  <span className="font-bold text-emerald-100 text-lg">{formatCurrency(emi)}</span>
+                  <span className="font-bold text-emerald-100 text-lg min-w-[120px] text-right inline-block">{formatCurrency(emi)}</span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-emerald-200 font-medium text-sm">Fuel</span>
-                  <span className="font-bold text-emerald-100 text-lg">{formatCurrency(monthlyFuelCost)}</span>
+                  <span className="font-bold text-emerald-100 text-lg min-w-[120px] text-right inline-block">{formatCurrency(monthlyFuelCost)}</span>
                 </div>
               </div>
             </div>
@@ -351,7 +351,7 @@ export default function TotalCostDisplayV2({ carData, updateCarData: _updateCarD
                   </div>
                 </div>
                 <div className="text-right">
-                  <div className="text-lg font-bold text-blue-100">{formatCurrency(carData.insuranceAndMaintenance || 0)}</div>
+                  <div className="text-lg font-bold text-blue-100 min-w-[120px] text-right">{formatCurrency(carData.insuranceAndMaintenance || 0)}</div>
                 </div>
               </div>
             </div>
@@ -371,7 +371,7 @@ export default function TotalCostDisplayV2({ carData, updateCarData: _updateCarD
                   </div>
                 </div>
                 <div className="text-right">
-                  <div className="text-lg font-bold text-purple-100">
+                  <div className="text-lg font-bold text-purple-100 min-w-[120px] text-right">
                     {formatCurrency((totalMonthlyCarExpenses * 12) + (carData.insuranceAndMaintenance || 0))}
                   </div>
                 </div>
@@ -511,7 +511,7 @@ export default function TotalCostDisplayV2({ carData, updateCarData: _updateCarD
                     </div>
                   </div>
                   <div className="text-right">
-                    <div className="text-lg font-bold text-green-100">{formatCurrency(loanAmount)}</div>
+                    <div className="text-lg font-bold text-green-100 min-w-[120px] text-right">{formatCurrency(loanAmount)}</div>
                   </div>
                 </div>
               </div>
@@ -529,7 +529,7 @@ export default function TotalCostDisplayV2({ carData, updateCarData: _updateCarD
                     </div>
                   </div>
                   <div className="text-right">
-                    <div className="text-lg font-bold text-yellow-100">{formatCurrency(totalInterest)}</div>
+                    <div className="text-lg font-bold text-yellow-100 min-w-[120px] text-right">{formatCurrency(totalInterest)}</div>
                   </div>
                 </div>
               </div>
@@ -547,7 +547,7 @@ export default function TotalCostDisplayV2({ carData, updateCarData: _updateCarD
                     </div>
                   </div>
                   <div className="text-right">
-                    <div className="text-xl font-bold text-purple-100">{formatCurrency(totalPayment)}</div>
+                    <div className="text-xl font-bold text-purple-100 min-w-[140px] text-right">{formatCurrency(totalPayment)}</div>
                     <div className="text-purple-300 text-xs mt-0.5">Over {formatDuration()}</div>
                   </div>
                 </div>

@@ -145,41 +145,41 @@ input[type="number"] {
 .slider-enhanced::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
-  height: 24px;
-  width: 24px;
+  height: 12px;
+  width: 12px;
   border-radius: 50%;
   background: linear-gradient(135deg, #06b6d4, #0891b2);
   cursor: pointer;
-  border: 3px solid white;
-  box-shadow: 0 4px 12px rgba(6, 182, 212, 0.4), 0 2px 4px rgba(0, 0, 0, 0.1);
+  border: 2px solid white;
+  box-shadow: 0 2px 6px rgba(6, 182, 212, 0.4), 0 1px 2px rgba(0, 0, 0, 0.1);
   transition: all 0.2s ease;
 }
 
 .slider-enhanced::-webkit-slider-thumb:hover {
   transform: scale(1.15);
-  box-shadow: 0 6px 16px rgba(6, 182, 212, 0.5), 0 2px 8px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 3px 8px rgba(6, 182, 212, 0.5), 0 1px 4px rgba(0, 0, 0, 0.15);
   background: linear-gradient(135deg, #0891b2, #0e7490);
 }
 
 .slider-enhanced::-webkit-slider-thumb:active {
   transform: scale(1.1);
-  box-shadow: 0 2px 8px rgba(6, 182, 212, 0.6), 0 1px 3px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 1px 4px rgba(6, 182, 212, 0.6), 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
 .slider-enhanced::-moz-range-thumb {
-  height: 24px;
-  width: 24px;
+  height: 12px;
+  width: 12px;
   border-radius: 50%;
   background: linear-gradient(135deg, #06b6d4, #0891b2);
   cursor: pointer;
-  border: 3px solid white;
-  box-shadow: 0 4px 12px rgba(6, 182, 212, 0.4), 0 2px 4px rgba(0, 0, 0, 0.1);
+  border: 2px solid white;
+  box-shadow: 0 2px 6px rgba(6, 182, 212, 0.4), 0 1px 2px rgba(0, 0, 0, 0.1);
   transition: all 0.2s ease;
 }
 
 .slider-enhanced::-moz-range-thumb:hover {
   transform: scale(1.15);
-  box-shadow: 0 6px 16px rgba(6, 182, 212, 0.5), 0 2px 8px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 3px 8px rgba(6, 182, 212, 0.5), 0 1px 4px rgba(0, 0, 0, 0.15);
   background: linear-gradient(135deg, #0891b2, #0e7490);
 }
 

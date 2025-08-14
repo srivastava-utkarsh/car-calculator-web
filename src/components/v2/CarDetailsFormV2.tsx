@@ -44,16 +44,25 @@ export default function CarDetailsFormV2({ carData, updateCarData, monthlyIncome
 
   // Preset car price options
   const carPresets = [
-    { label: '5 Lakhs', value: 500000 },
-    { label: '10 Lakhs', value: 1000000 },
-    { label: '15 Lakhs', value: 1500000 },
-    { label: '20 Lakhs', value: 2000000 },
-    { label: '50 Lakhs', value: 5000000 }
+    { label: '5L', value: 500000 },
+    { label: '10L', value: 1000000 },
+    { label: '20L', value: 2000000 },
+    { label: '50L', value: 5000000 }
   ]
+
+  // Helper function to format number with commas
+  const formatWithCommas = (num: number): string => {
+    return num.toLocaleString('en-IN')
+  }
+
+  // Helper function to remove commas and convert to number
+  const removeCommas = (str: string): string => {
+    return str.replace(/,/g, '')
+  }
 
   const handleCarPriceChange = (value: string) => {
     // Allow only numbers and enforce limits
-    const numericValue = value.replace(/[^0-9.]/g, '')
+    const numericValue = removeCommas(value).replace(/[^0-9.]/g, '')
     let price = parseFloat(numericValue) || 0
     
     // Enforce maximum limit
@@ -75,7 +84,7 @@ export default function CarDetailsFormV2({ carData, updateCarData, monthlyIncome
 
   const handleDownPaymentChange = (value: string) => {
     // Allow only numbers and enforce limits
-    const numericValue = value.replace(/[^0-9]/g, '')
+    const numericValue = removeCommas(value).replace(/[^0-9]/g, '')
     let payment = parseInt(numericValue) || 0
     
     // Enforce maximum limit (car price)
@@ -92,33 +101,60 @@ export default function CarDetailsFormV2({ carData, updateCarData, monthlyIncome
 
   const formContent = (
     <>
-      {/* Car Price */}
-      <div className="space-y-2">
-        <div className="mb-4">
-          <div className="flex items-center justify-between mb-3">
-            <label htmlFor="car-price-input" className={`text-base min-[375px]:text-lg font-medium ${themeClass(themeStyles.primaryText, 'text-white', isLight)}`} style={{ lineHeight: '1.5' }}>
-              1. Car Price
+      {/* Car Price and Down Payment Row */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        {/* Car Price */}
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <label htmlFor="car-price-input" className={`text-sm font-medium ${themeClass(themeStyles.primaryText, 'text-white', isLight)}`} style={{ lineHeight: '1.5' }}>
+              Car Price
             </label>
-            
-            {/* Preset Buttons - Moved to same level as label */}
-            <div className="flex gap-2 overflow-x-auto scrollbar-hide">
+          </div>
+          
+          <div className="relative">
+            <span className={`absolute left-4 top-1/2 transform -translate-y-1/2 font-semibold ${themeClass('text-slate-600', 'text-white/70', isLight)}`}>₹</span>
+            <input
+              id="car-price-input"
+              type="text"
+              required
+              value={carData.carPrice ? formatWithCommas(carData.carPrice) : ''}
+              onChange={(e) => handleCarPriceChange(e.target.value)}
+              onKeyPress={(e) => {
+                if (!/[0-9,.]/.test(e.key) && e.key !== 'Backspace' && e.key !== 'Delete') {
+                  e.preventDefault()
+                }
+              }}
+              className={`w-full pl-8 pr-4 py-1.5 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-transparent transition-all text-sm ${
+                themeClass(
+                  'bg-white border border-slate-300 text-slate-900 placeholder-slate-500',
+                  'bg-white/10 backdrop-blur-md border border-white/20 text-white placeholder-white/50',
+                  isLight
+                )
+              }`}
+              placeholder="Enter car price"
+            />
+          </div>
+          
+          {/* Preset Buttons - moved below input box */}
+          <div className="flex justify-center">
+            <div className="flex gap-1 overflow-x-auto scrollbar-hide">
               {carPresets.map((preset) => (
                 <button
                   key={preset.value}
                   type="button"
                   onClick={() => handleCarPriceChange(preset.value.toString())}
-                  className={`flex-shrink-0 min-h-[32px] px-3 py-1.5 rounded-full text-xs font-medium transition-all duration-200 hover:scale-105 focus:outline-none focus:ring-2 active:scale-95 ${
+                  className={`flex-shrink-0 min-h-[20px] px-1.5 py-0.5 text-xs font-medium transition-all duration-200 hover:scale-105 focus:outline-none focus:ring-1 active:scale-95 rounded ${
                     carData.carPrice === preset.value
-                      ? 'bg-emerald-600 text-white shadow-md focus:ring-emerald-400/50'
+                      ? 'bg-emerald-600 text-white shadow-sm focus:ring-emerald-400/50 border border-emerald-300'
                       : themeClass(
                           'bg-slate-100 text-slate-700 border border-slate-300 hover:bg-slate-200 hover:border-slate-400 focus:ring-slate-300',
-                          'bg-white/10 text-white/90 border border-white/20 hover:bg-white/20 hover:border-white/30 focus:ring-white/30',
+                          'bg-white/10 text-white/90 border border-white/30 hover:bg-white/20 hover:border-white/50 focus:ring-white/30',
                           isLight
                         )
                   }`}
                   style={{ 
-                    lineHeight: '1.2',
-                    minWidth: '60px'
+                    lineHeight: '1.1',
+                    minWidth: '38px'
                   }}
                 >
                   ₹{preset.label}
@@ -127,213 +163,161 @@ export default function CarDetailsFormV2({ carData, updateCarData, monthlyIncome
             </div>
           </div>
         </div>
-        
-        <div className="relative">
-          <span className={`absolute left-4 top-1/2 transform -translate-y-1/2 font-semibold ${themeClass('text-slate-600', 'text-white/70', isLight)}`}>₹</span>
-          <input
-            id="car-price-input"
-            type="number"
-            min="1"
-            max="50000000"
-            required
-            value={carData.carPrice || ''}
-            onChange={(e) => handleCarPriceChange(e.target.value)}
-            onKeyPress={(e) => {
-              if (!/[0-9.]/.test(e.key) && e.key !== 'Backspace' && e.key !== 'Delete') {
-                e.preventDefault()
-              }
-            }}
-            className={`w-full pl-8 pr-4 py-2.5 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-transparent transition-all text-base ${
-              themeClass(
-                'bg-white border border-slate-300 text-slate-900 placeholder-slate-500',
-                'bg-white/10 backdrop-blur-md border border-white/20 text-white placeholder-white/50',
-                isLight
-              )
-            }`}
-            placeholder="Enter on-road car price"
-          />
-        </div>
-      </div>
 
-      {/* Down Payment */}
-      <div className="space-y-2">
-        <div className="flex items-center justify-between mb-2">
-          <label className={`text-base min-[375px]:text-lg font-medium ${themeClass(themeStyles.primaryText, 'text-white', isLight)}`} style={{ lineHeight: '1.5' }}>
-            2. Down Payment
-          </label>
-          {downPaymentPercentage > 0 && (
-            <span className={`text-lg font-bold ${themeClass('text-cyan-600', 'text-cyan-300', isLight)}`}>
-              {downPaymentPercentage.toFixed(1)}% of car price
-            </span>
-          )}
-        </div>
-        
-        {/* Enhanced Slider for down payment */}
-        <div className="mb-4">
-          <div className="relative group">
+        {/* Down Payment */}
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <label className={`text-sm font-medium ${themeClass(themeStyles.primaryText, 'text-white', isLight)}`} style={{ lineHeight: '1.5' }}>
+              Down Payment
+            </label>
+            {downPaymentPercentage > 0 && (
+              <span className={`text-sm font-bold ${themeClass('text-cyan-600', 'text-cyan-300', isLight)}`}>
+                {downPaymentPercentage.toFixed(1)}%
+              </span>
+            )}
+          </div>
+          
+          <div className="relative">
+            <span className={`absolute left-4 top-1/2 -translate-y-1/2 font-semibold ${themeClass('text-slate-600', 'text-white/70', isLight)}`}>₹</span>
             <input
-              type="range"
-              min="0"
-              max={carData.carPrice}
-              step="1000"
-              value={carData.downPayment}
+              type="text"
+              required
+              value={carData.downPayment ? formatWithCommas(carData.downPayment) : ''}
               onChange={(e) => handleDownPaymentChange(e.target.value)}
-              className={`w-full h-3 rounded-full appearance-none cursor-pointer slider-enhanced transition-all duration-200 hover:h-4 ${isLight ? 'light-theme' : 'dark-theme'}`}
-              style={{
-                background: `linear-gradient(to right, ${downPaymentPercentage >= 20 ? '#06b6d4' : '#f97316'} 0%, ${downPaymentPercentage >= 20 ? '#06b6d4' : '#f97316'} ${(carData.downPayment / carData.carPrice) * 100}%, ${isLight ? '#e2e8f0' : 'rgba(255,255,255,0.2)'} ${(carData.downPayment / carData.carPrice) * 100}%, ${isLight ? '#e2e8f0' : 'rgba(255,255,255,0.2)'} 100%)`
+              onKeyPress={(e) => {
+                if (!/[0-9,]/.test(e.key) && e.key !== 'Backspace' && e.key !== 'Delete') {
+                  e.preventDefault()
+                }
               }}
+              className={`w-full pl-8 pr-4 py-1.5 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-transparent transition-all text-sm ${
+                themeClass(
+                  'bg-white border border-slate-300 text-slate-900 placeholder-slate-500',
+                  'bg-white/10 backdrop-blur-md border border-white/20 text-white placeholder-white/50',
+                  isLight
+                )
+              }`}
+              placeholder="Enter down payment"
             />
-            {/* Value display tooltip */}
-            <div 
-              className="absolute -top-10 bg-gray-800/90 text-white text-xs px-2 py-1 rounded-md pointer-events-none transition-opacity duration-200 opacity-0 group-hover:opacity-100"
-              style={{
-                left: `${(carData.downPayment / carData.carPrice) * 100}%`,
-                transform: 'translateX(-50%)'
-              }}
-            >
-              ₹{(carData.downPayment / 100000).toFixed(1)}L
-            </div>
-          </div>
-          <div className={`flex justify-between text-xs mt-2 ${themeClass(themeStyles.mutedText, 'text-white/60', isLight)}`}>
-            <span>₹0</span>
-            <span className="text-center">₹{(carData.carPrice / 200000).toFixed(1)}L</span>
-            <span>₹{(carData.carPrice / 100000).toFixed(0)}L</span>
-          </div>
-        </div>
-        
-        <div className="relative">
-          <span className={`absolute left-4 top-1/2 -translate-y-1/2 font-semibold ${themeClass('text-slate-600', 'text-white/70', isLight)}`}>₹</span>
-          <input
-            type="number"
-            min="0"
-            max={carData.carPrice}
-            required
-            value={carData.downPayment || ''}
-            onChange={(e) => handleDownPaymentChange(e.target.value)}
-            onKeyPress={(e) => {
-              if (!/[0-9]/.test(e.key) && e.key !== 'Backspace' && e.key !== 'Delete') {
-                e.preventDefault()
-              }
-            }}
-            className={`w-full pl-8 pr-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-transparent transition-all text-base ${
-              themeClass(
-                'bg-white border border-slate-300 text-slate-900 placeholder-slate-500',
-                'bg-white/10 backdrop-blur-md border border-white/20 text-white placeholder-white/50',
-                isLight
-              )
-            }`}
-            placeholder="Enter down payment"
-          />
-        </div>
-      </div>
-
-      {/* Loan Tenure */}
-      <div className="space-y-2">
-        <div className="flex items-center justify-between mb-2">
-          <label className={`text-base min-[375px]:text-lg font-medium ${themeClass(themeStyles.primaryText, 'text-white', isLight)}`} style={{ lineHeight: '1.5' }}>
-            3. Loan Tenure
-          </label>
-          {carData.tenure > 0 && (
-            <span className={`text-lg font-bold ${themeClass('text-cyan-600', 'text-cyan-300', isLight)}`}>
-              {Math.round(carData.tenure || 0)} years
-            </span>
-          )}
-        </div>
-        
-        <div className="space-y-3">
-          <div className="relative group">
-            <input
-              type="range"
-              min="1"
-              max="7"
-              step="0.01"
-              value={carData.tenure || 1}
-              onChange={(e) => {
-                const rawValue = parseFloat(e.target.value)
-                const roundedYears = Math.round(rawValue)
-                updateCarData({ tenure: roundedYears })
-              }}
-              className={`w-full h-3 rounded-full appearance-none cursor-pointer slider-enhanced transition-all duration-200 hover:h-4 ${isLight ? 'light-theme' : 'dark-theme'}`}
-              style={{
-                background: `linear-gradient(to right, ${(carData.tenure || 1) <= 4 ? '#06b6d4' : '#ef4444'} 0%, ${(carData.tenure || 1) <= 4 ? '#06b6d4' : '#ef4444'} ${(((carData.tenure || 1) - 1) / (7 - 1)) * 100}%, ${isLight ? '#e2e8f0' : 'rgba(255,255,255,0.2)'} ${(((carData.tenure || 1) - 1) / (7 - 1)) * 100}%, ${isLight ? '#e2e8f0' : 'rgba(255,255,255,0.2)'} 100%)`
-              }}
-            />
-            {/* Value display tooltip */}
-            <div 
-              className="absolute -top-10 bg-gray-800/90 text-white text-xs px-2 py-1 rounded-md pointer-events-none transition-opacity duration-200 opacity-0 group-hover:opacity-100"
-              style={{
-                left: `${(((carData.tenure || 1) - 1) / (7 - 1)) * 100}%`,
-                transform: 'translateX(-50%)'
-              }}
-            >
-              {Math.round(carData.tenure || 1)} years
-            </div>
           </div>
           
-          <div className={`flex justify-between text-xs ${themeClass(themeStyles.mutedText, 'text-white/60', isLight)}`}>
-            <span>1yr</span>
-            <span>2yr</span>
-            <span>3yr</span>
-            <span>4yr</span>
-            <span>5yr</span>
-            <span>6yr</span>
-            <span>7yr</span>
-          </div>
-          
-          {/* Warning for tenure > 4 years */}
-          {carData.tenure > 4 && (
-            <div className="bg-red-500/20 border border-red-400/50 rounded-2xl p-3">
-              <p className="text-red-300 text-xs">
-                ⚠️ You&apos;re going above the suggested 4-year limit. Consider reducing the tenure for better financial health.
-              </p>
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* Interest Rate */}
-      <div className="space-y-2">
-        <div className="flex items-center justify-between mb-2">
-          <label className={`text-base min-[375px]:text-lg font-medium ${themeClass(themeStyles.primaryText, 'text-white', isLight)}`} style={{ lineHeight: '1.5' }}>
-            4. Interest Rate
-          </label>
-          <span className={`text-lg font-bold ${themeClass('text-cyan-600', 'text-cyan-300', isLight)}`}>{carData.interestRate}% per annum</span>
-        </div>
-        
-        <div className="space-y-3">
-          {/* Interest Rate Slider */}
-          <div className="relative group">
-            <div className="relative">
+          {/* Enhanced Slider for down payment - moved below input */}
+          <div>
+            <div className="relative group">
               <input
                 type="range"
-                min="5"
-                max="15"
-                step="0.1"
-                value={carData.interestRate}
-                onChange={(e) => updateCarData({ interestRate: parseFloat(e.target.value) })}
-                className={`w-full h-3 rounded-full appearance-none cursor-pointer slider-enhanced transition-all duration-200 hover:h-4 ${isLight ? 'light-theme' : 'dark-theme'}`}
+                min="0"
+                max={carData.carPrice}
+                step="1000"
+                value={carData.downPayment}
+                onChange={(e) => handleDownPaymentChange(e.target.value)}
+                className={`w-full h-0.5 rounded-full appearance-none cursor-pointer slider-enhanced transition-all duration-200 ${isLight ? 'light-theme' : 'dark-theme'}`}
                 style={{
-                  background: `linear-gradient(to right, #06b6d4 0%, #06b6d4 ${((carData.interestRate - 5) / (15 - 5)) * 100}%, ${isLight ? '#e2e8f0' : 'rgba(255,255,255,0.2)'} ${((carData.interestRate - 5) / (15 - 5)) * 100}%, ${isLight ? '#e2e8f0' : 'rgba(255,255,255,0.2)'} 100%)`
+                  background: `linear-gradient(to right, ${downPaymentPercentage >= 20 ? '#06b6d4' : '#f97316'} 0%, ${downPaymentPercentage >= 20 ? '#06b6d4' : '#f97316'} ${(carData.downPayment / carData.carPrice) * 100}%, ${isLight ? '#e2e8f0' : 'rgba(255,255,255,0.2)'} ${(carData.downPayment / carData.carPrice) * 100}%, ${isLight ? '#e2e8f0' : 'rgba(255,255,255,0.2)'} 100%)`
                 }}
               />
-              {/* Value display tooltip */}
-              <div 
-                className="absolute -top-10 bg-gray-800/90 text-white text-xs px-2 py-1 rounded-md pointer-events-none transition-opacity duration-200 opacity-0 group-hover:opacity-100"
-                style={{
-                  left: `${((carData.interestRate - 5) / (15 - 5)) * 100}%`,
-                  transform: 'translateX(-50%)'
-                }}
-              >
-                {carData.interestRate.toFixed(1)}%
-              </div>
             </div>
             <div className={`flex justify-between text-xs mt-1 ${themeClass(themeStyles.mutedText, 'text-white/60', isLight)}`}>
-              <span>5%</span>
-              <span>10%</span>
-              <span>15%</span>
+              <span>₹0</span>
+              <span>₹{(carData.carPrice / 100000).toFixed(0)}L</span>
             </div>
           </div>
+        </div>
+      </div>
+
+      {/* Loan Details Section Header */}
+      <div className="flex items-center space-x-3 mb-4">
+        <h4 className={`text-lg font-semibold ${themeClass(themeStyles.primaryText, 'text-white', isLight)}`}>
+          Loan Details
+        </h4>
+        <div className={`h-px w-16 ${themeClass('bg-slate-300', 'bg-white/30', isLight)}`}></div>
+      </div>
+
+      {/* Loan Tenure and Interest Rate Row */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        {/* Loan Tenure */}
+        <div className="space-y-2">
+          <div className="flex items-center justify-between mb-2">
+            <label className={`text-sm font-medium ${themeClass(themeStyles.primaryText, 'text-white', isLight)}`} style={{ lineHeight: '1.5' }}>
+              Loan Tenure
+            </label>
+            {carData.tenure > 0 && (
+              <span className={`text-sm font-bold ${themeClass('text-cyan-600', 'text-cyan-300', isLight)}`}>
+                {Math.round(carData.tenure || 0)} years
+              </span>
+            )}
+          </div>
           
+          <div className="space-y-2">
+            <div className="relative group">
+              <input
+                type="range"
+                min="1"
+                max="7"
+                step="0.01"
+                value={carData.tenure || 1}
+                onChange={(e) => {
+                  const rawValue = parseFloat(e.target.value)
+                  const roundedYears = Math.round(rawValue)
+                  updateCarData({ tenure: roundedYears })
+                }}
+                className={`w-full h-0.5 rounded-full appearance-none cursor-pointer slider-enhanced transition-all duration-200 ${isLight ? 'light-theme' : 'dark-theme'}`}
+                style={{
+                  background: `linear-gradient(to right, ${(carData.tenure || 1) <= 4 ? '#06b6d4' : '#ef4444'} 0%, ${(carData.tenure || 1) <= 4 ? '#06b6d4' : '#ef4444'} ${(((carData.tenure || 1) - 1) / (7 - 1)) * 100}%, ${isLight ? '#e2e8f0' : 'rgba(255,255,255,0.2)'} ${(((carData.tenure || 1) - 1) / (7 - 1)) * 100}%, ${isLight ? '#e2e8f0' : 'rgba(255,255,255,0.2)'} 100%)`
+                }}
+              />
+            </div>
+            
+            <div className={`flex justify-between text-xs ${themeClass(themeStyles.mutedText, 'text-white/60', isLight)}`}>
+              <span>1yr</span>
+              <span>3yr</span>
+              <span>5yr</span>
+              <span>7yr</span>
+            </div>
+            
+            {/* Warning for tenure > 4 years */}
+            {carData.tenure > 4 && (
+              <div className="bg-red-500/20 border border-red-400/50 rounded-lg p-2">
+                <p className="text-red-300 text-xs">
+                  ⚠️ Consider reducing tenure for better financial health.
+                </p>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Interest Rate */}
+        <div className="space-y-2">
+          <div className="flex items-center justify-between mb-2">
+            <label className={`text-sm font-medium ${themeClass(themeStyles.primaryText, 'text-white', isLight)}`} style={{ lineHeight: '1.5' }}>
+              Interest Rate
+            </label>
+            <span className={`text-sm font-bold ${themeClass('text-cyan-600', 'text-cyan-300', isLight)}`}>{carData.interestRate}% per annum</span>
+          </div>
+          
+          <div className="space-y-2">
+            {/* Interest Rate Slider */}
+            <div className="relative group">
+              <div className="relative">
+                <input
+                  type="range"
+                  min="5"
+                  max="15"
+                  step="0.1"
+                  value={carData.interestRate}
+                  onChange={(e) => updateCarData({ interestRate: parseFloat(e.target.value) })}
+                  className={`w-full h-0.5 rounded-full appearance-none cursor-pointer slider-enhanced transition-all duration-200 ${isLight ? 'light-theme' : 'dark-theme'}`}
+                  style={{
+                    background: `linear-gradient(to right, #06b6d4 0%, #06b6d4 ${((carData.interestRate - 5) / (15 - 5)) * 100}%, ${isLight ? '#e2e8f0' : 'rgba(255,255,255,0.2)'} ${((carData.interestRate - 5) / (15 - 5)) * 100}%, ${isLight ? '#e2e8f0' : 'rgba(255,255,255,0.2)'} 100%)`
+                  }}
+                />
+              </div>
+              <div className={`flex justify-between text-xs mt-1 ${themeClass(themeStyles.mutedText, 'text-white/60', isLight)}`}>
+                <span>5%</span>
+                <span>10%</span>
+                <span>15%</span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
