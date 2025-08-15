@@ -283,28 +283,28 @@ export default function TotalCostDisplayV2({ carData, updateCarData: _updateCarD
           {/* Monthly Running Cost - Show when any expense is available */}
           {(monthlyFuelCost > 0 || monthlyParkingCost > 0) ? (
             <div className="bg-gradient-to-r from-blue-500/10 to-indigo-500/10 border border-blue-400/20 rounded-lg p-3 mb-3">
-              <div className="text-center">
-                <div className="text-blue-100 font-semibold text-base mb-2">Monthly Running Cost</div>
-                <div className="text-2xl font-bold text-blue-100">
+              <div className="text-center mb-3">
+                <div className="text-blue-100 font-semibold text-lg mb-2">Monthly Running Cost</div>
+                <div className="text-3xl font-bold text-blue-100">
                   {formatCurrency(totalMonthlyCarExpenses)}
                 </div>
               </div>
               {/* Breakdown */}
-              <div className="mt-2 pt-2 border-t border-blue-400/20">
-                <div className="space-y-1 text-sm">
+              <div className="mt-3 pt-3 border-t border-blue-400/20">
+                <div className="space-y-2">
                   {emi > 0 && (
-                    <div className="flex justify-between text-blue-200">
-                      <span className="flex-shrink-0">EMI</span>
-                      <span className="flex-1 text-right max-w-full">{formatCurrency(emi)}</span>
+                    <div className="flex justify-between items-center text-blue-200">
+                      <span className="flex-shrink-0 font-medium">EMI</span>
+                      <span className="flex-1 text-right max-w-full font-semibold text-base">{formatCurrency(emi)}</span>
                     </div>
                   )}
-                  <div className="flex justify-between text-blue-200">
-                    <span className="flex-shrink-0">Fuel</span>
-                    <span className="flex-1 text-right max-w-full">{formatCurrency(monthlyFuelCost)}</span>
+                  <div className="flex justify-between items-center text-blue-200">
+                    <span className="flex-shrink-0 font-medium">Fuel</span>
+                    <span className="flex-1 text-right max-w-full font-semibold text-base">{formatCurrency(monthlyFuelCost)}</span>
                   </div>
-                  <div className="flex justify-between text-blue-200">
-                    <span className="flex-shrink-0">Parking</span>
-                    <span className="flex-1 text-right max-w-full">{formatCurrency(monthlyParkingCost)}</span>
+                  <div className="flex justify-between items-center text-blue-200">
+                    <span className="flex-shrink-0 font-medium">Parking</span>
+                    <span className="flex-1 text-right max-w-full font-semibold text-base">{formatCurrency(monthlyParkingCost)}</span>
                   </div>
                 </div>
               </div>
@@ -336,43 +336,43 @@ export default function TotalCostDisplayV2({ carData, updateCarData: _updateCarD
           {/* Yearly Running Cost Calculation */}
           {(emi > 0 || monthlyFuelCost > 0 || monthlyParkingCost > 0 || (carData.insuranceAndMaintenance || 0) > 0 || (carData.maintenanceCostPerYear || 0) > 0) && (
             <div className="bg-gradient-to-r from-purple-500/10 to-indigo-500/10 border border-purple-400/20 rounded-lg p-3 mb-3">
-              <div className="text-center">
-                <div className="text-purple-100 font-semibold text-base mb-2">yearly Running Cost</div>
-                <div className="text-2xl font-bold text-purple-100">
+              <div className="text-center mb-3">
+                <div className="text-purple-100 font-semibold text-lg mb-2">yearly Running Cost</div>
+                <div className="text-3xl font-bold text-purple-100">
                   {formatCurrency((totalMonthlyCarExpenses * 12) + (carData.insuranceAndMaintenance || 0) + (carData.maintenanceCostPerYear || 0))}
                 </div>
               </div>
               {/* Breakdown */}
-              <div className="mt-2 pt-2 border-t border-purple-400/20">
-                <div className="space-y-1 text-sm">
+              <div className="mt-3 pt-3 border-t border-purple-400/20">
+                <div className="space-y-2">
                   {emi > 0 && (
-                    <div className="flex justify-between text-purple-200">
-                      <span className="flex-shrink-0">EMI × 12</span>
-                      <span className="flex-1 text-right max-w-full">{formatCurrency(emi * 12)}</span>
+                    <div className="flex justify-between items-center text-purple-200">
+                      <span className="flex-shrink-0 font-medium">EMI × 12</span>
+                      <span className="flex-1 text-right max-w-full font-semibold text-base">{formatCurrency(emi * 12)}</span>
                     </div>
                   )}
                   {monthlyFuelCost > 0 && (
-                    <div className="flex justify-between text-purple-200">
-                      <span className="flex-shrink-0">Fuel × 12</span>
-                      <span className="flex-1 text-right max-w-full">{formatCurrency(monthlyFuelCost * 12)}</span>
+                    <div className="flex justify-between items-center text-purple-200">
+                      <span className="flex-shrink-0 font-medium">Fuel × 12</span>
+                      <span className="flex-1 text-right max-w-full font-semibold text-base">{formatCurrency(monthlyFuelCost * 12)}</span>
                     </div>
                   )}
                   {monthlyParkingCost > 0 && (
-                    <div className="flex justify-between text-purple-200">
-                      <span className="flex-shrink-0">Parking × 12</span>
-                      <span className="flex-1 text-right max-w-full">{formatCurrency(monthlyParkingCost * 12)}</span>
+                    <div className="flex justify-between items-center text-purple-200">
+                      <span className="flex-shrink-0 font-medium">Parking × 12</span>
+                      <span className="flex-1 text-right max-w-full font-semibold text-base">{formatCurrency(monthlyParkingCost * 12)}</span>
                     </div>
                   )}
                   {(carData.insuranceAndMaintenance || 0) > 0 && (
-                    <div className="flex justify-between text-purple-200">
-                      <span className="flex-shrink-0">Insurance × 1</span>
-                      <span className="flex-1 text-right max-w-full">{formatCurrency(carData.insuranceAndMaintenance || 0)}</span>
+                    <div className="flex justify-between items-center text-purple-200">
+                      <span className="flex-shrink-0 font-medium">Insurance × 1</span>
+                      <span className="flex-1 text-right max-w-full font-semibold text-base">{formatCurrency(carData.insuranceAndMaintenance || 0)}</span>
                     </div>
                   )}
                   {(carData.maintenanceCostPerYear || 0) > 0 && (
-                    <div className="flex justify-between text-purple-200">
-                      <span className="flex-shrink-0">Maintenance × 1</span>
-                      <span className="flex-1 text-right max-w-full">{formatCurrency(carData.maintenanceCostPerYear || 0)}</span>
+                    <div className="flex justify-between items-center text-purple-200">
+                      <span className="flex-shrink-0 font-medium">Maintenance × 1</span>
+                      <span className="flex-1 text-right max-w-full font-semibold text-base">{formatCurrency(carData.maintenanceCostPerYear || 0)}</span>
                     </div>
                   )}
                 </div>
