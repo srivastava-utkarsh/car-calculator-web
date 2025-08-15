@@ -53,6 +53,16 @@ export default function ResultsDisplayV2({ carData, onBack, onRestart }: Results
   const isTenureOk = carData.tenure <= 4
   const isAffordable = isDownPaymentOk && isTenureOk
 
+  // Calculate completion date
+  const currentDate = new Date()
+  const completionDate = new Date(currentDate.getFullYear() + carData.tenure, currentDate.getMonth(), currentDate.getDate())
+  const formatDate = (date: Date) => {
+    return date.toLocaleDateString('en-IN', { 
+      month: 'short', 
+      year: 'numeric' 
+    })
+  }
+
   // Create payment breakdown data for visualization
   const paymentBreakdown = [
     { label: 'Principal', value: loanAmount, color: 'from-blue-400 to-cyan-400', percentage: (loanAmount / totalPayment) * 100 },
@@ -119,6 +129,33 @@ export default function ResultsDisplayV2({ carData, onBack, onRestart }: Results
             className="lg:col-span-2 bg-gradient-to-br from-emerald-500/20 to-cyan-500/20 backdrop-blur-md border border-emerald-400/30 rounded-3xl p-8 shadow-2xl"
           >
             <div className="text-center">
+              {/* Loan Details - 2 Stacked Rows */}
+              <div className="mb-6 space-y-2">
+                {/* First Row */}
+                <div className="flex justify-center items-center space-x-8 text-white/80">
+                  <div className="text-center">
+                    <p className="text-xs font-medium">Completion Date</p>
+                    <p className="text-sm font-semibold">{formatDate(completionDate)}</p>
+                  </div>
+                  <div className="text-center">
+                    <p className="text-xs font-medium">Loan Period</p>
+                    <p className="text-sm font-semibold">{carData.tenure} Years</p>
+                  </div>
+                </div>
+                
+                {/* Second Row */}
+                <div className="flex justify-center items-center space-x-8 text-white/80">
+                  <div className="text-center">
+                    <p className="text-xs font-medium">Loan Amount</p>
+                    <p className="text-sm font-semibold">₹{loanAmount.toLocaleString('en-IN')}</p>
+                  </div>
+                  <div className="text-center">
+                    <p className="text-xs font-medium">Interest Amount</p>
+                    <p className="text-sm font-semibold">₹{totalInterest.toLocaleString('en-IN', { maximumFractionDigits: 0 })}</p>
+                  </div>
+                </div>
+              </div>
+
               <div className="flex items-center justify-center space-x-3 mb-4">
                 <div className="w-12 h-12 bg-gradient-to-br from-emerald-400 to-cyan-400 rounded-2xl flex items-center justify-center">
                   <span className="text-white font-bold text-2xl">₹</span>

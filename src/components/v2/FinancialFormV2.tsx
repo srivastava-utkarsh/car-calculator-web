@@ -82,7 +82,7 @@ export default function FinancialFormV2({ carData, updateCarData, monthlyIncomeI
   const formContent = (
     <>
       {/* Monthly Income - Required for calculations */}
-      <div className="flex items-center space-x-3 mb-4">
+      <div className="flex items-center space-x-3 mb-3">
         <h4 className={`text-lg font-semibold ${themeClass(themeStyles.primaryText, 'text-white', isLight)}`}>
           Monthly Income
         </h4>
@@ -143,11 +143,8 @@ export default function FinancialFormV2({ carData, updateCarData, monthlyIncomeI
         </p>
       </div>
 
-      {/* Separator */}
-      <div className={`w-full h-px ${isLight ? 'bg-gradient-to-r from-transparent via-slate-300 to-transparent' : 'bg-gradient-to-r from-transparent via-white/20 to-transparent'}`}></div>
-
       {/* Operational Cost Section Header */}
-      <div className="flex items-center space-x-3 mb-4">
+      <div className="flex items-center space-x-3 mb-3">
         <h4 className={`text-lg font-semibold ${themeClass(themeStyles.primaryText, 'text-white', isLight)}`}>
           Operational Cost
         </h4>
@@ -338,9 +335,9 @@ export default function FinancialFormV2({ carData, updateCarData, monthlyIncomeI
   )
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-10">
 
-      <div className="space-y-4">
+      <div className="space-y-8">
         {formContent}
       </div>
     </div>

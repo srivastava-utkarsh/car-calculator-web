@@ -104,7 +104,7 @@ export default function CarDetailsFormV2({ carData, updateCarData, monthlyIncome
       {/* Car Price and Down Payment Row */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6 relative">
         {/* Car Price */}
-        <div className="space-y-4">
+        <div className="space-y-3">
           <div className="flex items-center justify-between">
             <label htmlFor="car-price-input" className={`text-sm font-medium ${themeClass(themeStyles.primaryText, 'text-white', isLight)}`} style={{ lineHeight: '1.5' }}>
               Car Price
@@ -168,7 +168,7 @@ export default function CarDetailsFormV2({ carData, updateCarData, monthlyIncome
         <div className={`hidden lg:block absolute left-1/2 transform -translate-x-1/2 top-0 bottom-0 w-px ${isLight ? 'bg-gradient-to-b from-transparent via-slate-300 to-transparent' : 'bg-gradient-to-b from-transparent via-white/20 to-transparent'}`}></div>
 
         {/* Down Payment */}
-        <div className="space-y-4">
+        <div className="space-y-3">
           <div className="flex items-center justify-between">
             <label className={`text-sm font-medium ${themeClass(themeStyles.primaryText, 'text-white', isLight)}`} style={{ lineHeight: '1.5' }}>
               Down Payment
@@ -227,11 +227,8 @@ export default function CarDetailsFormV2({ carData, updateCarData, monthlyIncome
         </div>
       </div>
 
-      {/* Separator */}
-      <div className={`w-full h-px ${isLight ? 'bg-gradient-to-r from-transparent via-slate-300 to-transparent' : 'bg-gradient-to-r from-transparent via-white/20 to-transparent'}`}></div>
-
       {/* Loan Details Section Header */}
-      <div className="flex items-center space-x-3 mb-4">
+      <div className="flex items-center space-x-3 mb-3">
         <h4 className={`text-lg font-semibold ${themeClass(themeStyles.primaryText, 'text-white', isLight)}`}>
           Loan Details
         </h4>
@@ -330,16 +327,13 @@ export default function CarDetailsFormV2({ carData, updateCarData, monthlyIncome
         </div>
       </div>
 
-      {/* Separator */}
-      <div className={`w-full h-px ${isLight ? 'bg-gradient-to-r from-transparent via-slate-300 to-transparent' : 'bg-gradient-to-r from-transparent via-white/20 to-transparent'}`}></div>
-
     </>
   )
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-10">
       
-      <div className="space-y-5" role="form" aria-label="Car details form">
+      <div className="space-y-8" role="form" aria-label="Car details form">
         {formContent}
       </div>
     </div>

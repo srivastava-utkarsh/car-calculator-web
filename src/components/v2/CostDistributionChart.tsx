@@ -34,6 +34,7 @@ interface LegendProps {
 
 export default function CostDistributionChart({ carData }: CostDistributionChartProps) {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
+  const [showOneYear, setShowOneYear] = useState(false)
   
   try {
     // Ensure carData exists and has default values
@@ -89,58 +90,154 @@ export default function CostDistributionChart({ carData }: CostDistributionChart
   const monthlyFuelCostFromInput = safeCarData.monthlyFuelExpense || 0
   const monthlyFuelCost = monthlyFuelCostFromInput > 0 ? monthlyFuelCostFromInput : monthlyFuelCostFromKm
   
-  // Calculate total costs over loan tenure (only if tenure > 0)
-  const totalFuelCost = safeCarData.tenure > 0 ? monthlyFuelCost * safeCarData.tenure * 12 : 0
+  // Calculate total costs based on selected period
+  const yearsToShow = showOneYear ? 1 : safeCarData.tenure
+  const totalFuelCost = yearsToShow > 0 ? monthlyFuelCost * yearsToShow * 12 : 0
   const insuranceAndMaintenance = safeCarData.insuranceAndMaintenance || 0
   const processingFee = safeCarData.processingFee || 0
 
-  // Calculate data for donut chart - Total cost of ownership only
+  // Calculate principal and interest breakdown for both views
+  const calculateLoanBreakdown = () => {
+    if (showOneYear) {
+      // For 1 year view, calculate actual principal and interest for first year
+      const monthlyInterestRate = safeCarData.interestRate / (12 * 100)
+      let remainingPrincipal = loanAmount
+      let yearlyPrincipal = 0
+      let yearlyInterest = 0
+      
+      for (let month = 1; month <= 12; month++) {
+        const monthlyInterest = remainingPrincipal * monthlyInterestRate
+        const monthlyPrincipal = emi - monthlyInterest
+        yearlyPrincipal += monthlyPrincipal
+        yearlyInterest += monthlyInterest
+        remainingPrincipal -= monthlyPrincipal
+      }
+      
+      return {
+        principal: yearlyPrincipal,
+        interest: yearlyInterest,
+        totalEMI: emi * 12
+      }
+    } else {
+      // Full tenure view
+      return {
+        principal: loanAmount,
+        interest: totalInterest,
+        totalEMI: emi * safeCarData.tenure * 12
+      }
+    }
+  }
+  
+  const loanBreakdown = calculateLoanBreakdown()
+
+  // Calculate data for donut chart - Always include all filled inputs
   const getChartData = () => {
     try {
-      return [
-        {
-          name: 'Principal Amount',
-          value: Number(loanAmount) || 0,
+      const chartItems = []
+      
+      // Always show principal amount (for both views)
+      if (loanBreakdown.principal > 0) {
+        chartItems.push({
+          name: showOneYear ? 'Principal (1Y)' : 'Principal Amount',
+          value: Number(loanBreakdown.principal) || 0,
           color: '#10B981', // emerald-500
           percentage: 0,
-          description: 'Loan amount financed'
-        },
-        {
-          name: 'Interest Cost',
-          value: Number(totalInterest) || 0,
+          description: showOneYear 
+            ? 'Principal payment in first year' 
+            : 'Total loan amount financed'
+        })
+      }
+      
+      // Always show interest cost (for both views)
+      if (loanBreakdown.interest > 0) {
+        chartItems.push({
+          name: showOneYear ? 'Interest (1Y)' : 'Interest Cost',
+          value: Number(loanBreakdown.interest) || 0,
           color: '#F59E0B', // amber-500
           percentage: 0,
-          description: 'Total interest over loan tenure'
-        },
-        {
+          description: showOneYear 
+            ? 'Interest payment in first year' 
+            : 'Total interest over loan tenure'
+        })
+      }
+      
+      // Always show down payment (applies to both views)
+      if (safeCarData.downPayment > 0) {
+        chartItems.push({
           name: 'Down Payment',
           value: Number(safeCarData.downPayment) || 0,
           color: '#3B82F6', // blue-500
           percentage: 0,
-          description: 'Initial payment'
-        },
-        {
-          name: 'Fuel Cost',
+          description: 'Initial payment made upfront'
+        })
+      }
+      
+      // Show fuel cost if calculated
+      if (totalFuelCost > 0) {
+        chartItems.push({
+          name: showOneYear ? 'Fuel Cost (1Y)' : 'Fuel Cost',
           value: Number(totalFuelCost) || 0,
           color: '#EF4444', // red-500
           percentage: 0,
-          description: `Total fuel cost over ${safeCarData.tenure || 0} years`
-        },
-        {
+          description: showOneYear 
+            ? 'Estimated fuel cost for 1 year' 
+            : `Total fuel cost over ${safeCarData.tenure || 0} years`
+        })
+      }
+      
+      // Show insurance & maintenance if provided
+      if (insuranceAndMaintenance > 0) {
+        chartItems.push({
           name: 'Insurance & Others',
           value: Number(insuranceAndMaintenance) || 0,
           color: '#8B5CF6', // violet-500
           percentage: 0,
-          description: 'One-time additional costs'
-        },
-        {
+          description: showOneYear 
+            ? 'Annual insurance & maintenance' 
+            : 'Total insurance & maintenance costs'
+        })
+      }
+      
+      // Show processing fee if provided
+      if (processingFee > 0) {
+        chartItems.push({
           name: 'Processing Fee',
           value: Number(processingFee) || 0,
           color: '#F97316', // orange-500
           percentage: 0,
-          description: 'One-time processing charges'
-        }
-      ].filter(item => item.value > 0 && isFinite(item.value))
+          description: 'One-time loan processing charges'
+        })
+      }
+      
+      // Show monthly income if provided (for reference)
+      if (safeCarData.monthlyIncome > 0 && showOneYear) {
+        const yearlyIncome = safeCarData.monthlyIncome * 12
+        chartItems.push({
+          name: 'Annual Income',
+          value: Number(yearlyIncome) || 0,
+          color: '#06B6D4', // cyan-500
+          percentage: 0,
+          description: 'Total annual income for reference'
+        })
+      }
+      
+      // Show monthly savings if provided (for reference)
+      if (safeCarData.monthlySavings > 0) {
+        const savingsAmount = showOneYear 
+          ? safeCarData.monthlySavings * 12 
+          : safeCarData.monthlySavings * 12 * safeCarData.tenure
+        chartItems.push({
+          name: showOneYear ? 'Annual Savings' : 'Total Savings',
+          value: Number(savingsAmount) || 0,
+          color: '#84CC16', // lime-500
+          percentage: 0,
+          description: showOneYear 
+            ? 'Potential annual savings' 
+            : `Total savings over ${safeCarData.tenure} years`
+        })
+      }
+      
+      return chartItems.filter(item => item.value > 0 && isFinite(item.value))
     } catch (error) {
       console.error('Error generating chart data:', error)
       return []
@@ -227,7 +324,33 @@ export default function CostDistributionChart({ carData }: CostDistributionChart
       className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-6 shadow-2xl"
     >
       <div className="text-center mb-6">
-        <h3 className="text-xl font-bold text-white mb-4">Cost Breakdown</h3>
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-xl font-bold text-white">Cost Breakdown</h3>
+          
+          {/* Toggle Button */}
+          <div className="flex items-center bg-white/10 rounded-xl p-1 border border-white/20">
+            <button
+              onClick={() => setShowOneYear(false)}
+              className={`px-3 py-1.5 text-sm font-medium rounded-lg transition-all ${
+                !showOneYear 
+                  ? 'bg-blue-500 text-white shadow-lg' 
+                  : 'text-white/70 hover:text-white'
+              }`}
+            >
+              {safeCarData.tenure}Y
+            </button>
+            <button
+              onClick={() => setShowOneYear(true)}
+              className={`px-3 py-1.5 text-sm font-medium rounded-lg transition-all ${
+                showOneYear 
+                  ? 'bg-blue-500 text-white shadow-lg' 
+                  : 'text-white/70 hover:text-white'
+              }`}
+            >
+              1Y
+            </button>
+          </div>
+        </div>
         
         {hasValidData && (
           <div className="p-4 bg-white/5 border border-white/10 rounded-lg">
@@ -239,11 +362,9 @@ export default function CostDistributionChart({ carData }: CostDistributionChart
               {formatCurrency(totalCost)}
             </div>
             
-            {safeCarData.tenure > 0 && (
-              <p className="text-white/60 text-sm">
-                Over {safeCarData.tenure} years
-              </p>
-            )}
+            <p className="text-white/60 text-sm">
+              Over {showOneYear ? '1 year' : `${safeCarData.tenure} years`}
+            </p>
           </div>
         )}
       </div>

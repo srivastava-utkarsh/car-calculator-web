@@ -3,7 +3,7 @@
 import React, { useState } from 'react'
 import { motion } from 'framer-motion'
 import { CarData } from '@/app/page'
-import { TrendingUp, CheckCircle, XCircle, Percent, Clock, Info } from 'lucide-react'
+import { TrendingUp, CheckCircle, XCircle, Percent, Clock, Info, Calendar, DollarSign, TrendingDown } from 'lucide-react'
 import { useTheme } from '@/contexts/ThemeContext'
 import { getThemeStyles, themeClass } from '@/utils/themeStyles'
 
@@ -32,6 +32,16 @@ export default function TotalCostDisplayV2({ carData, updateCarData: _updateCarD
   const loanAmount = Math.max(0, carData.carPrice - carData.downPayment)
   const emi = carData.tenure > 0 ? calculateEMI(loanAmount, carData.interestRate, carData.tenure) : 0
   const totalInterest = carData.tenure > 0 && emi > 0 ? (emi * carData.tenure * 12) - loanAmount : 0
+
+  // Calculate completion date
+  const currentDate = new Date()
+  const completionDate = new Date(currentDate.getFullYear() + carData.tenure, currentDate.getMonth(), currentDate.getDate())
+  const formatDate = (date: Date) => {
+    return date.toLocaleDateString('en-IN', { 
+      month: 'short', 
+      year: 'numeric' 
+    })
+  }
   
   // Monthly car expenses calculation for 20/4/10 rule
   // Including EMI, fuel, and parking when available (insurance moved to one-time costs)
@@ -99,7 +109,7 @@ export default function TotalCostDisplayV2({ carData, updateCarData: _updateCarD
   
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-10">
 
       {/* Smart Purchase Score - Always show, but with empty state when required fields not filled */}
         <div 
@@ -247,7 +257,7 @@ export default function TotalCostDisplayV2({ carData, updateCarData: _updateCarD
 
 
       <div className="flex items-center justify-between mb-6">
-        <h4 className={`font-semibold text-sm ${themeClass(themeStyles.primaryText, 'text-white', isLight)}`}>Final Monthly Summary</h4>
+        <h4 className={`font-semibold text-sm ${themeClass(themeStyles.primaryText, 'text-white', isLight)}`}>EMI Summary</h4>
         <div className="flex items-center space-x-2">
           <div className={`w-2 h-2 rounded-full ${completionPercentage === 100 ? 'bg-green-400' : completionPercentage >= 66 ? 'bg-yellow-400' : 'bg-red-400'}`}></div>
           <span className={`text-sm font-bold ${themeClass(themeStyles.secondaryText, 'text-white/80', isLight)}`}>{completionPercentage}% Complete</span>
@@ -270,6 +280,35 @@ export default function TotalCostDisplayV2({ carData, updateCarData: _updateCarD
       >
         {/* Main EMI Display - Proportional UX */}
         <div className="text-center mb-4">
+          {/* Loan Details - Clean Tabular Format */}
+          {carData.tenure > 0 && emi > 0 && (
+            <div className="mb-6">
+              <div className="space-y-2 text-gray-300">
+                <div className="flex justify-between items-center">
+                  <span className="text-sm font-medium">Completion Date</span>
+                  <span className="text-sm font-bold">{formatDate(completionDate)}</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-sm font-medium">Loan Period</span>
+                  <span className="text-sm font-bold">{carData.tenure} Years</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-sm font-medium">Loan Amount</span>
+                  <span className="text-sm font-bold">₹{loanAmount.toLocaleString('en-IN')}</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-sm font-medium">Interest Amount</span>
+                  <span className="text-sm font-bold">₹{totalInterest.toLocaleString('en-IN', { maximumFractionDigits: 0 })}</span>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Horizontal Separator */}
+          {carData.tenure > 0 && emi > 0 && (
+            <div className="border-t border-gray-600/30 my-4"></div>
+          )}
+
           {/* Primary EMI Section */}
           <div className="mb-3">
             <h3 className={`text-sm font-medium mb-1 tracking-wide ${themeClass(themeStyles.secondaryText, 'text-gray-300', isLight)}`}>
@@ -337,7 +376,7 @@ export default function TotalCostDisplayV2({ carData, updateCarData: _updateCarD
           {(emi > 0 || monthlyFuelCost > 0 || monthlyParkingCost > 0 || (carData.insuranceAndMaintenance || 0) > 0 || (carData.maintenanceCostPerYear || 0) > 0) && (
             <div className="bg-gradient-to-r from-purple-500/10 to-indigo-500/10 border border-purple-400/20 rounded-lg p-3 mb-3">
               <div className="text-center mb-3">
-                <div className="text-purple-100 font-semibold text-lg mb-2">yearly Running Cost</div>
+                <div className="text-purple-100 font-semibold text-lg mb-2">Yearly Running Cost</div>
                 <div className="text-3xl font-bold text-purple-100">
                   {formatCurrency((totalMonthlyCarExpenses * 12) + (carData.insuranceAndMaintenance || 0) + (carData.maintenanceCostPerYear || 0))}
                 </div>
