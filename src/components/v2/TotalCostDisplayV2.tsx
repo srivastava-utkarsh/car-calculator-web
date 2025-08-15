@@ -99,13 +99,13 @@ export default function TotalCostDisplayV2({ carData, updateCarData: _updateCarD
   
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-6">
 
       {/* Smart Purchase Score - Always show, but with empty state when required fields not filled */}
         <div 
           id="afford-panel"
           tabIndex={-1}
-          className={`relative p-3 sm:p-4 rounded-lg sm:rounded-xl border backdrop-blur-xl shadow-xl mb-3 sm:mb-4 transition-all duration-300 hover:shadow-xl hover:scale-[1.01] overflow-hidden focus:outline-none focus:ring-2 focus:ring-blue-400/50 ${
+          className={`relative p-3 sm:p-4 rounded-lg sm:rounded-xl border backdrop-blur-xl shadow-xl mb-6 sm:mb-8 transition-all duration-300 hover:shadow-xl hover:scale-[1.01] overflow-hidden focus:outline-none focus:ring-2 focus:ring-blue-400/50 ${
             !isAllRequiredFieldsFilled || carData.carPrice <= 0 || carData.tenure <= 0 || emi <= 0
               ? 'bg-gradient-to-br from-gray-500/10 via-gray-500/5 to-gray-600/10 border-gray-400/20 shadow-gray-500/10'
               : isAffordable 
@@ -246,7 +246,7 @@ export default function TotalCostDisplayV2({ carData, updateCarData: _updateCarD
         </div>
 
 
-      <div className="flex items-center justify-between mb-3">
+      <div className="flex items-center justify-between mb-6">
         <h4 className={`font-semibold text-sm ${themeClass(themeStyles.primaryText, 'text-white', isLight)}`}>Final Monthly Summary</h4>
         <div className="flex items-center space-x-2">
           <div className={`w-2 h-2 rounded-full ${completionPercentage === 100 ? 'bg-green-400' : completionPercentage >= 66 ? 'bg-yellow-400' : 'bg-red-400'}`}></div>
@@ -256,7 +256,7 @@ export default function TotalCostDisplayV2({ carData, updateCarData: _updateCarD
       
       {/* Loan Summary - Compact Display */}
       <motion.div 
-        className={`p-6 rounded-2xl mb-6 transition-all duration-300 hover:scale-[1.02] ${
+        className={`p-6 rounded-2xl mb-8 transition-all duration-300 hover:scale-[1.02] ${
           isLight 
             ? 'bg-white border border-slate-200/60 text-slate-900 shadow-sm'
             : 'bg-gradient-to-br from-slate-800/40 to-slate-900/30 backdrop-blur-xl border border-slate-700/30 text-gray-100 shadow-2xl'

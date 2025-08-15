@@ -143,6 +143,9 @@ export default function FinancialFormV2({ carData, updateCarData, monthlyIncomeI
         </p>
       </div>
 
+      {/* Separator */}
+      <div className={`w-full h-px ${isLight ? 'bg-gradient-to-r from-transparent via-slate-300 to-transparent' : 'bg-gradient-to-r from-transparent via-white/20 to-transparent'}`}></div>
+
       {/* Operational Cost Section Header */}
       <div className="flex items-center space-x-3 mb-4">
         <h4 className={`text-lg font-semibold ${themeClass(themeStyles.primaryText, 'text-white', isLight)}`}>
@@ -152,7 +155,7 @@ export default function FinancialFormV2({ carData, updateCarData, monthlyIncomeI
       </div>
 
       {/* Insurance Cost and Maintenance Cost Row */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6 mb-6 relative">
         {/* Insurance Cost */}
         <div className="space-y-2">
           <label className={`text-sm font-medium ${themeClass(themeStyles.primaryText, 'text-white', isLight)}`} style={{ lineHeight: '1.5' }}>
@@ -200,6 +203,9 @@ export default function FinancialFormV2({ carData, updateCarData, monthlyIncomeI
           </div>
         </div>
 
+        {/* Vertical Separator - Only visible on large screens */}
+        <div className={`hidden lg:block absolute left-1/2 transform -translate-x-1/2 top-0 bottom-0 w-px ${isLight ? 'bg-gradient-to-b from-transparent via-slate-300 to-transparent' : 'bg-gradient-to-b from-transparent via-white/20 to-transparent'}`}></div>
+
         {/* Maintenance Cost (per year) */}
         <div className="space-y-2">
           <label className={`text-sm font-medium ${themeClass(themeStyles.primaryText, 'text-white', isLight)}`} style={{ lineHeight: '1.5' }}>
@@ -242,7 +248,7 @@ export default function FinancialFormV2({ carData, updateCarData, monthlyIncomeI
       </div>
 
       {/* Monthly Fuel Expense and Parking Fee Row */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6 mt-6 relative">
         {/* Monthly Fuel Expense */}
         <div className="space-y-2" id="monthly-fuel-expense">
           <label className={`text-sm font-medium ${themeClass(themeStyles.primaryText, 'text-white', isLight)}`} style={{ lineHeight: '1.5' }}>
@@ -282,6 +288,9 @@ export default function FinancialFormV2({ carData, updateCarData, monthlyIncomeI
             />
           </div>
         </div>
+
+        {/* Vertical Separator - Only visible on large screens */}
+        <div className={`hidden lg:block absolute left-1/2 transform -translate-x-1/2 top-0 bottom-0 w-px ${isLight ? 'bg-gradient-to-b from-transparent via-slate-300 to-transparent' : 'bg-gradient-to-b from-transparent via-white/20 to-transparent'}`}></div>
 
         {/* Parking Fee */}
         <div className="space-y-2">
