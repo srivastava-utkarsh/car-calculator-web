@@ -13,12 +13,12 @@ interface TotalCostDisplayV2Props {
 }
 
 export default function TotalCostDisplayV2({ carData, updateCarData: _updateCarData }: TotalCostDisplayV2Props) {
-  const [durationToggle, setDurationToggle] = useState<'months' | 'years'>('months')
   const { theme, isLight, isDark } = useTheme()
   const themeStyles = getThemeStyles(theme)
   
   // Use monthly fuel expense from form input
   const monthlyFuelCost = carData.monthlyFuelExpense || 0
+  const monthlyParkingCost = carData.parkingFee || 0
   
   const calculateEMI = (principal: number, rate: number, years: number) => {
     if (principal <= 0 || rate <= 0 || years <= 0) return 0
@@ -32,11 +32,10 @@ export default function TotalCostDisplayV2({ carData, updateCarData: _updateCarD
   const loanAmount = Math.max(0, carData.carPrice - carData.downPayment)
   const emi = carData.tenure > 0 ? calculateEMI(loanAmount, carData.interestRate, carData.tenure) : 0
   const totalInterest = carData.tenure > 0 && emi > 0 ? (emi * carData.tenure * 12) - loanAmount : 0
-  const totalPayment = loanAmount + totalInterest
   
   // Monthly car expenses calculation for 20/4/10 rule
-  // Including EMI and fuel when available (insurance moved to one-time costs)
-  const totalMonthlyCarExpenses = emi + monthlyFuelCost
+  // Including EMI, fuel, and parking when available (insurance moved to one-time costs)
+  const totalMonthlyCarExpenses = emi + monthlyFuelCost + monthlyParkingCost
   
   // 20/4/10 Rule Check - Only calculate when valid data is available
   const downPaymentPercentage = carData.carPrice > 0 ? (carData.downPayment / carData.carPrice) * 100 : 0
@@ -56,21 +55,6 @@ export default function TotalCostDisplayV2({ carData, updateCarData: _updateCarD
     if (value < 1 && value > 0) return '< 1'
     if (value > 100) return '> 100'
     return value.toFixed(1)
-  }
-  const formatDuration = () => {
-    if (carData.tenure === 0) return '--'
-    return durationToggle === 'months' ? `${carData.tenure * 12} months` : `${carData.tenure} years`
-  }
-
-  const getLastEMIDate = () => {
-    if (carData.tenure <= 0) return '--'
-    const today = new Date()
-    const lastEMIDate = new Date(today.getFullYear(), today.getMonth() + (carData.tenure * 12), today.getDate())
-    return lastEMIDate.toLocaleDateString('en-IN', { 
-      year: 'numeric', 
-      month: 'short', 
-      day: 'numeric' 
-    })
   }
 
   // Calculate completion of required fields for Smart Purchase Score
@@ -296,21 +280,32 @@ export default function TotalCostDisplayV2({ carData, updateCarData: _updateCarD
             </div>
           </div>
 
-          {/* Fuel Cost Integration - Compact */}
-          {monthlyFuelCost > 0 ? (
-            <div className="bg-gradient-to-r from-emerald-500/20 to-green-500/20 border border-emerald-400/30 rounded-xl p-3 mb-3">
-              <h3 className="text-sm font-medium text-emerald-300 mb-1 tracking-wide">Overall Monthly Expense</h3>
-              <div className="text-3xl font-bold text-emerald-100 mb-3 tracking-tight min-w-[200px] text-center">
-                {formatCurrency(totalMonthlyCarExpenses)}
-              </div>
-              <div className="bg-emerald-500/10 rounded-lg p-3 space-y-2">
-                <div className="flex justify-between items-center">
-                  <span className="text-emerald-200 font-medium text-sm">EMI</span>
-                  <span className="font-bold text-emerald-100 text-lg min-w-[120px] text-right inline-block">{formatCurrency(emi)}</span>
+          {/* Monthly Running Cost - Show when any expense is available */}
+          {(monthlyFuelCost > 0 || monthlyParkingCost > 0) ? (
+            <div className="bg-gradient-to-r from-blue-500/10 to-indigo-500/10 border border-blue-400/20 rounded-lg p-3 mb-3">
+              <div className="text-center">
+                <div className="text-blue-100 font-semibold text-base mb-2">Monthly Running Cost</div>
+                <div className="text-2xl font-bold text-blue-100">
+                  {formatCurrency(totalMonthlyCarExpenses)}
                 </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-emerald-200 font-medium text-sm">Fuel</span>
-                  <span className="font-bold text-emerald-100 text-lg min-w-[120px] text-right inline-block">{formatCurrency(monthlyFuelCost)}</span>
+              </div>
+              {/* Breakdown */}
+              <div className="mt-2 pt-2 border-t border-blue-400/20">
+                <div className="space-y-1 text-sm">
+                  {emi > 0 && (
+                    <div className="flex justify-between text-blue-200">
+                      <span className="flex-shrink-0">EMI</span>
+                      <span className="flex-1 text-right max-w-full">{formatCurrency(emi)}</span>
+                    </div>
+                  )}
+                  <div className="flex justify-between text-blue-200">
+                    <span className="flex-shrink-0">Fuel</span>
+                    <span className="flex-1 text-right max-w-full">{formatCurrency(monthlyFuelCost)}</span>
+                  </div>
+                  <div className="flex justify-between text-blue-200">
+                    <span className="flex-shrink-0">Parking</span>
+                    <span className="flex-1 text-right max-w-full">{formatCurrency(monthlyParkingCost)}</span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -338,44 +333,46 @@ export default function TotalCostDisplayV2({ carData, updateCarData: _updateCarD
           )}
 
 
-          {/* Yearly Cost Calculation */}
-          {(emi > 0 || monthlyFuelCost > 0 || (carData.insuranceAndMaintenance || 0) > 0) && (
+          {/* Yearly Running Cost Calculation */}
+          {(emi > 0 || monthlyFuelCost > 0 || monthlyParkingCost > 0 || (carData.insuranceAndMaintenance || 0) > 0 || (carData.maintenanceCostPerYear || 0) > 0) && (
             <div className="bg-gradient-to-r from-purple-500/10 to-indigo-500/10 border border-purple-400/20 rounded-lg p-3 mb-3">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-2">
-                  <div className="w-8 h-8 bg-purple-500/20 rounded-full flex items-center justify-center">
-                    <TrendingUp size={14} className="text-purple-300"/>
-                  </div>
-                  <div>
-                    <div className="text-purple-100 font-semibold text-sm">Yearly Cost</div>
-                    <div className="text-purple-300 text-xs">Total annual expense</div>
-                  </div>
-                </div>
-                <div className="text-right">
-                  <div className="text-lg font-bold text-purple-100 min-w-[120px] text-right">
-                    {formatCurrency((totalMonthlyCarExpenses * 12) + (carData.insuranceAndMaintenance || 0))}
-                  </div>
+              <div className="text-center">
+                <div className="text-purple-100 font-semibold text-base mb-2">yearly Running Cost</div>
+                <div className="text-2xl font-bold text-purple-100">
+                  {formatCurrency((totalMonthlyCarExpenses * 12) + (carData.insuranceAndMaintenance || 0) + (carData.maintenanceCostPerYear || 0))}
                 </div>
               </div>
               {/* Breakdown */}
               <div className="mt-2 pt-2 border-t border-purple-400/20">
-                <div className="space-y-1 text-xs">
+                <div className="space-y-1 text-sm">
                   {emi > 0 && (
                     <div className="flex justify-between text-purple-200">
-                      <span>EMI × 12:</span>
-                      <span>{formatCurrency(emi * 12)}</span>
+                      <span className="flex-shrink-0">EMI × 12</span>
+                      <span className="flex-1 text-right max-w-full">{formatCurrency(emi * 12)}</span>
                     </div>
                   )}
                   {monthlyFuelCost > 0 && (
                     <div className="flex justify-between text-purple-200">
-                      <span>Fuel × 12:</span>
-                      <span>{formatCurrency(monthlyFuelCost * 12)}</span>
+                      <span className="flex-shrink-0">Fuel × 12</span>
+                      <span className="flex-1 text-right max-w-full">{formatCurrency(monthlyFuelCost * 12)}</span>
+                    </div>
+                  )}
+                  {monthlyParkingCost > 0 && (
+                    <div className="flex justify-between text-purple-200">
+                      <span className="flex-shrink-0">Parking × 12</span>
+                      <span className="flex-1 text-right max-w-full">{formatCurrency(monthlyParkingCost * 12)}</span>
                     </div>
                   )}
                   {(carData.insuranceAndMaintenance || 0) > 0 && (
                     <div className="flex justify-between text-purple-200">
-                      <span>Insurance + Others:</span>
-                      <span>{formatCurrency(carData.insuranceAndMaintenance || 0)}</span>
+                      <span className="flex-shrink-0">Insurance × 1</span>
+                      <span className="flex-1 text-right max-w-full">{formatCurrency(carData.insuranceAndMaintenance || 0)}</span>
+                    </div>
+                  )}
+                  {(carData.maintenanceCostPerYear || 0) > 0 && (
+                    <div className="flex justify-between text-purple-200">
+                      <span className="flex-shrink-0">Maintenance × 1</span>
+                      <span className="flex-1 text-right max-w-full">{formatCurrency(carData.maintenanceCostPerYear || 0)}</span>
                     </div>
                   )}
                 </div>
@@ -389,152 +386,6 @@ export default function TotalCostDisplayV2({ carData, updateCarData: _updateCarD
         {/* Loan Breakdown - Redesigned into Loan and Money sections */}
         <div className={`pt-3 ${themeClass('border-t border-slate-300/30', 'border-t border-slate-700/30', isLight)}`}>
           
-          {/* Loan Details Section */}
-          <div className={`mb-6 p-3 rounded-lg border ${themeClass('border-slate-200 bg-slate-50/30', 'border-white/10 bg-white/5', isLight)}`}>
-            <h4 className={`font-medium mb-3 text-sm tracking-wide ${themeClass(themeStyles.primaryText, 'text-gray-200', isLight)}`}>Loan Details</h4>
-            
-            <div className="grid grid-cols-1 gap-3">
-              {/* Loan Duration Info */}
-              <div className="p-3 rounded-2xl" style={{backgroundColor: isLight ? '#f8fafc' : '#123458'}}>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-2">
-                    <div className={`w-8 h-8 rounded-full flex items-center justify-center ${themeClass('bg-slate-300/50', 'bg-slate-500/20', isLight)}`}>
-                      <Clock size={14} className={themeClass('text-slate-600', 'text-slate-300', isLight)}/>
-                    </div>
-                    <div>
-                      <div className={`font-semibold text-sm ${themeClass('text-slate-700', 'text-slate-100', isLight)}`}>Loan Duration</div>
-                      <div className={`text-xs ${themeClass('text-slate-500', 'text-slate-300', isLight)}`}>Loan completion date</div>
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <div className={`text-lg font-bold ${themeClass('text-slate-800', 'text-slate-100', isLight)}`}>{getLastEMIDate()}</div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Loan Period */}
-              <div className="p-3 rounded-2xl" style={{backgroundColor: isLight ? '#f0f9ff' : '#123458'}}>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-2">
-                    <div className={`w-8 h-8 rounded-full flex items-center justify-center ${themeClass('bg-blue-200/50', 'bg-cyan-500/20', isLight)}`}>
-                      <Clock size={14} className={themeClass('text-blue-600', 'text-cyan-300', isLight)}/>
-                    </div>
-                    <div>
-                      <div className={`font-semibold text-sm ${themeClass('text-blue-700', 'text-cyan-100', isLight)}`}>Loan Period</div>
-                      <div className={`text-xs ${themeClass('text-blue-500', 'text-cyan-300', isLight)}`}>Repayment duration</div>
-                    </div>
-                  </div>
-                  <div className="text-right flex items-center space-x-2">
-                    <div className={`text-lg font-bold ${themeClass('text-blue-800', 'text-cyan-100', isLight)}`}>
-                      {durationToggle === 'months' ? `${carData.tenure * 12}m` : `${carData.tenure}y`}
-                    </div>
-                    <div className="flex bg-slate-700/50 rounded-full p-0.5">
-                      <button
-                        onClick={() => setDurationToggle('years')}
-                        className={`text-xs px-1.5 py-0.5 rounded-full transition-all duration-200 font-bold ${
-                          durationToggle === 'years' 
-                            ? 'bg-cyan-400 text-slate-800 shadow-sm' 
-                            : 'text-gray-300 hover:bg-slate-600/50'
-                        }`}
-                      >
-                        Y
-                      </button>
-                      <button
-                        onClick={() => setDurationToggle('months')}
-                        className={`text-xs px-1.5 py-0.5 rounded-full transition-all duration-200 font-bold ${
-                          durationToggle === 'months' 
-                            ? 'bg-cyan-400 text-slate-800 shadow-sm' 
-                            : 'text-gray-300 hover:bg-slate-600/50'
-                        }`}
-                      >
-                        M
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Interest Rate */}
-              <div className="p-3 rounded-2xl" style={{backgroundColor: isLight ? '#fef2f2' : '#123458'}}>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-2">
-                    <div className="w-8 h-8 bg-red-500/20 rounded-full flex items-center justify-center">
-                      <Percent size={14} className="text-red-300"/>
-                    </div>
-                    <div>
-                      <div className="text-red-100 font-semibold text-sm">Interest Rate</div>
-                      <div className="text-red-300 text-xs">Annual percentage rate</div>
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <div className="text-lg font-bold text-red-100">{carData.interestRate}%</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Overall EMI Details Section */}
-          <div className={`mb-3 p-3 rounded-lg border ${themeClass('border-slate-200 bg-slate-50/30', 'border-white/10 bg-white/5', isLight)}`}>
-            <h4 className={`font-medium mb-3 text-sm tracking-wide ${themeClass(themeStyles.primaryText, 'text-gray-200', isLight)}`}>Overall EMI Details</h4>
-            
-            <div className="grid grid-cols-1 gap-3">
-              {/* Principal Amount */}
-              <div className="p-3 rounded-2xl" style={{backgroundColor: isLight ? '#f0fdf4' : '#123458'}}>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-2">
-                    <div className="w-8 h-8 bg-green-500/20 rounded-full flex items-center justify-center">
-                      <span className="text-green-300 font-bold text-sm">₹</span>
-                    </div>
-                    <div>
-                      <div className="text-green-100 font-semibold text-sm">Principal Amount</div>
-                      <div className="text-green-300 text-xs">Loan amount after down payment</div>
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <div className="text-lg font-bold text-green-100 min-w-[120px] text-right">{formatCurrency(loanAmount)}</div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Interest Cost */}  
-              <div className="p-3 rounded-2xl" style={{backgroundColor: isLight ? '#fffbeb' : '#123458'}}>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-2">
-                    <div className="w-8 h-8 bg-yellow-500/20 rounded-full flex items-center justify-center">
-                      <TrendingUp size={14} className="text-yellow-300"/>
-                    </div>
-                    <div>
-                      <div className="text-yellow-100 font-semibold text-sm">Total Interest</div>
-                      <div className="text-yellow-300 text-xs">Amount paid over principal</div>
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <div className="text-lg font-bold text-yellow-100 min-w-[120px] text-right">{formatCurrency(totalInterest)}</div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Total Payment */}
-              <div className="p-3 shadow-lg rounded-2xl" style={{backgroundColor: isLight ? '#faf5ff' : '#123458'}}>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-3">
-                    <div className="w-8 h-8 bg-purple-500/30 rounded-full flex items-center justify-center">
-                      <span className="text-purple-200 font-bold text-sm">₹</span>
-                    </div>
-                    <div>
-                      <div className="text-purple-100 font-bold text-base">Total Payment</div>
-                      <div className="text-purple-300 text-xs">Principal + Interest</div>
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <div className="text-xl font-bold text-purple-100 min-w-[140px] text-right">{formatCurrency(totalPayment)}</div>
-                    <div className="text-purple-300 text-xs mt-0.5">Over {formatDuration()}</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
 
         {/* Processing Fee - One-time cost */}

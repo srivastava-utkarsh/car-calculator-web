@@ -200,7 +200,7 @@ export default function HomePage() {
                 
                 {/* Main Form Section - Collapsible */}
                 <motion.div 
-                  className={`transition-all duration-500 ease-in-out ${isLeftCollapsed ? 'w-16 lg:w-16' : 'w-full lg:w-[600px] lg:flex-shrink-0'}`}
+                  className={`transition-all duration-500 ease-in-out ${isLeftCollapsed ? 'w-16 lg:w-16' : 'w-full lg:w-1/2 lg:flex-shrink-0'}`}
                   animate={{ width: isLeftCollapsed ? 64 : 'auto' }}
                 >
                   {isLeftCollapsed ? (
@@ -371,7 +371,7 @@ export default function HomePage() {
 
                 {/* Live Preview Panel - Expands when left is collapsed */}
                 <motion.aside 
-                  className={`transition-all duration-500 ease-in-out ${isLeftCollapsed ? 'flex-1' : 'w-full lg:w-[450px] lg:flex-shrink-0'}`}
+                  className={`transition-all duration-500 ease-in-out ${isLeftCollapsed ? 'flex-1' : 'w-full lg:w-1/2 lg:flex-1'}`}
                   aria-labelledby="results-heading"
                   animate={{ width: isLeftCollapsed ? '100%' : 'auto' }}
                 >
@@ -380,7 +380,7 @@ export default function HomePage() {
                       initial={{ opacity: 0, x: 20 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ duration: 0.6, delay: 0.2 }}
-                      className={`rounded-2xl p-3 lg:p-4 ${isLight ? 'bg-white border border-slate-200/60 shadow-sm' : 'bg-white/5 backdrop-blur-xl border border-white/10 shadow-2xl'}`}
+                      className={`rounded-2xl p-3 sm:p-4 lg:p-5 ${isLight ? 'bg-white border border-slate-200/60 shadow-sm' : 'bg-white/5 backdrop-blur-xl border border-white/10 shadow-2xl'}`}
                     >
                       <h3 id="results-heading" className="sr-only">Loan Calculation Results</h3>
                       <TotalCostDisplayV2 carData={carData} updateCarData={updateCarData} />
