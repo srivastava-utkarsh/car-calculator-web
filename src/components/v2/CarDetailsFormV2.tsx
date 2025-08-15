@@ -279,9 +279,9 @@ export default function CarDetailsFormV2({ carData, updateCarData, monthlyIncome
             
             {/* Warning for tenure > 4 years */}
             {carData.tenure > 4 && (
-              <div className="bg-red-500/20 border border-red-400/50 rounded-lg p-2">
-                <p className="text-red-300 text-xs">
-                  ⚠️ Consider reducing tenure for better financial health.
+              <div className="bg-red-500/20 border border-red-400/50 rounded-lg p-1">
+                <p className="text-red-300 text-xs break-words">
+                  ⚠️ Consider reducing tenure for better financial health
                 </p>
               </div>
             )}

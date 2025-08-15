@@ -130,110 +130,66 @@ export default function CostDistributionChart({ carData }: CostDistributionChart
   
   const loanBreakdown = calculateLoanBreakdown()
 
-  // Calculate data for donut chart - Always include all filled inputs
+  // Calculate data for donut chart - Match yearly running cost components
   const getChartData = () => {
     try {
       const chartItems = []
+      const yearsMultiplier = showOneYear ? 1 : safeCarData.tenure
       
-      // Always show principal amount (for both views)
-      if (loanBreakdown.principal > 0) {
+      // Show EMI cost 
+      if (emi > 0) {
         chartItems.push({
-          name: showOneYear ? 'Principal (1Y)' : 'Principal Amount',
-          value: Number(loanBreakdown.principal) || 0,
+          name: showOneYear ? 'EMI × 12' : `EMI × ${safeCarData.tenure * 12}`,
+          value: Number(emi * 12 * yearsMultiplier) || 0,
           color: '#10B981', // emerald-500
           percentage: 0,
-          description: showOneYear 
-            ? 'Principal payment in first year' 
-            : 'Total loan amount financed'
-        })
-      }
-      
-      // Always show interest cost (for both views)
-      if (loanBreakdown.interest > 0) {
-        chartItems.push({
-          name: showOneYear ? 'Interest (1Y)' : 'Interest Cost',
-          value: Number(loanBreakdown.interest) || 0,
-          color: '#F59E0B', // amber-500
-          percentage: 0,
-          description: showOneYear 
-            ? 'Interest payment in first year' 
-            : 'Total interest over loan tenure'
-        })
-      }
-      
-      // Always show down payment (applies to both views)
-      if (safeCarData.downPayment > 0) {
-        chartItems.push({
-          name: 'Down Payment',
-          value: Number(safeCarData.downPayment) || 0,
-          color: '#3B82F6', // blue-500
-          percentage: 0,
-          description: 'Initial payment made upfront'
+          description: showOneYear ? 'Annual EMI payments' : `Total EMI payments over ${safeCarData.tenure} years`
         })
       }
       
       // Show fuel cost if calculated
-      if (totalFuelCost > 0) {
+      if (monthlyFuelCost > 0) {
         chartItems.push({
-          name: showOneYear ? 'Fuel Cost (1Y)' : 'Fuel Cost',
-          value: Number(totalFuelCost) || 0,
+          name: showOneYear ? 'Fuel × 12' : `Fuel × ${safeCarData.tenure * 12}`,
+          value: Number(monthlyFuelCost * 12 * yearsMultiplier) || 0,
           color: '#EF4444', // red-500
           percentage: 0,
-          description: showOneYear 
-            ? 'Estimated fuel cost for 1 year' 
-            : `Total fuel cost over ${safeCarData.tenure || 0} years`
+          description: showOneYear ? 'Annual fuel expenses' : `Total fuel expenses over ${safeCarData.tenure} years`
+        })
+      }
+      
+      // Show parking cost if provided
+      const monthlyParkingCost = safeCarData.parkingFee || 0
+      if (monthlyParkingCost > 0) {
+        chartItems.push({
+          name: showOneYear ? 'Parking × 12' : `Parking × ${safeCarData.tenure * 12}`,
+          value: Number(monthlyParkingCost * 12 * yearsMultiplier) || 0,
+          color: '#3B82F6', // blue-500
+          percentage: 0,
+          description: showOneYear ? 'Annual parking fees' : `Total parking fees over ${safeCarData.tenure} years`
         })
       }
       
       // Show insurance & maintenance if provided
       if (insuranceAndMaintenance > 0) {
         chartItems.push({
-          name: 'Insurance & Others',
-          value: Number(insuranceAndMaintenance) || 0,
+          name: showOneYear ? 'Insurance × 1' : `Insurance × ${safeCarData.tenure}`,
+          value: Number(insuranceAndMaintenance * yearsMultiplier) || 0,
           color: '#8B5CF6', // violet-500
           percentage: 0,
-          description: showOneYear 
-            ? 'Annual insurance & maintenance' 
-            : 'Total insurance & maintenance costs'
+          description: showOneYear ? 'Annual insurance cost' : `Total insurance cost over ${safeCarData.tenure} years`
         })
       }
       
-      // Show processing fee if provided
-      if (processingFee > 0) {
+      // Show maintenance cost per year if provided
+      const maintenanceCostPerYear = safeCarData.maintenanceCostPerYear || 0
+      if (maintenanceCostPerYear > 0) {
         chartItems.push({
-          name: 'Processing Fee',
-          value: Number(processingFee) || 0,
-          color: '#F97316', // orange-500
+          name: showOneYear ? 'Maintenance × 1' : `Maintenance × ${safeCarData.tenure}`,
+          value: Number(maintenanceCostPerYear * yearsMultiplier) || 0,
+          color: '#F59E0B', // amber-500
           percentage: 0,
-          description: 'One-time loan processing charges'
-        })
-      }
-      
-      // Show monthly income if provided (for reference)
-      if (safeCarData.monthlyIncome > 0 && showOneYear) {
-        const yearlyIncome = safeCarData.monthlyIncome * 12
-        chartItems.push({
-          name: 'Annual Income',
-          value: Number(yearlyIncome) || 0,
-          color: '#06B6D4', // cyan-500
-          percentage: 0,
-          description: 'Total annual income for reference'
-        })
-      }
-      
-      // Show monthly savings if provided (for reference)
-      if (safeCarData.monthlySavings > 0) {
-        const savingsAmount = showOneYear 
-          ? safeCarData.monthlySavings * 12 
-          : safeCarData.monthlySavings * 12 * safeCarData.tenure
-        chartItems.push({
-          name: showOneYear ? 'Annual Savings' : 'Total Savings',
-          value: Number(savingsAmount) || 0,
-          color: '#84CC16', // lime-500
-          percentage: 0,
-          description: showOneYear 
-            ? 'Potential annual savings' 
-            : `Total savings over ${safeCarData.tenure} years`
+          description: showOneYear ? 'Annual maintenance cost' : `Total maintenance cost over ${safeCarData.tenure} years`
         })
       }
       
@@ -330,16 +286,6 @@ export default function CostDistributionChart({ carData }: CostDistributionChart
           {/* Toggle Button */}
           <div className="flex items-center bg-white/10 rounded-xl p-1 border border-white/20">
             <button
-              onClick={() => setShowOneYear(false)}
-              className={`px-3 py-1.5 text-sm font-medium rounded-lg transition-all ${
-                !showOneYear 
-                  ? 'bg-blue-500 text-white shadow-lg' 
-                  : 'text-white/70 hover:text-white'
-              }`}
-            >
-              {safeCarData.tenure}Y
-            </button>
-            <button
               onClick={() => setShowOneYear(true)}
               className={`px-3 py-1.5 text-sm font-medium rounded-lg transition-all ${
                 showOneYear 
@@ -349,13 +295,23 @@ export default function CostDistributionChart({ carData }: CostDistributionChart
             >
               1Y
             </button>
+            <button
+              onClick={() => setShowOneYear(false)}
+              className={`px-3 py-1.5 text-sm font-medium rounded-lg transition-all ${
+                !showOneYear 
+                  ? 'bg-blue-500 text-white shadow-lg' 
+                  : 'text-white/70 hover:text-white'
+              }`}
+            >
+              {safeCarData.tenure}Y
+            </button>
           </div>
         </div>
         
         {hasValidData && (
           <div className="p-4 bg-white/5 border border-white/10 rounded-lg">
             <p className="text-white/70 font-medium text-sm mb-2">
-              Total Cost of Ownership
+              {showOneYear ? 'Yearly Running Cost' : 'Total Running Cost'}
             </p>
             
             <div className="text-3xl font-bold text-white mb-2">

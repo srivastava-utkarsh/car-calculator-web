@@ -9,51 +9,58 @@ interface MUIThemeProviderProps {
 }
 
 export default function MUIThemeProvider({ children }: MUIThemeProviderProps) {
-  // Simple default theme without dependency on theme context to avoid conflicts
+  // Material Design 3 dark theme
   const theme = createTheme({
     palette: {
-      mode: 'light', // Default to light mode
+      mode: 'dark', // Dark mode for Material Design 3
       primary: {
-        main: '#06b6d4', // cyan-500
-        light: '#67e8f9', // cyan-300
-        dark: '#0891b2', // cyan-600
+        main: '#64b5f6', // Material Design 3 dark primary
+        light: '#90caf9', 
+        dark: '#1976d2',
+        contrastText: '#0a0a0a',
       },
       secondary: {
-        main: '#8b5cf6', // violet-500
-        light: '#a78bfa', // violet-400
-        dark: '#7c3aed', // violet-600
+        main: '#b39ddb', // Material Design 3 dark secondary
+        light: '#c5cae9',
+        dark: '#512da8',
+        contrastText: '#0a0a0a',
       },
       success: {
-        main: '#22c55e', // green-500
-        light: '#4ade80', // green-400
-        dark: '#16a34a', // green-600
+        main: '#4caf50', // Material green
+        light: '#81c784',
+        dark: '#388e3c',
+        contrastText: '#ffffff',
       },
       warning: {
-        main: '#f59e0b', // amber-500
-        light: '#fbbf24', // amber-400
-        dark: '#d97706', // amber-600
+        main: '#ff9800', // Material orange
+        light: '#ffb74d',
+        dark: '#f57c00',
+        contrastText: '#0a0a0a',
       },
       error: {
-        main: '#ef4444', // red-500
-        light: '#f87171', // red-400
-        dark: '#dc2626', // red-600
+        main: '#ef5350', // Material red dark
+        light: '#e57373',
+        dark: '#c62828',
+        contrastText: '#ffffff',
       },
       info: {
-        main: '#3b82f6', // blue-500
-        light: '#60a5fa', // blue-400
-        dark: '#2563eb', // blue-600
+        main: '#4dd0e1', // Material cyan
+        light: '#80deea',
+        dark: '#00838f',
+        contrastText: '#0a0a0a',
       },
       background: {
-        default: '#f8fafc', // slate-50
-        paper: '#ffffff', // white
+        default: '#121212', // Material Design 3 dark background
+        paper: '#1e1e1e', // Material Design 3 dark surface
       },
       text: {
-        primary: '#0f172a', // slate-900
-        secondary: '#475569', // slate-600
+        primary: '#e0e0e0', // Material Design 3 dark on-surface
+        secondary: '#a8a8a8', // Material Design 3 dark on-surface-variant
       },
+      divider: '#4a4a4a',
     },
     typography: {
-      fontFamily: 'Inter, system-ui, sans-serif',
+      fontFamily: 'Roboto, Inter, system-ui, sans-serif',
       h1: {
         fontWeight: 700,
       },
