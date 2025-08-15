@@ -82,15 +82,18 @@ export default function FinancialFormV2({ carData, updateCarData, monthlyIncomeI
   const formContent = (
     <>
       {/* Monthly Income - Required for calculations */}
+      <div className="flex items-center space-x-3 mb-4">
+        <h4 className={`text-lg font-semibold ${themeClass(themeStyles.primaryText, 'text-white', isLight)}`}>
+          Monthly Income
+        </h4>
+        <div className={`h-px w-16 ${themeClass('bg-slate-300', 'bg-white/30', isLight)}`}></div>
+      </div>
+      
       <div className={`space-y-2 p-2.5 rounded-lg transition-all duration-300 ${
         shouldHighlightMonthlyIncome 
           ? 'border-lime-400/40 shadow-lg shadow-lime-400/20 bg-lime-400/10 border' 
           : ''
       }`}>
-        <label className={`block text-base min-[375px]:text-lg font-medium ${themeClass(themeStyles.primaryText, 'text-white', isLight)}`} style={{ lineHeight: '1.5' }}>
-          Monthly Income
-          <span className="text-xs text-emerald-300 bg-emerald-500/20 px-2 py-0.5 rounded-full ml-2">Affordability Check</span>
-        </label>
         {shouldHighlightMonthlyIncome && (
           <div className="text-red-300 text-sm font-medium flex items-center">
             <span className="w-1 h-1 bg-red-400 rounded-full mr-2"></span>

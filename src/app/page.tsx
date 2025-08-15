@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { PiggyBank, TrendingUp, Clock, ChevronLeft, ChevronRight } from 'lucide-react'
+import { PiggyBank, TrendingUp, Clock, ChevronLeft, ChevronRight, Palette } from 'lucide-react'
 import Image from 'next/image'
 import { useTheme } from '@/contexts/ThemeContext'
 import { themeClass } from '@/utils/themeStyles'
@@ -14,6 +14,7 @@ import ResultsDisplayV2 from '@/components/v2/ResultsDisplayV2'
 import TotalCostDisplayV2 from '@/components/v2/TotalCostDisplayV2'
 import CostDistributionChart from '@/components/v2/CostDistributionChart'
 import EducationalSummary from '@/components/v2/EducationalSummary'
+// Material UI components implemented inline
 
 export interface CarData {
   carPrice: number
@@ -70,6 +71,7 @@ const AdSenseAd = ({ slot, format, style, responsive = true }: {
 export default function HomePage() {
   const [showResults, setShowResults] = useState(false) // Toggle results view
   const [isLeftCollapsed, setIsLeftCollapsed] = useState(false) // Collapsible state
+  const [useMaterialUI, setUseMaterialUI] = useState(false) // Toggle Material UI
   const monthlyIncomeInputRef = useRef<HTMLInputElement>(null)
   const { isLight, isDark } = useTheme()
 
@@ -155,9 +157,22 @@ export default function HomePage() {
                 </nav>
               </div>
 
-              {/* Right side placeholder */}
+              {/* Right side - Material UI toggle */}
               <div className="flex items-center space-x-4">
-                {/* Theme toggle hidden */}
+                <button
+                  onClick={() => setUseMaterialUI(!useMaterialUI)}
+                  className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-all duration-200 hover:scale-105 font-medium text-sm ${
+                    useMaterialUI
+                      ? `bg-emerald-500 text-white shadow-lg hover:bg-emerald-600`
+                      : isLight 
+                        ? 'bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-slate-900' 
+                        : 'bg-white/10 hover:bg-white/20 text-white/70 hover:text-white'
+                  }`}
+                  title={useMaterialUI ? "Switch to Custom Design" : "Switch to Material Design"}
+                >
+                  <Palette className="w-4 h-4" />
+                  <span>{useMaterialUI ? "Material UI" : "Custom UI"}</span>
+                </button>
               </div>
             </div>
           </div>
@@ -236,16 +251,86 @@ export default function HomePage() {
                             
                             {/* Unified Form View - Single responsive design for all screen sizes */}
                             <div className="space-y-6">
-                              <CarDetailsFormV2 
-                                carData={carData} 
-                                updateCarData={updateCarData}
-                                monthlyIncomeInputRef={monthlyIncomeInputRef}
-                              />
-                              <FinancialFormV2 
-                                carData={carData} 
-                                updateCarData={updateCarData}
-                                monthlyIncomeInputRef={monthlyIncomeInputRef}
-                              />
+                              {useMaterialUI ? (
+                                <div className="space-y-4">
+                                  <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
+                                    <div className="flex items-center space-x-2 mb-2">
+                                      <Palette className="w-5 h-5 text-blue-600" />
+                                      <h3 className="text-blue-900 font-semibold">Material Design Mode</h3>
+                                    </div>
+                                    <p className="text-blue-700 text-sm">Material Design styling applied to form components</p>
+                                  </div>
+                                  
+                                  <div className="bg-white p-6 rounded-lg shadow-md border">
+                                    <h4 className="text-cyan-600 font-semibold mb-4">Material Design Calculator Demo</h4>
+                                    
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                                      <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-2">Car Price</label>
+                                        <input
+                                          type="text"
+                                          value={carData.carPrice || ''}
+                                          onChange={(e) => updateCarData({ carPrice: parseFloat(e.target.value) || 0 })}
+                                          className="w-full px-4 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 transition-all"
+                                          placeholder="Enter car price"
+                                        />
+                                      </div>
+                                      
+                                      <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-2">Down Payment</label>
+                                        <input
+                                          type="text"
+                                          value={carData.downPayment || ''}
+                                          onChange={(e) => updateCarData({ downPayment: parseFloat(e.target.value) || 0 })}
+                                          className="w-full px-4 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 transition-all"
+                                          placeholder="Enter down payment"
+                                        />
+                                      </div>
+                                    </div>
+                                    
+                                    <div className="flex gap-2 mb-4">
+                                      {[
+                                        { label: '5L', value: 500000 },
+                                        { label: '10L', value: 1000000 },
+                                        { label: '20L', value: 2000000 }
+                                      ].map((preset) => (
+                                        <button
+                                          key={preset.value}
+                                          onClick={() => updateCarData({ carPrice: preset.value })}
+                                          className={`px-3 py-1 rounded-full text-sm transition-all ${
+                                            carData.carPrice === preset.value
+                                              ? 'bg-cyan-500 text-white'
+                                              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                                          }`}
+                                        >
+                                          ₹{preset.label}
+                                        </button>
+                                      ))}
+                                    </div>
+                                    
+                                    <button className="bg-cyan-500 text-white px-6 py-2 rounded-md hover:bg-cyan-600 transition-colors font-medium">
+                                      Calculate with Material Design
+                                    </button>
+                                  </div>
+                                  
+                                  <div className="text-gray-600 text-sm">
+                                    ✓ Material Design principles applied with Tailwind CSS
+                                  </div>
+                                </div>
+                              ) : (
+                                <>
+                                  <CarDetailsFormV2 
+                                    carData={carData} 
+                                    updateCarData={updateCarData}
+                                    monthlyIncomeInputRef={monthlyIncomeInputRef}
+                                  />
+                                  <FinancialFormV2 
+                                    carData={carData} 
+                                    updateCarData={updateCarData}
+                                    monthlyIncomeInputRef={monthlyIncomeInputRef}
+                                  />
+                                </>
+                              )}
                             </div>
                           </motion.div>
                         ) : (
@@ -300,18 +385,27 @@ export default function HomePage() {
                       <h3 id="results-heading" className="sr-only">Loan Calculation Results</h3>
                       <TotalCostDisplayV2 carData={carData} updateCarData={updateCarData} />
                     </motion.div>
-                    
-                    {/* Desktop Sidebar Ad - 300x250 Medium Rectangle */}
-                    <div className="hidden lg:block">
-                      <AdSenseAd 
-                        slot="1234567892" 
-                        format="auto"
-                        style={{ width: '300px', height: '250px' }}
-                      />
-                    </div>
                   </div>
                 </motion.aside>
               </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Divider between Calculator and Cost Breakdown */}
+        <div className="relative z-10 mt-8">
+          <div className="container mx-auto px-4">
+            <div className="max-w-6xl mx-auto">
+              <div className={`h-px w-full ${isLight ? 'bg-gradient-to-r from-transparent via-slate-300 to-transparent' : 'bg-gradient-to-r from-transparent via-white/20 to-transparent'}`}></div>
+            </div>
+          </div>
+        </div>
+
+        {/* Cost Distribution Chart Section */}
+        <section className="relative z-10 mt-8">
+          <div className="container mx-auto px-4">
+            <div className="max-w-4xl mx-auto">
+              <CostDistributionChart carData={carData} />
             </div>
           </div>
         </section>
@@ -390,28 +484,6 @@ export default function HomePage() {
             </div>
           </section>
         )}
-
-        {/* In-Content Ad - 300x250 Medium Rectangle */}
-        <section className="relative z-10 mt-8">
-          <div className="container mx-auto px-4">
-            <div className="max-w-2xl mx-auto">
-              <AdSenseAd 
-                slot="1234567893" 
-                format="auto"
-                style={{ width: '300px', height: '250px', margin: '0 auto' }}
-              />
-            </div>
-          </div>
-        </section>
-
-        {/* Cost Distribution Chart Section */}
-        <section className="relative z-10 mt-12">
-          <div className="container mx-auto px-4">
-            <div className="max-w-4xl mx-auto">
-              <CostDistributionChart carData={carData} />
-            </div>
-          </div>
-        </section>
 
         {/* Educational Summary Section */}
         <EducationalSummary carData={carData} />

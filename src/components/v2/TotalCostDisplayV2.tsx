@@ -337,25 +337,6 @@ export default function TotalCostDisplayV2({ carData, updateCarData: _updateCarD
             </div>
           )}
 
-          {/* Insurance + Others - One-time cost */}
-          {(carData.insuranceAndMaintenance || 0) > 0 && (
-            <div className="bg-blue-500/10 border border-blue-400/20 rounded-lg p-3 mb-3">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-2">
-                  <div className="w-8 h-8 bg-blue-500/20 rounded-full flex items-center justify-center">
-                    <Info size={14} className="text-blue-300"/>
-                  </div>
-                  <div>
-                    <div className="text-blue-100 font-semibold text-sm">Insurance + Others</div>
-                    <div className="text-blue-300 text-xs">One-time additional costs</div>
-                  </div>
-                </div>
-                <div className="text-right">
-                  <div className="text-lg font-bold text-blue-100 min-w-[120px] text-right">{formatCurrency(carData.insuranceAndMaintenance || 0)}</div>
-                </div>
-              </div>
-            </div>
-          )}
 
           {/* Yearly Cost Calculation */}
           {(emi > 0 || monthlyFuelCost > 0 || (carData.insuranceAndMaintenance || 0) > 0) && (
