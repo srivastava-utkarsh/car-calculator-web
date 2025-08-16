@@ -112,7 +112,7 @@ export default function CarDetailsFormV2({ carData, updateCarData, monthlyIncome
           </div>
           
           <div className="relative">
-            <span className={`absolute left-4 top-1/2 transform -translate-y-1/2 font-semibold ${themeClass('text-slate-600', 'text-white/70', isLight)}`}>₹</span>
+            <span className={`absolute left-4 top-1/2 transform -translate-y-1/2 font-bold text-base z-10 ${themeClass('text-slate-700', 'text-white', isLight)}`}>₹</span>
             <input
               id="car-price-input"
               type="text"
@@ -124,7 +124,7 @@ export default function CarDetailsFormV2({ carData, updateCarData, monthlyIncome
                   e.preventDefault()
                 }
               }}
-              className={`w-full pl-8 pr-4 py-2.5 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-transparent transition-all text-sm md-text-field-input ${
+              className={`w-full pl-12 pr-4 py-2.5 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-transparent transition-all text-sm md-text-field-input ${
                 themeClass(
                   'bg-white border border-slate-300 text-slate-900 placeholder-slate-500',
                   'bg-white/10 backdrop-blur-md border border-white/20 text-white placeholder-white/50',
@@ -181,7 +181,7 @@ export default function CarDetailsFormV2({ carData, updateCarData, monthlyIncome
           </div>
           
           <div className="relative">
-            <span className={`absolute left-4 top-1/2 -translate-y-1/2 font-semibold ${themeClass('text-slate-600', 'text-white/70', isLight)}`}>₹</span>
+            <span className={`absolute left-4 top-1/2 -translate-y-1/2 font-bold text-base z-10 ${themeClass('text-slate-700', 'text-white', isLight)}`}>₹</span>
             <input
               type="text"
               required
@@ -192,7 +192,7 @@ export default function CarDetailsFormV2({ carData, updateCarData, monthlyIncome
                   e.preventDefault()
                 }
               }}
-              className={`w-full pl-8 pr-4 py-2.5 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-transparent transition-all text-sm md-text-field-input ${
+              className={`w-full pl-12 pr-4 py-2.5 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-transparent transition-all text-sm md-text-field-input ${
                 themeClass(
                   'bg-white border border-slate-300 text-slate-900 placeholder-slate-500',
                   'bg-white/10 backdrop-blur-md border border-white/20 text-white placeholder-white/50',

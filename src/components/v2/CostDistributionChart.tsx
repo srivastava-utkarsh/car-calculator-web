@@ -283,7 +283,7 @@ export default function CostDistributionChart({ carData }: CostDistributionChart
         {hasValidData && (
           <div className="p-4 bg-white/5 border border-white/10 rounded-lg">
             <p className="text-white/70 font-medium text-sm mb-2">
-              {showOneYear ? 'Yearly Running Cost' : 'Total Running Cost'}
+              {showOneYear ? 'Cost Breakdown' : 'Cost Breakdown'}
             </p>
             
             <div className="text-3xl font-bold text-white mb-2">
@@ -355,11 +355,11 @@ export default function CostDistributionChart({ carData }: CostDistributionChart
                         strokeWidth={isHovered ? 3 : 2}
                         style={{
                           filter: isHovered 
-                            ? 'drop-shadow(0 0 8px rgba(255, 255, 255, 0.3)) brightness(1.1)' 
+                            ? 'drop-shadow(0 0 12px rgba(255, 255, 255, 0.5)) brightness(1.2) saturate(1.1)' 
                             : isOtherHovered 
-                              ? 'brightness(0.7) opacity(0.6)' 
+                              ? 'brightness(0.6) opacity(0.5)' 
                               : 'none',
-                          transform: isHovered ? 'scale(1.03)' : 'scale(1)',
+                          transform: isHovered ? 'scale(1.05)' : 'scale(1)',
                           transformOrigin: 'center',
                           transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
                           cursor: 'pointer'
@@ -390,10 +390,10 @@ export default function CostDistributionChart({ carData }: CostDistributionChart
                   key={`legend-${index}`} 
                   className={`flex items-center justify-between rounded-lg p-2 border cursor-pointer transition-all duration-300 ${
                     isHovered 
-                      ? 'bg-white/15 border-white/30 shadow-lg' 
+                      ? 'bg-white/20 border-white/40 shadow-xl shadow-white/20' 
                       : isOtherHovered 
-                        ? 'bg-white/3 border-white/5 opacity-60' 
-                        : 'bg-white/5 border-white/10 hover:bg-white/10 hover:border-white/20'
+                        ? 'bg-white/3 border-white/5 opacity-50' 
+                        : 'bg-white/5 border-white/10 hover:bg-white/12 hover:border-white/25'
                   }`}
                   onMouseEnter={() => setHoveredIndex(index)}
                   onMouseLeave={() => setHoveredIndex(null)}
@@ -405,8 +405,8 @@ export default function CostDistributionChart({ carData }: CostDistributionChart
                       className="w-3 h-3 rounded-full"
                       style={{ backgroundColor: entry.color }}
                       animate={{
-                        scale: isHovered ? 1.2 : 1,
-                        boxShadow: isHovered ? `0 0 8px ${entry.color}80` : 'none'
+                        scale: isHovered ? 1.3 : 1,
+                        boxShadow: isHovered ? `0 0 12px ${entry.color}90` : 'none'
                       }}
                       transition={{ duration: 0.2 }}
                     />
