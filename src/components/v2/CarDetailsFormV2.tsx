@@ -112,7 +112,7 @@ export default function CarDetailsFormV2({ carData, updateCarData, monthlyIncome
           </div>
           
           <div className="relative">
-            <span className={`absolute left-4 top-1/2 transform -translate-y-1/2 font-bold text-base z-10 ${themeClass('text-slate-700', 'text-white', isLight)}`}>₹</span>
+            <span className={`absolute left-3 top-1/2 transform -translate-y-1/2 font-bold text-lg z-10 ${themeClass('text-slate-700', 'text-white', isLight)}`}>₹</span>
             <input
               id="car-price-input"
               type="text"
@@ -124,7 +124,7 @@ export default function CarDetailsFormV2({ carData, updateCarData, monthlyIncome
                   e.preventDefault()
                 }
               }}
-              className={`w-full pl-12 pr-4 py-2.5 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-transparent transition-all text-sm md-text-field-input ${
+              className={`w-full pl-10 pr-4 py-2.5 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-transparent transition-all text-base ${
                 themeClass(
                   'bg-white border border-slate-300 text-slate-900 placeholder-slate-500',
                   'bg-white/10 backdrop-blur-md border border-white/20 text-white placeholder-white/50',
@@ -181,7 +181,7 @@ export default function CarDetailsFormV2({ carData, updateCarData, monthlyIncome
           </div>
           
           <div className="relative">
-            <span className={`absolute left-4 top-1/2 -translate-y-1/2 font-bold text-base z-10 ${themeClass('text-slate-700', 'text-white', isLight)}`}>₹</span>
+            <span className={`absolute left-3 top-1/2 transform -translate-y-1/2 font-bold text-lg z-10 ${themeClass('text-slate-700', 'text-white', isLight)}`}>₹</span>
             <input
               type="text"
               required
@@ -192,7 +192,7 @@ export default function CarDetailsFormV2({ carData, updateCarData, monthlyIncome
                   e.preventDefault()
                 }
               }}
-              className={`w-full pl-12 pr-4 py-2.5 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-transparent transition-all text-sm md-text-field-input ${
+              className={`w-full pl-10 pr-4 py-2.5 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-transparent transition-all text-base ${
                 themeClass(
                   'bg-white border border-slate-300 text-slate-900 placeholder-slate-500',
                   'bg-white/10 backdrop-blur-md border border-white/20 text-white placeholder-white/50',
@@ -229,7 +229,7 @@ export default function CarDetailsFormV2({ carData, updateCarData, monthlyIncome
 
       {/* Loan Details Section Header */}
       <div className="flex items-center space-x-3 mb-3">
-        <h4 className={`text-lg font-semibold ${themeClass(themeStyles.primaryText, 'text-white', isLight)}`}>
+        <h4 className={`text-lg font-semibold ${isLight ? 'text-blue-600' : 'text-blue-400'}`}>
           Loan Details
         </h4>
         <div className={`h-px w-16 ${themeClass('bg-slate-300', 'bg-white/30', isLight)}`}></div>
