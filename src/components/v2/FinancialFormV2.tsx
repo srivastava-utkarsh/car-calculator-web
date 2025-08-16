@@ -83,7 +83,7 @@ export default function FinancialFormV2({ carData, updateCarData, monthlyIncomeI
     <>
       {/* Monthly Income - Required for calculations */}
       <div className="flex items-center space-x-3 mb-3">
-        <h4 className={`text-lg font-semibold ${isLight ? 'text-blue-600' : 'text-blue-400'}`}>
+        <h4 className="text-lg font-semibold text-white">
           Monthly Income
         </h4>
         <div className={`h-px w-16 ${themeClass('bg-slate-300', 'bg-white/30', isLight)}`}></div>
@@ -101,7 +101,7 @@ export default function FinancialFormV2({ carData, updateCarData, monthlyIncomeI
           </div>
         )}
         <div className="relative">
-          <span className={`absolute left-3 top-1/2 transform -translate-y-1/2 font-bold text-lg z-10 ${themeClass('text-slate-700', 'text-white', isLight)}`}>₹</span>
+          <span className="absolute left-4 top-1/2 transform -translate-y-1/2 font-semibold text-white/70 z-10">₹</span>
           <input
             type="text"
             required
@@ -124,16 +124,10 @@ export default function FinancialFormV2({ carData, updateCarData, monthlyIncomeI
               }
             }}
             placeholder="Enter your monthly income"
-            className={`w-full pl-10 pr-4 py-2.5 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-transparent transition-all text-base ${
-              themeClass(
-                'bg-white border text-slate-900 placeholder-slate-500',
-                'bg-white/10 backdrop-blur-md border text-white placeholder-white/50',
-                isLight
-              )
-            } ${
+            className={`w-full pl-8 pr-4 py-1.5 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-transparent transition-all text-sm bg-white/10 backdrop-blur-md border text-white placeholder-white/50 ${
               shouldHighlightMonthlyIncome 
                 ? 'border-lime-400/60' 
-                : themeClass('border-slate-300', 'border-white/20', isLight)
+                : 'border-white/20'
             }`}
           />
         </div>
@@ -145,7 +139,7 @@ export default function FinancialFormV2({ carData, updateCarData, monthlyIncomeI
 
       {/* Operational Cost Section Header */}
       <div className="flex items-center space-x-3 mb-3">
-        <h4 className={`text-lg font-semibold ${isLight ? 'text-blue-600' : 'text-blue-400'}`}>
+        <h4 className="text-lg font-semibold text-white">
           Operational Cost
         </h4>
         <div className={`h-px w-16 ${themeClass('bg-slate-300', 'bg-white/30', isLight)}`}></div>
@@ -156,10 +150,10 @@ export default function FinancialFormV2({ carData, updateCarData, monthlyIncomeI
         {/* Insurance Cost */}
         <div className="space-y-2">
           <label className={`text-sm font-medium ${themeClass(themeStyles.primaryText, 'text-white', isLight)}`} style={{ lineHeight: '1.5' }}>
-            Insurance Cost (per year)
+            Insurance Cost
           </label>
           <div className="relative">
-            <span className={`absolute left-3 top-1/2 transform -translate-y-1/2 font-bold text-lg z-10 ${themeClass('text-slate-700', 'text-white', isLight)}`}>₹</span>
+            <span className="absolute left-4 top-1/2 transform -translate-y-1/2 font-semibold text-white/70 z-10">₹</span>
             <input
               type="text"
               value={carData.insuranceAndMaintenance ? formatWithCommas(carData.insuranceAndMaintenance) : ''}
@@ -189,13 +183,7 @@ export default function FinancialFormV2({ carData, updateCarData, monthlyIncomeI
                 }
               }}
               placeholder="Enter Insurance cost"
-              className={`w-full pl-10 pr-4 py-2.5 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all text-sm ${
-                themeClass(
-                  'bg-white border border-slate-300 text-slate-900 placeholder-slate-500',
-                  'bg-white/10 backdrop-blur-md border border-white/20 text-white placeholder-white/50',
-                  isLight
-                )
-              }`}
+              className="w-full pl-8 pr-4 py-1.5 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all text-sm bg-white/10 backdrop-blur-md border border-white/20 text-white placeholder-white/50"
             />
           </div>
         </div>
@@ -209,7 +197,7 @@ export default function FinancialFormV2({ carData, updateCarData, monthlyIncomeI
             Maintenance Cost (per year)
           </label>
           <div className="relative">
-            <span className={`absolute left-3 top-1/2 transform -translate-y-1/2 font-bold text-lg z-10 ${themeClass('text-slate-700', 'text-white', isLight)}`}>₹</span>
+            <span className="absolute left-4 top-1/2 transform -translate-y-1/2 font-semibold text-white/70 z-10">₹</span>
             <input
               type="text"
               value={carData.maintenanceCostPerYear ? formatWithCommas(carData.maintenanceCostPerYear) : ''}
@@ -232,13 +220,7 @@ export default function FinancialFormV2({ carData, updateCarData, monthlyIncomeI
                 }
               }}
               placeholder="Enter yearly maintenance cost"
-              className={`w-full pl-10 pr-4 py-2.5 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-transparent transition-all text-sm ${
-                themeClass(
-                  'bg-white border border-slate-300 text-slate-900 placeholder-slate-500',
-                  'bg-white/10 backdrop-blur-md border border-white/20 text-white placeholder-white/50',
-                  isLight
-                )
-              }`}
+              className="w-full pl-8 pr-4 py-1.5 rounded-md focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-transparent transition-all text-sm bg-white/10 backdrop-blur-md border border-white/20 text-white placeholder-white/50"
             />
           </div>
         </div>
@@ -252,7 +234,7 @@ export default function FinancialFormV2({ carData, updateCarData, monthlyIncomeI
             Monthly Fuel Expense
           </label>
           <div className="relative">
-            <span className={`absolute left-3 top-1/2 transform -translate-y-1/2 font-bold text-lg z-10 ${themeClass('text-slate-700', 'text-white', isLight)}`}>₹</span>
+            <span className="absolute left-4 top-1/2 transform -translate-y-1/2 font-semibold text-white/70 z-10">₹</span>
             <input
               type="text"
               value={carData.monthlyFuelExpense ? formatWithCommas(carData.monthlyFuelExpense) : ''}
@@ -275,13 +257,7 @@ export default function FinancialFormV2({ carData, updateCarData, monthlyIncomeI
                 }
               }}
               placeholder="Enter monthly fuel expense"
-              className={`w-full pl-10 pr-4 py-2.5 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-transparent transition-all text-sm ${
-                themeClass(
-                  'bg-white border border-slate-300 text-slate-900 placeholder-slate-500',
-                  'bg-white/10 backdrop-blur-md border border-white/20 text-white placeholder-white/50',
-                  isLight
-                )
-              }`}
+              className="w-full pl-8 pr-4 py-1.5 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-transparent transition-all text-sm bg-white/10 backdrop-blur-md border border-white/20 text-white placeholder-white/50"
             />
           </div>
         </div>
@@ -295,7 +271,7 @@ export default function FinancialFormV2({ carData, updateCarData, monthlyIncomeI
             Parking Fee (per month)
           </label>
           <div className="relative">
-            <span className={`absolute left-3 top-1/2 transform -translate-y-1/2 font-bold text-lg z-10 ${themeClass('text-slate-700', 'text-white', isLight)}`}>₹</span>
+            <span className="absolute left-4 top-1/2 transform -translate-y-1/2 font-semibold text-white/70 z-10">₹</span>
             <input
               type="text"
               value={carData.parkingFee ? formatWithCommas(carData.parkingFee) : ''}
@@ -318,13 +294,7 @@ export default function FinancialFormV2({ carData, updateCarData, monthlyIncomeI
                 }
               }}
               placeholder="Enter parking fee"
-              className={`w-full pl-10 pr-4 py-2.5 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all text-sm ${
-                themeClass(
-                  'bg-white border border-slate-300 text-slate-900 placeholder-slate-500',
-                  'bg-white/10 backdrop-blur-md border border-white/20 text-white placeholder-white/50',
-                  isLight
-                )
-              }`}
+              className="w-full pl-8 pr-4 py-1.5 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all text-sm bg-white/10 backdrop-blur-md border border-white/20 text-white placeholder-white/50"
             />
           </div>
         </div>

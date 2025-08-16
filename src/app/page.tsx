@@ -237,7 +237,7 @@ export default function HomePage() {
                               {/* Collapse Button */}
                               <div className="flex justify-between items-center mb-4">
                                 <div className="flex items-center space-x-3">
-                                  <h3 className={`text-lg font-semibold ${isLight ? 'text-blue-600' : 'text-blue-400'}`}>
+                                  <h3 className="text-lg font-semibold text-white">
                                     Car Cost Details
                                   </h3>
                                   <div className={`h-px w-16 ${isLight ? 'bg-slate-300' : 'bg-white/30'}`}></div>
