@@ -155,7 +155,7 @@ export default function TotalCostDisplayV2({ carData, updateCarData: _updateCarD
                     <div className="w-6 h-6 bg-green-400/20 rounded-lg flex items-center justify-center">
                       <CheckCircle className="w-4 h-4 text-green-400" />
                     </div>
-                    <span className="text-lg font-bold text-green-400">100% Complete</span>
+                    <span className="text-lg font-bold text-green-400">In Budget</span>
                   </div>
                 ) : (
                   <div className="flex items-center space-x-2">
@@ -272,10 +272,21 @@ export default function TotalCostDisplayV2({ carData, updateCarData: _updateCarD
 
 
       <div className="flex items-center justify-between mb-6">
-        <h4 className={`font-semibold text-sm ${themeClass(themeStyles.primaryText, 'text-white', isLight)}`}>EMI Summary</h4>
+        <h4 className={`font-bold text-lg ${themeClass(themeStyles.primaryText, 'text-white', isLight)}`}>Summary</h4>
         <div className="flex items-center space-x-2">
-          <div className={`w-2 h-2 rounded-full ${completionPercentage === 100 ? 'bg-green-400' : completionPercentage >= 66 ? 'bg-yellow-400' : 'bg-red-400'}`}></div>
-          <span className={`text-sm font-bold ${themeClass(themeStyles.secondaryText, 'text-white/80', isLight)}`}>{completionPercentage}% Complete</span>
+          {completionPercentage === 100 ? (
+            <>
+              <div className="w-6 h-6 bg-green-400/20 rounded-lg flex items-center justify-center">
+                <CheckCircle className="w-4 h-4 text-green-400" />
+              </div>
+              <span className="text-lg font-bold text-green-400">100% Complete</span>
+            </>
+          ) : (
+            <>
+              <div className={`w-2 h-2 rounded-full ${completionPercentage >= 66 ? 'bg-yellow-400' : 'bg-red-400'}`}></div>
+              <span className={`text-sm font-bold ${themeClass(themeStyles.secondaryText, 'text-white/80', isLight)}`}>{completionPercentage}% Complete</span>
+            </>
+          )}
         </div>
       </div>
       
@@ -295,29 +306,45 @@ export default function TotalCostDisplayV2({ carData, updateCarData: _updateCarD
       >
         {/* Main EMI Display - Proportional UX */}
         <div className="text-center mb-4">
-          {/* Loan Details - Clean Tabular Format */}
+          {/* Loan Details - Dark Blue Background with Header and Icons */}
           {carData.tenure > 0 && emi > 0 && (
-            <div className="mb-6">
-              <div className="space-y-2 text-gray-300">
+            <div className="bg-slate-700 rounded-2xl p-5 mb-6 shadow-lg">
+              <h3 className="text-white font-bold text-lg mb-4">Loan Details</h3>
+              <div className="space-y-3 text-white">
                 <div className="flex justify-between items-center">
-                  <span className="text-sm font-medium">Completion Date</span>
+                  <div className="flex items-center space-x-2">
+                    <Calendar className="w-4 h-4 text-white" />
+                    <span className="text-sm font-medium">Completion Date</span>
+                  </div>
                   <span className="text-sm font-bold">{formatDate(completionDate)}</span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-sm font-medium">Loan Period</span>
+                  <div className="flex items-center space-x-2">
+                    <Clock className="w-4 h-4 text-white" />
+                    <span className="text-sm font-medium">Loan Period</span>
+                  </div>
                   <span className="text-sm font-bold">{carData.tenure} Years</span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-sm font-medium">Loan Amount</span>
+                  <div className="flex items-center space-x-2">
+                    <TrendingUp className="w-4 h-4 text-white" />
+                    <span className="text-sm font-medium">Loan Amount</span>
+                  </div>
                   <span className="text-sm font-bold">₹{loanAmount.toLocaleString('en-IN')}</span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-sm font-medium">Interest Amount</span>
-                  <span className="text-sm font-bold">₹{totalInterest.toLocaleString('en-IN', { maximumFractionDigits: 0 })}</span>
+                  <div className="flex items-center space-x-2">
+                    <IndianRupee className="w-4 h-4 text-white" />
+                    <span className="text-sm font-medium">Down Payment</span>
+                  </div>
+                  <span className="text-sm font-bold">₹{carData.downPayment.toLocaleString('en-IN')}</span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-sm font-medium">Down Payment</span>
-                  <span className="text-sm font-bold">₹{carData.downPayment.toLocaleString('en-IN')}</span>
+                  <div className="flex items-center space-x-2">
+                    <Percent className="w-4 h-4 text-white" />
+                    <span className="text-sm font-medium">Interest Rate</span>
+                  </div>
+                  <span className="text-sm font-bold">{carData.interestRate}%</span>
                 </div>
               </div>
             </div>
@@ -328,13 +355,16 @@ export default function TotalCostDisplayV2({ carData, updateCarData: _updateCarD
             <div className="border-t border-gray-600/30 my-4"></div>
           )}
 
-          {/* Primary EMI Section */}
-          <div className="mb-3">
-            <h3 className={`text-sm font-medium mb-1 tracking-wide ${themeClass(themeStyles.secondaryText, 'text-gray-300', isLight)}`}>
-              Monthly EMI {completionPercentage === 100 && '✨'}
-            </h3>
-            <div className={`text-3xl font-bold mb-2 tracking-tight min-w-[200px] text-center ${themeClass(themeStyles.primaryText, 'text-white', isLight)}`}>
-              {formatCurrency(emi)}
+          {/* Primary EMI Section - Teal design like screenshot */}
+          <div className="bg-gradient-to-r from-teal-500 to-teal-600 rounded-2xl p-6 mb-6 shadow-lg relative overflow-hidden">
+            {/* Content container - centered */}
+            <div className="text-center relative z-10">
+              <h3 className="text-white text-lg font-semibold mb-2 tracking-wide">
+                Monthly EMI
+              </h3>
+              <div className="text-white text-4xl font-bold tracking-tight">
+                {formatCurrency(emi)}
+              </div>
             </div>
           </div>
 
@@ -412,61 +442,56 @@ export default function TotalCostDisplayV2({ carData, updateCarData: _updateCarD
 
           {/* Yearly Running Cost - Pink/Red Gradient like Reference */}
           {(emi > 0 || monthlyFuelCost > 0 || monthlyParkingCost > 0 || (carData.insuranceAndMaintenance || 0) > 0 || (carData.maintenanceCostPerYear || 0) > 0) && (
-            <div className="bg-gradient-to-br from-pink-500 via-red-500 to-pink-600 rounded-2xl p-4 mb-4 shadow-lg">
-              <div className="flex items-center justify-between mb-3">
-                <div className="flex items-center space-x-2">
-                  <div className="w-8 h-8 bg-white/20 backdrop-blur-sm rounded-lg flex items-center justify-center">
-                    <Calendar className="w-5 h-5 text-white" />
-                  </div>
-                  <span className="text-white font-bold text-sm">Yearly Running Cost</span>
+            <div className="bg-gradient-to-br from-yellow-400 via-orange-400 to-yellow-500 rounded-2xl p-4 mb-4 shadow-lg">
+              <div className="text-center mb-4">
+                <h3 className="text-black font-bold text-xl tracking-wide mb-3">Yearly Running Cost</h3>
+                <div className="text-black text-3xl font-bold mb-4">
+                  {formatCurrency((totalMonthlyCarExpenses * 12) + (carData.insuranceAndMaintenance || 0) + (carData.maintenanceCostPerYear || 0))}
                 </div>
-                <CheckCircle className="w-5 h-5 text-white/80" />
               </div>
-              <div className="text-white text-2xl font-bold mb-3">
-                {formatCurrency((totalMonthlyCarExpenses * 12) + (carData.insuranceAndMaintenance || 0) + (carData.maintenanceCostPerYear || 0))}
-              </div>
-              {/* Breakdown with icons */}
+              
+              {/* Breakdown with icons - vertical layout */}
               <div className="space-y-2">
                 {emi > 0 && (
-                  <div className="flex justify-between items-center text-white/90">
+                  <div className="flex justify-between items-center text-black/90">
                     <div className="flex items-center space-x-2">
-                      <CreditCard className="w-4 h-4" />
+                      <CreditCard className="w-4 h-4 text-black" />
                       <span className="font-medium">EMI × 12</span>
                     </div>
                     <span className="font-bold">{formatCurrency(emi * 12)}</span>
                   </div>
                 )}
                 {monthlyFuelCost > 0 && (
-                  <div className="flex justify-between items-center text-white/90">
+                  <div className="flex justify-between items-center text-black/90">
                     <div className="flex items-center space-x-2">
-                      <Fuel className="w-4 h-4" />
+                      <Fuel className="w-4 h-4 text-black" />
                       <span className="font-medium">Fuel × 12</span>
                     </div>
                     <span className="font-bold">{formatCurrency(monthlyFuelCost * 12)}</span>
                   </div>
                 )}
                 {monthlyParkingCost > 0 && (
-                  <div className="flex justify-between items-center text-white/90">
+                  <div className="flex justify-between items-center text-black/90">
                     <div className="flex items-center space-x-2">
-                      <ParkingCircle className="w-4 h-4" />
+                      <ParkingCircle className="w-4 h-4 text-black" />
                       <span className="font-medium">Parking × 12</span>
                     </div>
                     <span className="font-bold">{formatCurrency(monthlyParkingCost * 12)}</span>
                   </div>
                 )}
                 {(carData.insuranceAndMaintenance || 0) > 0 && (
-                  <div className="flex justify-between items-center text-white/90">
+                  <div className="flex justify-between items-center text-black/90">
                     <div className="flex items-center space-x-2">
-                      <Info className="w-4 h-4" />
+                      <Info className="w-4 h-4 text-black" />
                       <span className="font-medium">Insurance</span>
                     </div>
                     <span className="font-bold">{formatCurrency(carData.insuranceAndMaintenance || 0)}</span>
                   </div>
                 )}
                 {(carData.maintenanceCostPerYear || 0) > 0 && (
-                  <div className="flex justify-between items-center text-white/90">
+                  <div className="flex justify-between items-center text-black/90">
                     <div className="flex items-center space-x-2">
-                      <Car className="w-4 h-4" />
+                      <Car className="w-4 h-4 text-black" />
                       <span className="font-medium">Maintenance</span>
                     </div>
                     <span className="font-bold">{formatCurrency(carData.maintenanceCostPerYear || 0)}</span>

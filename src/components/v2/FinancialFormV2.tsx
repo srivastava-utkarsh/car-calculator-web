@@ -188,7 +188,7 @@ export default function FinancialFormV2({ carData, updateCarData, monthlyIncomeI
                   updateCarData({ insuranceAndMaintenance: clampedValue })
                 }
               }}
-              placeholder="Enter Insurance, Processing Fee or Other Expenses"
+              placeholder="Enter Insurance cost"
               className={`w-full pl-8 pr-4 py-1.5 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all text-sm ${
                 themeClass(
                   'bg-white border border-slate-300 text-slate-900 placeholder-slate-500',

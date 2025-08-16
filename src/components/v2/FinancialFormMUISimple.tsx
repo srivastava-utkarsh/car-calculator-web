@@ -209,7 +209,7 @@ export default function FinancialFormMUISimple({ carData, updateCarData, monthly
                     updateCarData({ insuranceAndMaintenance: clampedValue })
                   }
                 }}
-                placeholder="Enter Insurance, Processing Fee or Other Expenses"
+                placeholder="Enter Insurance cost"
                 InputProps={{
                   startAdornment: <Typography sx={{ mr: 1 }}>₹</Typography>,
                 }}

@@ -129,39 +129,94 @@ export default function ResultsDisplayV2({ carData, onBack, onRestart }: Results
             className="lg:col-span-2 bg-gradient-to-br from-emerald-500/20 to-cyan-500/20 backdrop-blur-md border border-emerald-400/30 rounded-3xl p-8 shadow-2xl"
           >
             <div className="text-center">
-              {/* Loan Details - 2 Stacked Rows */}
-              <div className="mb-6 space-y-2">
-                {/* First Row */}
-                <div className="flex justify-center items-center space-x-8 text-white/80">
-                  <div className="text-center">
-                    <p className="text-xs font-medium">Completion Date</p>
-                    <p className="text-sm font-semibold">{formatDate(completionDate)}</p>
-                  </div>
-                  <div className="text-center">
-                    <p className="text-xs font-medium">Loan Period</p>
-                    <p className="text-sm font-semibold">{carData.tenure} Years</p>
-                  </div>
+              {/* Enhanced Loan Details Section */}
+              <div className="mb-8">
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.4 }}
+                  className="text-center mb-6"
+                >
+                  <h3 className="text-xl font-bold text-white mb-2 flex items-center justify-center space-x-2">
+                    <Sparkles className="w-5 h-5 text-cyan-300" />
+                    <span>Loan Details</span>
+                    <Sparkles className="w-5 h-5 text-cyan-300" />
+                  </h3>
+                </motion.div>
+
+                <div className="grid grid-cols-2 gap-4 mb-4">
+                  {/* Completion Date Card */}
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: 0.5 }}
+                    whileHover={{ scale: 1.02 }}
+                    className="bg-gradient-to-br from-purple-500/30 to-pink-500/30 rounded-2xl p-4 border border-purple-400/40 shadow-lg hover:shadow-purple-500/25 transition-all duration-300"
+                  >
+                    <div className="flex items-center space-x-2 mb-2">
+                      <Calendar className="w-4 h-4 text-purple-300" />
+                      <p className="text-xs font-medium text-purple-200">Completion Date</p>
+                    </div>
+                    <p className="text-lg font-bold text-white">{formatDate(completionDate)}</p>
+                  </motion.div>
+
+                  {/* Loan Period Card */}
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: 0.6 }}
+                    whileHover={{ scale: 1.02 }}
+                    className="bg-gradient-to-br from-blue-500/30 to-cyan-500/30 rounded-2xl p-4 border border-blue-400/40 shadow-lg hover:shadow-blue-500/25 transition-all duration-300"
+                  >
+                    <div className="flex items-center space-x-2 mb-2">
+                      <span className="text-blue-300 text-sm">⏱️</span>
+                      <p className="text-xs font-medium text-blue-200">Loan Period</p>
+                    </div>
+                    <p className="text-lg font-bold text-white">{carData.tenure} Years</p>
+                  </motion.div>
+
+                  {/* Loan Amount Card */}
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: 0.7 }}
+                    whileHover={{ scale: 1.02 }}
+                    className="bg-gradient-to-br from-emerald-500/30 to-green-500/30 rounded-2xl p-4 border border-emerald-400/40 shadow-lg hover:shadow-emerald-500/25 transition-all duration-300"
+                  >
+                    <div className="flex items-center space-x-2 mb-2">
+                      <TrendingUp className="w-4 h-4 text-emerald-300" />
+                      <p className="text-xs font-medium text-emerald-200">Loan Amount</p>
+                    </div>
+                    <p className="text-lg font-bold text-white">₹{loanAmount.toLocaleString('en-IN')}</p>
+                  </motion.div>
+
+                  {/* Down Payment Card */}
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: 0.8 }}
+                    whileHover={{ scale: 1.02 }}
+                    className="bg-gradient-to-br from-orange-500/30 to-red-500/30 rounded-2xl p-4 border border-orange-400/40 shadow-lg hover:shadow-orange-500/25 transition-all duration-300"
+                  >
+                    <div className="flex items-center space-x-2 mb-2">
+                      <span className="text-orange-300 font-bold text-sm">💰</span>
+                      <p className="text-xs font-medium text-orange-200">Down Payment</p>
+                    </div>
+                    <p className="text-lg font-bold text-white">₹{carData.downPayment.toLocaleString('en-IN')}</p>
+                  </motion.div>
                 </div>
-                
-                {/* Second Row */}
-                <div className="flex justify-center items-center space-x-8 text-white/80">
-                  <div className="text-center">
-                    <p className="text-xs font-medium">Loan Amount</p>
-                    <p className="text-sm font-semibold">₹{loanAmount.toLocaleString('en-IN')}</p>
-                  </div>
-                  <div className="text-center">
-                    <p className="text-xs font-medium">Interest Amount</p>
-                    <p className="text-sm font-semibold">₹{totalInterest.toLocaleString('en-IN', { maximumFractionDigits: 0 })}</p>
-                  </div>
-                </div>
-                
-                {/* Third Row - Down Payment */}
-                <div className="flex justify-center items-center space-x-8 text-white/80">
-                  <div className="text-center">
-                    <p className="text-xs font-medium">Down Payment</p>
-                    <p className="text-sm font-semibold">₹{carData.downPayment.toLocaleString('en-IN')}</p>
-                  </div>
-                </div>
+
+                {/* Interest Rate Badge */}
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.9 }}
+                  className="inline-flex items-center justify-center bg-gradient-to-r from-yellow-500/30 to-amber-500/30 border border-yellow-400/40 rounded-full px-4 py-2 mx-auto"
+                >
+                  <span className="text-yellow-300 text-sm mr-2">📊</span>
+                  <span className="text-yellow-200 text-sm font-medium">Interest Rate:</span>
+                  <span className="text-white font-bold ml-2">{carData.interestRate}%</span>
+                </motion.div>
               </div>
 
               <div className="flex items-center justify-center space-x-3 mb-4">
