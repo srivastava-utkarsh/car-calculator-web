@@ -220,17 +220,16 @@ export default function CostDistributionChart({ carData }: CostDistributionChart
       if (!data) return null
       
       return (
-        <div className="bg-black/95 backdrop-blur-xl border border-white/30 rounded-lg p-3 shadow-2xl max-w-xs">
-          <div className="flex items-center space-x-2 mb-1">
+        <div className="bg-black/95 backdrop-blur-xl border border-white/30 rounded-md p-2 shadow-lg max-w-[180px]">
+          <div className="flex items-center space-x-1.5 mb-1">
             <div 
-              className="w-3 h-3 rounded-full"
+              className="w-2 h-2 rounded-full"
               style={{ backgroundColor: data.color || '#fff' }}
             />
-            <p className="text-white font-semibold text-sm">{data.name || 'Unknown'}</p>
+            <p className="text-white font-medium text-xs truncate">{data.name || 'Unknown'}</p>
           </div>
-          <p className="text-white/90 text-lg font-bold mb-1">{formatCurrency(data.value || 0)}</p>
-          <p className="text-white/70 text-xs mb-1">{(data.percentage || 0).toFixed(1)}% of total</p>
-          <p className="text-white/60 text-xs">{data.description || ''}</p>
+          <p className="text-white/90 text-sm font-bold">{formatCurrency(data.value || 0)}</p>
+          <p className="text-white/70 text-xs">{(data.percentage || 0).toFixed(1)}%</p>
         </div>
       )
     }
@@ -277,36 +276,9 @@ export default function CostDistributionChart({ carData }: CostDistributionChart
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, delay: 0.2 }}
-      className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-6 shadow-2xl"
+      className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-6 shadow-2xl max-h-[600px] overflow-auto"
     >
       <div className="text-center mb-6">
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="text-xl font-bold text-white">Cost Breakdown</h3>
-          
-          {/* Toggle Button */}
-          <div className="flex items-center bg-white/10 rounded-xl p-1 border border-white/20">
-            <button
-              onClick={() => setShowOneYear(true)}
-              className={`px-3 py-1.5 text-sm font-medium rounded-lg transition-all ${
-                showOneYear 
-                  ? 'bg-blue-500 text-white shadow-lg' 
-                  : 'text-white/70 hover:text-white'
-              }`}
-            >
-              1Y
-            </button>
-            <button
-              onClick={() => setShowOneYear(false)}
-              className={`px-3 py-1.5 text-sm font-medium rounded-lg transition-all ${
-                !showOneYear 
-                  ? 'bg-blue-500 text-white shadow-lg' 
-                  : 'text-white/70 hover:text-white'
-              }`}
-            >
-              {safeCarData.tenure}Y
-            </button>
-          </div>
-        </div>
         
         {hasValidData && (
           <div className="p-4 bg-white/5 border border-white/10 rounded-lg">
@@ -318,9 +290,33 @@ export default function CostDistributionChart({ carData }: CostDistributionChart
               {formatCurrency(totalCost)}
             </div>
             
-            <p className="text-white/60 text-sm">
-              Over {showOneYear ? '1 year' : `${safeCarData.tenure} years`}
-            </p>
+            <div className="flex items-center justify-center">
+              <p className="text-white/60 text-sm mr-2">Over</p>
+              
+              {/* Toggle Button */}
+              <div className="flex items-center bg-white/10 rounded-xl p-1 border border-white/20">
+                <button
+                  onClick={() => setShowOneYear(true)}
+                  className={`px-3 py-1.5 text-sm font-medium rounded-lg transition-all ${
+                    showOneYear 
+                      ? 'bg-blue-500 text-white shadow-lg' 
+                      : 'text-white/70 hover:text-white'
+                  }`}
+                >
+                  1Y
+                </button>
+                <button
+                  onClick={() => setShowOneYear(false)}
+                  className={`px-3 py-1.5 text-sm font-medium rounded-lg transition-all ${
+                    !showOneYear 
+                      ? 'bg-blue-500 text-white shadow-lg' 
+                      : 'text-white/70 hover:text-white'
+                  }`}
+                >
+                  {safeCarData.tenure}Y
+                </button>
+              </div>
+            </div>
           </div>
         )}
       </div>
@@ -331,15 +327,15 @@ export default function CostDistributionChart({ carData }: CostDistributionChart
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.3 }}
         >
-          <div className="h-80 mb-4 relative">
+          <div className="h-48 lg:h-64 mb-4 relative">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie
                   data={chartData}
                   cx="50%"
                   cy="50%"
-                  innerRadius={70}
-                  outerRadius={120}
+                  innerRadius={50}
+                  outerRadius={90}
                   paddingAngle={2}
                   dataKey="value"
                   animationBegin={0}

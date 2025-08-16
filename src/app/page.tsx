@@ -196,13 +196,15 @@ export default function HomePage() {
               </div>
 
               {/* Content Layout - Collapsible design */}
-              <div className="flex flex-col lg:flex-row gap-4 lg:gap-6 relative">
+              <div className="flex flex-col lg:flex-row gap-6 lg:gap-12 relative">
                 
-                {/* Main Form Section - Collapsible */}
-                <motion.div 
-                  className={`transition-all duration-500 ease-in-out ${isLeftCollapsed ? 'w-16 lg:w-16' : 'w-full lg:w-1/2 lg:flex-shrink-0'}`}
-                  animate={{ width: isLeftCollapsed ? 64 : 'auto' }}
-                >
+                {/* Left Column - Form and Chart */}
+                <div className={`transition-all duration-500 ease-in-out ${isLeftCollapsed ? 'w-16 lg:w-16' : 'w-full lg:w-1/2 lg:flex-shrink-0'} space-y-4`}>
+                  {/* Main Form Section - Collapsible */}
+                  <motion.div 
+                    className="transition-all duration-500 ease-in-out"
+                    animate={{ width: isLeftCollapsed ? 64 : 'auto' }}
+                  >
                   {isLeftCollapsed ? (
                     // Collapsed State - Small Label
                     <div className={`h-full rounded-2xl p-3 ${isLight ? 'bg-white border border-slate-200/60 shadow-sm' : 'bg-white/5 backdrop-blur-xl border border-white/10 shadow-2xl'} flex flex-col items-center justify-center space-y-6 min-h-[400px]`}>
@@ -351,7 +353,24 @@ export default function HomePage() {
                       </AnimatePresence>
                     </div>
                   )}
-                </motion.div>
+                  </motion.div>
+
+                  {/* Horizontal Separator */}
+                  {!isLeftCollapsed && (
+                    <div className={`h-px w-full ${isLight ? 'bg-gradient-to-r from-transparent via-slate-300 to-transparent' : 'bg-gradient-to-r from-transparent via-white/20 to-transparent'}`}></div>
+                  )}
+
+                  {/* Cost Distribution Chart - Under left panel */}
+                  {!isLeftCollapsed && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.6, delay: 0.4 }}
+                    >
+                      <CostDistributionChart carData={carData} />
+                    </motion.div>
+                  )}
+                </div>
 
                 {/* Live Preview Panel - Expands when left is collapsed */}
                 <motion.aside 
@@ -376,23 +395,6 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* Divider between Calculator and Cost Breakdown */}
-        <div className="relative z-10 mt-8">
-          <div className="container mx-auto px-4">
-            <div className="max-w-6xl mx-auto">
-              <div className={`h-px w-full ${isLight ? 'bg-gradient-to-r from-transparent via-slate-300 to-transparent' : 'bg-gradient-to-r from-transparent via-white/20 to-transparent'}`}></div>
-            </div>
-          </div>
-        </div>
-
-        {/* Cost Distribution Chart Section */}
-        <section className="relative z-10 mt-8">
-          <div className="container mx-auto px-4">
-            <div className="max-w-4xl mx-auto">
-              <CostDistributionChart carData={carData} />
-            </div>
-          </div>
-        </section>
 
         {/* Smart Prepayment Section */}
         {carData.carPrice > 0 && carData.downPayment >= 0 && carData.tenure > 0 && (
