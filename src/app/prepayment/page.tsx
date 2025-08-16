@@ -150,7 +150,7 @@ import { useState, useEffect, Suspense } from 'react'
 import { Calculator } from 'lucide-react'
 import { useSearchParams } from 'next/navigation'
 import Image from 'next/image'
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend, BarChart, Bar } from 'recharts'
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts'
 
 interface LoanData {
   loanAmount: number
@@ -1094,107 +1094,77 @@ function PrepaymentCalculator() {
               })()}
             </section>
 
-            {/* Loan Comparison Chart */}
+            {/* Loan Details */}
             <section className="card" style={{marginTop: '12px'}}>
-              <div className="title">Loan Comparison Chart</div>
-              <div style={{height: '400px', width: '100%'}}>
-                {results ? (
-                  <ResponsiveContainer width="100%" height="100%">
-                  <BarChart
-                    data={(() => {
-                      // Safety check to ensure results exist
-                      if (!results) {
-                        return [
-                          { category: 'Loan Tenure', withoutPrepayment: 0, withPrepayment: 0 },
-                          { category: 'Total Interest', withoutPrepayment: 0, withPrepayment: 0 },
-                          { category: 'Total Cost to Customer', withoutPrepayment: 0, withPrepayment: 0 }
-                        ];
-                      }
-                      
-                      return [
-                        {
-                          category: 'Loan Tenure',
-                          withoutPrepayment: Math.max(0, loanData.tenure || 0),
-                          withPrepayment: Math.max(0, results.newTenure || 0),
-                          unit: 'years'
-                        },
-                        {
-                          category: 'Total Interest',
-                          withoutPrepayment: Math.max(0, Math.round((results.originalInterest || 0) / 1000)),
-                          withPrepayment: Math.max(0, Math.round((results.interestPaid || 0) / 1000)),
-                          unit: '₹ (in thousands)'
-                        },
-                        {
-                          category: 'Total Cost to Customer',
-                          withoutPrepayment: Math.max(0, Math.round((results.originalTotalAmount || 0) / 1000)),
-                          withPrepayment: Math.max(0, Math.round(((results.interestPaid || 0) + (loanData.loanAmount || 0) + (results.penaltyAmount || 0)) / 1000)),
-                          unit: '₹ (in thousands)'
-                        }
-                      ];
-                    })()}
-                    margin={{
-                      top: 20,
-                      right: 30,
-                      left: 20,
-                      bottom: 60
-                    }}
-                    barCategoryGap="20%"
-                  >
-                    <CartesianGrid strokeDasharray="3 3" stroke="#1b2230" />
-                    <XAxis 
-                      dataKey="category" 
-                      tick={{ fill: '#9ab1c9', fontSize: 12 }}
-                      angle={-45}
-                      textAnchor="end"
-                      height={80}
-                    />
-                    <YAxis 
-                      tick={{ fill: '#9ab1c9', fontSize: 12 }}
-                      axisLine={{ stroke: '#1b2230' }}
-                    />
-                    <Tooltip 
-                      contentStyle={{
-                        backgroundColor: '#0f1420',
-                        border: '1px solid #1b2230',
-                        borderRadius: '8px',
-                        color: '#e6ecf3'
-                      }}
-                      formatter={(value, name, props) => {
-                        const category = (props as {payload?: {category?: string}})?.payload?.category;
-                        const formattedValue = category === 'Loan Tenure' ? 
-                          `${value} years` : 
-                          `₹${((value as number) * 1000).toLocaleString('en-IN')}`;
-                        const label = name === 'withoutPrepayment' ? 'Without Prepayment' : 'With Prepayment';
-                        return [formattedValue, label];
-                      }}
-                    />
-                    <Legend 
-                      wrapperStyle={{ color: '#9ab1c9' }}
-                    />
-                    <Bar 
-                      dataKey="withoutPrepayment" 
-                      fill="#5e86ff" 
-                      name="Without Prepayment"
-                      radius={[4, 4, 0, 0]}
-                    />
-                    <Bar 
-                      dataKey="withPrepayment" 
-                      fill="#22c55e" 
-                      name="With Prepayment"
-                      radius={[4, 4, 0, 0]}
-                    />
-                  </BarChart>
-                </ResponsiveContainer>
-                ) : (
-                  <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', color: '#9ab1c9'}}>
-                    Enter loan details to see comparison chart
-                  </div>
-                )}
+              <div className="title">Loan Details</div>
+              <div style={{overflow: 'auto'}}>
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Metric</th>
+                      <th>Before</th>
+                      <th>After</th>
+                      <th>Savings</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Loan Tenure</td>
+                      <td>{formatTenure(loanData.tenure)}</td>
+                      <td>{formatTenure(results.newTenure)}</td>
+                      <td className="pos">
+                        {(() => {
+                          const monthsSaved = results.monthsSaved || 0;
+                          const years = Math.floor(monthsSaved / 12);
+                          const remainingMonths = monthsSaved % 12;
+                          if (years === 0) {
+                            return `${remainingMonths} month${remainingMonths !== 1 ? 's' : ''}`;
+                          } else if (remainingMonths === 0) {
+                            return `${years} year${years !== 1 ? 's' : ''}`;
+                          } else {
+                            return `${years} year${years !== 1 ? 's' : ''} ${remainingMonths} month${remainingMonths !== 1 ? 's' : ''}`;
+                          }
+                        })()}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Total Interest Paid</td>
+                      <td>{formatCurrency(results.originalInterest)}</td>
+                      <td>{formatCurrency(results.interestPaid)}</td>
+                      <td className="pos">{formatCurrency(results.originalInterest - results.interestPaid)}</td>
+                    </tr>
+                    <tr>
+                      <td>Monthly EMI</td>
+                      <td>{formatCurrency(loanData.emi)}</td>
+                      <td>{formatCurrency(loanData.emi)}</td>
+                      <td>—</td>
+                    </tr>
+                    <tr>
+                      <td>Prepayment Penalty</td>
+                      <td>—</td>
+                      <td>{formatCurrency(results.penaltyAmount || 0)}</td>
+                      <td className="warn">—</td>
+                    </tr>
+                    <tr>
+                      <td>Total Amount Paid</td>
+                      <td>{formatCurrency(results.originalTotalAmount)}</td>
+                      <td>{formatCurrency(results.totalAmountPaid)}</td>
+                      <td className="pos">
+                        {formatCurrency(
+                          penaltyRate > 0 && results.penaltyAmount 
+                            ? Math.max(0, results.amountSaved - results.penaltyAmount)
+                            : results.amountSaved
+                        )}
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
-              <div className="subnote" style={{textAlign: 'center', marginTop: '8px'}}>
-                Comparison showing the impact of prepayment on loan tenure, interest, and total cost to customer
+              <div className="bar">
+                <button className="btn btn--pri" onClick={() => window.location.reload()}>Recalculate</button>
               </div>
             </section>
+
 
             {/* Monthly Payment Timeline Chart */}
             <section className="card" style={{marginTop: '12px'}}>
@@ -1354,77 +1324,6 @@ function PrepaymentCalculator() {
               </div>
               <div className="subnote" style={{textAlign: 'center', marginTop: '8px'}}>
                 Outstanding loan balance over time showing how prepayment accelerates loan payoff
-              </div>
-            </section>
-
-            {/* Loan Details */}
-            <section className="card" style={{marginTop: '12px'}}>
-              <div className="title">Loan Details</div>
-              <div style={{overflow: 'auto'}}>
-                <table>
-                  <thead>
-                    <tr>
-                      <th>Metric</th>
-                      <th>Before</th>
-                      <th>After</th>
-                      <th>Savings</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>Loan Tenure</td>
-                      <td>{formatTenure(loanData.tenure)}</td>
-                      <td>{formatTenure(results.newTenure)}</td>
-                      <td className="pos">
-                        {(() => {
-                          const monthsSaved = results.monthsSaved || 0;
-                          const years = Math.floor(monthsSaved / 12);
-                          const remainingMonths = monthsSaved % 12;
-                          if (years === 0) {
-                            return `${remainingMonths} month${remainingMonths !== 1 ? 's' : ''}`;
-                          } else if (remainingMonths === 0) {
-                            return `${years} year${years !== 1 ? 's' : ''}`;
-                          } else {
-                            return `${years} year${years !== 1 ? 's' : ''} ${remainingMonths} month${remainingMonths !== 1 ? 's' : ''}`;
-                          }
-                        })()}
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>Total Interest Paid</td>
-                      <td>{formatCurrency(results.originalInterest)}</td>
-                      <td>{formatCurrency(results.interestPaid)}</td>
-                      <td className="pos">{formatCurrency(results.originalInterest - results.interestPaid)}</td>
-                    </tr>
-                    <tr>
-                      <td>Monthly EMI</td>
-                      <td>{formatCurrency(loanData.emi)}</td>
-                      <td>{formatCurrency(loanData.emi)}</td>
-                      <td>—</td>
-                    </tr>
-                    <tr>
-                      <td>Prepayment Penalty</td>
-                      <td>—</td>
-                      <td>{formatCurrency(results.penaltyAmount || 0)}</td>
-                      <td className="warn">—</td>
-                    </tr>
-                    <tr>
-                      <td>Total Amount Paid</td>
-                      <td>{formatCurrency(results.originalTotalAmount)}</td>
-                      <td>{formatCurrency(results.totalAmountPaid)}</td>
-                      <td className="pos">
-                        {formatCurrency(
-                          penaltyRate > 0 && results.penaltyAmount 
-                            ? Math.max(0, results.amountSaved - results.penaltyAmount)
-                            : results.amountSaved
-                        )}
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-              <div className="bar">
-                <button className="btn btn--pri" onClick={() => window.location.reload()}>Recalculate</button>
               </div>
             </section>
           </>
