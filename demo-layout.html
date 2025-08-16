@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Car Calculator - Improved Layout Demo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#0ea5e9',
+                        secondary: '#10b981'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <div class="max-w-4xl mx-auto p-6">
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <h1 class="text-3xl font-bold text-gray-900 mb-2">Car Loan Calculator</h1>
+            <p class="text-gray-600">Find your perfect car payment</p>
+        </div>
+
+        <!-- Main Content - Single Column Layout -->
+        <div class="space-y-8">
+            
+            <!-- Quick Result Card - Shown First -->
+            <div class="bg-white rounded-2xl shadow-lg p-6 border border-gray-200">
+                <div class="text-center">
+                    <div class="text-gray-600 text-sm mb-2">Monthly Payment</div>
+                    <div class="text-4xl font-bold text-primary mb-4">₹32,442</div>
+                    <div class="flex justify-center space-x-8 text-sm text-gray-600">
+                        <div>
+                            <div class="font-semibold">Total Cost</div>
+                            <div>₹19,46,534</div>
+                        </div>
+                        <div>
+                            <div class="font-semibold">Interest</div>
+                            <div>₹3,46,534</div>
+                        </div>
+                        <div>
+                            <div class="font-semibold">Loan Period</div>
+                            <div>5 years</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Affordability Check -->
+            <div class="bg-gradient-to-r from-red-50 to-red-100 rounded-2xl shadow-lg p-6 border border-red-200">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h3 class="text-lg font-semibold text-red-800">Affordability Check</h3>
+                        <p class="text-red-600 text-sm">This car may stretch your budget</p>
+                    </div>
+                    <div class="text-2xl font-bold text-red-700">58.3%</div>
+                </div>
+                <div class="mt-4 space-y-2">
+                    <div class="flex justify-between text-sm">
+                        <span class="text-red-700">Monthly car expenses</span>
+                        <span class="font-semibold">₹87,442</span>
+                    </div>
+                    <div class="flex justify-between text-sm">
+                        <span class="text-red-700">Monthly income</span>
+                        <span class="font-semibold">₹1,50,000</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Input Sections -->
+            <div class="grid md:grid-cols-2 gap-6">
+                
+                <!-- Car Details -->
+                <div class="bg-white rounded-2xl shadow-lg p-6 border border-gray-200">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                        <span class="bg-primary text-white rounded-full w-6 h-6 text-sm flex items-center justify-center mr-2">1</span>
+                        Car Details
+                    </h3>
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Car Price</label>
+                            <div class="relative">
+                                <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">₹</span>
+                                <input type="text" value="20,00,000" 
+                                    class="w-full pl-8 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-lg font-semibold">
+                            </div>
+                            <div class="flex gap-2 mt-2">
+                                <button class="px-3 py-1 bg-gray-100 rounded text-sm">₹15L</button>
+                                <button class="px-3 py-1 bg-gray-100 rounded text-sm">₹20L</button>
+                                <button class="px-3 py-1 bg-primary text-white rounded text-sm">₹25L</button>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Down Payment</label>
+                            <div class="relative">
+                                <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">₹</span>
+                                <input type="text" value="4,00,000" 
+                                    class="w-full pl-8 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-lg font-semibold">
+                                <span class="absolute right-3 top-1/2 transform -translate-y-1/2 text-sm text-secondary font-semibold">20.0%</span>
+                            </div>
+                            <div class="mt-2">
+                                <input type="range" min="0" max="20" value="4" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                                <div class="flex justify-between text-xs text-gray-500 mt-1">
+                                    <span>₹0</span>
+                                    <span>₹20L</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Loan Details -->
+                <div class="bg-white rounded-2xl shadow-lg p-6 border border-gray-200">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                        <span class="bg-primary text-white rounded-full w-6 h-6 text-sm flex items-center justify-center mr-2">2</span>
+                        Loan Details
+                    </h3>
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Loan Tenure</label>
+                            <div class="flex items-center space-x-4">
+                                <span class="text-2xl font-bold text-primary">5 years</span>
+                                <span class="px-2 py-1 bg-yellow-100 text-yellow-800 rounded text-xs">Above recommended</span>
+                            </div>
+                            <div class="mt-2">
+                                <input type="range" min="1" max="7" value="5" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                                <div class="flex justify-between text-xs text-gray-500 mt-1">
+                                    <span>1yr</span>
+                                    <span>4yr</span>
+                                    <span>7yr</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Interest Rate</label>
+                            <div class="flex items-center space-x-4">
+                                <span class="text-2xl font-bold text-primary">8.0%</span>
+                                <span class="text-sm text-gray-500">per annum</span>
+                            </div>
+                            <div class="mt-2">
+                                <input type="range" min="5" max="15" step="0.1" value="8" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                                <div class="flex justify-between text-xs text-gray-500 mt-1">
+                                    <span>5%</span>
+                                    <span>10%</span>
+                                    <span>15%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Financial Profile -->
+            <div class="bg-white rounded-2xl shadow-lg p-6 border border-gray-200">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                    <span class="bg-primary text-white rounded-full w-6 h-6 text-sm flex items-center justify-center mr-2">3</span>
+                    Your Financial Profile
+                </h3>
+                
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Monthly Income</label>
+                        <div class="relative">
+                            <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">₹</span>
+                            <input type="text" value="1,50,000" 
+                                class="w-full pl-8 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-lg font-semibold">
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Monthly Expenses</label>
+                        <div class="space-y-2">
+                            <div class="flex justify-between items-center">
+                                <span class="text-sm">Fuel</span>
+                                <span class="font-semibold">₹6,000</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-sm">Parking</span>
+                                <span class="font-semibold">₹5,000</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-sm">Insurance</span>
+                                <span class="font-semibold">₹5,000</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cost Breakdown Chart -->
+            <div class="bg-white rounded-2xl shadow-lg p-6 border border-gray-200">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-lg font-semibold text-gray-900">Cost Breakdown</h3>
+                    <div class="flex bg-gray-100 rounded-lg p-1">
+                        <button class="px-3 py-1 bg-white shadow rounded text-sm font-medium">1 Year</button>
+                        <button class="px-3 py-1 text-gray-600 text-sm">5 Years</button>
+                    </div>
+                </div>
+                
+                <div class="grid md:grid-cols-2 gap-6">
+                    <!-- Chart placeholder -->
+                    <div class="h-64 bg-gray-50 rounded-lg flex items-center justify-center">
+                        <div class="text-center">
+                            <div class="w-32 h-32 bg-primary/20 rounded-full mx-auto mb-4 flex items-center justify-center">
+                                <span class="text-primary font-bold">Chart</span>
+                            </div>
+                            <p class="text-gray-600">Visual breakdown would go here</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Legend -->
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                            <div class="flex items-center">
+                                <div class="w-4 h-4 bg-green-500 rounded mr-3"></div>
+                                <span>EMI × 12</span>
+                            </div>
+                            <span class="font-semibold">₹3,89,304</span>
+                        </div>
+                        <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                            <div class="flex items-center">
+                                <div class="w-4 h-4 bg-red-500 rounded mr-3"></div>
+                                <span>Fuel × 12</span>
+                            </div>
+                            <span class="font-semibold">₹72,000</span>
+                        </div>
+                        <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                            <div class="flex items-center">
+                                <div class="w-4 h-4 bg-blue-500 rounded mr-3"></div>
+                                <span>Parking × 12</span>
+                            </div>
+                            <span class="font-semibold">₹60,000</span>
+                        </div>
+                        <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                            <div class="flex items-center">
+                                <div class="w-4 h-4 bg-purple-500 rounded mr-3"></div>
+                                <span>Insurance × 1</span>
+                            </div>
+                            <span class="font-semibold">₹50,000</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-6 p-4 bg-gray-50 rounded-lg">
+                    <div class="flex justify-between items-center">
+                        <span class="font-semibold">Total Yearly Cost</span>
+                        <span class="text-xl font-bold text-primary">₹5,71,304</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex flex-col sm:flex-row gap-4">
+                <button class="flex-1 bg-primary text-white py-4 rounded-xl font-semibold text-lg hover:bg-primary/90 transition-colors">
+                    Get Pre-Approved
+                </button>
+                <button class="flex-1 border-2 border-primary text-primary py-4 rounded-xl font-semibold text-lg hover:bg-primary/5 transition-colors">
+                    Save Calculation
+                </button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

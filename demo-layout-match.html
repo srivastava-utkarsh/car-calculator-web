@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Car Calculator - Layout Demo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'inter': ['Inter', 'system-ui', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .slider-enhanced {
+            -webkit-appearance: none;
+            appearance: none;
+            cursor: pointer;
+        }
+        .slider-enhanced::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #06b6d4;
+            cursor: pointer;
+            border: 3px solid white;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+        }
+        .slider-enhanced::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #06b6d4;
+            cursor: pointer;
+            border: 3px solid white;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-slate-50 via-white to-slate-50 min-h-screen font-inter">
+    
+    <!-- Header -->
+    <header class="bg-white border-b border-slate-200/60">
+        <div class="container mx-auto px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <!-- Logo -->
+                <div class="flex items-center space-x-2 sm:space-x-3 flex-shrink-0">
+                    <div class="w-10 h-10 sm:w-16 sm:h-16 flex items-center justify-center">
+                        <div class="w-10 h-10 sm:w-16 sm:h-16 bg-gradient-to-br from-blue-500 to-cyan-400 rounded-lg flex items-center justify-center">
+                            <span class="text-white font-bold text-lg">BG</span>
+                        </div>
+                    </div>
+                    <span class="text-base sm:text-2xl font-extrabold tracking-tight text-slate-900">BudgetGear</span>
+                </div>
+
+                <!-- Navigation -->
+                <div class="flex-1 flex justify-center px-4">
+                    <nav class="flex items-center">
+                        <a href="#calculator" class="font-bold text-xs sm:text-base tracking-wide text-slate-900 hover:text-slate-600 px-1 sm:px-4 py-2 text-center">
+                            Car Affordability Calculator
+                        </a>
+                    </nav>
+                </div>
+
+                <!-- Right side buttons -->
+                <div class="flex items-center space-x-4">
+                    <button class="flex items-center space-x-2 px-4 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-slate-900 font-medium text-sm">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zM21 5a2 2 0 00-2-2h-4a2 2 0 00-2 2v12a4 4 0 004 4h4a2 2 0 002-2V5z"></path>
+                        </svg>
+                        <span>Custom UI</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <section class="relative z-10 pt-4" id="calculator">
+        <div class="container mx-auto px-4">
+            <div class="max-w-6xl mx-auto">
+                <!-- Estimates Notice -->
+                <div class="text-left mb-4">
+                    <p class="text-xs text-slate-600 font-medium">
+                        * All calculations are estimates for informational purposes only
+                    </p>
+                </div>
+
+                <!-- Two Panel Layout -->
+                <div class="flex flex-col lg:flex-row gap-4 lg:gap-6 relative">
+                    
+                    <!-- Left Panel - Form -->
+                    <div class="w-full lg:w-1/2 lg:flex-shrink-0">
+                        <div class="bg-white border border-slate-200/60 shadow-sm rounded-2xl p-3 sm:p-4 lg:p-5">
+                            
+                            <!-- Header with Hide button -->
+                            <div class="flex justify-between items-center mb-4">
+                                <div class="flex items-center space-x-3">
+                                    <h3 class="text-lg font-semibold text-slate-900">Car Cost Details</h3>
+                                    <div class="h-px w-16 bg-slate-300"></div>
+                                </div>
+                                <button class="hidden lg:flex items-center space-x-2 px-4 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-slate-900 font-medium text-sm">
+                                    <span>Hide</span>
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                                    </svg>
+                                </button>
+                            </div>
+
+                            <!-- Car Price Section -->
+                            <div class="space-y-6">
+                                <div class="space-y-4">
+                                    <h4 class="text-lg font-semibold text-slate-900 flex items-center">
+                                        <svg class="w-5 h-5 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+                                        </svg>
+                                        Car Price
+                                    </h4>
+                                    
+                                    <div class="relative">
+                                        <span class="absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-600 font-medium">₹</span>
+                                        <input 
+                                            type="text" 
+                                            value="20,00,000" 
+                                            class="w-full pl-10 pr-4 py-4 text-xl font-bold bg-slate-50 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-slate-900"
+                                        >
+                                    </div>
+                                    
+                                    <!-- Quick Amount Buttons -->
+                                    <div class="flex flex-wrap gap-2">
+                                        <button class="px-4 py-2 bg-slate-200 hover:bg-slate-300 rounded-lg text-sm font-medium">₹5L</button>
+                                        <button class="px-4 py-2 bg-slate-200 hover:bg-slate-300 rounded-lg text-sm font-medium">₹10L</button>
+                                        <button class="px-4 py-2 bg-cyan-500 text-white rounded-lg text-sm font-medium">₹20L</button>
+                                        <button class="px-4 py-2 bg-slate-200 hover:bg-slate-300 rounded-lg text-sm font-medium">₹50L</button>
+                                    </div>
+                                </div>
+
+                                <!-- Down Payment Section -->
+                                <div class="space-y-4">
+                                    <div class="flex items-center justify-between">
+                                        <h4 class="text-lg font-semibold text-slate-900">Down Payment</h4>
+                                        <span class="text-cyan-600 font-bold">20.0%</span>
+                                    </div>
+                                    
+                                    <div class="relative">
+                                        <span class="absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-600 font-medium">₹</span>
+                                        <input 
+                                            type="text" 
+                                            value="4,00,000" 
+                                            class="w-full pl-10 pr-4 py-4 text-xl font-bold bg-slate-50 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-slate-900"
+                                        >
+                                    </div>
+                                    
+                                    <!-- Down Payment Slider -->
+                                    <div class="space-y-2">
+                                        <input 
+                                            type="range" 
+                                            min="0" 
+                                            max="20" 
+                                            value="4" 
+                                            class="w-full h-0.5 rounded-full slider-enhanced"
+                                            style="background: linear-gradient(to right, #06b6d4 0%, #06b6d4 20%, #e2e8f0 20%, #e2e8f0 100%)"
+                                        >
+                                        <div class="flex justify-between text-xs text-slate-500">
+                                            <span>₹0</span>
+                                            <span>₹20L</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Loan Details Section -->
+                                <div class="border-t border-slate-200 pt-6">
+                                    <h4 class="text-lg font-semibold text-slate-900 mb-4">Loan Details</h4>
+                                    
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        <!-- Loan Tenure -->
+                                        <div class="space-y-4">
+                                            <div class="flex items-center justify-between">
+                                                <span class="text-slate-700 font-medium">Loan Tenure</span>
+                                                <span class="text-red-600 font-bold">5 years</span>
+                                            </div>
+                                            
+                                            <div class="space-y-2">
+                                                <input 
+                                                    type="range" 
+                                                    min="1" 
+                                                    max="7" 
+                                                    value="5" 
+                                                    class="w-full h-0.5 rounded-full slider-enhanced"
+                                                    style="background: linear-gradient(to right, #ef4444 0%, #ef4444 57%, #e2e8f0 57%, #e2e8f0 100%)"
+                                                >
+                                                <div class="flex justify-between text-xs text-slate-500">
+                                                    <span>1yr</span>
+                                                    <span>3yr</span>
+                                                    <span>5yr</span>
+                                                    <span>7yr</span>
+                                                </div>
+                                            </div>
+                                            
+                                            <!-- Warning -->
+                                            <div class="bg-red-500/20 border border-red-400/50 rounded-lg p-1">
+                                                <p class="text-red-300 text-xs break-words">
+                                                    ⚠️ Consider reducing tenure for better financial health
+                                                </p>
+                                            </div>
+                                        </div>
+
+                                        <!-- Interest Rate -->
+                                        <div class="space-y-4">
+                                            <div class="flex items-center justify-between">
+                                                <span class="text-slate-700 font-medium">Interest Rate</span>
+                                                <span class="text-cyan-600 font-bold">8% per annum</span>
+                                            </div>
+                                            
+                                            <div class="space-y-2">
+                                                <input 
+                                                    type="range" 
+                                                    min="5" 
+                                                    max="15" 
+                                                    step="0.1" 
+                                                    value="8" 
+                                                    class="w-full h-0.5 rounded-full slider-enhanced"
+                                                    style="background: linear-gradient(to right, #06b6d4 0%, #06b6d4 30%, #e2e8f0 30%, #e2e8f0 100%)"
+                                                >
+                                                <div class="flex justify-between text-xs text-slate-500">
+                                                    <span>5%</span>
+                                                    <span>10%</span>
+                                                    <span>15%</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Monthly Income Section -->
+                                <div class="border-t border-slate-200 pt-6">
+                                    <h4 class="text-lg font-semibold text-slate-900 mb-4">Monthly Income</h4>
+                                    
+                                    <div class="relative">
+                                        <span class="absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-600 font-medium">₹</span>
+                                        <input 
+                                            type="text" 
+                                            value="1,50,000" 
+                                            class="w-full pl-10 pr-4 py-4 text-xl font-bold bg-slate-50 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-slate-900"
+                                        >
+                                    </div>
+                                    
+                                    <p class="text-sm text-slate-600 mt-2">
+                                        • Used to calculate the 10% rule: total car expenses should not exceed 10% of your income
+                                    </p>
+                                </div>
+
+                                <!-- Operational Cost Section -->
+                                <div class="border-t border-slate-200 pt-6">
+                                    <h4 class="text-lg font-semibold text-slate-900 mb-4">Operational Cost</h4>
+                                    
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div>
+                                            <label class="block text-sm font-medium text-slate-700 mb-2">Monthly Fuel Expense</label>
+                                            <div class="relative">
+                                                <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-500">₹</span>
+                                                <input 
+                                                    type="text" 
+                                                    value="6,000" 
+                                                    class="w-full pl-8 pr-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                                >
+                                            </div>
+                                        </div>
+                                        
+                                        <div>
+                                            <label class="block text-sm font-medium text-slate-700 mb-2">Parking Fee</label>
+                                            <div class="relative">
+                                                <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-500">₹</span>
+                                                <input 
+                                                    type="text" 
+                                                    value="5,000" 
+                                                    class="w-full pl-8 pr-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                                >
+                                            </div>
+                                        </div>
+                                        
+                                        <div>
+                                            <label class="block text-sm font-medium text-slate-700 mb-2">Insurance & Others</label>
+                                            <div class="relative">
+                                                <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-500">₹</span>
+                                                <input 
+                                                    type="text" 
+                                                    value="5,000" 
+                                                    class="w-full pl-8 pr-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                                >
+                                            </div>
+                                        </div>
+                                        
+                                        <div>
+                                            <label class="block text-sm font-medium text-slate-700 mb-2">Maintenance Cost</label>
+                                            <div class="relative">
+                                                <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-500">₹</span>
+                                                <input 
+                                                    type="text" 
+                                                    value="50,000" 
+                                                    class="w-full pl-8 pr-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                                >
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Panel - Results -->
+                    <aside class="w-full lg:w-1/2 lg:flex-1">
+                        <div class="lg:sticky lg:top-8 space-y-4">
+                            <div class="bg-white border border-slate-200/60 shadow-sm rounded-2xl p-3 sm:p-4 lg:p-5">
+                                
+                                <!-- Affordability Check -->
+                                <div class="relative p-3 sm:p-4 rounded-lg sm:rounded-xl border backdrop-blur-xl shadow-xl mb-6 sm:mb-8 bg-gradient-to-br from-red-500/10 via-red-500/5 to-red-600/10 border-red-400/20 shadow-red-500/10">
+                                    <div class="absolute inset-0 opacity-5">
+                                        <div class="absolute inset-0 bg-gradient-to-r from-red-400 to-red-500"></div>
+                                    </div>
+                                    
+                                    <div class="relative z-10">
+                                        <div class="flex items-center justify-between mb-2">
+                                            <div class="flex items-center">
+                                                <h5 class="font-bold text-sm sm:text-base tracking-tight leading-tight text-white">
+                                                    Can you afford?
+                                                </h5>
+                                            </div>
+                                            <div class="flex items-center justify-center">
+                                                <span class="text-2xl font-bold text-red-400 leading-none">Out of Budget</span>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Rules -->
+                                        <div class="space-y-1 text-sm">
+                                            <!-- 20% Down Payment Rule -->
+                                            <div class="relative p-2 sm:p-3 rounded-md sm:rounded-lg border bg-slate-100/10 border-green-200/30 hover:bg-slate-100/15">
+                                                <div class="flex items-center justify-between mb-1">
+                                                    <span class="font-medium flex items-center text-sm text-white/90">
+                                                        <span class="text-yellow-400 mr-1 font-bold">₹</span>
+                                                        20% Down Payment
+                                                    </span>
+                                                    <div class="flex items-center space-x-2">
+                                                        <span class="font-bold text-sm text-white">20.0%</span>
+                                                        <svg class="w-4 h-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                                        </svg>
+                                                    </div>
+                                                </div>
+                                                <div class="w-full bg-white/15 rounded-full h-1.5 overflow-hidden">
+                                                    <div class="h-full rounded-full bg-gradient-to-r from-green-400 to-emerald-500 w-full"></div>
+                                                </div>
+                                            </div>
+                                            
+                                            <!-- 4 Year Tenure Rule -->
+                                            <div class="relative p-2 sm:p-3 rounded-md sm:rounded-lg border bg-slate-100/10 border-red-200/30 hover:bg-slate-100/15">
+                                                <div class="flex items-center justify-between mb-1">
+                                                    <span class="font-medium flex items-center text-sm text-white/90">
+                                                        <svg class="w-3 h-3 mr-1 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                                        </svg>
+                                                        Max 4 Years
+                                                    </span>
+                                                    <div class="flex items-center space-x-2">
+                                                        <span class="font-bold text-sm text-white">5y</span>
+                                                        <svg class="w-4 h-4 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                                        </svg>
+                                                    </div>
+                                                </div>
+                                                <div class="w-full bg-white/15 rounded-full h-1.5 overflow-hidden">
+                                                    <div class="h-full rounded-full bg-gradient-to-r from-red-400 to-red-500 w-4/5"></div>
+                                                </div>
+                                            </div>
+                                            
+                                            <!-- 10% Income Rule -->
+                                            <div class="relative p-2 sm:p-3 rounded-md sm:rounded-lg border bg-slate-100/10 border-red-200/30 hover:bg-slate-100/15">
+                                                <div class="flex items-center justify-between mb-1">
+                                                    <span class="font-medium flex items-center text-sm text-white/90">
+                                                        <svg class="w-3 h-3 mr-1 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                                                        </svg>
+                                                        Max 10% Income
+                                                    </span>
+                                                    <div class="flex items-center space-x-2">
+                                                        <span class="font-bold text-sm text-white">58.3%</span>
+                                                        <svg class="w-4 h-4 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                                        </svg>
+                                                    </div>
+                                                </div>
+                                                <div class="w-full bg-white/15 rounded-full h-1.5 overflow-hidden">
+                                                    <div class="h-full rounded-full bg-gradient-to-r from-red-400 to-red-500 w-full"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- EMI Summary -->
+                                <div class="flex items-center justify-between mb-6">
+                                    <h4 class="font-semibold text-sm text-slate-900">EMI Summary</h4>
+                                    <div class="flex items-center space-x-2">
+                                        <div class="w-2 h-2 rounded-full bg-green-400"></div>
+                                        <span class="text-sm font-bold text-slate-600">100% Complete</span>
+                                    </div>
+                                </div>
+
+                                <!-- Main EMI Display -->
+                                <div class="bg-gradient-to-br from-slate-800/40 to-slate-900/30 backdrop-blur-xl border border-slate-700/30 text-gray-100 shadow-2xl p-6 rounded-2xl mb-8">
+                                    
+                                    <!-- Loan Details -->
+                                    <div class="mb-6">
+                                        <div class="space-y-2 text-gray-300">
+                                            <div class="flex justify-between items-center">
+                                                <span class="text-sm font-medium">Completion Date</span>
+                                                <span class="text-sm font-bold">Aug 2030</span>
+                                            </div>
+                                            <div class="flex justify-between items-center">
+                                                <span class="text-sm font-medium">Loan Period</span>
+                                                <span class="text-sm font-bold">5 Years</span>
+                                            </div>
+                                            <div class="flex justify-between items-center">
+                                                <span class="text-sm font-medium">Loan Amount</span>
+                                                <span class="text-sm font-bold">₹16,00,000</span>
+                                            </div>
+                                            <div class="flex justify-between items-center">
+                                                <span class="text-sm font-medium">Interest Amount</span>
+                                                <span class="text-sm font-bold">₹3,46,534</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Separator -->
+                                    <div class="border-t border-gray-600/30 my-4"></div>
+
+                                    <!-- Monthly EMI -->
+                                    <div class="text-center mb-3">
+                                        <h3 class="text-sm font-medium mb-1 tracking-wide text-gray-300">
+                                            Monthly EMI ✨
+                                        </h3>
+                                        <div class="text-3xl font-bold mb-2 tracking-tight text-white">
+                                            ₹32,442
+                                        </div>
+                                    </div>
+
+                                    <!-- Monthly Running Cost -->
+                                    <div class="bg-gradient-to-r from-blue-500/10 to-indigo-500/10 border border-blue-400/20 rounded-lg p-3 mb-3">
+                                        <div class="text-center mb-3">
+                                            <div class="text-blue-100 font-semibold text-lg mb-2">Monthly Running Cost</div>
+                                            <div class="text-3xl font-bold text-blue-100">₹87,442</div>
+                                        </div>
+                                        
+                                        <!-- Breakdown -->
+                                        <div class="mt-3 pt-3 border-t border-blue-400/20">
+                                            <div class="space-y-2">
+                                                <div class="flex justify-between items-center text-blue-200">
+                                                    <span class="font-medium">EMI</span>
+                                                    <span class="font-semibold text-base">₹32,442</span>
+                                                </div>
+                                                <div class="flex justify-between items-center text-blue-200">
+                                                    <span class="font-medium">Fuel</span>
+                                                    <span class="font-semibold text-base">₹6,000</span>
+                                                </div>
+                                                <div class="flex justify-between items-center text-blue-200">
+                                                    <span class="font-medium">Parking</span>
+                                                    <span class="font-semibold text-base">₹5,000</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Yearly Running Cost -->
+                                    <div class="bg-gradient-to-r from-purple-500/10 to-indigo-500/10 border border-purple-400/20 rounded-lg p-3">
+                                        <div class="text-center mb-3">
+                                            <div class="text-purple-100 font-semibold text-lg mb-2">Yearly Running Cost</div>
+                                            <div class="text-3xl font-bold text-purple-100">₹13,16,658</div>
+                                        </div>
+                                        
+                                        <!-- Breakdown -->
+                                        <div class="mt-3 pt-3 border-t border-purple-400/20">
+                                            <div class="space-y-2">
+                                                <div class="flex justify-between items-center text-purple-200">
+                                                    <span class="font-medium">EMI × 12</span>
+                                                    <span class="font-semibold text-base">₹6,01,658</span>
+                                                </div>
+                                                <div class="flex justify-between items-center text-purple-200">
+                                                    <span class="font-medium">Fuel × 12</span>
+                                                    <span class="font-semibold text-base">₹6,00,000</span>
+                                                </div>
+                                                <div class="flex justify-between items-center text-purple-200">
+                                                    <span class="font-medium">Parking × 12</span>
+                                                    <span class="font-semibold text-base">₹60,000</span>
+                                                </div>
+                                                <div class="flex justify-between items-center text-purple-200">
+                                                    <span class="font-medium">Insurance × 1</span>
+                                                    <span class="font-semibold text-base">₹5,000</span>
+                                                </div>
+                                                <div class="flex justify-between items-center text-purple-200">
+                                                    <span class="font-medium">Maintenance × 1</span>
+                                                    <span class="font-semibold text-base">₹50,000</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </aside>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Add some basic interactivity for demo purposes
+        document.querySelectorAll('input[type="range"]').forEach(slider => {
+            slider.addEventListener('input', function() {
+                const percent = (this.value - this.min) / (this.max - this.min) * 100;
+                this.style.background = `linear-gradient(to right, #06b6d4 0%, #06b6d4 ${percent}%, #e2e8f0 ${percent}%, #e2e8f0 100%)`;
+            });
+        });
+    </script>
+</body>
+</html>
