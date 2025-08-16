@@ -239,14 +239,6 @@ export default function HomePage() {
                                 </h3>
                                 <div className={`h-px w-16 ${isLight ? 'bg-slate-300' : 'bg-white/30'}`}></div>
                               </div>
-                              <button
-                                onClick={() => setIsLeftCollapsed(true)}
-                                className={`hidden lg:flex items-center space-x-2 px-4 py-2 rounded-lg transition-all duration-200 hover:scale-105 font-medium text-sm ${isLight ? 'bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-slate-900' : 'bg-white/10 hover:bg-white/20 text-white/70 hover:text-white'}`}
-                                aria-label="Hide form panel"
-                              >
-                                <span>Hide</span>
-                                <ChevronLeft className="w-4 h-4" />
-                              </button>
                             </div>
                             
                             {/* Unified Form View - Single responsive design for all screen sizes */}
@@ -347,14 +339,6 @@ export default function HomePage() {
                               <h3 className={`text-lg font-semibold ${isLight ? 'text-slate-900' : 'text-white'}`}>
                                 Calculation Results
                               </h3>
-                              <button
-                                onClick={() => setIsLeftCollapsed(true)}
-                                className={`hidden lg:flex items-center space-x-2 px-4 py-2 rounded-lg transition-all duration-200 hover:scale-105 font-medium text-sm ${isLight ? 'bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-slate-900' : 'bg-white/10 hover:bg-white/20 text-white/70 hover:text-white'}`}
-                                aria-label="Hide results panel"
-                              >
-                                <span>Hide</span>
-                                <ChevronLeft className="w-4 h-4" />
-                              </button>
                             </div>
                             
                             <ResultsDisplayV2 

@@ -154,6 +154,14 @@ export default function ResultsDisplayV2({ carData, onBack, onRestart }: Results
                     <p className="text-sm font-semibold">₹{totalInterest.toLocaleString('en-IN', { maximumFractionDigits: 0 })}</p>
                   </div>
                 </div>
+                
+                {/* Third Row - Down Payment */}
+                <div className="flex justify-center items-center space-x-8 text-white/80">
+                  <div className="text-center">
+                    <p className="text-xs font-medium">Down Payment</p>
+                    <p className="text-sm font-semibold">₹{carData.downPayment.toLocaleString('en-IN')}</p>
+                  </div>
+                </div>
               </div>
 
               <div className="flex items-center justify-center space-x-3 mb-4">
