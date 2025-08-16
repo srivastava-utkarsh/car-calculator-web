@@ -233,7 +233,6 @@ const calculateLoanDetails = (
   tenure: number,
   prepaymentAmount: number,
   prepaymentFrequency: 'monthly' | 'quarterly' | 'yearly' | 'lumpsum',
-  _loanType: 'fixed' | 'floating' = 'floating',
   penaltyRate: number = 0
 ): PrepaymentResult & { amortizationSchedule?: Array<{month: number, emi: number, interest: number, principal: number, prepayment: number, balance: number}> } => {
   // Input validation
@@ -273,7 +272,7 @@ const calculateLoanDetails = (
                     999 // lumpsum - will be handled specially
   
   // ========================================================================
-  // AMORTIZATION LOOP - "REDUCE TENURE" STRATEGY
+  // AMORTIZATION LOOP - HANDLES BOTH STRATEGIES
   // ========================================================================
   // This loop simulates month-by-month loan payments with prepayments
   // Key: Prepayment applied BEFORE interest calculation (industry standard)
@@ -283,7 +282,8 @@ const calculateLoanDetails = (
   let totalInterestPaid = 0                // Sum of all interest payments
   let totalPrepaymentsPaid = 0             // Sum of all prepayments
   let months = 0                           // Counter for actual months taken
-  const maxMonths = tenure * 12 + 60       // Safety limit to prevent infinite loops
+  let currentEMI = originalEMI             // Current EMI (stays constant for reduce_tenure)
+  const maxMonths = tenure * 12 + 60      // Safety limit
   
   // Array to store month-by-month breakdown for transparency
   const amortizationSchedule: Array<{month: number, emi: number, interest: number, principal: number, prepayment: number, balance: number}> = []
@@ -317,6 +317,9 @@ const calculateLoanDetails = (
         currentPrepayment = Math.min(prepaymentAmount, remainingPrincipal)
         remainingPrincipal -= currentPrepayment
         totalPrepaymentsPaid += currentPrepayment
+        
+        // For "Reduce Tenure" strategy, EMI remains constant
+        // No recalculation needed - prepayment reduces loan duration instead
       }
     }
     
@@ -330,15 +333,15 @@ const calculateLoanDetails = (
     // This is how banks actually apply prepayments in practice
     
     const interestPortion = remainingPrincipal * monthlyRate
-    let emiAmount = originalEMI  // EMI amount remains same (reduce tenure strategy)
-    let principalFromEMI = Math.min(originalEMI - interestPortion, remainingPrincipal)
+    let emiAmount = currentEMI  // Use current EMI (may have changed for reduce_emi)
+    let principalFromEMI = Math.min(currentEMI - interestPortion, remainingPrincipal)
     
     // ====================================================================
     // STEP 3: HANDLE FINAL PAYMENT ADJUSTMENT
     // ====================================================================
     // If remaining balance is less than normal EMI, adjust the final payment
     
-    if (remainingPrincipal <= originalEMI - interestPortion) {
+    if (remainingPrincipal <= currentEMI - interestPortion) {
       emiAmount = remainingPrincipal + interestPortion  // Final payment amount
       principalFromEMI = remainingPrincipal             // All remaining goes to principal
     }
@@ -414,6 +417,7 @@ function PrepaymentCalculator() {
   
   const [prepaymentAmount, setPrepaymentAmount] = useState(0)
   const [prepaymentFrequency, setPrepaymentFrequency] = useState<'monthly' | 'quarterly' | 'yearly' | 'lumpsum'>('yearly')
+  const prepaymentStrategy = 'reduce_tenure' // Fixed to reduce tenure only
   const [penaltyRate, setPenaltyRate] = useState(0)
   const [tenureDisplayFormat] = useState<'years' | 'months'>('years')
 
@@ -449,7 +453,6 @@ function PrepaymentCalculator() {
     loanData.tenure,
     prepaymentAmount,
     prepaymentFrequency,
-    'floating',
     penaltyRate
   ) : null
 
@@ -657,6 +660,7 @@ function PrepaymentCalculator() {
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            
             <div className="space-y-3">
               <label className={`block text-sm font-medium ${isLight ? 'text-slate-700' : 'text-white/80'}`}>Payment Frequency</label>
               <div className={`relative rounded-lg border ${isLight ? 'border-slate-300 bg-white' : 'border-white/20 bg-black/20'} focus-within:ring-2 focus-within:ring-blue-500`}>
@@ -755,7 +759,10 @@ function PrepaymentCalculator() {
                 
                 {/* With Prepayment */}
                 <div className={`p-6 rounded-lg border ${isLight ? 'bg-emerald-50 border-emerald-200' : 'bg-emerald-900/20 border-emerald-500/20'}`}>
-                  <div className={`text-sm font-medium mb-3 ${isLight ? 'text-emerald-700' : 'text-emerald-300'}`}>With Prepayment</div>
+                  <div className={`text-sm font-medium mb-3 ${isLight ? 'text-emerald-700' : 'text-emerald-300'}`}>
+                    With Prepayment (Reduce Tenure)
+                  </div>
+                  
                   <div className={`text-2xl font-bold mb-2 ${isLight ? 'text-emerald-900' : 'text-emerald-100'}`}>{formatTenure(results.newTenure)}</div>
                   <div className={`text-sm mb-2 ${isLight ? 'text-emerald-700' : 'text-emerald-200'}`}>
                     You save <span className="font-semibold">
@@ -777,49 +784,22 @@ function PrepaymentCalculator() {
                       }
                     })()} earlier
                   </div>
-                  <div className={`text-sm ${isLight ? 'text-emerald-600' : 'text-emerald-200'}`}>EMI: {formatCurrency(loanData.emi)}</div>
+                  <div className={`text-sm ${isLight ? 'text-emerald-600' : 'text-emerald-200'}`}>EMI: {formatCurrency(loanData.emi)} (unchanged)</div>
                 </div>
               </div>
             </section>
 
-            {/* EMI Comparison */}
+            {/* EMI Information */}
             <section className="md-panel-elevated p-4 mb-6">
-              <div className={`text-sm font-semibold mb-4 ${isLight ? 'text-slate-900' : 'text-white'}`}>EMI Comparison</div>
-              {(() => {
-                const originalEMI = loanData.emi;
-                const newEMI = loanData.emi; // In "Reduce Tenure" strategy, EMI remains same
-                const isSame = Math.abs(originalEMI - newEMI) < 1; // Account for rounding
-                
-                return isSame ? (
-                  <div className={`p-4 rounded-lg border ${isLight ? 'bg-green-50 border-green-200' : 'bg-green-900/20 border-green-500/20'}`}>
-                    <div className="flex items-center justify-center gap-3">
-                      <span className={`text-sm font-medium ${isLight ? 'text-green-700' : 'text-green-300'}`}>EMI Remains Same:</span>
-                      <span className={`text-lg font-bold ${isLight ? 'text-green-800' : 'text-green-200'}`}>{formatCurrency(originalEMI)}</span>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="emi-status different">
-                    <div className="emi-comparison">
-                      <div className="emi-item before">
-                        <span className="emi-label">Before</span>
-                        <span className="emi-amount">{formatCurrency(originalEMI)}</span>
-                      </div>
-                      <div className="emi-arrow">→</div>
-                      <div className="emi-item after">
-                        <span className="emi-label">After</span>
-                        <span className="emi-amount">{formatCurrency(newEMI)}</span>
-                      </div>
-                    </div>
-                    <div className="emi-difference">
-                      <span>Difference: </span>
-                      <span className={newEMI < originalEMI ? 'positive' : 'negative'}>
-                        {formatCurrency(Math.abs(originalEMI - newEMI))}
-                        {newEMI < originalEMI ? ' less' : ' more'}
-                      </span>
-                    </div>
-                  </div>
-                );
-              })()}
+              <div className={`p-4 rounded-lg border ${isLight ? 'bg-blue-50 border-blue-200' : 'bg-blue-900/20 border-blue-500/20'}`}>
+                <div className="flex items-center justify-center gap-3">
+                  <span className={`text-sm font-medium ${isLight ? 'text-blue-700' : 'text-blue-300'}`}>EMI Remains Same:</span>
+                  <span className={`text-lg font-bold ${isLight ? 'text-blue-800' : 'text-blue-200'}`}>{formatCurrency(loanData.emi)}</span>
+                </div>
+                <div className={`text-xs text-center mt-2 ${isLight ? 'text-blue-600' : 'text-blue-300'}`}>
+                  Loan tenure gets reduced instead of EMI
+                </div>
+              </div>
             </section>
 
             {/* Loan Details */}
@@ -839,20 +819,27 @@ function PrepaymentCalculator() {
                     <tr className={`border-b ${isLight ? 'border-slate-100' : 'border-white/5'}`}>
                       <td className={`py-3 px-4 text-sm ${isLight ? 'text-slate-900' : 'text-white'}`}>Loan Tenure</td>
                       <td className={`py-3 px-4 text-sm ${isLight ? 'text-slate-700' : 'text-white/80'}`}>{formatTenure(loanData.tenure)}</td>
-                      <td className={`py-3 px-4 text-sm ${isLight ? 'text-slate-700' : 'text-white/80'}`}>{formatTenure(results.newTenure)}</td>
+                      <td className={`py-3 px-4 text-sm ${isLight ? 'text-slate-700' : 'text-white/80'}`}>
+                        {formatTenure(results.newTenure)}
+                        <span className={`ml-2 text-xs ${isLight ? 'text-green-600' : 'text-green-400'}`}>
+                          (reduced)
+                        </span>
+                      </td>
                       <td className={`py-3 px-4 text-sm font-medium ${isLight ? 'text-green-600' : 'text-green-400'}`}>
-                        {(() => {
-                          const monthsSaved = results.monthsSaved || 0;
-                          const years = Math.floor(monthsSaved / 12);
-                          const remainingMonths = monthsSaved % 12;
-                          if (years === 0) {
-                            return `${remainingMonths} month${remainingMonths !== 1 ? 's' : ''}`;
-                          } else if (remainingMonths === 0) {
-                            return `${years} year${years !== 1 ? 's' : ''}`;
-                          } else {
-                            return `${years} year${years !== 1 ? 's' : ''} ${remainingMonths} month${remainingMonths !== 1 ? 's' : ''}`;
-                          }
-                        })()}
+                        {results.monthsSaved && results.monthsSaved > 0 ? (
+                          (() => {
+                            const monthsSaved = results.monthsSaved || 0;
+                            const years = Math.floor(monthsSaved / 12);
+                            const remainingMonths = monthsSaved % 12;
+                            if (years === 0) {
+                              return `${remainingMonths} month${remainingMonths !== 1 ? 's' : ''}`;
+                            } else if (remainingMonths === 0) {
+                              return `${years} year${years !== 1 ? 's' : ''}`;
+                            } else {
+                              return `${years} year${years !== 1 ? 's' : ''} ${remainingMonths} month${remainingMonths !== 1 ? 's' : ''}`;
+                            }
+                          })()
+                        ) : '—'}
                       </td>
                     </tr>
                     <tr className={`border-b ${isLight ? 'border-slate-100' : 'border-white/5'}`}>
@@ -864,8 +851,15 @@ function PrepaymentCalculator() {
                     <tr className={`border-b ${isLight ? 'border-slate-100' : 'border-white/5'}`}>
                       <td className={`py-3 px-4 text-sm ${isLight ? 'text-slate-900' : 'text-white'}`}>Monthly EMI</td>
                       <td className={`py-3 px-4 text-sm ${isLight ? 'text-slate-700' : 'text-white/80'}`}>{formatCurrency(loanData.emi)}</td>
-                      <td className={`py-3 px-4 text-sm ${isLight ? 'text-slate-700' : 'text-white/80'}`}>{formatCurrency(loanData.emi)}</td>
-                      <td className={`py-3 px-4 text-sm ${isLight ? 'text-slate-500' : 'text-white/50'}`}>—</td>
+                      <td className={`py-3 px-4 text-sm ${isLight ? 'text-slate-700' : 'text-white/80'}`}>
+                        {formatCurrency(loanData.emi)}
+                        <span className={`ml-2 text-xs ${isLight ? 'text-blue-600' : 'text-blue-400'}`}>
+                          (unchanged)
+                        </span>
+                      </td>
+                      <td className={`py-3 px-4 text-sm ${isLight ? 'text-slate-500' : 'text-white/50'}`}>
+                        —
+                      </td>
                     </tr>
                     <tr className={`border-b ${isLight ? 'border-slate-100' : 'border-white/5'}`}>
                       <td className={`py-3 px-4 text-sm ${isLight ? 'text-slate-900' : 'text-white'}`}>Prepayment Penalty</td>

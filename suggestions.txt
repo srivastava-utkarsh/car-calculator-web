@@ -1,45 +1,773 @@
-<!DOCTYPE html> <html lang="en"> <head> <meta charset="utf-8" /> <meta name="viewport" content="width=device-width, initial-scale=1" /> <title>Loan Prepayment Calculator</title> <style> :root{ --bg:#0d1117; --panel:#121826; --panel2:#0f1420; --text:#e6ecf3; --muted:#9ab1c9; --border:#1b2230; --accent:#4da3ff; --pos:#22c55e; --warn:#f59e0b; --radius:10px; --gap:12px; --pad:14px; } *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--text);font:15px/1.45 Inter,system-ui,Segoe UI,Roboto,Arial} .wrap{max-width:1024px;margin:0 auto;padding:18px} h1{font-size:18px;margin:0 0 10px}
-/* Cards and grids */
-.card{background:linear-gradient(180deg,var(--panel) 0%,var(--panel2) 100%);border:1px solid var(--border);border-radius:var(--radius);padding:var(--pad)}
-.title{font-size:14px;color:#cfe3ff;margin-bottom:8px;font-weight:600}
-.row{display:grid;gap:var(--gap)}
-.grid-3{grid-template-columns:1fr 1fr 1fr}
-@media (max-width:900px){.grid-3{grid-template-columns:1fr}}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loan Prepayment Calculator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-/* Inputs compact */
-.fields{display:grid;gap:var(--gap)}
-.field{display:flex;flex-direction:column;gap:6px}
-.label{font-size:12px;color:#cbd6e5}
-.ctrl{display:flex;gap:8px;align-items:center;background:#0b1220;border:1px solid var(--border);border-radius:8px;padding:10px}
-input,select{background:transparent;border:0;outline:0;color:var(--text);width:100%;font-size:14px}
-.prefix,.suffix{font-size:12px;color:var(--muted)}
-.subnote{font-size:12px;color:#97a9bd;margin-top:8px}
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
 
-/* Comparison section */
-.compare{display:grid;gap:var(--gap)}
-@media(min-width:900px){.compare{grid-template-columns:1fr 1fr}}
-.panel{border:1px solid var(--border);border-radius:var(--radius);padding:16px;background:#0f1524}
-.kicker{font-size:12px;color:#cbd6e5;margin-bottom:6px}
-.big{font-weight:800;font-size:24px;margin:0 0 6px}
-.meta{font-size:13px;color:var(--muted)}
-.save{color:var(--pos);font-weight:700}
-.emi-line{margin-top:6px;font-size:13px}
-.emi-same{color:#b7d7ff}
-.emi-diff .before{color:#5e86ff}
-.emi-diff .after{color:#22c55e;font-weight:600}
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
 
-/* Table compact */
-table{width:100%;border-collapse:separate;border-spacing:0}
-th,td{padding:10px 8px;border-bottom:1px solid var(--border);text-align:left}
-th{font-size:11px;letter-spacing:.4px;color:#bcd1e6;text-transform:uppercase}
-td{font-size:14px}
-.pos{color:var(--pos);font-weight:600}
-.warn{color:var(--warn);font-weight:600}
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
 
-/* Footer actions */
-.bar{display:flex;gap:8px;justify-content:flex-end;margin-top:10px}
-.btn{background:#0f2436;border:1px solid #18324a;color:#cfe3ff;padding:8px 12px;border-radius:8px;cursor:pointer}
-.btn--pri{background:#0461e6;border-color:#0c5ed1;color:#fff}
-</style>
+        .header h1 {
+            color: white;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
 
-</head> <body> <div class="wrap"> <h1>Loan Prepayment Calculator</h1> <!-- Your Current Loan --> <section class="card"> <div class="title">Your Current Loan</div> <div class="fields grid-3"> <div class="field"> <div class="label">Loan Amount</div> <div class="ctrl"><span class="prefix">₹</span><input type="number" placeholder="800000" aria-label="Loan Amount" id="loanAmount"></div> <div class="subnote">Enter principal outstanding</div> </div> <div class="field"> <div class="label">Interest Rate</div> <div class="ctrl"><input type="number" step="0.05" placeholder="8.00" aria-label="Interest Rate" id="interestRate"><span class="suffix">% p.a.</span></div> </div> <div class="field"> <div class="label">Loan Tenure</div> <div class="ctrl"><input type="number" placeholder="3" aria-label="Loan Tenure Years" id="tenureYears"><span class="suffix">years</span></div> </div> </div> </section> <!-- Prepayment Configuration --> <section class="card" style="margin-top:12px"> <div class="title">Prepayment Configuration</div> <div class="fields grid-3"> <div class="field"> <div class="label">Frequency</div> <div class="ctrl"> <select aria-label="Prepayment Frequency" id="frequency"> <option>Yearly</option> <option>Quarterly</option> <option>Monthly</option> <option>One‑time (Lumpsum)</option> </select> </div> </div> <div class="field"> <div class="label">Prepayment Amount</div> <div class="ctrl"><span class="prefix">₹</span><input type="number" placeholder="16000" aria-label="Prepayment Amount" id="prepayAmount"></div> </div> <div class="field"> <div class="label">Prepayment Penalty (if any)</div> <div class="ctrl"><input type="number" step="0.1" placeholder="0" aria-label="Prepayment Penalty" id="penalty"><span class="suffix">%</span></div> <div class="subnote">Most floating‑rate loans have 0% penalty</div> </div> </div> </section> <!-- Comparison --> <section class="card" style="margin-top:12px"> <div class="title">Comparison</div> <div class="compare"> <!-- Without Prepayment --> <div class="panel" id="panelWithout"> <div class="kicker">Without Prepayment</div> <div class="big" id="tenureWithout">3 years</div> <div class="meta" id="interestWithout">Total interest: ₹1,02,487</div> <div class="emi-line emi-same" id="emiWithout">EMI: ₹25,069</div> </div> <!-- With Prepayment --> <div class="panel" id="panelWith"> <div class="kicker">With Prepayment</div> <div class="big" id="tenureWith">2 years 11 months</div> <div class="meta" id="saveLine">You save <span class="save">₹4,260</span> and finish 1 month earlier</div> <div class="emi-line emi-same" id="emiWith">EMI: ₹25,069</div> </div> </div> </section> <!-- Loan Details --> <section class="card" style="margin-top:12px"> <div class="title">Loan Details</div> <div style="overflow:auto"> <table> <thead> <tr><th>Metric</th><th>Before</th><th>After</th><th>Savings</th></tr> </thead> <tbody> <tr><td>Loan Tenure</td><td id="tblTenureBefore">3 years</td><td id="tblTenureAfter">2 years 11 months</td><td class="pos" id="tblTenureSave">1 month</td></tr> <tr><td>Total Interest Paid</td><td id="tblIntBefore">₹1,02,487</td><td id="tblIntAfter">₹98,227</td><td class="pos" id="tblIntSave">₹4,260</td></tr> <tr><td>Monthly EMI</td><td id="tblEmiBefore">₹25,069</td><td id="tblEmiAfter">₹25,069</td><td id="tblEmiSave">—</td></tr> <tr><td>Prepayment Penalty</td><td>—</td><td id="tblPenalty">₹0</td><td class="warn">—</td></tr> <tr><td>Total Amount Paid</td><td id="tblTotalBefore">₹9,02,487</td><td id="tblTotalAfter">₹8,98,227</td><td class="pos" id="tblTotalSave">₹4,260</td></tr> </tbody> </table> </div> <div class="bar"> <button class="btn" id="btnReset">Reset</button> <button class="btn">Share</button> <button class="btn">Download CSV</button> <button class="btn btn--pri" id="btnRecalc">Recalculate</button> </div> </section> </div> <script> // NOTE: This is a minimal demo calculation to update EMI labels and show "same vs different". // Replace with your full amortization + prepayment logic. const el = id => document.getElementById(id); const fmt = n => '₹' + Number(n).toLocaleString('en-IN'); function calcEMI(P, annualRate, years){ const r = (annualRate/12)/100; const n = years*12; if(r === 0) return P / n; return P * r * Math.pow(1+r, n) / (Math.pow(1+r, n)-1); } function recalc(){ const P = Number(el('loanAmount').value || 800000); const R = Number(el('interestRate').value || 8); const Y = Number(el('tenureYears').value || 3); // Base EMI const emi = Math.round(calcEMI(P,R,Y)); // Naive interest estimate (for demo) const totalPay = Math.round(emi * Y * 12); const totalInt = totalPay - P; // Pretend prepayment effect: reduce one month if prepayAmount > 0 const preAmt = Number(el('prepayAmount').value || 16000); const hasPrepay = preAmt > 0; const monthsSaved = hasPrepay ? 1 : 0; const tenureWithout = `${Y} ${Y===1?'year':'years'}`; const tenureWith = monthsSaved ? `${Y} years ${11} months` : tenureWithout; const saveAmt = hasPrepay ? 4260 : 0; const penaltyPct = Number(el('penalty').value || 0); const penalty = Math.round(preAmt * (penaltyPct/100)); // Update panels el('tenureWithout').textContent = tenureWithout; el('interestWithout').textContent = `Total interest: ${fmt(totalInt)}`; el('emiWithout').textContent = `EMI: ${fmt(emi)}`; el('tenureWith').textContent = tenureWith; el('saveLine').innerHTML = hasPrepay ? `You save <span class="save">${fmt(saveAmt)}</span> and finish ${monthsSaved} month earlier` : `No prepayment applied`; // Assume EMI unchanged for prepayment-to-principal const emiAfter = emi; // if your logic changes EMI, set here. // EMI line rule: same vs different if(emiAfter === emi){ el('emiWith').className = 'emi-line emi-same'; el('emiWith').textContent = `EMI is same: ${fmt(emiAfter)}`; }else{ el('emiWith').className = 'emi-line emi-diff'; el('emiWith').innerHTML = `EMI changed: <span class="before">${fmt(emi)}</span> → <span class="after">${fmt(emiAfter)}</span>`; } // Table el('tblTenureBefore').textContent = tenureWithout; el('tblTenureAfter').textContent = tenureWith; el('tblTenureSave').textContent = monthsSaved ? `${monthsSaved} month` : '—'; el('tblIntBefore').textContent = fmt(totalInt); el('tblIntAfter').textContent = fmt(totalInt - saveAmt); el('tblIntSave').textContent = saveAmt ? fmt(saveAmt) : '—'; el('tblEmiBefore').textContent = fmt(emi); el('tblEmiAfter').textContent = fmt(emiAfter); el('tblEmiSave').textContent = emiAfter===emi ? '—' : fmt(emi - emiAfter); el('tblPenalty').textContent = fmt(penalty); el('tblTotalBefore').textContent = fmt(totalPay); el('tblTotalAfter').textContent = fmt(totalPay - saveAmt + penalty); el('tblTotalSave').textContent = saveAmt ? fmt(saveAmt - penalty) : '—'; } // Events ['loanAmount','interestRate','tenureYears','prepayAmount','penalty','frequency'].forEach(id=>{ const node = el(id); if(node) node.addEventListener('input', ()=>{ requestAnimationFrame(recalc); }); if(node && node.tagName==='SELECT') node.addEventListener('change', recalc); }); el('btnRecalc').addEventListener('click', recalc); el('btnReset').addEventListener('click', ()=>{ el('loanAmount').value = 800000; el('interestRate').value = 8; el('tenureYears').value = 3; el('prepayAmount').value = 16000; el('penalty').value = 0; el('frequency').value = 'Yearly'; recalc(); }); // Initialize defaults el('loanAmount').value = 800000; el('interestRate').value = 8.00; el('tenureYears').value = 3; el('prepayAmount').value = 16000; el('penalty').value = 0; recalc(); </script> </body> </html>
+        .header p {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1.1rem;
+        }
+
+        .main-card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+
+        .progress-bar {
+            background: linear-gradient(90deg, #4f46e5 0%, #7c3aed 100%);
+            height: 4px;
+            width: 100%;
+        }
+
+        .calculator-content {
+            padding: 40px;
+        }
+
+        .step-indicator {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 40px;
+            gap: 20px;
+        }
+
+        .step {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 20px;
+            border-radius: 50px;
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            transition: all 0.3s ease;
+        }
+
+        .step.active {
+            background: linear-gradient(90deg, #4f46e5 0%, #7c3aed 100%);
+            color: white;
+            border-color: #4f46e5;
+        }
+
+        .step-number {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .step.active .step-number {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+
+        .input-section {
+            margin-bottom: 40px;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #1e293b;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-icon {
+            width: 24px;
+            height: 24px;
+            background: linear-gradient(90deg, #4f46e5 0%, #7c3aed 100%);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+        }
+
+        .input-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            margin-bottom: 30px;
+        }
+
+        .input-group {
+            position: relative;
+        }
+
+        .input-label {
+            display: block;
+            font-weight: 500;
+            color: #475569;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 16px 20px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: #fafbfc;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: #4f46e5;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
+        .input-prefix {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #64748b;
+            font-weight: 500;
+        }
+
+        .input-suffix {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+
+        .input-field.has-prefix {
+            padding-left: 45px;
+        }
+
+        .input-field.has-suffix {
+            padding-right: 60px;
+        }
+
+        .range-slider {
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: #e2e8f0;
+            outline: none;
+            margin-top: 10px;
+            -webkit-appearance: none;
+        }
+
+        .range-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: linear-gradient(90deg, #4f46e5 0%, #7c3aed 100%);
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(79, 70, 229, 0.3);
+        }
+
+        .range-slider::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: linear-gradient(90deg, #4f46e5 0%, #7c3aed 100%);
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 2px 10px rgba(79, 70, 229, 0.3);
+        }
+
+        .calculate-btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(90deg, #4f46e5 0%, #7c3aed 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+
+        .calculate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(79, 70, 229, 0.3);
+        }
+
+        .results-section {
+            background: #f8fafc;
+            border-radius: 16px;
+            padding: 30px;
+            margin-top: 40px;
+        }
+
+        .comparison-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin-bottom: 30px;
+        }
+
+        .comparison-card {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .comparison-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .comparison-card.savings {
+            border-color: #10b981;
+            background: linear-gradient(135deg, #ecfdf5 0%, #f0fdf4 100%);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+
+        .card-title {
+            font-weight: 600;
+            color: #374151;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .card-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 14px;
+        }
+
+        .card-icon.without {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        }
+
+        .card-icon.with {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        }
+
+        .card-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 8px;
+        }
+
+        .card-subtitle {
+            color: #64748b;
+            font-size: 0.9rem;
+            margin-bottom: 16px;
+        }
+
+        .savings-highlight {
+            background: linear-gradient(90deg, #10b981 0%, #059669 100%);
+            color: white;
+            padding: 12px 16px;
+            border-radius: 10px;
+            font-weight: 600;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .details-table {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        .table-header {
+            background: linear-gradient(90deg, #4f46e5 0%, #7c3aed 100%);
+            color: white;
+            padding: 20px;
+            font-weight: 600;
+        }
+
+        .table-content {
+            padding: 0;
+        }
+
+        .table-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            padding: 16px 20px;
+            border-bottom: 1px solid #e2e8f0;
+            align-items: center;
+        }
+
+        .table-row:last-child {
+            border-bottom: none;
+        }
+
+        .table-row:nth-child(even) {
+            background: #f8fafc;
+        }
+
+        .metric-name {
+            font-weight: 500;
+            color: #374151;
+        }
+
+        .metric-value {
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        .metric-value.savings {
+            color: #10b981;
+        }
+
+        .footer-note {
+            text-align: center;
+            color: #64748b;
+            font-size: 0.9rem;
+            margin-top: 30px;
+            padding: 20px;
+            background: white;
+            border-radius: 12px;
+            border-left: 4px solid #4f46e5;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .calculator-content {
+                padding: 24px;
+            }
+
+            .input-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .comparison-cards {
+                grid-template-columns: 1fr;
+            }
+
+            .table-row {
+                grid-template-columns: 1fr;
+                gap: 8px;
+            }
+
+            .step-indicator {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Loan Prepayment Calculator</h1>
+            <p>Calculate your savings and optimize your loan repayment strategy</p>
+        </div>
+
+        <div class="main-card">
+            <div class="progress-bar"></div>
+            
+            <div class="calculator-content">
+                <div class="step-indicator">
+                    <div class="step active">
+                        <div class="step-number">1</div>
+                        <span>Loan Details</span>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <span>Prepayment Strategy</span>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <span>Results & Savings</span>
+                    </div>
+                </div>
+
+                <div class="input-section">
+                    <h2 class="section-title">
+                        <div class="section-icon">₹</div>
+                        Current Loan Details
+                    </h2>
+                    
+                    <div class="input-grid">
+                        <div class="input-group">
+                            <label class="input-label">Loan Amount</label>
+                            <div class="input-wrapper">
+                                <span class="input-prefix">₹</span>
+                                <input type="number" class="input-field has-prefix" id="loanAmount" value="1600000" min="10000" max="10000000">
+                            </div>
+                            <input type="range" class="range-slider" id="loanAmountRange" min="100000" max="10000000" value="1600000" step="10000">
+                        </div>
+
+                        <div class="input-group">
+                            <label class="input-label">Interest Rate</label>
+                            <div class="input-wrapper">
+                                <input type="number" class="input-field has-suffix" id="interestRate" value="8" min="1" max="30" step="0.1">
+                                <span class="input-suffix">% p.a.</span>
+                            </div>
+                            <input type="range" class="range-slider" id="interestRateRange" min="1" max="30" value="8" step="0.1">
+                        </div>
+
+                        <div class="input-group">
+                            <label class="input-label">Loan Tenure</label>
+                            <div class="input-wrapper">
+                                <input type="number" class="input-field has-suffix" id="loanTenure" value="36" min="6" max="360">
+                                <span class="input-suffix">months</span>
+                            </div>
+                            <input type="range" class="range-slider" id="loanTenureRange" min="6" max="360" value="36" step="1">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="input-section">
+                    <h2 class="section-title">
+                        <div class="section-icon">⚡</div>
+                        Prepayment Strategy
+                    </h2>
+                    
+                    <div class="input-grid">
+                        <div class="input-group">
+                            <label class="input-label">Prepayment Amount</label>
+                            <div class="input-wrapper">
+                                <span class="input-prefix">₹</span>
+                                <input type="number" class="input-field has-prefix" id="prepaymentAmount" value="32000" min="1000" max="1000000">
+                            </div>
+                            <input type="range" class="range-slider" id="prepaymentAmountRange" min="1000" max="500000" value="32000" step="1000">
+                        </div>
+
+                        <div class="input-group">
+                            <label class="input-label">Payment Frequency</label>
+                            <select class="input-field" id="paymentFrequency">
+                                <option value="yearly" selected>Yearly</option>
+                                <option value="monthly">Monthly</option>
+                                <option value="quarterly">Quarterly</option>
+                                <option value="half-yearly">Half Yearly</option>
+                            </select>
+                        </div>
+
+                        <div class="input-group">
+                            <label class="input-label">Prepayment Penalty</label>
+                            <div class="input-wrapper">
+                                <input type="number" class="input-field has-suffix" id="prepaymentPenalty" value="0" min="0" max="10" step="0.1">
+                                <span class="input-suffix">%</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button class="calculate-btn" onclick="calculatePrepayment()">
+                        Calculate Savings & Generate Report
+                    </button>
+                </div>
+
+                <div class="results-section" id="resultsSection" style="display: none;">
+                    <h2 class="section-title">
+                        <div class="section-icon">📊</div>
+                        Comparison & Savings Analysis
+                    </h2>
+
+                    <div class="comparison-cards">
+                        <div class="comparison-card">
+                            <div class="card-header">
+                                <span class="card-title">Without Prepayment</span>
+                                <div class="card-icon without">❌</div>
+                            </div>
+                            <div class="card-value" id="originalTenure">3 years</div>
+                            <div class="card-subtitle">Total Interest: <span id="originalInterest">₹2,04,975</span></div>
+                            <div class="card-subtitle">Monthly EMI: <span id="originalEMI">₹50,138</span></div>
+                        </div>
+
+                        <div class="comparison-card savings">
+                            <div class="card-header">
+                                <span class="card-title">With Prepayment</span>
+                                <div class="card-icon with">✅</div>
+                            </div>
+                            <div class="card-value" id="newTenure">2 years 11 months</div>
+                            <div class="card-subtitle">Total Interest: <span id="newInterest">₹1,96,454</span></div>
+                            <div class="card-subtitle">Monthly EMI: <span id="newEMI">₹50,138</span> (unchanged)</div>
+                        </div>
+                    </div>
+
+                    <div class="savings-highlight">
+                        <div style="font-size: 1.2rem;">💰 Total Savings: <span id="totalSavings">₹8,521</span></div>
+                        <div style="font-size: 0.9rem; margin-top: 4px;">You finish <span id="timeSaved">1 month</span> earlier!</div>
+                    </div>
+
+                    <div class="details-table">
+                        <div class="table-header">
+                            Detailed Loan Comparison
+                        </div>
+                        <div class="table-content">
+                            <div class="table-row">
+                                <div class="metric-name">Metric</div>
+                                <div class="metric-name">Before</div>
+                                <div class="metric-name">After</div>
+                                <div class="metric-name">Savings</div>
+                            </div>
+                            <div class="table-row">
+                                <div class="metric-name">Loan Tenure</div>
+                                <div class="metric-value" id="beforeTenure">3 years</div>
+                                <div class="metric-value" id="afterTenure">2 years 11 months</div>
+                                <div class="metric-value savings" id="tenureSaved">1 month</div>
+                            </div>
+                            <div class="table-row">
+                                <div class="metric-name">Total Interest Paid</div>
+                                <div class="metric-value" id="beforeInterest">₹2,04,975</div>
+                                <div class="metric-value" id="afterInterest">₹1,96,454</div>
+                                <div class="metric-value savings" id="interestSaved">₹8,521</div>
+                            </div>
+                            <div class="table-row">
+                                <div class="metric-name">Monthly EMI</div>
+                                <div class="metric-value" id="beforeEMI">₹50,138</div>
+                                <div class="metric-value" id="afterEMI">₹50,138</div>
+                                <div class="metric-value">—</div>
+                            </div>
+                            <div class="table-row">
+                                <div class="metric-name">Total Amount Paid</div>
+                                <div class="metric-value" id="beforeTotal">₹18,04,975</div>
+                                <div class="metric-value" id="afterTotal">₹17,96,454</div>
+                                <div class="metric-value savings" id="totalAmountSaved">₹8,521</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="footer-note">
+                        <strong>Note:</strong> This calculator provides estimates based on the assumption that prepayments reduce the loan tenure while keeping EMI constant. Actual savings may vary based on your lender's specific terms and conditions.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sync input fields with range sliders
+        function syncInputs() {
+            // Loan Amount
+            document.getElementById('loanAmount').addEventListener('input', function() {
+                document.getElementById('loanAmountRange').value = this.value;
+            });
+            document.getElementById('loanAmountRange').addEventListener('input', function() {
+                document.getElementById('loanAmount').value = this.value;
+            });
+
+            // Interest Rate
+            document.getElementById('interestRate').addEventListener('input', function() {
+                document.getElementById('interestRateRange').value = this.value;
+            });
+            document.getElementById('interestRateRange').addEventListener('input', function() {
+                document.getElementById('interestRate').value = this.value;
+            });
+
+            // Loan Tenure
+            document.getElementById('loanTenure').addEventListener('input', function() {
+                document.getElementById('loanTenureRange').value = this.value;
+            });
+            document.getElementById('loanTenureRange').addEventListener('input', function() {
+                document.getElementById('loanTenure').value = this.value;
+            });
+
+            // Prepayment Amount
+            document.getElementById('prepaymentAmount').addEventListener('input', function() {
+                document.getElementById('prepaymentAmountRange').value = this.value;
+            });
+            document.getElementById('prepaymentAmountRange').addEventListener('input', function() {
+                document.getElementById('prepaymentAmount').value = this.value;
+            });
+        }
+
+        function calculateEMI(principal, rate, tenure) {
+            const monthlyRate = rate / (12 * 100);
+            const emi = (principal * monthlyRate * Math.pow(1 + monthlyRate, tenure)) / 
+                       (Math.pow(1 + monthlyRate, tenure) - 1);
+            return emi;
+        }
+
+        function formatCurrency(amount) {
+            return '₹' + Math.round(amount).toLocaleString('en-IN');
+        }
+
+        function formatTenure(months) {
+            const years = Math.floor(months / 12);
+            const remainingMonths = months % 12;
+            
+            if (years === 0) {
+                return `${remainingMonths} month${remainingMonths !== 1 ? 's' : ''}`;
+            } else if (remainingMonths === 0) {
+                return `${years} year${years !== 1 ? 's' : ''}`;
+            } else {
+                return `${years} year${years !== 1 ? 's' : ''} ${remainingMonths} month${remainingMonths !== 1 ? 's' : ''}`;
+            }
+        }
+
+        function calculatePrepayment() {
+            const loanAmount = parseFloat(document.getElementById('loanAmount').value);
+            const interestRate = parseFloat(document.getElementById('interestRate').value);
+            const loanTenure = parseInt(document.getElementById('loanTenure').value);
+            const prepaymentAmount = parseFloat(document.getElementById('prepaymentAmount').value);
+            const paymentFrequency = document.getElementById('paymentFrequency').value;
+            const prepaymentPenalty = parseFloat(document.getElementById('prepaymentPenalty').value);
+
+            // Calculate original loan details
+            const originalEMI = calculateEMI(loanAmount, interestRate, loanTenure);
+            const originalTotalPayment = originalEMI * loanTenure;
+            const originalTotalInterest = originalTotalPayment - loanAmount;
+
+            // Calculate prepayment frequency multiplier
+            let prepaymentFrequencyMultiplier;
+            switch(paymentFrequency) {
+                case 'monthly': prepaymentFrequencyMultiplier = 12; break;
+                case 'quarterly': prepaymentFrequencyMultiplier = 4; break;
+                case 'half-yearly': prepaymentFrequencyMultiplier = 2; break;
+                case 'yearly': 
+                default: prepaymentFrequencyMultiplier = 1; break;
+            }
+
+            // Simulate loan with prepayments
+            let remainingPrincipal = loanAmount;
+            let month = 0;
+            let totalInterestPaid = 0;
+            let totalPrepaymentPaid = 0;
+            const monthlyRate = interestRate / (12 * 100);
+
+            while (remainingPrincipal > 0.01 && month < loanTenure) {
+                month++;
+                
+                // Calculate monthly interest
+                const monthlyInterest = remainingPrincipal * monthlyRate;
+                const monthlyPrincipal = originalEMI - monthlyInterest;
+                
+                totalInterestPaid += monthlyInterest;
+                remainingPrincipal -= monthlyPrincipal;
+
+                // Apply prepayment based on frequency
+                if (month % (12 / prepaymentFrequencyMultiplier) === 0) {
+                    const prepaymentWithPenalty = prepaymentAmount * (1 + prepaymentPenalty / 100);
+                    const actualPrepayment = Math.min(prepaymentWithPenalty, remainingPrincipal);
+                    remainingPrincipal -= actualPrepayment;
+                    totalPrepaymentPaid += actualPrepayment;
+                }
+            }
+
+            const newTenure = month;
+            const newTotalInterest = totalInterestPaid;
+            const interestSavings = originalTotalInterest - newTotalInterest;
+            const timeSavings = loanTenure - newTenure;
+
+            // Update UI
+            document.getElementById('originalTenure').textContent = formatTenure(loanTenure);
+            document.getElementById('originalInterest').textContent = formatCurrency(originalTotalInterest);
+            document.getElementById('originalEMI').textContent = formatCurrency(originalEMI);
+
+            document.getElementById('newTenure').textContent = formatTenure(newTenure);
+            document.getElementById('newInterest').textContent = formatCurrency(newTotalInterest);
+            document.getElementById('newEMI').textContent = formatCurrency(originalEMI);
+
+            document.getElementById('totalSavings').textContent = formatCurrency(interestSavings);
+            document.getElementById('timeSaved').textContent = formatTenure(timeSavings);
+
+            // Update detailed table
+            document.getElementById('beforeTenure').textContent = formatTenure(loanTenure);
+            document.getElementById('afterTenure').textContent = formatTenure(newTenure);
+            document.getElementById('tenureSaved').textContent = formatTenure(timeSavings);
+
+            document.getElementById('beforeInterest').textContent = formatCurrency(originalTotalInterest);
+            document.getElementById('afterInterest').textContent = formatCurrency(newTotalInterest);
+            document.getElementById('interestSaved').textContent = formatCurrency(interestSavings);
+
+            document.getElementById('beforeEMI').textContent = formatCurrency(originalEMI);
+            document.getElementById('afterEMI').textContent = formatCurrency(originalEMI);
+
+            document.getElementById('beforeTotal').textContent = formatCurrency(originalTotalPayment);
+            document.getElementById('afterTotal').textContent = formatCurrency(newTotalInterest + loanAmount + totalPrepaymentPaid);
+            document.getElementById('totalAmountSaved').textContent = formatCurrency(interestSavings);
+
+            // Show results section
+            document.getElementById('resultsSection').style.display = 'block';
+            
+            // Update step indicator
+            const steps = document.querySelectorAll('.step');
+            steps.forEach((step, index) => {
+                if (index <= 2) {
+                    step.classList.add('active');
+                }
+            });
+
+            // Smooth scroll to results
+            document.getElementById('resultsSection').scrollIntoView({ 
+                behavior: 'smooth',
+                block: 'start'
+            });
+        }
+
+        // Initialize the calculator
+        document.addEventListener('DOMContentLoaded', function() {
+            syncInputs();
+            // Calculate with default values
+            setTimeout(calculatePrepayment, 500);
+        });
+    </script>
+</body>
+</html
