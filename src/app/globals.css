@@ -12,11 +12,13 @@
   --outline: #dadce0;
   --outline-variant: #e8eaed;
   --shadow: rgba(0, 0, 0, 0.12);
-  --elevation-1: 0 1px 3px 0 rgba(0, 0, 0, 0.12), 0 1px 2px 0 rgba(0, 0, 0, 0.24);
-  --elevation-2: 0 3px 6px 0 rgba(0, 0, 0, 0.16), 0 3px 6px 0 rgba(0, 0, 0, 0.23);
-  --elevation-3: 0 10px 20px 0 rgba(0, 0, 0, 0.19), 0 6px 6px 0 rgba(0, 0, 0, 0.23);
-  --elevation-4: 0 14px 28px 0 rgba(0, 0, 0, 0.25), 0 10px 10px 0 rgba(0, 0, 0, 0.22);
-  --elevation-5: 0 19px 38px 0 rgba(0, 0, 0, 0.30), 0 15px 12px 0 rgba(0, 0, 0, 0.22);
+  /* Material Design 3 Elevation System - Light Theme */
+  --elevation-0: none;
+  --elevation-1: 0px 1px 2px 0px rgba(0, 0, 0, 0.30), 0px 1px 3px 1px rgba(0, 0, 0, 0.15);
+  --elevation-2: 0px 1px 2px 0px rgba(0, 0, 0, 0.30), 0px 2px 6px 2px rgba(0, 0, 0, 0.15);
+  --elevation-3: 0px 1px 3px 0px rgba(0, 0, 0, 0.30), 0px 4px 8px 3px rgba(0, 0, 0, 0.15);
+  --elevation-4: 0px 2px 3px 0px rgba(0, 0, 0, 0.30), 0px 6px 10px 4px rgba(0, 0, 0, 0.15);
+  --elevation-5: 0px 4px 4px 0px rgba(0, 0, 0, 0.30), 0px 8px 12px 6px rgba(0, 0, 0, 0.15);
   
   /* Material Design 3 Color Palette - Light */
   --md-primary: #1976d2;
@@ -49,11 +51,13 @@
     --outline: #4a4a4a;
     --outline-variant: #3a3a3a;
     --shadow: rgba(0, 0, 0, 0.4);
-    --elevation-1: 0 1px 3px 0 rgba(0, 0, 0, 0.4), 0 1px 2px 0 rgba(0, 0, 0, 0.6);
-    --elevation-2: 0 3px 6px 0 rgba(0, 0, 0, 0.5), 0 3px 6px 0 rgba(0, 0, 0, 0.7);
-    --elevation-3: 0 10px 20px 0 rgba(0, 0, 0, 0.6), 0 6px 6px 0 rgba(0, 0, 0, 0.7);
-    --elevation-4: 0 14px 28px 0 rgba(0, 0, 0, 0.7), 0 10px 10px 0 rgba(0, 0, 0, 0.8);
-    --elevation-5: 0 19px 38px 0 rgba(0, 0, 0, 0.8), 0 15px 12px 0 rgba(0, 0, 0, 0.9);
+    /* Material Design 3 Elevation System - Dark Theme */
+    --elevation-0: none;
+    --elevation-1: 0px 1px 2px 0px rgba(0, 0, 0, 0.30), 0px 1px 3px 1px rgba(0, 0, 0, 0.15);
+    --elevation-2: 0px 1px 2px 0px rgba(0, 0, 0, 0.30), 0px 2px 6px 2px rgba(0, 0, 0, 0.15);
+    --elevation-3: 0px 1px 3px 0px rgba(0, 0, 0, 0.30), 0px 4px 8px 3px rgba(0, 0, 0, 0.15);
+    --elevation-4: 0px 2px 3px 0px rgba(0, 0, 0, 0.30), 0px 6px 10px 4px rgba(0, 0, 0, 0.15);
+    --elevation-5: 0px 4px 4px 0px rgba(0, 0, 0, 0.30), 0px 8px 12px 6px rgba(0, 0, 0, 0.15);
     
     /* Material Design 3 Color Palette - Dark */
     --md-primary: #64b5f6;
@@ -121,11 +125,12 @@ body {
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* Material Design 3 Components */
+/* Material Design 3 Surface System */
 .md-surface {
   background-color: var(--surface);
   color: var(--on-surface);
   border-radius: 12px;
+  border: 1px solid var(--outline-variant);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -133,30 +138,80 @@ body {
   background-color: var(--surface-variant);
   color: var(--on-surface-variant);
   border-radius: 12px;
+  border: 1px solid var(--outline-variant);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Material Design 3 Elevation System */
+.md-elevation-0 {
+  box-shadow: var(--elevation-0);
+  border: 1px solid var(--outline-variant);
 }
 
 .md-elevation-1 {
   box-shadow: var(--elevation-1);
+  border: 1px solid var(--outline-variant);
 }
 
 .md-elevation-2 {
   box-shadow: var(--elevation-2);
+  border: 1px solid var(--outline-variant);
 }
 
 .md-elevation-3 {
   box-shadow: var(--elevation-3);
+  border: none;
 }
 
 .md-elevation-4 {
   box-shadow: var(--elevation-4);
+  border: none;
 }
 
 .md-elevation-5 {
   box-shadow: var(--elevation-5);
+  border: none;
 }
 
-/* Material Design Buttons */
+/* Material Design 3 Panel Styles */
+.md-panel {
+  background-color: var(--surface);
+  color: var(--on-surface);
+  border-radius: 16px;
+  border: 1px solid var(--outline-variant);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.md-panel-elevated {
+  background-color: var(--surface);
+  color: var(--on-surface);
+  border-radius: 16px;
+  box-shadow: var(--elevation-1);
+  border: 1px solid var(--outline-variant);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.md-panel-elevated:hover {
+  box-shadow: var(--elevation-2);
+}
+
+.md-panel-outlined {
+  background-color: var(--surface);
+  color: var(--on-surface);
+  border-radius: 16px;
+  border: 2px solid var(--outline);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.md-panel-filled {
+  background-color: var(--surface-variant);
+  color: var(--on-surface-variant);
+  border-radius: 16px;
+  border: none;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Material Design 3 Buttons */
 .md-button {
   display: inline-flex;
   align-items: center;
@@ -171,15 +226,15 @@ body {
   font-size: 14px;
   font-weight: 500;
   line-height: 1.4;
-  text-transform: uppercase;
-  letter-spacing: 0.8px;
+  text-transform: none;
+  letter-spacing: 0.1px;
   cursor: pointer;
   overflow: hidden;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   outline: none;
 }
 
-.md-button:focus {
+.md-button:focus-visible {
   outline: 2px solid var(--md-primary);
   outline-offset: 2px;
 }
@@ -187,13 +242,13 @@ body {
 .md-button-filled {
   background-color: var(--md-primary);
   color: var(--md-on-primary);
+  box-shadow: var(--elevation-0);
 }
 
 .md-button-filled:hover {
   background-color: var(--md-primary-container);
   color: var(--md-on-primary-container);
-  box-shadow: var(--elevation-2);
-  transform: translateY(-1px);
+  box-shadow: var(--elevation-1);
 }
 
 .md-button-outlined {
@@ -206,7 +261,6 @@ body {
   background-color: var(--md-primary-container);
   color: var(--md-on-primary-container);
   border-color: var(--md-primary);
-  box-shadow: var(--elevation-1);
 }
 
 .md-button-text {
@@ -219,6 +273,18 @@ body {
 .md-button-text:hover {
   background-color: var(--md-primary-container);
   color: var(--md-on-primary-container);
+}
+
+.md-button-elevated {
+  background-color: var(--surface);
+  color: var(--md-primary);
+  box-shadow: var(--elevation-1);
+}
+
+.md-button-elevated:hover {
+  background-color: var(--md-primary-container);
+  color: var(--md-on-primary-container);
+  box-shadow: var(--elevation-2);
 }
 
 /* Material Design Text Fields */
@@ -275,18 +341,47 @@ body {
   color: var(--md-primary);
 }
 
-/* Material Design Cards */
+/* Material Design 3 Cards */
 .md-card {
   background-color: var(--surface);
   color: var(--on-surface);
   border-radius: 12px;
   padding: 24px;
+  border: 1px solid var(--outline-variant);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.md-card:hover {
+.md-card-elevated {
+  background-color: var(--surface);
+  color: var(--on-surface);
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: var(--elevation-1);
+  border: none;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.md-card-elevated:hover {
   box-shadow: var(--elevation-3);
-  transform: translateY(-2px);
+  transform: translateY(-1px);
+}
+
+.md-card-outlined {
+  background-color: var(--surface);
+  color: var(--on-surface);
+  border-radius: 12px;
+  padding: 24px;
+  border: 1px solid var(--outline);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.md-card-filled {
+  background-color: var(--surface-variant);
+  color: var(--on-surface-variant);
+  border-radius: 12px;
+  padding: 24px;
+  border: none;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* Material Design Chips */
@@ -531,4 +626,69 @@ input[type="number"] {
 
 .scrollbar-hide::-webkit-scrollbar {
   display: none;  /* Safari and Chrome */
+}
+
+/* Material Design 3 Utility Classes */
+.md-container {
+  background-color: var(--surface);
+  color: var(--on-surface);
+  border-radius: 16px;
+  padding: 16px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.md-container-small {
+  background-color: var(--surface);
+  color: var(--on-surface);
+  border-radius: 12px;
+  padding: 12px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.md-form-field {
+  background-color: var(--surface-variant);
+  border: 1px solid var(--outline-variant);
+  border-radius: 8px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.md-form-field:focus {
+  border-color: var(--md-primary);
+  outline: 2px solid var(--md-primary);
+  outline-offset: -1px;
+}
+
+.md-form-field:hover {
+  border-color: var(--outline);
+}
+
+/* State layers for interactive elements */
+.md-state-layer {
+  position: relative;
+  overflow: hidden;
+}
+
+.md-state-layer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: currentColor;
+  opacity: 0;
+  transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+}
+
+.md-state-layer:hover::before {
+  opacity: 0.08;
+}
+
+.md-state-layer:focus::before {
+  opacity: 0.12;
+}
+
+.md-state-layer:active::before {
+  opacity: 0.16;
 }

@@ -124,7 +124,7 @@ export default function CarDetailsFormV2({ carData, updateCarData, monthlyIncome
                   e.preventDefault()
                 }
               }}
-              className={`w-full pl-8 pr-4 py-1.5 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-transparent transition-all text-sm ${
+              className={`w-full pl-8 pr-4 py-2.5 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-transparent transition-all text-sm md-text-field-input ${
                 themeClass(
                   'bg-white border border-slate-300 text-slate-900 placeholder-slate-500',
                   'bg-white/10 backdrop-blur-md border border-white/20 text-white placeholder-white/50',
@@ -192,7 +192,7 @@ export default function CarDetailsFormV2({ carData, updateCarData, monthlyIncome
                   e.preventDefault()
                 }
               }}
-              className={`w-full pl-8 pr-4 py-1.5 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-transparent transition-all text-sm ${
+              className={`w-full pl-8 pr-4 py-2.5 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-transparent transition-all text-sm md-text-field-input ${
                 themeClass(
                   'bg-white border border-slate-300 text-slate-900 placeholder-slate-500',
                   'bg-white/10 backdrop-blur-md border border-white/20 text-white placeholder-white/50',
