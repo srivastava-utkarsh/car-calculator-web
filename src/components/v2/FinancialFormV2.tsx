@@ -2,8 +2,8 @@
 
 import React, { useRef, useEffect } from 'react'
 import { CarData } from '@/app/page'
-import { useTheme } from '@/contexts/ThemeContext'
-import { getThemeStyles, themeClass } from '@/utils/themeStyles'
+import { Box, Typography, TextField, Divider } from '@mui/material'
+import { useTheme } from '@mui/material/styles'
 
 interface FinancialFormV2Props {
   carData: CarData
@@ -12,8 +12,8 @@ interface FinancialFormV2Props {
 }
 
 export default function FinancialFormV2({ carData, updateCarData, monthlyIncomeInputRef }: FinancialFormV2Props) {
-  const { theme, isLight, isDark } = useTheme()
-  const themeStyles = getThemeStyles(theme)
+  const muiTheme = useTheme()
+  const isLight = muiTheme.palette.mode === 'light'
 
   // Helper function to format number with commas
   const formatWithCommas = (num: number): string => {
@@ -82,12 +82,12 @@ export default function FinancialFormV2({ carData, updateCarData, monthlyIncomeI
   const formContent = (
     <>
       {/* Monthly Income - Required for calculations */}
-      <div className="flex items-center space-x-3 mb-3">
-        <h4 className="text-lg font-semibold text-white">
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+        <Typography variant="h6" sx={{ fontWeight: 600 }}>
           Monthly Income
-        </h4>
-        <div className={`h-px w-16 ${themeClass('bg-slate-300', 'bg-white/30', isLight)}`}></div>
-      </div>
+        </Typography>
+        <Divider sx={{ flexGrow: 1, maxWidth: '64px' }} />
+      </Box>
       
       <div className={`space-y-2 p-2.5 rounded-lg transition-all duration-300 ${
         shouldHighlightMonthlyIncome 
@@ -131,10 +131,10 @@ export default function FinancialFormV2({ carData, updateCarData, monthlyIncomeI
             }`}
           />
         </div>
-        <p className={`text-sm flex items-center mt-3 ${themeClass(themeStyles.secondaryText, 'text-white/70', isLight)}`}>
-          <span className="w-1.5 h-1.5 bg-emerald-400 rounded-full mr-3"></span>
+        <Typography variant="body2" sx={{ display: 'flex', alignItems: 'center', mt: 2, color: 'text.secondary' }}>
+          <Box component="span" sx={{ width: 6, height: 6, bgcolor: 'success.main', borderRadius: '50%', mr: 1.5 }} />
           Used to calculate the 10% rule: total car expenses should not exceed 10% of your income
-        </p>
+        </Typography>
       </div>
 
       {/* Operational Cost Section Header */}
@@ -142,16 +142,16 @@ export default function FinancialFormV2({ carData, updateCarData, monthlyIncomeI
         <h4 className="text-lg font-semibold text-white">
           Operational Cost
         </h4>
-        <div className={`h-px w-16 ${themeClass('bg-slate-300', 'bg-white/30', isLight)}`}></div>
+        <Divider sx={{ flexGrow: 1, maxWidth: '64px' }} />
       </div>
 
       {/* Insurance Cost and Maintenance Cost Row */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6 mb-6 relative">
         {/* Insurance Cost */}
         <div className="space-y-2">
-          <label className={`text-sm font-medium ${themeClass(themeStyles.primaryText, 'text-white', isLight)}`} style={{ lineHeight: '1.5' }}>
+          <Typography variant="body2" sx={{ fontWeight: 500, lineHeight: 1.5 }}>
             Insurance Cost
-          </label>
+          </Typography>
           <div className="relative">
             <span className="absolute left-4 top-1/2 transform -translate-y-1/2 font-semibold text-white/70 z-10">₹</span>
             <input
@@ -193,9 +193,9 @@ export default function FinancialFormV2({ carData, updateCarData, monthlyIncomeI
 
         {/* Maintenance Cost (per year) */}
         <div className="space-y-2">
-          <label className={`text-sm font-medium ${themeClass(themeStyles.primaryText, 'text-white', isLight)}`} style={{ lineHeight: '1.5' }}>
+          <Typography variant="body2" sx={{ fontWeight: 500, lineHeight: 1.5 }}>
             Maintenance Cost (per year)
-          </label>
+          </Typography>
           <div className="relative">
             <span className="absolute left-4 top-1/2 transform -translate-y-1/2 font-semibold text-white/70 z-10">₹</span>
             <input
@@ -230,9 +230,9 @@ export default function FinancialFormV2({ carData, updateCarData, monthlyIncomeI
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6 mt-6 relative">
         {/* Monthly Fuel Expense */}
         <div className="space-y-2" id="monthly-fuel-expense">
-          <label className={`text-sm font-medium ${themeClass(themeStyles.primaryText, 'text-white', isLight)}`} style={{ lineHeight: '1.5' }}>
+          <Typography variant="body2" sx={{ fontWeight: 500, lineHeight: 1.5 }}>
             Monthly Fuel Expense
-          </label>
+          </Typography>
           <div className="relative">
             <span className="absolute left-4 top-1/2 transform -translate-y-1/2 font-semibold text-white/70 z-10">₹</span>
             <input
@@ -267,9 +267,9 @@ export default function FinancialFormV2({ carData, updateCarData, monthlyIncomeI
 
         {/* Parking Fee */}
         <div className="space-y-2">
-          <label className={`text-sm font-medium ${themeClass(themeStyles.primaryText, 'text-white', isLight)}`} style={{ lineHeight: '1.5' }}>
+          <Typography variant="body2" sx={{ fontWeight: 500, lineHeight: 1.5 }}>
             Parking Fee (per month)
-          </label>
+          </Typography>
           <div className="relative">
             <span className="absolute left-4 top-1/2 transform -translate-y-1/2 font-semibold text-white/70 z-10">₹</span>
             <input

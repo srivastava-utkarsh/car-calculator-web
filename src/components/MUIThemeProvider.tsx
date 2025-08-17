@@ -2,28 +2,28 @@
 
 import React from 'react'
 import { ThemeProvider, createTheme } from '@mui/material/styles'
-import { CssBaseline } from '@mui/material'
+import { CssBaseline, StyledEngineProvider } from '@mui/material'
 
 interface MUIThemeProviderProps {
   children: React.ReactNode
 }
 
 export default function MUIThemeProvider({ children }: MUIThemeProviderProps) {
-  // Material Design 3 dark theme
+  // Material Design 3 light theme
   const theme = createTheme({
     palette: {
-      mode: 'dark', // Dark mode for Material Design 3
+      mode: 'light', // Light mode for Material Design 3
       primary: {
-        main: '#64b5f6', // Material Design 3 dark primary
-        light: '#90caf9', 
-        dark: '#1976d2',
-        contrastText: '#0a0a0a',
+        main: '#1976d2', // Material Design 3 light primary
+        light: '#42a5f5', 
+        dark: '#1565c0',
+        contrastText: '#ffffff',
       },
       secondary: {
-        main: '#b39ddb', // Material Design 3 dark secondary
-        light: '#c5cae9',
+        main: '#7c4dff', // Material Design 3 light secondary
+        light: '#b39ddb',
         dark: '#512da8',
-        contrastText: '#0a0a0a',
+        contrastText: '#ffffff',
       },
       success: {
         main: '#4caf50', // Material green
@@ -35,29 +35,29 @@ export default function MUIThemeProvider({ children }: MUIThemeProviderProps) {
         main: '#ff9800', // Material orange
         light: '#ffb74d',
         dark: '#f57c00',
-        contrastText: '#0a0a0a',
+        contrastText: '#ffffff',
       },
       error: {
-        main: '#ef5350', // Material red dark
-        light: '#e57373',
-        dark: '#c62828',
+        main: '#d32f2f', // Material red light
+        light: '#ef5350',
+        dark: '#b71c1c',
         contrastText: '#ffffff',
       },
       info: {
-        main: '#4dd0e1', // Material cyan
-        light: '#80deea',
-        dark: '#00838f',
-        contrastText: '#0a0a0a',
+        main: '#0288d1', // Material cyan
+        light: '#4dd0e1',
+        dark: '#01579b',
+        contrastText: '#ffffff',
       },
       background: {
-        default: '#121212', // Material Design 3 dark background
-        paper: '#1e1e1e', // Material Design 3 dark surface
+        default: '#fafafa', // Material Design 3 light background
+        paper: '#ffffff', // Material Design 3 light surface
       },
       text: {
-        primary: '#e0e0e0', // Material Design 3 dark on-surface
-        secondary: '#a8a8a8', // Material Design 3 dark on-surface-variant
+        primary: '#212121', // Material Design 3 light on-surface
+        secondary: '#757575', // Material Design 3 light on-surface-variant
       },
-      divider: '#4a4a4a',
+      divider: '#e0e0e0',
     },
     typography: {
       fontFamily: 'Roboto, Inter, system-ui, sans-serif',
@@ -159,9 +159,11 @@ export default function MUIThemeProvider({ children }: MUIThemeProviderProps) {
   })
 
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      {children}
-    </ThemeProvider>
+    <StyledEngineProvider injectFirst>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        {children}
+      </ThemeProvider>
+    </StyledEngineProvider>
   )
 }

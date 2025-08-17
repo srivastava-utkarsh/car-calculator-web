@@ -3,8 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Loan Prepayment Calculator</title>
+    <title>Material Design Loan Calculator</title>
+    
+    <!-- Material Design CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/material-design-icons/4.0.0/iconfont/material-icons.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
     <style>
+        :root {
+            --md-primary: #1976d2;
+            --md-primary-dark: #1565c0;
+            --md-primary-light: #42a5f5;
+            --md-secondary: #4caf50;
+            --md-secondary-dark: #388e3c;
+            --md-accent: #ff9800;
+            --md-error: #f44336;
+            --md-surface: #ffffff;
+            --md-background: #fafafa;
+            --md-on-surface: #212121;
+            --md-on-primary: #ffffff;
+            --md-outline: #e0e0e0;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -12,762 +35,636 @@
         }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
-            color: #333;
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--md-background);
+            color: var(--md-on-surface);
+            line-height: 1.5;
         }
 
         .container {
             max-width: 1200px;
             margin: 0 auto;
+            padding: 16px;
         }
 
-        .header {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-
-        .header h1 {
-            color: white;
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin-bottom: 10px;
-        }
-
-        .header p {
-            color: rgba(255, 255, 255, 0.8);
-            font-size: 1.1rem;
-        }
-
-        .main-card {
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+        /* Material Design Cards */
+        .material-card {
+            background: var(--md-surface);
+            border-radius: 12px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1), 0 8px 16px rgba(0,0,0,0.1);
+            margin-bottom: 24px;
             overflow: hidden;
-            margin-bottom: 30px;
+            transition: box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        .progress-bar {
-            background: linear-gradient(90deg, #4f46e5 0%, #7c3aed 100%);
-            height: 4px;
-            width: 100%;
-        }
-
-        .calculator-content {
-            padding: 40px;
-        }
-
-        .step-indicator {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 40px;
-            gap: 20px;
-        }
-
-        .step {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 10px 20px;
-            border-radius: 50px;
-            background: #f8fafc;
-            border: 2px solid #e2e8f0;
-            transition: all 0.3s ease;
-        }
-
-        .step.active {
-            background: linear-gradient(90deg, #4f46e5 0%, #7c3aed 100%);
-            color: white;
-            border-color: #4f46e5;
-        }
-
-        .step-number {
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            background: #e2e8f0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 12px;
-            font-weight: 600;
-        }
-
-        .step.active .step-number {
-            background: rgba(255, 255, 255, 0.2);
-            color: white;
-        }
-
-        .input-section {
-            margin-bottom: 40px;
-        }
-
-        .section-title {
-            font-size: 1.5rem;
-            font-weight: 600;
-            margin-bottom: 20px;
-            color: #1e293b;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .section-icon {
-            width: 24px;
-            height: 24px;
-            background: linear-gradient(90deg, #4f46e5 0%, #7c3aed 100%);
-            border-radius: 6px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 12px;
-        }
-
-        .input-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 24px;
-            margin-bottom: 30px;
-        }
-
-        .input-group {
-            position: relative;
-        }
-
-        .input-label {
-            display: block;
-            font-weight: 500;
-            color: #475569;
-            margin-bottom: 8px;
-            font-size: 0.9rem;
-        }
-
-        .input-wrapper {
-            position: relative;
-        }
-
-        .input-field {
-            width: 100%;
-            padding: 16px 20px;
-            border: 2px solid #e2e8f0;
-            border-radius: 12px;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-            background: #fafbfc;
-        }
-
-        .input-field:focus {
-            outline: none;
-            border-color: #4f46e5;
-            background: white;
-            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
-        }
-
-        .input-prefix {
-            position: absolute;
-            left: 16px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #64748b;
-            font-weight: 500;
-        }
-
-        .input-suffix {
-            position: absolute;
-            right: 16px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #64748b;
-            font-size: 0.9rem;
-        }
-
-        .input-field.has-prefix {
-            padding-left: 45px;
-        }
-
-        .input-field.has-suffix {
-            padding-right: 60px;
-        }
-
-        .range-slider {
-            width: 100%;
-            height: 6px;
-            border-radius: 3px;
-            background: #e2e8f0;
-            outline: none;
-            margin-top: 10px;
-            -webkit-appearance: none;
-        }
-
-        .range-slider::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            background: linear-gradient(90deg, #4f46e5 0%, #7c3aed 100%);
-            cursor: pointer;
-            box-shadow: 0 2px 10px rgba(79, 70, 229, 0.3);
-        }
-
-        .range-slider::-moz-range-thumb {
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            background: linear-gradient(90deg, #4f46e5 0%, #7c3aed 100%);
-            cursor: pointer;
-            border: none;
-            box-shadow: 0 2px 10px rgba(79, 70, 229, 0.3);
-        }
-
-        .calculate-btn {
-            width: 100%;
-            padding: 18px;
-            background: linear-gradient(90deg, #4f46e5 0%, #7c3aed 100%);
-            color: white;
-            border: none;
-            border-radius: 12px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin-top: 20px;
-        }
-
-        .calculate-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(79, 70, 229, 0.3);
-        }
-
-        .results-section {
-            background: #f8fafc;
-            border-radius: 16px;
-            padding: 30px;
-            margin-top: 40px;
-        }
-
-        .comparison-cards {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 24px;
-            margin-bottom: 30px;
-        }
-
-        .comparison-card {
-            background: white;
-            border-radius: 16px;
-            padding: 24px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-            border: 2px solid transparent;
-            transition: all 0.3s ease;
-        }
-
-        .comparison-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-        }
-
-        .comparison-card.savings {
-            border-color: #10b981;
-            background: linear-gradient(135deg, #ecfdf5 0%, #f0fdf4 100%);
+        .material-card:hover {
+            box-shadow: 0 4px 8px rgba(0,0,0,0.12), 0 16px 32px rgba(0,0,0,0.12);
         }
 
         .card-header {
+            background: var(--md-primary);
+            color: var(--md-on-primary);
+            padding: 20px 24px;
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            margin-bottom: 16px;
+            gap: 16px;
         }
 
-        .card-title {
-            font-weight: 600;
-            color: #374151;
-            font-size: 0.9rem;
-            text-transform: uppercase;
+        .card-header h2 {
+            font-size: 20px;
+            font-weight: 500;
+            margin: 0;
+        }
+
+        .card-content {
+            padding: 24px;
+        }
+
+        /* Material Design Form Fields */
+        .input-field {
+            position: relative;
+            margin-bottom: 24px;
+        }
+
+        .input-field input[type=text],
+        .input-field input[type=number],
+        .input-field select {
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid var(--md-outline);
+            border-radius: 4px 4px 0 0;
+            background-color: rgba(0,0,0,0.04);
+            color: var(--md-on-surface);
+            display: block;
+            font-size: 16px;
+            height: 56px;
+            padding: 16px 16px 0;
+            width: 100%;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .input-field input[type=text]:focus,
+        .input-field input[type=number]:focus,
+        .input-field select:focus {
+            background-color: rgba(25, 118, 210, 0.08);
+            border-bottom: 2px solid var(--md-primary);
+            outline: none;
+        }
+
+        .input-field label {
+            color: rgba(0,0,0,0.6);
+            font-size: 16px;
+            position: absolute;
+            top: 16px;
+            left: 16px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            pointer-events: none;
+        }
+
+        .input-field input:focus + label,
+        .input-field input:not(:placeholder-shown) + label,
+        .input-field.active label {
+            color: var(--md-primary);
+            font-size: 12px;
+            top: 4px;
+        }
+
+        /* Material Design Buttons */
+        .btn-material {
+            background: var(--md-primary);
+            border: none;
+            border-radius: 4px;
+            color: var(--md-on-primary);
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            height: 36px;
             letter-spacing: 0.5px;
+            padding: 0 16px;
+            text-transform: uppercase;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            min-width: 64px;
+            position: relative;
+            overflow: hidden;
         }
 
-        .card-icon {
-            width: 32px;
-            height: 32px;
-            border-radius: 8px;
+        .btn-material:hover {
+            background: var(--md-primary-dark);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .btn-material:active {
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+        }
+
+        .btn-large {
+            height: 48px;
+            padding: 0 24px;
+            font-size: 16px;
+        }
+
+        .btn-outlined {
+            background: transparent;
+            border: 1px solid var(--md-primary);
+            color: var(--md-primary);
+        }
+
+        .btn-outlined:hover {
+            background: rgba(25, 118, 210, 0.08);
+        }
+
+        /* Material Design Grid */
+        .material-row {
+            display: flex;
+            flex-wrap: wrap;
+            margin: 0 -12px;
+        }
+
+        .material-col {
+            padding: 0 12px;
+            width: 100%;
+        }
+
+        .col-s12 { width: 100%; }
+        .col-m6 { width: 50%; }
+        .col-m4 { width: 33.333%; }
+        .col-l4 { width: 33.333%; }
+
+        @media (max-width: 600px) {
+            .col-m6, .col-m4, .col-l4 { width: 100%; }
+        }
+
+        /* Savings Highlight Card */
+        .savings-card {
+            background: linear-gradient(135deg, var(--md-secondary) 0%, #66bb6a 100%);
+            color: white;
+            text-align: center;
+            padding: 32px 24px;
+            border-radius: 12px;
+            margin: 24px 0;
+            box-shadow: 0 4px 8px rgba(76, 175, 80, 0.3);
+        }
+
+        .savings-amount {
+            font-size: 32px;
+            font-weight: 300;
+            margin-bottom: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
+            gap: 8px;
+        }
+
+        .savings-subtitle {
             font-size: 14px;
+            opacity: 0.9;
+            font-weight: 400;
         }
 
-        .card-icon.without {
-            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        /* Comparison Cards */
+        .comparison-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin: 24px 0;
         }
 
-        .card-icon.with {
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        .comparison-card {
+            background: var(--md-surface);
+            border-radius: 8px;
+            padding: 20px;
+            border-left: 4px solid;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+            transition: all 0.3s ease;
         }
 
-        .card-value {
-            font-size: 2rem;
-            font-weight: 700;
-            color: #1e293b;
-            margin-bottom: 8px;
+        .comparison-card.without {
+            border-left-color: var(--md-error);
         }
 
-        .card-subtitle {
-            color: #64748b;
-            font-size: 0.9rem;
+        .comparison-card.with {
+            border-left-color: var(--md-secondary);
+            background: #f1f8e9;
+        }
+
+        .comparison-card:hover {
+            box-shadow: 0 4px 8px rgba(0,0,0,0.16);
+            transform: translateY(-2px);
+        }
+
+        .comparison-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
             margin-bottom: 16px;
         }
 
-        .savings-highlight {
-            background: linear-gradient(90deg, #10b981 0%, #059669 100%);
-            color: white;
-            padding: 12px 16px;
-            border-radius: 10px;
-            font-weight: 600;
-            text-align: center;
-            margin: 20px 0;
-        }
-
-        .details-table {
-            background: white;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-        }
-
-        .table-header {
-            background: linear-gradient(90deg, #4f46e5 0%, #7c3aed 100%);
-            color: white;
-            padding: 20px;
-            font-weight: 600;
-        }
-
-        .table-content {
-            padding: 0;
-        }
-
-        .table-row {
-            display: grid;
-            grid-template-columns: 2fr 1fr 1fr 1fr;
-            padding: 16px 20px;
-            border-bottom: 1px solid #e2e8f0;
+        .status-chip {
+            display: inline-flex;
             align-items: center;
+            gap: 4px;
+            padding: 4px 8px;
+            border-radius: 16px;
+            font-size: 12px;
+            font-weight: 500;
         }
 
-        .table-row:last-child {
+        .chip-error {
+            background: rgba(244, 67, 54, 0.1);
+            color: var(--md-error);
+        }
+
+        .chip-success {
+            background: rgba(76, 175, 80, 0.1);
+            color: var(--md-secondary);
+        }
+
+        .comparison-title {
+            font-size: 16px;
+            font-weight: 500;
+            color: var(--md-on-surface);
+        }
+
+        .comparison-value {
+            font-size: 24px;
+            font-weight: 400;
+            color: var(--md-on-surface);
+            margin-bottom: 12px;
+        }
+
+        .comparison-details {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            color: rgba(0,0,0,0.6);
+        }
+
+        /* Data Table */
+        .material-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--md-surface);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+        }
+
+        .material-table thead {
+            background: #f5f5f5;
+        }
+
+        .material-table th,
+        .material-table td {
+            padding: 16px;
+            text-align: left;
+            border-bottom: 1px solid var(--md-outline);
+        }
+
+        .material-table th {
+            font-weight: 500;
+            color: rgba(0,0,0,0.87);
+            font-size: 14px;
+        }
+
+        .material-table td {
+            color: rgba(0,0,0,0.87);
+        }
+
+        .material-table tbody tr:hover {
+            background: rgba(0,0,0,0.04);
+        }
+
+        .material-table tbody tr:last-child td {
             border-bottom: none;
         }
 
-        .table-row:nth-child(even) {
-            background: #f8fafc;
-        }
-
-        .metric-name {
+        /* Status Badges */
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 12px;
+            border-radius: 16px;
+            font-size: 12px;
             font-weight: 500;
-            color: #374151;
         }
 
-        .metric-value {
-            font-weight: 600;
-            color: #1e293b;
+        .badge-neutral {
+            background: #e0e0e0;
+            color: #424242;
         }
 
-        .metric-value.savings {
-            color: #10b981;
+        .badge-improved {
+            background: #c8e6c9;
+            color: #2e7d32;
         }
 
-        .footer-note {
-            text-align: center;
-            color: #64748b;
-            font-size: 0.9rem;
-            margin-top: 30px;
+        .badge-reduced {
+            background: #ffcdd2;
+            color: #c62828;
+        }
+
+        /* EMI Highlight */
+        .emi-highlight {
+            background: var(--md-surface);
+            border: 2px solid var(--md-outline);
+            border-radius: 8px;
             padding: 20px;
-            background: white;
-            border-radius: 12px;
-            border-left: 4px solid #4f46e5;
+            text-align: center;
+            margin: 24px 0;
         }
 
+        .emi-amount {
+            font-size: 20px;
+            font-weight: 500;
+            color: var(--md-on-surface);
+        }
+
+        /* Disclaimer */
+        .disclaimer {
+            text-align: center;
+            color: rgba(0,0,0,0.6);
+            font-size: 12px;
+            margin-bottom: 16px;
+            font-style: italic;
+        }
+
+        /* Material Icons adjustments */
+        .material-icons {
+            font-size: 24px;
+        }
+
+        /* Ripple effect */
+        .btn-material::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+            transition: width 0.6s, height 0.6s, top 0.6s, left 0.6s;
+            transform: translate(-50%, -50%);
+        }
+
+        .btn-material:active::before {
+            width: 300px;
+            height: 300px;
+            top: 50%;
+            left: 50%;
+        }
+
+        /* Responsive adjustments */
         @media (max-width: 768px) {
-            .header h1 {
-                font-size: 2rem;
-            }
-
-            .calculator-content {
-                padding: 24px;
-            }
-
-            .input-grid {
+            .comparison-container {
                 grid-template-columns: 1fr;
             }
-
-            .comparison-cards {
-                grid-template-columns: 1fr;
+            
+            .material-table {
+                font-size: 14px;
             }
-
-            .table-row {
-                grid-template-columns: 1fr;
-                gap: 8px;
-            }
-
-            .step-indicator {
-                flex-direction: column;
-                gap: 10px;
+            
+            .material-table th,
+            .material-table td {
+                padding: 12px 8px;
             }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="header">
-            <h1>Loan Prepayment Calculator</h1>
-            <p>Calculate your savings and optimize your loan repayment strategy</p>
+        <div class="disclaimer">* All calculations are estimates for informational purposes only</div>
+        
+        <!-- Current Loan Details -->
+        <div class="material-card">
+            <div class="card-header">
+                <i class="material-icons">account_balance</i>
+                <h2>Current Loan Details</h2>
+            </div>
+            <div class="card-content">
+                <div class="material-row">
+                    <div class="material-col col-s12 col-m4">
+                        <div class="input-field">
+                            <input type="text" id="loan-amount" value="1600000" placeholder=" ">
+                            <label for="loan-amount">Loan Amount ($)</label>
+                        </div>
+                    </div>
+                    <div class="material-col col-s12 col-m4">
+                        <div class="input-field">
+                            <input type="text" id="interest-rate" value="8" placeholder=" ">
+                            <label for="interest-rate">Interest Rate (% p.a.)</label>
+                        </div>
+                    </div>
+                    <div class="material-col col-s12 col-m4">
+                        <div class="input-field">
+                            <input type="text" id="loan-tenure" value="3 years" placeholder=" ">
+                            <label for="loan-tenure">Loan Tenure</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <div class="main-card">
-            <div class="progress-bar"></div>
-            
-            <div class="calculator-content">
-                <div class="step-indicator">
-                    <div class="step active">
-                        <div class="step-number">1</div>
-                        <span>Loan Details</span>
-                    </div>
-                    <div class="step">
-                        <div class="step-number">2</div>
-                        <span>Prepayment Strategy</span>
-                    </div>
-                    <div class="step">
-                        <div class="step-number">3</div>
-                        <span>Results & Savings</span>
-                    </div>
-                </div>
-
-                <div class="input-section">
-                    <h2 class="section-title">
-                        <div class="section-icon">₹</div>
-                        Current Loan Details
-                    </h2>
-                    
-                    <div class="input-grid">
-                        <div class="input-group">
-                            <label class="input-label">Loan Amount</label>
-                            <div class="input-wrapper">
-                                <span class="input-prefix">₹</span>
-                                <input type="number" class="input-field has-prefix" id="loanAmount" value="1600000" min="10000" max="10000000">
-                            </div>
-                            <input type="range" class="range-slider" id="loanAmountRange" min="100000" max="10000000" value="1600000" step="10000">
+        <!-- Prepayment Strategy -->
+        <div class="material-card">
+            <div class="card-header">
+                <i class="material-icons">trending_up</i>
+                <h2>Prepayment Strategy</h2>
+            </div>
+            <div class="card-content">
+                <div class="material-row">
+                    <div class="material-col col-s12 col-m4">
+                        <div class="input-field">
+                            <input type="text" id="payment-frequency" value="Yearly" placeholder=" ">
+                            <label for="payment-frequency">Payment Frequency</label>
                         </div>
-
-                        <div class="input-group">
-                            <label class="input-label">Interest Rate</label>
-                            <div class="input-wrapper">
-                                <input type="number" class="input-field has-suffix" id="interestRate" value="8" min="1" max="30" step="0.1">
-                                <span class="input-suffix">% p.a.</span>
-                            </div>
-                            <input type="range" class="range-slider" id="interestRateRange" min="1" max="30" value="8" step="0.1">
+                    </div>
+                    <div class="material-col col-s12 col-m4">
+                        <div class="input-field">
+                            <input type="text" id="prepayment-amount" value="32000" placeholder=" ">
+                            <label for="prepayment-amount">Prepayment Amount ($)</label>
                         </div>
-
-                        <div class="input-group">
-                            <label class="input-label">Loan Tenure</label>
-                            <div class="input-wrapper">
-                                <input type="number" class="input-field has-suffix" id="loanTenure" value="36" min="6" max="360">
-                                <span class="input-suffix">months</span>
-                            </div>
-                            <input type="range" class="range-slider" id="loanTenureRange" min="6" max="360" value="36" step="1">
+                    </div>
+                    <div class="material-col col-s12 col-m4">
+                        <div class="input-field">
+                            <input type="text" id="prepayment-penalty" value="" placeholder=" ">
+                            <label for="prepayment-penalty">Prepayment Penalty (%)</label>
                         </div>
                     </div>
                 </div>
-
-                <div class="input-section">
-                    <h2 class="section-title">
-                        <div class="section-icon">⚡</div>
-                        Prepayment Strategy
-                    </h2>
-                    
-                    <div class="input-grid">
-                        <div class="input-group">
-                            <label class="input-label">Prepayment Amount</label>
-                            <div class="input-wrapper">
-                                <span class="input-prefix">₹</span>
-                                <input type="number" class="input-field has-prefix" id="prepaymentAmount" value="32000" min="1000" max="1000000">
-                            </div>
-                            <input type="range" class="range-slider" id="prepaymentAmountRange" min="1000" max="500000" value="32000" step="1000">
-                        </div>
-
-                        <div class="input-group">
-                            <label class="input-label">Payment Frequency</label>
-                            <select class="input-field" id="paymentFrequency">
-                                <option value="yearly" selected>Yearly</option>
-                                <option value="monthly">Monthly</option>
-                                <option value="quarterly">Quarterly</option>
-                                <option value="half-yearly">Half Yearly</option>
-                            </select>
-                        </div>
-
-                        <div class="input-group">
-                            <label class="input-label">Prepayment Penalty</label>
-                            <div class="input-wrapper">
-                                <input type="number" class="input-field has-suffix" id="prepaymentPenalty" value="0" min="0" max="10" step="0.1">
-                                <span class="input-suffix">%</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <button class="calculate-btn" onclick="calculatePrepayment()">
+                
+                <div style="text-align: center; margin-top: 24px;">
+                    <button class="btn-material btn-large">
+                        <i class="material-icons">calculate</i>
                         Calculate Savings & Generate Report
                     </button>
                 </div>
+            </div>
+        </div>
 
-                <div class="results-section" id="resultsSection" style="display: none;">
-                    <h2 class="section-title">
-                        <div class="section-icon">📊</div>
-                        Comparison & Savings Analysis
-                    </h2>
+        <!-- Total Savings Highlight -->
+        <div class="savings-card">
+            <div class="savings-amount">
+                <i class="material-icons" style="font-size: 32px;">savings</i>
+                Total Savings: ₹8,520
+            </div>
+            <div class="savings-subtitle">You finish 1 month earlier!</div>
+        </div>
 
-                    <div class="comparison-cards">
-                        <div class="comparison-card">
-                            <div class="card-header">
-                                <span class="card-title">Without Prepayment</span>
-                                <div class="card-icon without">❌</div>
-                            </div>
-                            <div class="card-value" id="originalTenure">3 years</div>
-                            <div class="card-subtitle">Total Interest: <span id="originalInterest">₹2,04,975</span></div>
-                            <div class="card-subtitle">Monthly EMI: <span id="originalEMI">₹50,138</span></div>
+        <!-- Comparison & Analysis -->
+        <div class="material-card">
+            <div class="card-header">
+                <i class="material-icons">assessment</i>
+                <h2>Comparison & Analysis</h2>
+            </div>
+            <div class="card-content">
+                <div class="comparison-container">
+                    <div class="comparison-card without">
+                        <div class="comparison-header">
+                            <span class="status-chip chip-error">
+                                <i class="material-icons" style="font-size: 16px;">close</i>
+                                Without Prepayment
+                            </span>
                         </div>
-
-                        <div class="comparison-card savings">
-                            <div class="card-header">
-                                <span class="card-title">With Prepayment</span>
-                                <div class="card-icon with">✅</div>
+                        <div class="comparison-title">Loan Duration</div>
+                        <div class="comparison-value">3 years</div>
+                        <div class="comparison-details">
+                            <div class="detail-row">
+                                <span>Total Amount:</span>
+                                <strong>₹2,04,875</strong>
                             </div>
-                            <div class="card-value" id="newTenure">2 years 11 months</div>
-                            <div class="card-subtitle">Total Interest: <span id="newInterest">₹1,96,454</span></div>
-                            <div class="card-subtitle">Monthly EMI: <span id="newEMI">₹50,138</span> (unchanged)</div>
-                        </div>
-                    </div>
-
-                    <div class="savings-highlight">
-                        <div style="font-size: 1.2rem;">💰 Total Savings: <span id="totalSavings">₹8,521</span></div>
-                        <div style="font-size: 0.9rem; margin-top: 4px;">You finish <span id="timeSaved">1 month</span> earlier!</div>
-                    </div>
-
-                    <div class="details-table">
-                        <div class="table-header">
-                            Detailed Loan Comparison
-                        </div>
-                        <div class="table-content">
-                            <div class="table-row">
-                                <div class="metric-name">Metric</div>
-                                <div class="metric-name">Before</div>
-                                <div class="metric-name">After</div>
-                                <div class="metric-name">Savings</div>
-                            </div>
-                            <div class="table-row">
-                                <div class="metric-name">Loan Tenure</div>
-                                <div class="metric-value" id="beforeTenure">3 years</div>
-                                <div class="metric-value" id="afterTenure">2 years 11 months</div>
-                                <div class="metric-value savings" id="tenureSaved">1 month</div>
-                            </div>
-                            <div class="table-row">
-                                <div class="metric-name">Total Interest Paid</div>
-                                <div class="metric-value" id="beforeInterest">₹2,04,975</div>
-                                <div class="metric-value" id="afterInterest">₹1,96,454</div>
-                                <div class="metric-value savings" id="interestSaved">₹8,521</div>
-                            </div>
-                            <div class="table-row">
-                                <div class="metric-name">Monthly EMI</div>
-                                <div class="metric-value" id="beforeEMI">₹50,138</div>
-                                <div class="metric-value" id="afterEMI">₹50,138</div>
-                                <div class="metric-value">—</div>
-                            </div>
-                            <div class="table-row">
-                                <div class="metric-name">Total Amount Paid</div>
-                                <div class="metric-value" id="beforeTotal">₹18,04,975</div>
-                                <div class="metric-value" id="afterTotal">₹17,96,454</div>
-                                <div class="metric-value savings" id="totalAmountSaved">₹8,521</div>
+                            <div class="detail-row">
+                                <span>Interest:</span>
+                                <strong>₹50,138</strong>
                             </div>
                         </div>
                     </div>
-
-                    <div class="footer-note">
-                        <strong>Note:</strong> This calculator provides estimates based on the assumption that prepayments reduce the loan tenure while keeping EMI constant. Actual savings may vary based on your lender's specific terms and conditions.
+                    
+                    <div class="comparison-card with">
+                        <div class="comparison-header">
+                            <span class="status-chip chip-success">
+                                <i class="material-icons" style="font-size: 16px;">check</i>
+                                With Prepayment
+                            </span>
+                        </div>
+                        <div class="comparison-title">Money Saved</div>
+                        <div class="comparison-value">₹8,520</div>
+                        <div class="comparison-details">
+                            <div class="detail-row">
+                                <span>Monthly EMI:</span>
+                                <strong>₹50,138</strong>
+                            </div>
+                            <div class="detail-row">
+                                <span>Status:</span>
+                                <span style="color: var(--md-secondary);">Reduced</span>
+                            </div>
+                        </div>
                     </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- EMI Remaining -->
+        <div class="emi-highlight">
+            <div class="emi-amount">
+                <i class="material-icons" style="margin-right: 8px; vertical-align: middle;">payment</i>
+                EMI Remaining Same: ₹50,138
+            </div>
+        </div>
+
+        <!-- Detailed Comparison Table -->
+        <div class="material-card">
+            <div class="card-header">
+                <i class="material-icons">table_chart</i>
+                <h2>Detailed Loan Comparison</h2>
+            </div>
+            <div class="card-content">
+                <table class="material-table">
+                    <thead>
+                        <tr>
+                            <th>Metric</th>
+                            <th>Before</th>
+                            <th>After</th>
+                            <th>Savings</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Loan Tenure</strong></td>
+                            <td><span class="status-badge badge-neutral">3 years</span></td>
+                            <td><span class="status-badge badge-improved">2 yrs 11 months</span></td>
+                            <td><span class="status-badge badge-improved">1 month</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Total Interest Paid</strong></td>
+                            <td><span class="status-badge badge-neutral">₹50,138</span></td>
+                            <td><span class="status-badge badge-improved">₹41,618</span></td>
+                            <td><span class="status-badge badge-improved">₹8,520</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Monthly EMI</strong></td>
+                            <td><span class="status-badge badge-neutral">₹50,138</span></td>
+                            <td><span class="status-badge badge-neutral">₹50,138</span></td>
+                            <td><span class="status-badge badge-neutral">₹0</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Prepayment Penalty</strong></td>
+                            <td><span class="status-badge badge-neutral">₹0</span></td>
+                            <td><span class="status-badge badge-neutral">₹0</span></td>
+                            <td><span class="status-badge badge-neutral">₹0</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Total Amount Paid</strong></td>
+                            <td><span class="status-badge badge-neutral">₹18,04,975</span></td>
+                            <td><span class="status-badge badge-improved">₹17,91,955</span></td>
+                            <td><span class="status-badge badge-improved">₹8,520</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div style="text-align: center; margin-top: 24px;">
+                    <button class="btn-material btn-outlined">
+                        <i class="material-icons">refresh</i>
+                        Recalculate
+                    </button>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- Material Design JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <script>
-        // Sync input fields with range sliders
-        function syncInputs() {
-            // Loan Amount
-            document.getElementById('loanAmount').addEventListener('input', function() {
-                document.getElementById('loanAmountRange').value = this.value;
-            });
-            document.getElementById('loanAmountRange').addEventListener('input', function() {
-                document.getElementById('loanAmount').value = this.value;
-            });
-
-            // Interest Rate
-            document.getElementById('interestRate').addEventListener('input', function() {
-                document.getElementById('interestRateRange').value = this.value;
-            });
-            document.getElementById('interestRateRange').addEventListener('input', function() {
-                document.getElementById('interestRate').value = this.value;
-            });
-
-            // Loan Tenure
-            document.getElementById('loanTenure').addEventListener('input', function() {
-                document.getElementById('loanTenureRange').value = this.value;
-            });
-            document.getElementById('loanTenureRange').addEventListener('input', function() {
-                document.getElementById('loanTenure').value = this.value;
-            });
-
-            // Prepayment Amount
-            document.getElementById('prepaymentAmount').addEventListener('input', function() {
-                document.getElementById('prepaymentAmountRange').value = this.value;
-            });
-            document.getElementById('prepaymentAmountRange').addEventListener('input', function() {
-                document.getElementById('prepaymentAmount').value = this.value;
-            });
-        }
-
-        function calculateEMI(principal, rate, tenure) {
-            const monthlyRate = rate / (12 * 100);
-            const emi = (principal * monthlyRate * Math.pow(1 + monthlyRate, tenure)) / 
-                       (Math.pow(1 + monthlyRate, tenure) - 1);
-            return emi;
-        }
-
-        function formatCurrency(amount) {
-            return '₹' + Math.round(amount).toLocaleString('en-IN');
-        }
-
-        function formatTenure(months) {
-            const years = Math.floor(months / 12);
-            const remainingMonths = months % 12;
-            
-            if (years === 0) {
-                return `${remainingMonths} month${remainingMonths !== 1 ? 's' : ''}`;
-            } else if (remainingMonths === 0) {
-                return `${years} year${years !== 1 ? 's' : ''}`;
-            } else {
-                return `${years} year${years !== 1 ? 's' : ''} ${remainingMonths} month${remainingMonths !== 1 ? 's' : ''}`;
-            }
-        }
-
-        function calculatePrepayment() {
-            const loanAmount = parseFloat(document.getElementById('loanAmount').value);
-            const interestRate = parseFloat(document.getElementById('interestRate').value);
-            const loanTenure = parseInt(document.getElementById('loanTenure').value);
-            const prepaymentAmount = parseFloat(document.getElementById('prepaymentAmount').value);
-            const paymentFrequency = document.getElementById('paymentFrequency').value;
-            const prepaymentPenalty = parseFloat(document.getElementById('prepaymentPenalty').value);
-
-            // Calculate original loan details
-            const originalEMI = calculateEMI(loanAmount, interestRate, loanTenure);
-            const originalTotalPayment = originalEMI * loanTenure;
-            const originalTotalInterest = originalTotalPayment - loanAmount;
-
-            // Calculate prepayment frequency multiplier
-            let prepaymentFrequencyMultiplier;
-            switch(paymentFrequency) {
-                case 'monthly': prepaymentFrequencyMultiplier = 12; break;
-                case 'quarterly': prepaymentFrequencyMultiplier = 4; break;
-                case 'half-yearly': prepaymentFrequencyMultiplier = 2; break;
-                case 'yearly': 
-                default: prepaymentFrequencyMultiplier = 1; break;
-            }
-
-            // Simulate loan with prepayments
-            let remainingPrincipal = loanAmount;
-            let month = 0;
-            let totalInterestPaid = 0;
-            let totalPrepaymentPaid = 0;
-            const monthlyRate = interestRate / (12 * 100);
-
-            while (remainingPrincipal > 0.01 && month < loanTenure) {
-                month++;
-                
-                // Calculate monthly interest
-                const monthlyInterest = remainingPrincipal * monthlyRate;
-                const monthlyPrincipal = originalEMI - monthlyInterest;
-                
-                totalInterestPaid += monthlyInterest;
-                remainingPrincipal -= monthlyPrincipal;
-
-                // Apply prepayment based on frequency
-                if (month % (12 / prepaymentFrequencyMultiplier) === 0) {
-                    const prepaymentWithPenalty = prepaymentAmount * (1 + prepaymentPenalty / 100);
-                    const actualPrepayment = Math.min(prepaymentWithPenalty, remainingPrincipal);
-                    remainingPrincipal -= actualPrepayment;
-                    totalPrepaymentPaid += actualPrepayment;
-                }
-            }
-
-            const newTenure = month;
-            const newTotalInterest = totalInterestPaid;
-            const interestSavings = originalTotalInterest - newTotalInterest;
-            const timeSavings = loanTenure - newTenure;
-
-            // Update UI
-            document.getElementById('originalTenure').textContent = formatTenure(loanTenure);
-            document.getElementById('originalInterest').textContent = formatCurrency(originalTotalInterest);
-            document.getElementById('originalEMI').textContent = formatCurrency(originalEMI);
-
-            document.getElementById('newTenure').textContent = formatTenure(newTenure);
-            document.getElementById('newInterest').textContent = formatCurrency(newTotalInterest);
-            document.getElementById('newEMI').textContent = formatCurrency(originalEMI);
-
-            document.getElementById('totalSavings').textContent = formatCurrency(interestSavings);
-            document.getElementById('timeSaved').textContent = formatTenure(timeSavings);
-
-            // Update detailed table
-            document.getElementById('beforeTenure').textContent = formatTenure(loanTenure);
-            document.getElementById('afterTenure').textContent = formatTenure(newTenure);
-            document.getElementById('tenureSaved').textContent = formatTenure(timeSavings);
-
-            document.getElementById('beforeInterest').textContent = formatCurrency(originalTotalInterest);
-            document.getElementById('afterInterest').textContent = formatCurrency(newTotalInterest);
-            document.getElementById('interestSaved').textContent = formatCurrency(interestSavings);
-
-            document.getElementById('beforeEMI').textContent = formatCurrency(originalEMI);
-            document.getElementById('afterEMI').textContent = formatCurrency(originalEMI);
-
-            document.getElementById('beforeTotal').textContent = formatCurrency(originalTotalPayment);
-            document.getElementById('afterTotal').textContent = formatCurrency(newTotalInterest + loanAmount + totalPrepaymentPaid);
-            document.getElementById('totalAmountSaved').textContent = formatCurrency(interestSavings);
-
-            // Show results section
-            document.getElementById('resultsSection').style.display = 'block';
-            
-            // Update step indicator
-            const steps = document.querySelectorAll('.step');
-            steps.forEach((step, index) => {
-                if (index <= 2) {
-                    step.classList.add('active');
-                }
-            });
-
-            // Smooth scroll to results
-            document.getElementById('resultsSection').scrollIntoView({ 
-                behavior: 'smooth',
-                block: 'start'
-            });
-        }
-
-        // Initialize the calculator
         document.addEventListener('DOMContentLoaded', function() {
-            syncInputs();
-            // Calculate with default values
-            setTimeout(calculatePrepayment, 500);
+            // Initialize Material Design components
+            M.AutoInit();
+            
+            // Add active class to input fields with values
+            const inputs = document.querySelectorAll('.input-field input');
+            inputs.forEach(input => {
+                if (input.value !== '') {
+                    input.parentElement.classList.add('active');
+                }
+                
+                input.addEventListener('blur', function() {
+                    if (this.value !== '') {
+                        this.parentElement.classList.add('active');
+                    } else {
+                        this.parentElement.classList.remove('active');
+                    }
+                });
+            });
         });
     </script>
 </body>
-</html
+</html>

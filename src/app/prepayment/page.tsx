@@ -151,8 +151,8 @@ import { Calculator } from 'lucide-react'
 import { useSearchParams } from 'next/navigation'
 import Image from 'next/image'
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts'
-import { useTheme } from '@/contexts/ThemeContext'
-import { themeClass } from '@/utils/themeStyles'
+import { useTheme } from '@mui/material/styles'
+import { Box, Container, Typography, Paper } from '@mui/material'
 
 interface LoanData {
   loanAmount: number
@@ -282,7 +282,7 @@ const calculateLoanDetails = (
   let totalInterestPaid = 0                // Sum of all interest payments
   let totalPrepaymentsPaid = 0             // Sum of all prepayments
   let months = 0                           // Counter for actual months taken
-  let currentEMI = originalEMI             // Current EMI (stays constant for reduce_tenure)
+  const currentEMI = originalEMI             // Current EMI (stays constant for reduce_tenure)
   const maxMonths = tenure * 12 + 60      // Safety limit
   
   // Array to store month-by-month breakdown for transparency
@@ -405,8 +405,18 @@ const calculateLoanDetails = (
 
 function PrepaymentCalculator() {
   const searchParams = useSearchParams()
+  
+  // Using Material-UI theme - must be before any conditional returns
+  const muiTheme = useTheme()
+  const isLight = muiTheme.palette.mode === 'light'
+  const isDark = muiTheme.palette.mode === 'dark'
+  
+  // Simple theme class helper
+  const themeClass = (lightClass: string, darkClass: string, isLightMode: boolean) => {
+    return isLightMode ? lightClass : darkClass
+  }
+  
   const [isLoading, setIsLoading] = useState(true)
-  const { isLight, isDark } = useTheme()
   
   const [loanData, setLoanData] = useState<LoanData>({
     loanAmount: 0,
@@ -488,55 +498,110 @@ function PrepaymentCalculator() {
   }
 
   return (
-    <main className={`min-h-screen font-sans relative ${isLight ? 'bg-gradient-to-br from-indigo-100 via-purple-50 to-blue-100' : 'bg-gradient-to-br from-gray-900 via-black to-gray-900'}`} style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>
+    <Box 
+      component="main" 
+      sx={{ 
+        minHeight: '100vh',
+        fontFamily: 'Inter, system-ui, sans-serif',
+        position: 'relative',
+        background: isLight 
+          ? 'linear-gradient(135deg, #e0e7ff 0%, #f3e8ff 50%, #dbeafe 100%)'
+          : 'linear-gradient(135deg, #111827 0%, #000000 50%, #111827 100%)'
+      }}
+    >
       {/* Header Navigation - Enhanced with gradient */}
-      <header className={isLight ? 'bg-white/80 backdrop-blur-sm border-b border-slate-200/60' : 'bg-black/80 backdrop-blur-sm border-b border-white/10'}>
-        <div className="container mx-auto px-6 lg:px-8">
-          <div className="flex items-center justify-between h-20">
+      <Box 
+        component="header" 
+        sx={{ 
+          backgroundColor: isLight ? 'rgba(255, 255, 255, 0.8)' : 'rgba(0, 0, 0, 0.8)',
+          backdropFilter: 'blur(8px)',
+          borderBottom: isLight ? '1px solid rgba(148, 163, 184, 0.6)' : '1px solid rgba(255, 255, 255, 0.1)'
+        }}
+      >
+        <Container maxWidth="xl" sx={{ px: { xs: 3, lg: 4 } }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: '80px' }}>
             {/* Logo - Far Left Positioning */}
-            <div className="flex items-center space-x-2 sm:space-x-3 flex-shrink-0">
-              <div className="w-10 h-10 sm:w-16 sm:h-16 flex items-center justify-center">
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 1, sm: 1.5 }, flexShrink: 0 }}>
+              <Box sx={{ width: { xs: 40, sm: 64 }, height: { xs: 40, sm: 64 }, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <Image 
                   src="/bck-logo.svg" 
                   alt="BudgetGear Logo" 
-                  className="w-10 h-10 sm:w-16 sm:h-16 object-contain"
+                  style={{ width: '100%', height: '100%', objectFit: 'contain' }}
                   width={64}
                   height={64}
                 />
-              </div>
-              <span className={`text-base sm:text-2xl font-extrabold tracking-tight flex items-center ${isLight ? 'text-slate-900' : 'text-white'}`}>BudgetGear</span>
-            </div>
+              </Box>
+              <Typography 
+                variant="h6" 
+                sx={{ 
+                  fontSize: { xs: '1rem', sm: '1.5rem' },
+                  fontWeight: 800,
+                  letterSpacing: '-0.025em',
+                  color: isLight ? '#0f172a' : '#ffffff',
+                  display: 'flex',
+                  alignItems: 'center'
+                }}
+              >
+                BudgetGear
+              </Typography>
+            </Box>
 
             {/* Navigation Menu - Center with proper spacing */}
-            <div className="flex-1 flex justify-center px-4">
-              <nav className="flex items-center" role="navigation" aria-label="Main navigation">
-                <span className={`font-bold text-xs sm:text-base tracking-wide px-1 sm:px-4 py-2 text-center ${isLight ? 'text-slate-900' : 'text-white'}`}>
+            <Box sx={{ flex: 1, display: 'flex', justifyContent: 'center', px: 2 }}>
+              <Box component="nav" sx={{ display: 'flex', alignItems: 'center' }} role="navigation" aria-label="Main navigation">
+                <Typography 
+                  sx={{ 
+                    fontWeight: 700,
+                    fontSize: { xs: '0.75rem', sm: '1rem' },
+                    letterSpacing: '0.05em',
+                    px: { xs: 0.5, sm: 2 },
+                    py: 1,
+                    textAlign: 'center',
+                    color: isLight ? '#0f172a' : '#ffffff'
+                  }}
+                >
                   Loan Prepayment Calculator
-                </span>
-              </nav>
-            </div>
+                </Typography>
+              </Box>
+            </Box>
 
             {/* Right side placeholder */}
-            <div className="flex items-center space-x-4">
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
               {/* Theme toggle hidden */}
-            </div>
-          </div>
-        </div>
-      </header>
+            </Box>
+          </Box>
+        </Container>
+      </Box>
 
       {/* Hero Section with improved styling */}
-      <div className="relative z-10 pt-8 pb-6">
-        <div className="container mx-auto px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h1 className={`text-4xl lg:text-5xl font-bold mb-4 ${isLight ? 'text-slate-900' : 'text-white'}`}>
+      <Box sx={{ position: 'relative', zIndex: 10, pt: 4, pb: 3 }}>
+        <Container maxWidth="xl" sx={{ px: { xs: 3, lg: 4 } }}>
+          <Box sx={{ textAlign: 'center', mb: 6 }}>
+            <Typography 
+              variant="h1" 
+              sx={{ 
+                fontSize: { xs: '2.25rem', lg: '3rem' },
+                fontWeight: 700,
+                mb: 2,
+                color: isLight ? '#0f172a' : '#ffffff'
+              }}
+            >
               Loan Prepayment Calculator
-            </h1>
-            <p className={`text-lg lg:text-xl ${isLight ? 'text-slate-600' : 'text-white/80'} max-w-2xl mx-auto`}>
+            </Typography>
+            <Typography 
+              variant="h6" 
+              sx={{ 
+                fontSize: { xs: '1.125rem', lg: '1.25rem' },
+                color: isLight ? '#475569' : 'rgba(255, 255, 255, 0.8)',
+                maxWidth: '48rem',
+                mx: 'auto'
+              }}
+            >
               Calculate your savings and optimize your loan repayment strategy
-            </p>
-          </div>
-        </div>
-      </div>
+            </Typography>
+          </Box>
+        </Container>
+      </Box>
 
       {/* Main Content */}
       <div className="relative z-10" style={{
@@ -1137,20 +1202,30 @@ function PrepaymentCalculator() {
           </div>
         </footer>
       </div>
-    </main>
+    </Box>
   )
 }
 
 export default function PrepaymentPage() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50 flex items-center justify-center">
-        <div className="text-center">
-          <Calculator className="w-12 h-12 mx-auto mb-4 animate-pulse text-blue-500" />
-          <p className="text-lg text-slate-900">Loading Smart Prepayment Calculator...</p>
-          <p className="text-slate-600 text-sm mt-2">Analyzing your loan data</p>
-        </div>
-      </div>
+      <Box sx={{ 
+        minHeight: '100vh',
+        background: 'linear-gradient(135deg, #f8fafc 0%, #ffffff 50%, #f8fafc 100%)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
+      }}>
+        <Box sx={{ textAlign: 'center' }}>
+          <Calculator style={{ width: 48, height: 48, margin: '0 auto 16px', color: '#3b82f6' }} />
+          <Typography variant="h6" sx={{ fontSize: '1.125rem', color: '#0f172a', mb: 1 }}>
+            Loading Smart Prepayment Calculator...
+          </Typography>
+          <Typography variant="body2" sx={{ color: '#475569', fontSize: '0.875rem' }}>
+            Analyzing your loan data
+          </Typography>
+        </Box>
+      </Box>
     }>
       <PrepaymentCalculator />
     </Suspense>

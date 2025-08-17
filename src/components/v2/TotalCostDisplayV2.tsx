@@ -4,7 +4,8 @@ import React, { useState } from 'react'
 import { motion } from 'framer-motion'
 import { CarData } from '@/app/page'
 import { TrendingUp, CheckCircle, XCircle, Percent, Clock, Info, Calendar, DollarSign, TrendingDown, CreditCard, Car, IndianRupee, Fuel, ParkingCircle } from 'lucide-react'
-import { useTheme } from '@/contexts/ThemeContext'
+import { useTheme } from '@mui/material/styles'
+import { Box, Paper, Typography, Chip, LinearProgress, Divider, Stack, IconButton } from '@mui/material'
 import { getThemeStyles, themeClass } from '@/utils/themeStyles'
 
 interface TotalCostDisplayV2Props {
@@ -13,8 +14,9 @@ interface TotalCostDisplayV2Props {
 }
 
 export default function TotalCostDisplayV2({ carData, updateCarData: _updateCarData }: TotalCostDisplayV2Props) {
-  const { theme, isLight, isDark } = useTheme()
-  const themeStyles = getThemeStyles(theme)
+  const muiTheme = useTheme()
+  const isLight = muiTheme.palette.mode === 'light'
+  const themeStyles = getThemeStyles(isLight ? 'light' : 'dark')
   
   // Use monthly fuel expense from form input
   const monthlyFuelCost = carData.monthlyFuelExpense || 0
@@ -96,432 +98,263 @@ export default function TotalCostDisplayV2({ carData, updateCarData: _updateCarD
       }
     }
   }, [isAllRequiredFieldsFilled, carData.tenure, emi]);
-  
-  // Calculate completion percentage for all fields
+
+  // Calculate completion percentage for all fields (required + optional)
   const allFields = [
     carData.carPrice > 0,
     carData.downPayment >= 0,
+    carData.tenure > 0,
+    carData.interestRate > 0,
     carData.monthlyIncome > 0,
     (carData.insuranceAndMaintenance || 0) > 0,
-    (carData.monthlyFuelExpense || 0) > 0
+    (carData.monthlyFuelExpense || 0) > 0,
+    (carData.parkingFee || 0) >= 0
   ];
   const completionPercentage = Math.round((allFields.filter(Boolean).length / allFields.length) * 100);
   
 
   return (
-    <div className="space-y-10">
-
+    <Stack spacing={5}>
       {/* Smart Purchase Score - Always show, but with empty state when required fields not filled */}
-        <div 
-          id="afford-panel"
-          tabIndex={-1}
-          className={`relative p-4 sm:p-5 rounded-2xl border backdrop-blur-xl shadow-xl mb-6 sm:mb-8 transition-all duration-300 hover:shadow-xl hover:scale-[1.01] overflow-hidden focus:outline-none focus:ring-2 focus:ring-blue-400/50 ${
-            !isAllRequiredFieldsFilled || carData.carPrice <= 0 || carData.tenure <= 0 || emi <= 0
-              ? 'bg-gradient-to-br from-slate-500/20 via-slate-600/10 to-slate-700/20 border-slate-400/30 shadow-slate-500/20'
-              : isAffordable 
-                ? 'bg-gradient-to-br from-emerald-400/20 via-green-500/15 to-emerald-600/20 border-emerald-400/40 shadow-emerald-500/20' 
-                : 'bg-gradient-to-br from-red-400/20 via-red-500/15 to-red-600/20 border-red-400/40 shadow-red-500/20'
-          }`}
-        >
-          {/* Subtle background pattern */}
-          <div className="absolute inset-0 opacity-5">
-            <div className={`absolute inset-0 bg-gradient-to-r ${
-              !isAllRequiredFieldsFilled || carData.carPrice <= 0 || carData.tenure <= 0 || emi <= 0
-                ? 'from-gray-400 to-gray-500'
-                : isAffordable ? 'from-green-400 to-emerald-400' : 'from-red-400 to-red-500'
-            }`}></div>
-          </div>
-          
-          <div className="relative z-10">
-            <div className="flex items-center justify-between mb-2">
-              {/* Left side - "Can you afford?" text */}
-              <div className="flex items-center">
-                <h5 className={`font-bold text-sm sm:text-base tracking-tight leading-tight ${themeClass(themeStyles.primaryText, 'text-white', isLight)}`}>
-                  Can you afford?
-                </h5>
-              </div>
-              
-              {/* Right side - Status with icons like reference */}
-              <div className="flex items-center">
-                {!isAllRequiredFieldsFilled || carData.carPrice <= 0 || carData.tenure <= 0 || emi <= 0 ? (
-                  <div className="flex items-center space-x-2">
-                    <div className="w-6 h-6 bg-gray-400/20 rounded-lg flex items-center justify-center">
-                      <Clock className="w-4 h-4 text-gray-400" />
-                    </div>
-                    <span className="text-lg font-bold text-gray-400">Pending</span>
-                  </div>
-                ) : isAffordable ? (
-                  <div className="flex items-center space-x-2">
-                    <div className="w-6 h-6 bg-green-400/20 rounded-lg flex items-center justify-center">
-                      <CheckCircle className="w-4 h-4 text-green-400" />
-                    </div>
-                    <span className="text-lg font-bold text-green-400">In Budget</span>
-                  </div>
-                ) : (
-                  <div className="flex items-center space-x-2">
-                    <div className="w-6 h-6 bg-red-400/20 rounded-lg flex items-center justify-center">
-                      <XCircle className="w-4 h-4 text-red-400" />
-                    </div>
-                    <span className="text-lg font-bold text-red-400">Over Budget</span>
-                  </div>
-                )}
-              </div>
-            </div>
-          
-            {/* Compact rule indicators */}
-            <div className="space-y-1 text-sm">
-              {/* 20% Down Payment Rule */}
-              <div 
-                className={`relative p-2 sm:p-3 rounded-md sm:rounded-lg border transition-all duration-300 hover:scale-[1.01] ${
-                  isDownPaymentOk 
-                    ? 'bg-slate-100/10 border-green-200/30 hover:bg-slate-100/15' 
-                    : 'bg-slate-100/10 border-red-200/30 hover:bg-slate-100/15'
-                }`}
-              >
-                <div className="flex items-center justify-between mb-1">
-                  <span className={`font-medium flex items-center text-sm ${themeClass(themeStyles.secondaryText, 'text-white/90', isLight)}`}>
-                    <span className="text-yellow-400 mr-1 font-bold">₹</span>
-                    20% Down Payment
-                  </span>
-                  <div className="flex items-center space-x-2">
-                    <span className={`font-bold text-sm ${themeClass(themeStyles.primaryText, 'text-white', isLight)}`}>{formatPercentage(downPaymentPercentage)}%</span>
-                    {isDownPaymentOk ? (
-                      <CheckCircle className="w-4 h-4 text-green-400" />
-                    ) : (
-                      <XCircle className="w-4 h-4 text-red-400" />
-                    )}
-                  </div>
-                </div>
-                <div className="w-full bg-white/15 rounded-full h-1.5 overflow-hidden">
-                  <div 
-                    style={{ width: `${Math.min(downPaymentPercentage, 100)}%` }}
-                    className={`h-full rounded-full transition-all duration-500 ${
-                      isDownPaymentOk ? 'bg-gradient-to-r from-green-400 to-emerald-500' : 'bg-gradient-to-r from-red-400 to-red-500'
-                    }`}
-                  />
-                </div>
-              </div>
-              
-              {/* 4 Year Tenure Rule */}
-              <div 
-                className={`relative p-2 sm:p-3 rounded-md sm:rounded-lg border transition-all duration-300 hover:scale-[1.01] ${
-                  isTenureOk 
-                    ? 'bg-slate-100/10 border-green-200/30 hover:bg-slate-100/15' 
-                    : 'bg-slate-100/10 border-red-200/30 hover:bg-slate-100/15'
-                }`}
-              >
-                <div className="flex items-center justify-between mb-1">
-                  <span className={`font-medium flex items-center text-sm ${themeClass(themeStyles.secondaryText, 'text-white/90', isLight)}`}>
-                    <Clock className="w-3 h-3 mr-1 text-blue-400" />
-                    Max 4 Years
-                  </span>
-                  <div className="flex items-center space-x-2">
-                    <span className={`font-bold text-sm ${themeClass(themeStyles.primaryText, 'text-white', isLight)}`}>{carData.tenure || 0}y</span>
-                    {isTenureOk ? (
-                      <CheckCircle className="w-4 h-4 text-green-400" />
-                    ) : (
-                      <XCircle className="w-4 h-4 text-red-400" />
-                    )}
-                  </div>
-                </div>
-                <div className="w-full bg-white/15 rounded-full h-1.5 overflow-hidden">
-                  <div 
-                    style={{ width: `${(carData.tenure / 7) * 100}%` }}
-                    className={`h-full rounded-full transition-all duration-500 ${
-                      isTenureOk ? 'bg-gradient-to-r from-green-400 to-emerald-500' : 'bg-gradient-to-r from-red-400 to-red-500'
-                    }`}
-                  />
-                </div>
-              </div>
-              
-              {/* 10% Income Rule */}
-              <div 
-                className={`relative p-2 sm:p-3 rounded-md sm:rounded-lg border transition-all duration-300 hover:scale-[1.01] ${
-                  isExpenseOk 
-                    ? 'bg-slate-100/10 border-green-200/30 hover:bg-slate-100/15' 
-                    : 'bg-slate-100/10 border-red-200/30 hover:bg-slate-100/15'
-                }`}
-              >
-                <div className="flex items-center justify-between mb-1">
-                  <span className={`font-medium flex items-center text-sm ${themeClass(themeStyles.secondaryText, 'text-white/90', isLight)}`}>
-                    <Percent className="w-3 h-3 mr-1 text-purple-400" />
-                    Max 10% Income
-                  </span>
-                  <div className="flex items-center space-x-2">
-                    <span className={`font-bold text-sm ${themeClass(themeStyles.primaryText, 'text-white', isLight)}`}>{formatPercentage(expensePercentage)}%</span>
-                    {isExpenseOk ? (
-                      <CheckCircle className="w-4 h-4 text-green-400" />
-                    ) : (
-                      <XCircle className="w-4 h-4 text-red-400" />
-                    )}
-                  </div>
-                </div>
-                <div className="w-full bg-white/15 rounded-full h-1.5 overflow-hidden">
-                  <div 
-                    style={{ width: `${Math.min(expensePercentage, 100)}%` }}
-                    className={`h-full rounded-full transition-all duration-500 ${
-                      isExpenseOk ? 'bg-gradient-to-r from-green-400 to-emerald-500' : 'bg-gradient-to-r from-red-400 to-red-500'
-                    }`}
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-
-        </div>
-
-
-      <div className="flex items-center justify-between mb-6">
-        <h4 className={`font-bold text-lg ${themeClass(themeStyles.primaryText, 'text-white', isLight)}`}>Summary</h4>
-        <div className="flex items-center space-x-2">
-          {completionPercentage === 100 ? (
-            <>
-              <div className="w-6 h-6 bg-green-400/20 rounded-lg flex items-center justify-center">
-                <CheckCircle className="w-4 h-4 text-green-400" />
-              </div>
-              <span className="text-lg font-bold text-green-400">100% Complete</span>
-            </>
-          ) : (
-            <>
-              <div className={`w-2 h-2 rounded-full ${completionPercentage >= 66 ? 'bg-yellow-400' : 'bg-red-400'}`}></div>
-              <span className={`text-sm font-bold ${themeClass(themeStyles.secondaryText, 'text-white/80', isLight)}`}>{completionPercentage}% Complete</span>
-            </>
-          )}
-        </div>
-      </div>
-      
-      {/* Loan Summary - Compact Display */}
-      <motion.div 
-        className="p-6 mb-8 transition-all duration-300"
-        animate={completionPercentage === 100 ? { scale: [1, 1.02, 1] } : {}}
-        transition={{ duration: 0.6, repeat: 0 }}
+      <Paper 
+        id="afford-panel"
+        tabIndex={-1}
+        elevation={3}
+        sx={{ 
+          p: { xs: 3, sm: 4 },
+          borderRadius: 3,
+          position: 'relative',
+          overflow: 'hidden',
+          transition: 'all 0.3s ease',
+          '&:hover': {
+            transform: 'scale(1.02)',
+            boxShadow: 6
+          },
+          '&:focus': {
+            outline: 'none',
+            boxShadow: '0 0 0 3px rgba(25, 118, 210, 0.2)'
+          },
+          background: !isAllRequiredFieldsFilled || carData.carPrice <= 0 || carData.tenure <= 0 || emi <= 0
+            ? 'linear-gradient(135deg, rgba(158, 158, 158, 0.1) 0%, rgba(117, 117, 117, 0.1) 100%)'
+            : isAffordable 
+              ? 'linear-gradient(135deg, rgba(76, 175, 80, 0.1) 0%, rgba(56, 142, 60, 0.1) 100%)'
+              : 'linear-gradient(135deg, rgba(244, 67, 54, 0.1) 0%, rgba(198, 40, 40, 0.1) 100%)',
+          borderLeft: 4,
+          borderLeftColor: !isAllRequiredFieldsFilled || carData.carPrice <= 0 || carData.tenure <= 0 || emi <= 0
+            ? 'grey.400'
+            : isAffordable ? 'success.main' : 'error.main'
+        }}
       >
-        {/* Main EMI Display - Proportional UX */}
-        <div className="text-center mb-4">
-          {/* Loan Details - Dark Blue Background with Header and Icons */}
-          {carData.tenure > 0 && emi > 0 && (
-            <div className="bg-slate-700 rounded-2xl p-5 mb-6 shadow-lg">
-              <h3 className="text-white font-bold text-lg mb-4">Loan Details</h3>
-              <div className="space-y-3 text-white">
-                <div className="flex justify-between items-center">
-                  <div className="flex items-center space-x-2">
-                    <Calendar className="w-4 h-4 text-white" />
-                    <span className="text-sm font-medium">Completion Date</span>
-                  </div>
-                  <span className="text-sm font-bold">{formatDate(completionDate)}</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <div className="flex items-center space-x-2">
-                    <Clock className="w-4 h-4 text-white" />
-                    <span className="text-sm font-medium">Loan Period</span>
-                  </div>
-                  <span className="text-sm font-bold">{carData.tenure} Years</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <div className="flex items-center space-x-2">
-                    <TrendingUp className="w-4 h-4 text-white" />
-                    <span className="text-sm font-medium">Loan Amount</span>
-                  </div>
-                  <span className="text-sm font-bold">₹{loanAmount.toLocaleString('en-IN')}</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <div className="flex items-center space-x-2">
-                    <IndianRupee className="w-4 h-4 text-white" />
-                    <span className="text-sm font-medium">Down Payment</span>
-                  </div>
-                  <span className="text-sm font-bold">₹{carData.downPayment.toLocaleString('en-IN')}</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <div className="flex items-center space-x-2">
-                    <Percent className="w-4 h-4 text-white" />
-                    <span className="text-sm font-medium">Interest Rate</span>
-                  </div>
-                  <span className="text-sm font-bold">{carData.interestRate}%</span>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Horizontal Separator */}
-          {carData.tenure > 0 && emi > 0 && (
-            <div className="border-t border-gray-600/30 my-4"></div>
-          )}
-
-          {/* Primary EMI Section - Teal design like screenshot */}
-          <div className="bg-gradient-to-r from-teal-500 to-teal-600 rounded-2xl p-6 mb-6 shadow-lg relative overflow-hidden">
-            {/* Content container - centered */}
-            <div className="text-center relative z-10">
-              <h3 className="text-white text-lg font-semibold mb-2 tracking-wide">
-                Monthly EMI
-              </h3>
-              <div className="text-white text-4xl font-bold tracking-tight">
-                {formatCurrency(emi)}
-              </div>
-            </div>
-          </div>
-
-          {/* Monthly Running Cost - Horizontal Layout like Screenshot */}
-          {(monthlyFuelCost > 0 || monthlyParkingCost > 0) ? (
-            <div className="bg-gradient-to-br from-yellow-400 via-orange-400 to-yellow-500 rounded-2xl p-4 mb-4 shadow-lg">
-              <div className="mb-3">
-                <h3 className="text-black font-bold text-lg mb-2">Monthly Running Cost</h3>
-                <div className="text-black text-3xl font-bold mb-4">
-                  {formatCurrency(totalMonthlyCarExpenses)}
-                </div>
-              </div>
+        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
+          {/* Left side - "Can you afford?" text */}
+          <Typography variant="h6" sx={{ fontWeight: 700, fontSize: { xs: '0.875rem', sm: '1rem' } }}>
+            Can you afford?
+          </Typography>
               
-              {/* Horizontal breakdown with separators */}
-              <div className="flex items-center justify-between">
-                {emi > 0 && (
-                  <div className="flex-1 text-center">
-                    <div className="text-black font-medium text-sm mb-1">EMI</div>
-                    <div className="text-black font-bold text-lg">{formatCurrency(emi)}</div>
-                  </div>
-                )}
-                
-                {emi > 0 && monthlyFuelCost > 0 && (
-                  <div className="w-px h-8 bg-black/20 mx-4"></div>
-                )}
-                
-                {monthlyFuelCost > 0 && (
-                  <div className="flex-1 text-center">
-                    <div className="flex items-center justify-center space-x-1 mb-1">
-                      <Fuel className="w-4 h-4 text-black" />
-                      <span className="text-black font-medium text-sm">Fuel</span>
-                    </div>
-                    <div className="text-black font-bold text-lg">{formatCurrency(monthlyFuelCost)}</div>
-                  </div>
-                )}
-                
-                {monthlyFuelCost > 0 && monthlyParkingCost > 0 && (
-                  <div className="w-px h-8 bg-black/20 mx-4"></div>
-                )}
-                
-                {monthlyParkingCost > 0 && (
-                  <div className="flex-1 text-center">
-                    <div className="flex items-center justify-center space-x-1 mb-1">
-                      <div className="w-4 h-4 bg-black rounded text-white text-xs flex items-center justify-center font-bold">P</div>
-                      <span className="text-black font-medium text-sm">Parking</span>
-                    </div>
-                    <div className="text-black font-bold text-lg">{formatCurrency(monthlyParkingCost)}</div>
-                  </div>
-                )}
-              </div>
-            </div>
-          ) : (
-            <div className="bg-gradient-to-r from-cyan-500/10 to-blue-500/10 border border-cyan-400/20 rounded-xl p-3 mb-3">
-              <button
-                onClick={() => {
-                  const fuelExpenseElement = document.getElementById('monthly-fuel-expense');
-                  if (fuelExpenseElement) {
-                    fuelExpenseElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    setTimeout(() => {
-                      const input = fuelExpenseElement.querySelector('input');
-                      if (input) input.focus();
-                    }, 500);
-                  }
+          {/* Right side - Status with icons */}
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            {!isAllRequiredFieldsFilled || carData.carPrice <= 0 || carData.tenure <= 0 || emi <= 0 ? (
+              <Chip 
+                icon={<Clock size={16} />}
+                label="Pending"
+                variant="outlined"
+                sx={{ 
+                  color: 'grey.600',
+                  borderColor: 'grey.400',
+                  fontWeight: 600
                 }}
-                className="w-full p-2 text-cyan-300 hover:text-cyan-200 transition-all duration-200 cursor-pointer bg-cyan-500/10 hover:bg-cyan-500/20 rounded-lg border border-cyan-400/20 hover:border-cyan-400/40 outline-none"
-              >
-                <div className="flex items-center justify-center space-x-2">
-                  <span className="text-xs font-medium">+ Add Fuel Expense</span>
-                </div>
-                <p className="text-xs text-cyan-400/80 mt-1">Get your complete monthly car cost</p>
-              </button>
-            </div>
-          )}
-
-
-          {/* Yearly Running Cost - Pink/Red Gradient like Reference */}
-          {(emi > 0 || monthlyFuelCost > 0 || monthlyParkingCost > 0 || (carData.insuranceAndMaintenance || 0) > 0 || (carData.maintenanceCostPerYear || 0) > 0) && (
-            <div className="bg-gradient-to-br from-yellow-400 via-orange-400 to-yellow-500 rounded-2xl p-4 mb-4 shadow-lg">
-              <div className="text-center mb-4">
-                <h3 className="text-black font-bold text-xl tracking-wide mb-3">Yearly Running Cost</h3>
-                <div className="text-black text-3xl font-bold mb-4">
-                  {formatCurrency((totalMonthlyCarExpenses * 12) + (carData.insuranceAndMaintenance || 0) + (carData.maintenanceCostPerYear || 0))}
-                </div>
-              </div>
-              
-              {/* Breakdown with icons - vertical layout */}
-              <div className="space-y-2">
-                {emi > 0 && (
-                  <div className="flex justify-between items-center text-black/90">
-                    <div className="flex items-center space-x-2">
-                      <CreditCard className="w-4 h-4 text-black" />
-                      <span className="font-medium">EMI × 12</span>
-                    </div>
-                    <span className="font-bold">{formatCurrency(emi * 12)}</span>
-                  </div>
+              />
+            ) : isAffordable ? (
+              <Chip 
+                icon={<CheckCircle size={16} />}
+                label="In Budget"
+                color="success"
+                sx={{ fontWeight: 600 }}
+              />
+            ) : (
+              <Chip 
+                icon={<XCircle size={16} />}
+                label="Over Budget"
+                color="error"
+                sx={{ fontWeight: 600 }}
+              />
+            )}
+          </Box>
+        </Box>
+        
+        {/* Compact rule indicators */}
+        <Stack spacing={1}>
+          {/* 20% Down Payment Rule */}
+          <Paper 
+            elevation={1}
+            sx={{ 
+              p: 2,
+              borderRadius: 2,
+              transition: 'all 0.3s ease',
+              '&:hover': {
+                transform: 'scale(1.01)',
+                boxShadow: 2
+              },
+              borderLeft: 3,
+              borderLeftColor: isDownPaymentOk ? 'success.main' : 'error.main',
+              backgroundColor: isDownPaymentOk ? 'success.50' : 'error.50'
+            }}
+          >
+            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1 }}>
+              <Typography variant="body2" sx={{ fontWeight: 500, display: 'flex', alignItems: 'center' }}>
+                <Typography component="span" sx={{ color: 'warning.main', mr: 1, fontWeight: 700 }}>₹</Typography>
+                20% Down Payment
+              </Typography>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                <Typography variant="body2" sx={{ fontWeight: 700 }}>{formatPercentage(downPaymentPercentage)}%</Typography>
+                {isDownPaymentOk ? (
+                  <CheckCircle size={16} color="#4caf50" />
+                ) : (
+                  <XCircle size={16} color="#f44336" />
                 )}
-                {monthlyFuelCost > 0 && (
-                  <div className="flex justify-between items-center text-black/90">
-                    <div className="flex items-center space-x-2">
-                      <Fuel className="w-4 h-4 text-black" />
-                      <span className="font-medium">Fuel × 12</span>
-                    </div>
-                    <span className="font-bold">{formatCurrency(monthlyFuelCost * 12)}</span>
-                  </div>
-                )}
-                {monthlyParkingCost > 0 && (
-                  <div className="flex justify-between items-center text-black/90">
-                    <div className="flex items-center space-x-2">
-                      <ParkingCircle className="w-4 h-4 text-black" />
-                      <span className="font-medium">Parking × 12</span>
-                    </div>
-                    <span className="font-bold">{formatCurrency(monthlyParkingCost * 12)}</span>
-                  </div>
-                )}
-                {(carData.insuranceAndMaintenance || 0) > 0 && (
-                  <div className="flex justify-between items-center text-black/90">
-                    <div className="flex items-center space-x-2">
-                      <Info className="w-4 h-4 text-black" />
-                      <span className="font-medium">Insurance</span>
-                    </div>
-                    <span className="font-bold">{formatCurrency(carData.insuranceAndMaintenance || 0)}</span>
-                  </div>
-                )}
-                {(carData.maintenanceCostPerYear || 0) > 0 && (
-                  <div className="flex justify-between items-center text-black/90">
-                    <div className="flex items-center space-x-2">
-                      <Car className="w-4 h-4 text-black" />
-                      <span className="font-medium">Maintenance</span>
-                    </div>
-                    <span className="font-bold">{formatCurrency(carData.maintenanceCostPerYear || 0)}</span>
-                  </div>
-                )}
-              </div>
-            </div>
-          )}
-
-        </div>
-
-
-        {/* Loan Breakdown - Redesigned into Loan and Money sections */}
-        <div className={`pt-3 ${themeClass('border-t border-slate-300/30', 'border-t border-slate-700/30', isLight)}`}>
+              </Box>
+            </Box>
+            <LinearProgress 
+              variant="determinate" 
+              value={Math.min(downPaymentPercentage, 100)}
+              color={isDownPaymentOk ? 'success' : 'error'}
+              sx={{ height: 6, borderRadius: 3 }}
+            />
+          </Paper>
           
-        </div>
-
-        {/* Processing Fee - One-time cost */}
-        {carData.processingFee > 0 && (
-          <div className="mt-3 pt-3 border-t border-white/20">
-            <div className="flex justify-between items-center bg-orange-500/30 backdrop-blur-md rounded-lg p-2">
-              <span className="text-xs text-orange-100 flex items-center font-medium">
-                <Info size={12} className="mr-1 text-orange-200"/>
-                Processing Fee
-                <span className="ml-1 text-xs text-orange-200 bg-orange-500/40 px-1.5 py-0.5 rounded-full">one-time</span>
-              </span>
-              <span className="font-bold text-orange-100 text-sm">{formatCurrency(carData.processingFee)}</span>
-            </div>
-          </div>
-        )}
-
-      </motion.div>
-
-
-
-
-
-
-    </div>
+          {/* 4 Year Tenure Rule */}
+          <Paper 
+            elevation={1}
+            sx={{ 
+              p: 2,
+              borderRadius: 2,
+              transition: 'all 0.3s ease',
+              '&:hover': {
+                transform: 'scale(1.01)',
+                boxShadow: 2
+              },
+              borderLeft: 3,
+              borderLeftColor: isTenureOk ? 'success.main' : 'error.main',
+              backgroundColor: isTenureOk ? 'success.50' : 'error.50'
+            }}
+          >
+            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1 }}>
+              <Typography variant="body2" sx={{ fontWeight: 500, display: 'flex', alignItems: 'center' }}>
+                <Clock size={12} style={{ marginRight: 4, color: '#2196f3' }} />
+                Max 4 Years
+              </Typography>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                <Typography variant="body2" sx={{ fontWeight: 700 }}>{carData.tenure || 0}y</Typography>
+                {isTenureOk ? (
+                  <CheckCircle size={16} color="#4caf50" />
+                ) : (
+                  <XCircle size={16} color="#f44336" />
+                )}
+              </Box>
+            </Box>
+            <LinearProgress 
+              variant="determinate" 
+              value={Math.min((carData.tenure / 7) * 100, 100)}
+              color={isTenureOk ? 'success' : 'error'}
+              sx={{ height: 6, borderRadius: 3 }}
+            />
+          </Paper>
+          
+          {/* 10% Income Rule */}
+          <Paper 
+            elevation={1}
+            sx={{ 
+              p: 2,
+              borderRadius: 2,
+              transition: 'all 0.3s ease',
+              '&:hover': {
+                transform: 'scale(1.01)',
+                boxShadow: 2
+              },
+              borderLeft: 3,
+              borderLeftColor: isExpenseOk ? 'success.main' : 'error.main',
+              backgroundColor: isExpenseOk ? 'success.50' : 'error.50'
+            }}
+          >
+            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1 }}>
+              <Typography variant="body2" sx={{ fontWeight: 500, display: 'flex', alignItems: 'center' }}>
+                <Percent size={12} style={{ marginRight: 4, color: '#9c27b0' }} />
+                Max 10% Income
+              </Typography>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                <Typography variant="body2" sx={{ fontWeight: 700 }}>{formatPercentage(expensePercentage)}%</Typography>
+                {isExpenseOk ? (
+                  <CheckCircle size={16} color="#4caf50" />
+                ) : (
+                  <XCircle size={16} color="#f44336" />
+                )}
+              </Box>
+            </Box>
+            <LinearProgress 
+              variant="determinate" 
+              value={Math.min(expensePercentage, 100)}
+              color={isExpenseOk ? 'success' : 'error'}
+              sx={{ height: 6, borderRadius: 3 }}
+            />
+          </Paper>
+        </Stack>
+      </Paper>
+      
+      {/* Monthly EMI Section - Simplified for now */}
+      <Paper elevation={2} sx={{ p: 3, borderRadius: 3 }}>
+        <Typography variant="h6" sx={{ fontWeight: 600, mb: 2 }}>Monthly EMI</Typography>
+        <Typography variant="h4" sx={{ fontWeight: 700, color: 'primary.main' }}>
+          {formatCurrency(emi)}
+        </Typography>
+        
+        <Typography variant="body2" sx={{ color: 'text.secondary', mt: 1 }}>
+          {completionPercentage}% Complete
+        </Typography>
+        
+        {/* Add Fuel Expense Button */}
+        <Box sx={{ mt: 2 }}>
+          <Typography 
+            variant="body2" 
+            component="button"
+            onClick={() => {
+              const fuelSection = document.getElementById('monthly-fuel-expense')
+              if (fuelSection) {
+                fuelSection.scrollIntoView({ behavior: 'smooth' })
+                const input = fuelSection.querySelector('input')
+                if (input) {
+                  setTimeout(() => input.focus(), 300)
+                }
+              }
+            }}
+            sx={{ 
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: '100%',
+              p: 2,
+              border: '2px dashed',
+              borderColor: 'grey.300',
+              borderRadius: 2,
+              backgroundColor: 'grey.50',
+              color: 'text.secondary',
+              cursor: 'pointer',
+              transition: 'all 0.3s ease',
+              '&:hover': {
+                borderColor: 'primary.main',
+                backgroundColor: 'primary.50',
+                color: 'primary.main'
+              }
+            }}
+          >
+            <Fuel size={16} style={{ marginRight: 8 }} />
+            + Add Fuel Expense
+            <br />
+            <Typography variant="caption" sx={{ mt: 0.5, display: 'block' }}>
+              Get your complete monthly car cost
+            </Typography>
+          </Typography>
+        </Box>
+      </Paper>
+    </Stack>
   )
 }

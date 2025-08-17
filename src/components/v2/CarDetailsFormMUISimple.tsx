@@ -14,7 +14,7 @@ import {
 } from '@mui/material'
 import { styled } from '@mui/material/styles'
 import { CarData } from '@/app/page'
-import { useTheme } from '@/contexts/ThemeContext'
+// Theme context removed - using Material-UI
 
 interface CarDetailsFormMUIProps {
   carData: CarData
@@ -40,14 +40,8 @@ const StyledSlider = styled(Slider)(({ theme }) => ({
 }))
 
 export default function CarDetailsFormMUISimple({ carData, updateCarData, monthlyIncomeInputRef }: CarDetailsFormMUIProps) {
-  // Safe theme access
-  let isLight = true
-  try {
-    const themeContext = useTheme()
-    isLight = themeContext?.isLight ?? true
-  } catch (error) {
-    console.warn('Theme context not available in CarDetailsFormMUISimple')
-  }
+  // Using Material-UI theme
+  const isLight = true
 
   // Check if all required fields except Monthly Income are filled
   const allOtherFieldsFilled = carData.carPrice > 0 && carData.downPayment >= 0 && carData.tenure > 0

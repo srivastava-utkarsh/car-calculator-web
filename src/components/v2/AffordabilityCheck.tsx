@@ -3,16 +3,15 @@
 import React from 'react'
 import { CarData } from '@/app/page'
 import { CheckCircle, XCircle, Percent, Clock } from 'lucide-react'
-import { useTheme } from '@/contexts/ThemeContext'
-import { getThemeStyles, themeClass } from '@/utils/themeStyles'
+// Theme context removed - using Material-UI
+// Theme utils removed - using Material-UI
 
 interface AffordabilityCheckProps {
   carData: CarData
 }
 
 export default function AffordabilityCheck({ carData }: AffordabilityCheckProps) {
-  const { theme, isLight } = useTheme()
-  const themeStyles = getThemeStyles(theme)
+  // Theme removed - using Material-UI styling
 
   // Use monthly fuel expense from form input
   const monthlyFuelCost = carData.monthlyFuelExpense || 0
@@ -101,7 +100,7 @@ export default function AffordabilityCheck({ carData }: AffordabilityCheckProps)
         <div className="flex items-center justify-between mb-2">
           {/* Left side - "Can you afford?" text */}
           <div className="flex items-center">
-            <h5 className={`font-bold text-sm sm:text-base tracking-tight leading-tight ${themeClass(themeStyles.primaryText, 'text-white', isLight)}`}>
+            <h5 className="">
               Can you afford?
             </h5>
           </div>
@@ -129,12 +128,12 @@ export default function AffordabilityCheck({ carData }: AffordabilityCheckProps)
             }`}
           >
             <div className="flex items-center justify-between mb-1">
-              <span className={`font-medium flex items-center text-sm ${themeClass(themeStyles.secondaryText, 'text-white/90', isLight)}`}>
+              <span className="">
                 <span className="text-yellow-400 mr-1 font-bold">₹</span>
                 20% Down Payment
               </span>
               <div className="flex items-center space-x-2">
-                <span className={`font-bold text-sm ${themeClass(themeStyles.primaryText, 'text-white', isLight)}`}>{formatPercentage(downPaymentPercentage)}%</span>
+                <span className="">{formatPercentage(downPaymentPercentage)}%</span>
                 {isDownPaymentOk ? (
                   <CheckCircle className="w-4 h-4 text-green-400" />
                 ) : (
@@ -161,12 +160,12 @@ export default function AffordabilityCheck({ carData }: AffordabilityCheckProps)
             }`}
           >
             <div className="flex items-center justify-between mb-1">
-              <span className={`font-medium flex items-center text-sm ${themeClass(themeStyles.secondaryText, 'text-white/90', isLight)}`}>
+              <span className="">
                 <Clock className="w-3 h-3 mr-1 text-blue-400" />
                 Max 4 Years
               </span>
               <div className="flex items-center space-x-2">
-                <span className={`font-bold text-sm ${themeClass(themeStyles.primaryText, 'text-white', isLight)}`}>{carData.tenure || 0}y</span>
+                <span className="">{carData.tenure || 0}y</span>
                 {isTenureOk ? (
                   <CheckCircle className="w-4 h-4 text-green-400" />
                 ) : (
@@ -193,12 +192,12 @@ export default function AffordabilityCheck({ carData }: AffordabilityCheckProps)
             }`}
           >
             <div className="flex items-center justify-between mb-1">
-              <span className={`font-medium flex items-center text-sm ${themeClass(themeStyles.secondaryText, 'text-white/90', isLight)}`}>
+              <span className="">
                 <Percent className="w-3 h-3 mr-1 text-purple-400" />
                 Max 10% Income
               </span>
               <div className="flex items-center space-x-2">
-                <span className={`font-bold text-sm ${themeClass(themeStyles.primaryText, 'text-white', isLight)}`}>{formatPercentage(expensePercentage)}%</span>
+                <span className="">{formatPercentage(expensePercentage)}%</span>
                 {isExpenseOk ? (
                   <CheckCircle className="w-4 h-4 text-green-400" />
                 ) : (

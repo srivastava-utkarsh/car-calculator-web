@@ -4,8 +4,8 @@ import React, { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { CarData } from '@/app/page'
 import { TrendingUp, Clock, Percent } from 'lucide-react'
-import { useTheme } from '@/contexts/ThemeContext'
-import { getThemeStyles, themeClass } from '@/utils/themeStyles'
+// Theme context removed - using Material-UI
+// Theme utils removed - using Material-UI
 
 // AdSense Component
 const AdSenseAd = ({ slot, format, style, responsive = true }: {

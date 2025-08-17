@@ -1,7 +1,7 @@
 'use client'
 
 import React from 'react'
-import { CarData } from '@/app/demo-new/page'
+import { CarData } from '@/app/page'
 
 interface CarDetailsFormProps {
   carData: CarData
