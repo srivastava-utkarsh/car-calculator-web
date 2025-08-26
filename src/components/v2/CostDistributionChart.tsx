@@ -136,14 +136,24 @@ export default function CostDistributionChart({ carData }: CostDistributionChart
       const chartItems = []
       const yearsMultiplier = showOneYear ? 1 : safeCarData.tenure
       
-      // Show EMI cost 
+      // Show Principal and Interest separately instead of EMI
       if (emi > 0) {
+        // Principal component
         chartItems.push({
-          name: showOneYear ? 'EMI × 12' : `EMI × ${safeCarData.tenure * 12}`,
-          value: Number(emi * 12 * yearsMultiplier) || 0,
+          name: showOneYear ? 'Principal (1Y)' : `Principal (${safeCarData.tenure}Y)`,
+          value: Number(loanBreakdown.principal) || 0,
           color: '#10B981', // emerald-500
           percentage: 0,
-          description: showOneYear ? 'Annual EMI payments' : `Total EMI payments over ${safeCarData.tenure} years`
+          description: showOneYear ? 'Principal repayment in first year' : `Total principal amount over ${safeCarData.tenure} years`
+        })
+        
+        // Interest component
+        chartItems.push({
+          name: showOneYear ? 'Interest (1Y)' : `Interest (${safeCarData.tenure}Y)`,
+          value: Number(loanBreakdown.interest) || 0,
+          color: '#F97316', // orange-500
+          percentage: 0,
+          description: showOneYear ? 'Interest payment in first year' : `Total interest over ${safeCarData.tenure} years`
         })
       }
       

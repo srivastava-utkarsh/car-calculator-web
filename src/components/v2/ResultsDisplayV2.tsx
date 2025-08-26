@@ -206,6 +206,22 @@ export default function ResultsDisplayV2({ carData, onBack, onRestart }: Results
                   </motion.div>
                 </div>
 
+                {/* Total Interest Amount Card */}
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: 0.85 }}
+                  whileHover={{ scale: 1.02 }}
+                  className="bg-gradient-to-br from-yellow-500/30 to-amber-500/30 rounded-2xl p-4 border border-yellow-400/40 shadow-lg hover:shadow-yellow-500/25 transition-all duration-300 mb-4 max-w-xs mx-auto"
+                >
+                  <div className="flex items-center space-x-2 mb-2 justify-center">
+                    <span className="text-yellow-300 text-sm">💰</span>
+                    <p className="text-xs font-medium text-yellow-200">Total Interest</p>
+                  </div>
+                  <p className="text-lg font-bold text-white text-center">₹{totalInterest.toLocaleString('en-IN', { maximumFractionDigits: 0 })}</p>
+                  <p className="text-yellow-200/70 text-xs text-center mt-1">over {carData.tenure} years</p>
+                </motion.div>
+
                 {/* Interest Rate Badge */}
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}

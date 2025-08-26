@@ -271,7 +271,7 @@ export default function TotalCostDisplayV2({ carData, updateCarData: _updateCarD
         </div>
 
 
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex items-center justify-between mb-3">
         <h4 className={`font-bold text-lg ${themeClass(themeStyles.primaryText, 'text-white', isLight)}`}>Summary</h4>
         <div className="flex items-center space-x-2">
           {completionPercentage === 100 ? (
@@ -292,7 +292,7 @@ export default function TotalCostDisplayV2({ carData, updateCarData: _updateCarD
       
       {/* Loan Summary - Compact Display */}
       <motion.div 
-        className="p-6 mb-8 transition-all duration-300"
+        className="p-6 mb-4 transition-all duration-300"
         animate={completionPercentage === 100 ? { scale: [1, 1.02, 1] } : {}}
         transition={{ duration: 0.6, repeat: 0 }}
       >
@@ -323,6 +323,13 @@ export default function TotalCostDisplayV2({ carData, updateCarData: _updateCarD
                     <span className="text-sm font-medium">Loan Amount</span>
                   </div>
                   <span className="text-sm font-bold">₹{loanAmount.toLocaleString('en-IN')}</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <div className="flex items-center space-x-2">
+                    <TrendingDown className="w-4 h-4 text-white" />
+                    <span className="text-sm font-medium">Total Interest</span>
+                  </div>
+                  <span className="text-sm font-bold">₹{totalInterest.toLocaleString('en-IN', { maximumFractionDigits: 0 })}</span>
                 </div>
                 <div className="flex justify-between items-center">
                   <div className="flex items-center space-x-2">
@@ -451,6 +458,15 @@ export default function TotalCostDisplayV2({ carData, updateCarData: _updateCarD
                       <span className="font-medium">EMI × 12</span>
                     </div>
                     <span className="font-bold">{formatCurrency(emi * 12)}</span>
+                  </div>
+                )}
+                {totalInterest > 0 && carData.tenure > 0 && (
+                  <div className="flex justify-between items-center text-black/90">
+                    <div className="flex items-center space-x-2">
+                      <TrendingDown className="w-4 h-4 text-black" />
+                      <span className="font-medium">Total Interest (1Y)</span>
+                    </div>
+                    <span className="font-bold">{formatCurrency(totalInterest / carData.tenure)}</span>
                   </div>
                 )}
                 {monthlyFuelCost > 0 && (

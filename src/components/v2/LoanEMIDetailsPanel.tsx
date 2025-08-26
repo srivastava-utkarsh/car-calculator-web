@@ -286,6 +286,19 @@ export default function LoanEMIDetailsPanel({ carData, hoveredIndex, onHoverChan
               </div>
             </div>
           </div>
+
+          {/* Total Interest Amount */}
+          <div className="p-1.5 rounded-lg" style={{backgroundColor: isLight ? '#fff7ed' : '#123458'}}>
+            <div className="text-center">
+              <div className="w-4 h-4 bg-orange-500/20 rounded-full flex items-center justify-center mx-auto mb-1">
+                <TrendingUp size={10} className="text-orange-300"/>
+              </div>
+              <div className="text-orange-100 font-medium text-xs">Total Interest</div>
+              <div className="text-xs font-bold text-orange-100 mt-0.5">
+                {hasData ? `₹${Math.round(totalInterest).toLocaleString('en-IN')}` : '₹--'}
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
