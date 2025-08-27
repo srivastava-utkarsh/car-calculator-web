@@ -876,13 +876,11 @@ function PrepaymentCalculator() {
                       <div className={`p-4 rounded-lg ${isLight ? 'bg-emerald-50' : 'bg-emerald-900/30'} border border-emerald-500/30`}>
                         <div className="text-center">
                           <div className={`text-2xl font-bold ${isLight ? 'text-emerald-700' : 'text-emerald-300'} mb-1`}>
-                            {formatCurrency(
-                              penaltyRate > 0 && results.penaltyAmount 
-                                ? Math.max(0, results.amountSaved - results.penaltyAmount)
-                                : results.amountSaved
-                            )}
+                            {formatCurrency(results.netSavings || results.amountSaved)}
                           </div>
-                          <div className={`text-sm font-medium ${isLight ? 'text-emerald-600' : 'text-emerald-400'}`}>Total Savings</div>
+                          <div className={`text-sm font-medium ${isLight ? 'text-emerald-600' : 'text-emerald-400'}`}>
+                            Total Savings{penaltyRate > 0 && results.penaltyAmount ? ` (after ${formatCurrency(results.penaltyAmount)} penalty)` : ''}
+                          </div>
                         </div>
                       </div>
                       <div className={`text-base ${isLight ? 'text-slate-600' : 'text-slate-300'}`}>
@@ -901,10 +899,16 @@ function PrepaymentCalculator() {
                             }
                           })()}</span>
                         </div>
-                        <div className="flex justify-between items-center">
+                        <div className="flex justify-between items-center mb-2">
                           <span>Monthly EMI:</span>
                           <span className="font-semibold">{formatCurrency(loanData.emi)} <span className="text-xs text-blue-600">(unchanged)</span></span>
                         </div>
+                        {penaltyRate > 0 && results.penaltyAmount > 0 && (
+                          <div className="flex justify-between items-center">
+                            <span>Prepayment Penalty:</span>
+                            <span className="font-semibold text-red-600">{formatCurrency(results.penaltyAmount)}</span>
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -1055,11 +1059,7 @@ function PrepaymentCalculator() {
                       <td className={`py-3 px-4 text-sm ${isLight ? 'text-slate-700' : 'text-white/80'}`}>{formatCurrency(results.originalTotalAmount)}</td>
                       <td className={`py-3 px-4 text-sm ${isLight ? 'text-slate-700' : 'text-white/80'}`}>{formatCurrency(results.totalAmountPaid)}</td>
                       <td className={`py-3 px-4 text-sm font-medium ${isLight ? 'text-green-600' : 'text-green-400'}`}>
-                        {formatCurrency(
-                          penaltyRate > 0 && results.penaltyAmount 
-                            ? Math.max(0, results.amountSaved - results.penaltyAmount)
-                            : results.amountSaved
-                        )}
+                        {formatCurrency(results.netSavings || results.amountSaved)}
                       </td>
                     </tr>
                   </tbody>
