@@ -180,9 +180,15 @@ export default function HomePage() {
 
               {/* Navigation Menu - Center with proper spacing */}
               <div className="flex-1 flex justify-center">
-                <nav className="flex items-center" role="navigation" aria-label="Main navigation">
-                  <a href="#calculator" className={`font-bold text-sm sm:text-lg tracking-wide transition-colors duration-200 px-4 py-2 text-center ${isLight ? 'text-slate-900 hover:text-slate-600' : 'text-white hover:text-white/80'}`}>
+                <nav className="flex items-center gap-6" role="navigation" aria-label="Main navigation">
+                  <span className={`font-semibold text-xs sm:text-sm tracking-wide px-3 py-2 text-center rounded-lg ${isLight ? 'text-white bg-blue-600' : 'text-black bg-white'}`}>
                     Car Affordability Calculator
+                  </span>
+                  <a 
+                    href="/prepayment" 
+                    className={`font-semibold text-xs sm:text-sm tracking-wide px-3 py-2 text-center rounded-lg transition-colors duration-200 hover:scale-105 ${isLight ? 'text-slate-700 hover:text-slate-900 hover:bg-slate-100' : 'text-white/80 hover:text-white hover:bg-white/10'}`}
+                  >
+                    Loan Prepayment Calculator
                   </a>
                 </nav>
               </div>

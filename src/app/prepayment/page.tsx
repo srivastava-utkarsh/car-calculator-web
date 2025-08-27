@@ -409,9 +409,9 @@ function PrepaymentCalculator() {
   const { isLight, isDark } = useTheme()
   
   const [loanData, setLoanData] = useState<LoanData>({
-    loanAmount: 0,
+    loanAmount: 100000,
     interestRate: 8,
-    tenure: 0,
+    tenure: 5,
     emi: 0
   })
   
@@ -428,7 +428,16 @@ function PrepaymentCalculator() {
     const interestRate = Math.max(0.1, Math.min(20, parseFloat(searchParams.get('interestRate') || '8')))
     const tenure = Math.max(1, Math.min(10, parseFloat(searchParams.get('tenure') || '5')))
     
-    const loanAmount = Math.max(0, carPrice - downPayment)
+    // Apply loan amount limits: minimum 0, maximum 10 crores
+    let loanAmount = Math.max(0, carPrice - downPayment)
+    if (loanAmount < 0) loanAmount = 0
+    if (loanAmount > 100000000) loanAmount = 100000000
+    
+    // If no URL parameters provided, use default value
+    if (!searchParams.get('carPrice') && !searchParams.get('downPayment')) {
+      loanAmount = 100000
+    }
+    
     const emi = loanAmount > 0 ? calculateEMI(loanAmount, interestRate, tenure) : 0
     
     setLoanData({
@@ -438,9 +447,10 @@ function PrepaymentCalculator() {
       emi
     })
     
-    // Set default prepayment amount (2% of loan amount)
+    // Set default prepayment amount (2% of loan amount, but not exceeding loan amount)
     if (loanAmount > 0) {
-      setPrepaymentAmount(Math.round(loanAmount * 0.02))
+      const defaultPrepayment = Math.round(loanAmount * 0.02)
+      setPrepaymentAmount(Math.min(defaultPrepayment, loanAmount))
     }
     
     // Set loading to false after component is ready
@@ -508,10 +518,16 @@ function PrepaymentCalculator() {
             </div>
 
             {/* Navigation Menu - Center with proper spacing */}
-            <div className="flex-1 flex justify-center px-4">
-              <nav className="flex items-center" role="navigation" aria-label="Main navigation">
-                <span className={`font-bold text-xs sm:text-base tracking-wide px-1 sm:px-4 py-2 text-center ${isLight ? 'text-slate-900' : 'text-white'}`}>
-                  Prepayment Calculator
+            <div className="flex-1 flex justify-center">
+              <nav className="flex items-center gap-6" role="navigation" aria-label="Main navigation">
+                <a 
+                  href="/" 
+                  className={`font-semibold text-xs sm:text-sm tracking-wide px-3 py-2 text-center rounded-lg transition-colors duration-200 hover:scale-105 ${isLight ? 'text-slate-700 hover:text-slate-900 hover:bg-slate-100' : 'text-white/80 hover:text-white hover:bg-white/10'}`}
+                >
+                  Car Affordability Calculator
+                </a>
+                <span className={`font-semibold text-xs sm:text-sm tracking-wide px-3 py-2 text-center rounded-lg ${isLight ? 'text-white bg-blue-600' : 'text-black bg-white'}`}>
+                  Loan Prepayment Calculator
                 </span>
               </nav>
             </div>
@@ -536,11 +552,48 @@ function PrepaymentCalculator() {
       }}>
         <style jsx global>{`
         .md-panel-elevated {
-          background: ${isLight ? 'rgba(255, 255, 255, 0.95)' : 'rgba(18, 24, 38, 0.95)'};
-          border: 1px solid ${isLight ? 'rgba(226, 232, 240, 0.6)' : 'rgba(255, 255, 255, 0.1)'};
+          background: ${isLight ? 'rgba(255, 255, 255, 0.98)' : 'rgba(15, 23, 42, 0.95)'};
+          border: 1px solid ${isLight ? 'rgba(148, 163, 184, 0.2)' : 'rgba(71, 85, 105, 0.3)'};
+          border-radius: 20px;
+          backdrop-filter: blur(24px);
+          box-shadow: ${isLight 
+            ? '0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 10px 10px -5px rgba(0, 0, 0, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.5)' 
+            : '0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 10px 10px -5px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1)'};
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .md-panel-elevated:hover {
+          transform: translateY(-2px);
+          box-shadow: ${isLight 
+            ? '0 25px 50px -12px rgba(0, 0, 0, 0.12), 0 20px 25px -5px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.6)' 
+            : '0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 20px 25px -5px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.15)'};
+        }
+        .comparison-card {
+          background: ${isLight ? 'linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)' : 'linear-gradient(135deg, #1e293b 0%, #0f172a 100%)'};
+          border: 1px solid ${isLight ? 'rgba(148, 163, 184, 0.2)' : 'rgba(71, 85, 105, 0.4)'};
           border-radius: 16px;
-          backdrop-filter: blur(20px);
-          box-shadow: ${isLight ? '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)' : '0 10px 25px -5px rgba(0, 0, 0, 0.25), 0 10px 10px -5px rgba(0, 0, 0, 0.1)'};
+          transition: all 0.3s ease;
+        }
+        .comparison-card:hover {
+          transform: translateY(-4px);
+          box-shadow: ${isLight 
+            ? '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)' 
+            : '0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.1)'};
+        }
+        .gradient-border {
+          position: relative;
+          background: ${isLight ? '#ffffff' : '#0f172a'};
+          border-radius: 16px;
+          padding: 2px;
+        }
+        .gradient-border::before {
+          content: '';
+          position: absolute;
+          inset: 0;
+          padding: 2px;
+          background: linear-gradient(135deg, #3b82f6, #8b5cf6, #06b6d4);
+          border-radius: 16px;
+          mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+          mask-composite: exclude;
         }
       `}</style>
       
@@ -554,47 +607,55 @@ function PrepaymentCalculator() {
             </p>
           </div>
 
-          <h1 className={`text-lg font-semibold mb-6 ${isLight ? 'text-slate-900' : 'text-white'}`}>Loan Prepayment Calculator</h1>
         
         {/* Your Current Loan Details */}
-        <section className="md-panel-elevated p-6 mb-6">
-          <div className="flex items-center gap-3 mb-6">
-            <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${isLight ? 'bg-blue-100' : 'bg-blue-500/20'}`}>
-              <svg className={`w-5 h-5 ${isLight ? 'text-blue-600' : 'text-blue-400'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <section className="md-panel-elevated p-8 mb-8">
+          <div className="flex items-center gap-4 mb-8">
+            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-lg">
+              <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 00-2-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
               </svg>
             </div>
-            <h2 className={`text-lg font-semibold ${isLight ? 'text-slate-900' : 'text-white'}`}>Your Current Loan Details</h2>
+            <div>
+              <h2 className={`text-xl font-bold ${isLight ? 'text-slate-900' : 'text-white'}`}>Your Current Loan Details</h2>
+              <p className={`text-sm ${isLight ? 'text-slate-600' : 'text-slate-400'} mt-1`}>Enter your existing loan information</p>
+            </div>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="space-y-3">
               <label className={`block text-sm font-medium ${isLight ? 'text-slate-700' : 'text-white/80'}`}>Loan Amount</label>
-              <div className={`relative rounded-lg border ${isLight ? 'border-slate-300 bg-white' : 'border-white/20 bg-black/20'} focus-within:ring-2 focus-within:ring-blue-500`}>
-                <span className={`absolute left-3 top-1/2 transform -translate-y-1/2 text-sm ${isLight ? 'text-slate-500' : 'text-white/60'}`}>₹</span>
+              <div className={`relative rounded-xl border-2 ${isLight ? 'border-slate-200 bg-white hover:border-blue-300' : 'border-white/20 bg-black/20 hover:border-blue-400/50'} focus-within:ring-4 focus-within:ring-blue-500/20 focus-within:border-blue-500 transition-all duration-200 group`}>
+                <span className={`absolute left-4 top-1/2 transform -translate-y-1/2 text-lg font-semibold ${isLight ? 'text-slate-600 group-focus-within:text-blue-600' : 'text-white/70 group-focus-within:text-blue-400'} transition-colors`}>₹</span>
                 <input 
-                  type="number" 
-                  value={loanData.loanAmount || ''}
+                  type="text" 
+                  value={loanData.loanAmount ? loanData.loanAmount.toLocaleString('en-IN') : ''}
                   onChange={(e) => {
-                    const newAmount = parseFloat(e.target.value) || 0
+                    const value = e.target.value.replace(/,/g, '')
+                    let newAmount = parseFloat(value) || 0
+                    
+                    // Apply min/max limits: 0 to 10 crores (10,00,00,000)
+                    if (newAmount < 0) newAmount = 0
+                    if (newAmount > 100000000) newAmount = 100000000
+                    
                     const newEMI = newAmount > 0 ? calculateEMI(newAmount, loanData.interestRate, loanData.tenure) : 0
                     setLoanData(prev => ({ ...prev, loanAmount: newAmount, emi: newEMI }))
+                    
+                    // Reset prepayment if it exceeds new loan amount
+                    if (prepaymentAmount > newAmount) {
+                      setPrepaymentAmount(0)
+                    }
                   }}
-                  placeholder="1600002" 
+                  placeholder="Enter amount between ₹0 and ₹10,00,00,000"
                   aria-label="Loan Amount"
-                  className={`w-full pl-8 pr-4 py-3 rounded-lg border-0 focus:outline-none ${isLight ? 'bg-transparent text-slate-900' : 'bg-transparent text-white'}`}
+                  className={`w-full pl-10 pr-12 py-4 rounded-xl border-0 focus:outline-none text-lg font-medium ${isLight ? 'bg-transparent text-slate-900 placeholder-slate-400' : 'bg-transparent text-white placeholder-white/50'}`}
                 />
-                <div className={`absolute right-3 top-1/2 transform -translate-y-1/2 ${isLight ? 'text-slate-400' : 'text-white/40'}`}>
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
-                  </svg>
-                </div>
               </div>
             </div>
             
             <div className="space-y-3">
               <label className={`block text-sm font-medium ${isLight ? 'text-slate-700' : 'text-white/80'}`}>Interest Rate</label>
-              <div className={`relative rounded-lg border ${isLight ? 'border-slate-300 bg-white' : 'border-white/20 bg-black/20'} focus-within:ring-2 focus-within:ring-blue-500`}>
+              <div className={`relative rounded-xl border-2 ${isLight ? 'border-slate-200 bg-white hover:border-purple-300' : 'border-white/20 bg-black/20 hover:border-purple-400/50'} focus-within:ring-4 focus-within:ring-purple-500/20 focus-within:border-purple-500 transition-all duration-200 group`}>
                 <input 
                   type="number" 
                   step="0.05" 
@@ -606,17 +667,17 @@ function PrepaymentCalculator() {
                     const newEMI = loanData.loanAmount > 0 ? calculateEMI(loanData.loanAmount, newRate, loanData.tenure) : 0
                     setLoanData(prev => ({ ...prev, interestRate: newRate, emi: newEMI }))
                   }}
-                  placeholder="8" 
+ 
                   aria-label="Interest Rate"
-                  className={`w-full pl-4 pr-16 py-3 rounded-lg border-0 focus:outline-none ${isLight ? 'bg-transparent text-slate-900' : 'bg-transparent text-white'}`}
+                  className={`w-full pl-4 pr-20 py-4 rounded-xl border-0 focus:outline-none text-lg font-medium ${isLight ? 'bg-transparent text-slate-900 placeholder-slate-400' : 'bg-transparent text-white placeholder-white/50'}`}
                 />
-                <span className={`absolute right-3 top-1/2 transform -translate-y-1/2 text-sm ${isLight ? 'text-slate-500' : 'text-white/60'}`}>%p.a.</span>
+                <span className={`absolute right-4 top-1/2 transform -translate-y-1/2 text-sm font-semibold ${isLight ? 'text-slate-600 group-focus-within:text-purple-600' : 'text-white/70 group-focus-within:text-purple-400'} transition-colors`}>% p.a.</span>
               </div>
             </div>
             
             <div className="space-y-3">
               <label className={`block text-sm font-medium ${isLight ? 'text-slate-700' : 'text-white/80'}`}>Loan Tenure</label>
-              <div className={`relative rounded-lg border ${isLight ? 'border-slate-300 bg-white' : 'border-white/20 bg-black/20'} focus-within:ring-2 focus-within:ring-blue-500`}>
+              <div className={`relative rounded-xl border-2 ${isLight ? 'border-slate-200 bg-white hover:border-green-300' : 'border-white/20 bg-black/20 hover:border-green-400/50'} focus-within:ring-4 focus-within:ring-green-500/20 focus-within:border-green-500 transition-all duration-200 group`}>
                 <select 
                   value={loanData.tenure || ''}
                   onChange={(e) => {
@@ -625,7 +686,7 @@ function PrepaymentCalculator() {
                     setLoanData(prev => ({ ...prev, tenure: newTenure, emi: newEMI }))
                   }}
                   aria-label="Loan Tenure"
-                  className={`w-full px-4 py-3 rounded-lg border-0 focus:outline-none ${isLight ? 'bg-transparent text-slate-900' : 'bg-transparent text-white'} appearance-none`}
+                  className={`w-full px-4 py-4 rounded-xl border-0 focus:outline-none text-lg font-medium ${isLight ? 'bg-transparent text-slate-900' : 'bg-transparent text-white'} appearance-none cursor-pointer`}
                 >
                   <option value="1">1 year</option>
                   <option value="2">2 years</option>
@@ -638,8 +699,8 @@ function PrepaymentCalculator() {
                   <option value="9">9 years</option>
                   <option value="10">10 years</option>
                 </select>
-                <div className={`absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none ${isLight ? 'text-slate-400' : 'text-white/40'}`}>
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className={`absolute right-4 top-1/2 transform -translate-y-1/2 pointer-events-none ${isLight ? 'text-slate-400 group-focus-within:text-green-500' : 'text-white/40 group-focus-within:text-green-400'} transition-colors`}>
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                   </svg>
                 </div>
@@ -649,21 +710,24 @@ function PrepaymentCalculator() {
         </section>
 
         {/* Prepayment Strategy */}
-        <section className="md-panel-elevated p-6 mb-6">
-          <div className="flex items-center gap-3 mb-6">
-            <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${isLight ? 'bg-purple-100' : 'bg-purple-500/20'}`}>
-              <svg className={`w-5 h-5 ${isLight ? 'text-purple-600' : 'text-purple-400'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <section className="md-panel-elevated p-8 mb-8">
+          <div className="flex items-center gap-4 mb-8">
+            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center shadow-lg">
+              <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
               </svg>
             </div>
-            <h2 className={`text-lg font-semibold ${isLight ? 'text-slate-900' : 'text-white'}`}>Prepayment Strategy</h2>
+            <div>
+              <h2 className={`text-xl font-bold ${isLight ? 'text-slate-900' : 'text-white'}`}>Prepayment Strategy</h2>
+              <p className={`text-sm ${isLight ? 'text-slate-600' : 'text-slate-400'} mt-1`}>Configure your prepayment schedule</p>
+            </div>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             
             <div className="space-y-3">
               <label className={`block text-sm font-medium ${isLight ? 'text-slate-700' : 'text-white/80'}`}>Payment Frequency</label>
-              <div className={`relative rounded-lg border ${isLight ? 'border-slate-300 bg-white' : 'border-white/20 bg-black/20'} focus-within:ring-2 focus-within:ring-blue-500`}>
+              <div className={`relative rounded-xl border-2 ${isLight ? 'border-slate-200 bg-white hover:border-indigo-300' : 'border-white/20 bg-black/20 hover:border-indigo-400/50'} focus-within:ring-4 focus-within:ring-indigo-500/20 focus-within:border-indigo-500 transition-all duration-200 group`}>
                 <select 
                   aria-label="Prepayment Frequency"
                   value={prepaymentFrequency === 'yearly' ? 'Yearly' : 
@@ -677,15 +741,15 @@ function PrepaymentCalculator() {
                       value === 'Monthly' ? 'monthly' : 'lumpsum'
                     )
                   }}
-                  className={`w-full px-4 py-3 rounded-lg border-0 focus:outline-none ${isLight ? 'bg-transparent text-slate-900' : 'bg-transparent text-white'} appearance-none`}
+                  className={`w-full px-4 py-4 rounded-xl border-0 focus:outline-none text-lg font-medium ${isLight ? 'bg-transparent text-slate-900' : 'bg-transparent text-white'} appearance-none cursor-pointer`}
                 >
                   <option>Yearly</option>
                   <option>Quarterly</option>
                   <option>Monthly</option>
                   <option>Lumpsum</option>
                 </select>
-                <div className={`absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none ${isLight ? 'text-slate-400' : 'text-white/40'}`}>
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className={`absolute right-4 top-1/2 transform -translate-y-1/2 pointer-events-none ${isLight ? 'text-slate-400 group-focus-within:text-indigo-500' : 'text-white/40 group-focus-within:text-indigo-400'} transition-colors`}>
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                   </svg>
                 </div>
@@ -694,27 +758,37 @@ function PrepaymentCalculator() {
             
             <div className="space-y-3">
               <label className={`block text-sm font-medium ${isLight ? 'text-slate-700' : 'text-white/80'}`}>Prepayment Amount</label>
-              <div className={`relative rounded-lg border ${isLight ? 'border-slate-300 bg-white' : 'border-white/20 bg-black/20'} focus-within:ring-2 focus-within:ring-blue-500`}>
-                <span className={`absolute left-3 top-1/2 transform -translate-y-1/2 text-sm ${isLight ? 'text-slate-500' : 'text-white/60'}`}>₹</span>
+              <div className={`relative rounded-xl border-2 ${isLight ? 'border-slate-200 bg-white hover:border-orange-300' : 'border-white/20 bg-black/20 hover:border-orange-400/50'} focus-within:ring-4 focus-within:ring-orange-500/20 focus-within:border-orange-500 transition-all duration-200 group`}>
+                <span className={`absolute left-4 top-1/2 transform -translate-y-1/2 text-lg font-semibold ${isLight ? 'text-slate-600 group-focus-within:text-orange-600' : 'text-white/70 group-focus-within:text-orange-400'} transition-colors`}>₹</span>
                 <input 
-                  type="number" 
-                  value={prepaymentAmount || ''}
-                  onChange={(e) => setPrepaymentAmount(parseFloat(e.target.value) || 0)}
-                  placeholder="32000" 
+                  type="text" 
+                  value={prepaymentAmount ? prepaymentAmount.toLocaleString('en-IN') : ''}
+                  onChange={(e) => {
+                    const value = e.target.value.replace(/,/g, '')
+                    let newPrepayment = parseFloat(value) || 0
+                    
+                    // Ensure prepayment cannot exceed loan amount
+                    if (newPrepayment > loanData.loanAmount) {
+                      newPrepayment = loanData.loanAmount
+                    }
+                    
+                    // Ensure prepayment is not negative
+                    if (newPrepayment < 0) {
+                      newPrepayment = 0
+                    }
+                    
+                    setPrepaymentAmount(newPrepayment)
+                  }}
+                  placeholder={`Max: ${loanData.loanAmount ? formatCurrency(loanData.loanAmount) : '₹0'}`}
                   aria-label="Prepayment Amount"
-                  className={`w-full pl-8 pr-4 py-3 rounded-lg border-0 focus:outline-none ${isLight ? 'bg-transparent text-slate-900' : 'bg-transparent text-white'}`}
+                  className={`w-full pl-10 pr-12 py-4 rounded-xl border-0 focus:outline-none text-lg font-medium ${isLight ? 'bg-transparent text-slate-900 placeholder-slate-400' : 'bg-transparent text-white placeholder-white/50'}`}
                 />
-                <div className={`absolute right-3 top-1/2 transform -translate-y-1/2 ${isLight ? 'text-slate-400' : 'text-white/40'}`}>
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 4V2a1 1 0 011-1h4a1 1 0 011 1v2h4a1 1 0 110 2h-1v12a2 2 0 01-2 2H6a2 2 0 01-2-2V6H3a1 1 0 110-2h4z" />
-                  </svg>
-                </div>
               </div>
             </div>
             
             <div className="space-y-3">
               <label className={`block text-sm font-medium ${isLight ? 'text-slate-700' : 'text-white/80'}`}>Prepayment Penalty</label>
-              <div className={`relative rounded-lg border ${isLight ? 'border-slate-300 bg-white' : 'border-white/20 bg-black/20'} focus-within:ring-2 focus-within:ring-blue-500`}>
+              <div className={`relative rounded-xl border-2 ${isLight ? 'border-slate-200 bg-white hover:border-red-300' : 'border-white/20 bg-black/20 hover:border-red-400/50'} focus-within:ring-4 focus-within:ring-red-500/20 focus-within:border-red-500 transition-all duration-200 group`}>
                 <input 
                   type="number" 
                   step="0.1" 
@@ -733,11 +807,11 @@ function PrepaymentCalculator() {
                       setPenaltyRate(value);
                     }
                   }}
-                  placeholder="0" 
+ 
                   aria-label="Prepayment Penalty"
-                  className={`w-full pl-4 pr-8 py-3 rounded-lg border-0 focus:outline-none ${isLight ? 'bg-transparent text-slate-900' : 'bg-transparent text-white'}`}
+                  className={`w-full pl-4 pr-16 py-4 rounded-xl border-0 focus:outline-none text-lg font-medium ${isLight ? 'bg-transparent text-slate-900 placeholder-slate-400' : 'bg-transparent text-white placeholder-white/50'}`}
                 />
-                <span className={`absolute right-3 top-1/2 transform -translate-y-1/2 text-sm ${isLight ? 'text-slate-500' : 'text-white/60'}`}>%</span>
+                <span className={`absolute right-4 top-1/2 transform -translate-y-1/2 text-sm font-semibold ${isLight ? 'text-slate-600 group-focus-within:text-red-600' : 'text-white/70 group-focus-within:text-red-400'} transition-colors`}>%</span>
               </div>
             </div>
           </div>
@@ -746,68 +820,177 @@ function PrepaymentCalculator() {
         {results && (
           <>
             {/* Comparison */}
-            <section className="md-panel-elevated p-4 mb-6">
-              <div className={`text-sm font-semibold mb-4 ${isLight ? 'text-slate-900' : 'text-white'}`}>Comparison</div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <section className="md-panel-elevated p-8 mb-8">
+              <div className="flex items-center gap-4 mb-8">
+                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center shadow-lg">
+                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 00-2-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                  </svg>
+                </div>
+                <div>
+                  <h2 className={`text-xl font-bold ${isLight ? 'text-slate-900' : 'text-white'}`}>Comparison</h2>
+                  <p className={`text-sm ${isLight ? 'text-slate-600' : 'text-slate-400'} mt-1`}>See how prepayments impact your loan</p>
+                </div>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* Without Prepayment */}
-                <div className={`p-6 rounded-lg border ${isLight ? 'bg-slate-50 border-slate-200' : 'bg-black/20 border-white/10'}`}>
-                  <div className={`text-sm font-medium mb-3 ${isLight ? 'text-slate-700' : 'text-white/80'}`}>Without Prepayment</div>
-                  <div className={`text-2xl font-bold mb-2 ${isLight ? 'text-slate-900' : 'text-white'}`}>{formatTenure(loanData.tenure)}</div>
-                  <div className={`text-sm mb-2 ${themeClass('text-slate-600', 'text-white/60', isLight)}`}>Total interest: {formatCurrency(results.originalInterest)}</div>
-                  <div className={`text-sm ${themeClass('text-slate-600', 'text-white/60', isLight)}`}>EMI: {formatCurrency(loanData.emi)}</div>
+                <div className="comparison-card p-8 relative overflow-hidden">
+                  <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-red-500/20 to-orange-500/20 rounded-bl-full"></div>
+                  <div className="relative z-10">
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${isLight ? 'bg-red-100' : 'bg-red-500/20'}`}>
+                        <svg className={`w-5 h-5 ${isLight ? 'text-red-600' : 'text-red-400'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.732 15.5c-.77.833.192 2.5 1.732 2.5z" />
+                        </svg>
+                      </div>
+                      <div className={`text-lg font-bold ${isLight ? 'text-slate-900' : 'text-white'}`}>Without Prepayment</div>
+                    </div>
+                    <div className={`text-3xl font-bold mb-3 ${isLight ? 'text-slate-900' : 'text-white'}`}>{formatTenure(loanData.tenure)}</div>
+                    <div className={`text-base mb-3 ${isLight ? 'text-slate-600' : 'text-slate-300'}`}>
+                      <div className="flex justify-between items-center mb-2">
+                        <span>Total Interest:</span>
+                        <span className="font-semibold">{formatCurrency(results.originalInterest)}</span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span>Monthly EMI:</span>
+                        <span className="font-semibold">{formatCurrency(loanData.emi)}</span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
                 
                 {/* With Prepayment */}
-                <div className={`p-6 rounded-lg border ${isLight ? 'bg-emerald-50 border-emerald-200' : 'bg-emerald-900/20 border-emerald-500/20'}`}>
-                  <div className={`text-sm font-medium mb-3 ${isLight ? 'text-emerald-700' : 'text-emerald-300'}`}>
-                    With Prepayment (Reduce Tenure)
+                <div className="comparison-card p-8 relative overflow-hidden border-2 border-emerald-500/50">
+                  <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-emerald-500/30 to-green-500/30 rounded-bl-full"></div>
+                  <div className="relative z-10">
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="w-10 h-10 rounded-lg bg-emerald-500 flex items-center justify-center">
+                        <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                        </svg>
+                      </div>
+                      <div className={`text-lg font-bold ${isLight ? 'text-slate-900' : 'text-white'}`}>With Prepayment</div>
+                    </div>
+                    <div className={`text-3xl font-bold mb-3 ${isLight ? 'text-emerald-900' : 'text-emerald-100'}`}>{formatTenure(results.newTenure)}</div>
+                    <div className="space-y-3">
+                      <div className={`p-4 rounded-lg ${isLight ? 'bg-emerald-50' : 'bg-emerald-900/30'} border border-emerald-500/30`}>
+                        <div className="text-center">
+                          <div className={`text-2xl font-bold ${isLight ? 'text-emerald-700' : 'text-emerald-300'} mb-1`}>
+                            {formatCurrency(
+                              penaltyRate > 0 && results.penaltyAmount 
+                                ? Math.max(0, results.amountSaved - results.penaltyAmount)
+                                : results.amountSaved
+                            )}
+                          </div>
+                          <div className={`text-sm font-medium ${isLight ? 'text-emerald-600' : 'text-emerald-400'}`}>Total Savings</div>
+                        </div>
+                      </div>
+                      <div className={`text-base ${isLight ? 'text-slate-600' : 'text-slate-300'}`}>
+                        <div className="flex justify-between items-center mb-2">
+                          <span>Time Saved:</span>
+                          <span className="font-semibold text-emerald-600">{(() => {
+                            const monthsSaved = results.monthsSaved || 0;
+                            const years = Math.floor(monthsSaved / 12);
+                            const remainingMonths = monthsSaved % 12;
+                            if (years === 0) {
+                              return `${remainingMonths} month${remainingMonths !== 1 ? 's' : ''}`;
+                            } else if (remainingMonths === 0) {
+                              return `${years} year${years !== 1 ? 's' : ''}`;
+                            } else {
+                              return `${years} year${years !== 1 ? 's' : ''} ${remainingMonths} month${remainingMonths !== 1 ? 's' : ''}`;
+                            }
+                          })()}</span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span>Monthly EMI:</span>
+                          <span className="font-semibold">{formatCurrency(loanData.emi)} <span className="text-xs text-blue-600">(unchanged)</span></span>
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                  
-                  <div className={`text-2xl font-bold mb-2 ${isLight ? 'text-emerald-900' : 'text-emerald-100'}`}>{formatTenure(results.newTenure)}</div>
-                  <div className={`text-sm mb-2 ${isLight ? 'text-emerald-700' : 'text-emerald-200'}`}>
-                    You save <span className="font-semibold">
-                      {formatCurrency(
-                        penaltyRate > 0 && results.penaltyAmount 
-                          ? Math.max(0, results.amountSaved - results.penaltyAmount)
-                          : results.amountSaved
-                      )}
-                    </span> and finish {(() => {
-                      const monthsSaved = results.monthsSaved || 0;
-                      const years = Math.floor(monthsSaved / 12);
-                      const remainingMonths = monthsSaved % 12;
-                      if (years === 0) {
-                        return `${remainingMonths} month${remainingMonths !== 1 ? 's' : ''}`;
-                      } else if (remainingMonths === 0) {
-                        return `${years} year${years !== 1 ? 's' : ''}`;
-                      } else {
-                        return `${years} year${years !== 1 ? 's' : ''} ${remainingMonths} month${remainingMonths !== 1 ? 's' : ''}`;
-                      }
-                    })()} earlier
-                  </div>
-                  <div className={`text-sm ${isLight ? 'text-emerald-600' : 'text-emerald-200'}`}>EMI: {formatCurrency(loanData.emi)} (unchanged)</div>
                 </div>
               </div>
             </section>
 
-            {/* EMI Information */}
-            <section className="md-panel-elevated p-4 mb-6">
-              <div className={`p-4 rounded-lg border ${isLight ? 'bg-blue-50 border-blue-200' : 'bg-blue-900/20 border-blue-500/20'}`}>
-                <div className="flex items-center justify-center gap-3">
-                  <span className={`text-sm font-medium ${isLight ? 'text-blue-700' : 'text-blue-300'}`}>EMI Remains Same:</span>
-                  <span className={`text-lg font-bold ${isLight ? 'text-blue-800' : 'text-blue-200'}`}>{formatCurrency(loanData.emi)}</span>
+            {/* Key Insight Card */}
+            <section className="md-panel-elevated p-8 mb-8">
+              <div className="text-center">
+                <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 mb-4 shadow-lg">
+                  <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
                 </div>
-                <div className={`text-xs text-center mt-2 ${isLight ? 'text-blue-600' : 'text-blue-300'}`}>
-                  Loan tenure gets reduced instead of EMI
+                <h3 className={`text-2xl font-bold mb-2 ${isLight ? 'text-slate-900' : 'text-white'}`}>EMI Remains Same</h3>
+                <div className={`text-4xl font-bold mb-4 bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent`}>
+                  {formatCurrency(loanData.emi)}
+                </div>
+                <p className={`text-lg ${isLight ? 'text-slate-600' : 'text-slate-400'} max-w-md mx-auto`}>
+                  With the "Reduce Tenure" strategy, your monthly EMI stays the same while your loan term gets shorter, saving you thousands in interest.
+                </p>
+              </div>
+            </section>
+
+            {/* Advertisement - Before Loan Details */}
+            <section className="relative z-10 mb-8">
+              <div className="container mx-auto px-4">
+                <div className="max-w-4xl mx-auto">
+                  {/* Desktop Ad - 970x250 Billboard */}
+                  <div className="text-center my-6 hidden md:block">
+                    <div className={`text-xs mb-2 ${isLight ? 'text-slate-500' : 'text-white/60'}`}>Advertisement</div>
+                    <div 
+                      className={`
+                        border-2 border-dashed rounded-lg flex items-center justify-center mx-auto
+                        ${isLight 
+                          ? 'bg-gradient-to-br from-slate-50 via-white to-slate-50 border-slate-300' 
+                          : 'bg-black border-white/20'
+                        }
+                      `}
+                      style={{ width: '970px', height: '250px' }}
+                    >
+                      <div className={`text-sm font-medium ${isLight ? 'text-slate-400' : 'text-white/40'}`}>
+                        970 x 250 Billboard Ad
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* Mobile Ad - 320x100 Banner */}
+                  <div className="text-center my-6 block md:hidden">
+                    <div className={`text-xs mb-2 ${isLight ? 'text-slate-500' : 'text-white/60'}`}>Advertisement</div>
+                    <div 
+                      className={`
+                        border-2 border-dashed rounded-lg flex items-center justify-center mx-auto
+                        ${isLight 
+                          ? 'bg-gradient-to-br from-slate-50 via-white to-slate-50 border-slate-300' 
+                          : 'bg-black border-white/20'
+                        }
+                      `}
+                      style={{ width: '320px', height: '100px' }}
+                    >
+                      <div className={`text-sm font-medium ${isLight ? 'text-slate-400' : 'text-white/40'}`}>
+                        320 x 100 Large Mobile Banner Ad
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </section>
 
             {/* Loan Details */}
-            <section className="md-panel-elevated p-4 mb-6">
-              <div className={`text-sm font-semibold mb-4 ${isLight ? 'text-slate-900' : 'text-white'}`}>Loan Details</div>
-              <div className="overflow-x-auto">
+            <section className="md-panel-elevated p-8 mb-8">
+              <div className="flex items-center gap-4 mb-8">
+                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg">
+                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  </svg>
+                </div>
+                <div>
+                  <h2 className={`text-xl font-bold ${isLight ? 'text-slate-900' : 'text-white'}`}>Loan Details</h2>
+                  <p className={`text-sm ${isLight ? 'text-slate-600' : 'text-slate-400'} mt-1`}>Detailed breakdown of your loan metrics</p>
+                </div>
+              </div>
+              <div className="overflow-x-auto rounded-xl border border-slate-200 dark:border-white/10">
                 <table className="w-full">
-                  <thead>
+                  <thead className={`${isLight ? 'bg-slate-50' : 'bg-white/5'}`}>
                     <tr className={`border-b ${isLight ? 'border-slate-200' : 'border-white/10'}`}>
                       <th className={`py-3 px-4 text-left text-xs font-medium uppercase tracking-wider ${isLight ? 'text-slate-700' : 'text-white/70'}`}>Metric</th>
                       <th className={`py-3 px-4 text-left text-xs font-medium uppercase tracking-wider ${isLight ? 'text-slate-700' : 'text-white/70'}`}>Before</th>
@@ -882,12 +1065,16 @@ function PrepaymentCalculator() {
                   </tbody>
                 </table>
               </div>
-              <div className="flex justify-end mt-4">
+              <div className="flex justify-center mt-8">
                 <button 
                   onClick={() => window.location.reload()}
-                  className={`px-6 py-2 rounded-lg font-medium transition-colors ${isLight ? 'bg-blue-600 hover:bg-blue-700 text-white' : 'bg-blue-500 hover:bg-blue-600 text-white'}`}
+                  className="group relative px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-bold rounded-2xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 flex items-center space-x-3"
                 >
-                  Recalculate
+                  <svg className="w-5 h-5 group-hover:rotate-180 transition-transform duration-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                  </svg>
+                  <span>Recalculate</span>
+                  <div className="absolute inset-0 rounded-2xl bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                 </button>
               </div>
             </section>
@@ -1099,6 +1286,130 @@ function PrepaymentCalculator() {
               <div className={`text-xs text-center mt-2 ${themeClass('text-slate-600', 'text-white/60', isLight)}`}>
                 Outstanding loan balance over time showing how prepayment accelerates loan payoff
               </div>
+            </section>
+
+            {/* Amortization Schedule */}
+            <section className="md-panel-elevated p-8 mb-8">
+              <div className="flex items-center gap-4 mb-8">
+                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center shadow-lg">
+                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+                  </svg>
+                </div>
+                <div>
+                  <h2 className={`text-xl font-bold ${isLight ? 'text-slate-900' : 'text-white'}`}>Amortization Schedule</h2>
+                  <p className={`text-sm ${isLight ? 'text-slate-600' : 'text-slate-400'} mt-1`}>Month-by-month payment breakdown with prepayments</p>
+                </div>
+              </div>
+
+              {results?.amortizationSchedule && results.amortizationSchedule.length > 0 ? (
+                <div className="space-y-6">
+                  {/* Summary Stats */}
+                  <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
+                    <div className={`p-4 rounded-xl ${isLight ? 'bg-slate-50 border border-slate-200' : 'bg-white/5 border border-white/10'}`}>
+                      <div className={`text-2xl font-bold ${isLight ? 'text-slate-900' : 'text-white'}`}>
+                        {formatCurrency(loanData.loanAmount)}
+                      </div>
+                      <div className={`text-sm ${isLight ? 'text-slate-600' : 'text-white/60'}`}>Original Loan</div>
+                    </div>
+                    <div className={`p-4 rounded-xl ${isLight ? 'bg-slate-50 border border-slate-200' : 'bg-white/5 border border-white/10'}`}>
+                      <div className={`text-2xl font-bold ${isLight ? 'text-slate-900' : 'text-white'}`}>
+                        {results.amortizationSchedule.length}
+                      </div>
+                      <div className={`text-sm ${isLight ? 'text-slate-600' : 'text-white/60'}`}>Total Payments</div>
+                    </div>
+                    <div className={`p-4 rounded-xl ${isLight ? 'bg-slate-50 border border-slate-200' : 'bg-white/5 border border-white/10'}`}>
+                      <div className={`text-2xl font-bold ${isLight ? 'text-slate-900' : 'text-white'}`}>
+                        {formatCurrency(results.amortizationSchedule.reduce((sum, payment) => sum + payment.prepayment, 0))}
+                      </div>
+                      <div className={`text-sm ${isLight ? 'text-slate-600' : 'text-white/60'}`}>Total Prepayments</div>
+                    </div>
+                    <div className={`p-4 rounded-xl ${isLight ? 'bg-slate-50 border border-slate-200' : 'bg-white/5 border border-white/10'}`}>
+                      <div className={`text-2xl font-bold ${isLight ? 'text-slate-900' : 'text-white'}`}>
+                        {formatCurrency(results.amortizationSchedule.reduce((sum, payment) => sum + payment.interest, 0))}
+                      </div>
+                      <div className={`text-sm ${isLight ? 'text-slate-600' : 'text-white/60'}`}>Total Interest</div>
+                    </div>
+                    <div className={`p-4 rounded-xl ${isLight ? 'bg-slate-50 border border-slate-200' : 'bg-white/5 border border-white/10'}`}>
+                      <div className={`text-2xl font-bold ${isLight ? 'text-slate-900' : 'text-white'}`}>
+                        {formatCurrency(results.amortizationSchedule.reduce((sum, payment) => sum + payment.principal, 0))}
+                      </div>
+                      <div className={`text-sm ${isLight ? 'text-slate-600' : 'text-white/60'}`}>Total Principal</div>
+                    </div>
+                  </div>
+
+                  {/* Scrollable Table */}
+                  <div className="overflow-x-auto rounded-xl border border-slate-200 dark:border-white/10" style={{maxHeight: '400px'}}>
+                    <table className="w-full">
+                      <thead className={`sticky top-0 ${isLight ? 'bg-slate-50' : 'bg-white/5'} backdrop-blur-sm`}>
+                        <tr className={`border-b ${isLight ? 'border-slate-200' : 'border-white/10'}`}>
+                          <th className={`py-3 px-4 text-left text-xs font-medium uppercase tracking-wider ${isLight ? 'text-slate-700' : 'text-white/70'}`}>Month</th>
+                          <th className={`py-3 px-4 text-right text-xs font-medium uppercase tracking-wider ${isLight ? 'text-slate-700' : 'text-white/70'}`}>EMI</th>
+                          <th className={`py-3 px-4 text-right text-xs font-medium uppercase tracking-wider ${isLight ? 'text-slate-700' : 'text-white/70'}`}>Interest</th>
+                          <th className={`py-3 px-4 text-right text-xs font-medium uppercase tracking-wider ${isLight ? 'text-slate-700' : 'text-white/70'}`}>Principal</th>
+                          <th className={`py-3 px-4 text-right text-xs font-medium uppercase tracking-wider ${isLight ? 'text-slate-700' : 'text-white/70'}`}>Prepayment</th>
+                          <th className={`py-3 px-4 text-right text-xs font-medium uppercase tracking-wider ${isLight ? 'text-slate-700' : 'text-white/70'}`}>Balance</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {results.amortizationSchedule.map((payment, index) => (
+                          <tr 
+                            key={index} 
+                            className={`border-b ${isLight ? 'border-slate-100 hover:bg-slate-50' : 'border-white/5 hover:bg-white/5'} transition-colors`}
+                          >
+                            <td className={`py-3 px-4 text-sm font-medium ${isLight ? 'text-slate-900' : 'text-white'}`}>
+                              {payment.month}
+                            </td>
+                            <td className={`py-3 px-4 text-sm text-right ${isLight ? 'text-slate-700' : 'text-white/80'}`}>
+                              {formatCurrency(payment.emi)}
+                            </td>
+                            <td className={`py-3 px-4 text-sm text-right ${isLight ? 'text-red-600' : 'text-red-400'}`}>
+                              {formatCurrency(payment.interest)}
+                            </td>
+                            <td className={`py-3 px-4 text-sm text-right ${isLight ? 'text-blue-600' : 'text-blue-400'}`}>
+                              {formatCurrency(payment.principal)}
+                            </td>
+                            <td className={`py-3 px-4 text-sm text-right ${payment.prepayment > 0 ? (isLight ? 'text-green-600 font-semibold' : 'text-green-400 font-semibold') : (isLight ? 'text-slate-500' : 'text-white/50')}`}>
+                              {payment.prepayment > 0 ? formatCurrency(payment.prepayment) : '—'}
+                            </td>
+                            <td className={`py-3 px-4 text-sm text-right font-medium ${isLight ? 'text-slate-900' : 'text-white'}`}>
+                              {formatCurrency(payment.balance)}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+
+                  {/* Legend */}
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-xs">
+                    <div className="flex items-center gap-2">
+                      <div className={`w-3 h-3 rounded-full ${isLight ? 'bg-red-600' : 'bg-red-400'}`}></div>
+                      <span className={isLight ? 'text-slate-600' : 'text-white/60'}>Interest Payment</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className={`w-3 h-3 rounded-full ${isLight ? 'bg-blue-600' : 'bg-blue-400'}`}></div>
+                      <span className={isLight ? 'text-slate-600' : 'text-white/60'}>Principal Payment</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className={`w-3 h-3 rounded-full ${isLight ? 'bg-green-600' : 'bg-green-400'}`}></div>
+                      <span className={isLight ? 'text-slate-600' : 'text-white/60'}>Prepayment</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className={`w-3 h-3 rounded-full ${isLight ? 'bg-slate-900' : 'bg-white'}`}></div>
+                      <span className={isLight ? 'text-slate-600' : 'text-white/60'}>Remaining Balance</span>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div className={`text-center py-12 ${isLight ? 'text-slate-500' : 'text-white/60'}`}>
+                  <svg className="w-12 h-12 mx-auto mb-4 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  </svg>
+                  <div className="text-lg font-medium mb-2">No Schedule Available</div>
+                  <div className="text-sm">Enter loan details and prepayment amount to view the amortization schedule</div>
+                </div>
+              )}
             </section>
           </>
         )}
