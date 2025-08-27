@@ -319,14 +319,14 @@ export default function TotalCostDisplayV2({ carData, updateCarData: _updateCarD
                 </div>
                 <div className="flex justify-between items-center">
                   <div className="flex items-center space-x-2">
-                    <TrendingUp className="w-4 h-4 text-white" />
+                    <IndianRupee className="w-4 h-4 text-white" />
                     <span className="text-sm font-medium">Loan Amount</span>
                   </div>
                   <span className="text-sm font-bold">₹{loanAmount.toLocaleString('en-IN')}</span>
                 </div>
                 <div className="flex justify-between items-center">
                   <div className="flex items-center space-x-2">
-                    <TrendingDown className="w-4 h-4 text-white" />
+                    <IndianRupee className="w-4 h-4 text-white" />
                     <span className="text-sm font-medium">Total Interest</span>
                   </div>
                   <span className="text-sm font-bold">₹{totalInterest.toLocaleString('en-IN', { maximumFractionDigits: 0 })}</span>
@@ -463,7 +463,7 @@ export default function TotalCostDisplayV2({ carData, updateCarData: _updateCarD
                 {totalInterest > 0 && carData.tenure > 0 && (
                   <div className="flex justify-between items-center text-black/90">
                     <div className="flex items-center space-x-2">
-                      <TrendingDown className="w-4 h-4 text-black" />
+                      <IndianRupee className="w-4 h-4 text-black" />
                       <span className="font-medium">Total Interest (1Y)</span>
                     </div>
                     <span className="font-bold">{formatCurrency(totalInterest / carData.tenure)}</span>

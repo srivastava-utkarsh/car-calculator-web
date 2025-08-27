@@ -68,6 +68,36 @@ const AdSenseAd = ({ slot, format, style, responsive = true }: {
   );
 };
 
+// Enhanced Ad Space Component with matching background and dotted border
+const EnhancedAdSpace = ({ width, height, label, className = "" }: {
+  width: string;
+  height: string;
+  label: string;
+  className?: string;
+}) => {
+  const { isLight } = useTheme();
+  
+  return (
+    <div className={`text-center my-6 ${className}`}>
+      <div className={`text-xs mb-2 ${isLight ? 'text-slate-500' : 'text-white/60'}`}>Advertisement</div>
+      <div 
+        className={`
+          border-2 border-dashed rounded-lg flex items-center justify-center mx-auto
+          ${isLight 
+            ? 'bg-gradient-to-br from-slate-50 via-white to-slate-50 border-slate-300' 
+            : 'bg-black border-white/20'
+          }
+        `}
+        style={{ width, height }}
+      >
+        <div className={`text-sm font-medium ${isLight ? 'text-slate-400' : 'text-white/40'}`}>
+          {label}
+        </div>
+      </div>
+    </div>
+  );
+};
+
 export default function HomePage() {
   const [showResults, setShowResults] = useState(false) // Toggle results view
   const [isLeftCollapsed, setIsLeftCollapsed] = useState(false) // Collapsible state
@@ -149,31 +179,14 @@ export default function HomePage() {
               </div>
 
               {/* Navigation Menu - Center with proper spacing */}
-              <div className="flex-1 flex justify-center px-4">
+              <div className="flex-1 flex justify-center">
                 <nav className="flex items-center" role="navigation" aria-label="Main navigation">
-                  <a href="#calculator" className={`font-bold text-xs sm:text-base tracking-wide transition-colors duration-200 px-1 sm:px-4 py-2 text-center ${isLight ? 'text-slate-900 hover:text-slate-600' : 'text-white hover:text-white/80'}`}>
+                  <a href="#calculator" className={`font-bold text-sm sm:text-lg tracking-wide transition-colors duration-200 px-4 py-2 text-center ${isLight ? 'text-slate-900 hover:text-slate-600' : 'text-white hover:text-white/80'}`}>
                     Car Affordability Calculator
                   </a>
                 </nav>
               </div>
 
-              {/* Right side - Material UI toggle */}
-              <div className="flex items-center space-x-4">
-                <button
-                  onClick={() => setUseMaterialUI(!useMaterialUI)}
-                  className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-all duration-200 hover:scale-105 font-medium text-sm ${
-                    useMaterialUI
-                      ? `bg-emerald-500 text-white shadow-lg hover:bg-emerald-600`
-                      : isLight 
-                        ? 'bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-slate-900' 
-                        : 'bg-white/10 hover:bg-white/20 text-white/70 hover:text-white'
-                  }`}
-                  title={useMaterialUI ? "Switch to Custom Design" : "Switch to Material Design"}
-                >
-                  <Palette className="w-4 h-4" />
-                  <span>{useMaterialUI ? "Material UI" : "Custom UI"}</span>
-                </button>
-              </div>
             </div>
           </div>
         </header>
@@ -399,6 +412,31 @@ export default function HomePage() {
         </section>
 
 
+        {/* Advertisement - Before Prepayment Section */}
+        {carData.carPrice > 0 && carData.downPayment >= 0 && carData.tenure > 0 && (
+          <section className="relative z-10 mt-12">
+            <div className="container mx-auto px-4">
+              <div className="max-w-4xl mx-auto">
+                {/* Desktop Ad - 970x250 Billboard */}
+                <EnhancedAdSpace 
+                  width="970px" 
+                  height="250px" 
+                  label="970 x 250 Billboard Ad"
+                  className="hidden md:block"
+                />
+                
+                {/* Mobile Ad - 320x100 Banner */}
+                <EnhancedAdSpace 
+                  width="320px" 
+                  height="100px" 
+                  label="320 x 100 Large Mobile Banner Ad"
+                  className="block md:hidden"
+                />
+              </div>
+            </div>
+          </section>
+        )}
+
         {/* Smart Prepayment Section */}
         {carData.carPrice > 0 && carData.downPayment >= 0 && carData.tenure > 0 && (
           <section className="relative z-10 mt-12">
@@ -408,42 +446,26 @@ export default function HomePage() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: 0.3 }}
-                  className="bg-gradient-to-r from-emerald-500/10 via-green-500/5 to-emerald-600/10 backdrop-blur-xl rounded-3xl border border-emerald-400/20 p-8 shadow-2xl hover:shadow-emerald-500/10 transition-all duration-500"
+                  className="bg-blue-600/15 backdrop-blur-xl rounded-3xl border border-blue-400/20 p-8 shadow-2xl hover:shadow-blue-500/10 transition-all duration-500"
                 >
                   <div className="text-center">
                     <div className="flex justify-center mb-4">
-                      <div className="w-16 h-16 bg-emerald-500/20 rounded-2xl flex items-center justify-center">
-                        <PiggyBank className="w-8 h-8 text-emerald-400" />
+                      <div className="w-16 h-16 bg-blue-500 rounded-2xl flex items-center justify-center">
+                        <PiggyBank className="w-8 h-8 text-white" />
                       </div>
                     </div>
-                    <h3 className="text-white font-bold text-2xl mb-3">Ready to Save on Interest?</h3>
+                    <h3 className="text-white font-bold text-2xl mb-3">Ready to Pay Off Your Loan Faster?</h3>
                     <p className="text-white/70 text-lg mb-6 max-w-2xl mx-auto">
-                      Discover how strategic prepayments can reduce your loan tenure by years and save lakhs in interest payments
+                      Use our loan prepayment calculator to discover how strategic prepayments help you pay off your loan faster and save lakhs in interest
                     </p>
                     
-                    {/* Benefits Preview */}
-                    <div className="grid md:grid-cols-2 gap-4 mb-8">
-                      <div className="bg-white/5 rounded-2xl p-4 border border-emerald-400/20">
-                        <div className="flex items-center space-x-3">
-                          <div className="w-10 h-10 bg-emerald-500/20 rounded-xl flex items-center justify-center">
-                            <Clock className="w-5 h-5 text-emerald-400" />
-                          </div>
-                          <div className="text-left">
-                            <div className="text-emerald-300 font-semibold text-sm">Reduce Tenure</div>
-                            <div className="text-white/70 text-xs">Finish loan 3-5 years earlier</div>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="bg-white/5 rounded-2xl p-4 border border-emerald-400/20">
-                        <div className="flex items-center space-x-3">
-                          <div className="w-10 h-10 bg-emerald-500/20 rounded-xl flex items-center justify-center">
-                            <TrendingUp className="w-5 h-5 text-emerald-400" />
-                          </div>
-                          <div className="text-left">
-                            <div className="text-emerald-300 font-semibold text-sm">Massive Savings</div>
-                            <div className="text-white/70 text-xs">Save ₹10L+ in interest</div>
-                          </div>
-                        </div>
+                    {/* Centered Message */}
+                    <div className="bg-blue-500/10 rounded-2xl p-6 mb-8 border border-blue-400/20">
+                      <div className="text-center">
+                        <div className="text-blue-300 font-bold text-lg mb-2">Smart Prepayment Strategy</div>
+                        <p className="text-white/80 text-base">
+                          Make additional payments towards your loan principal to pay off your loan faster and reduce overall interest burden significantly
+                        </p>
                       </div>
                     </div>
 
@@ -457,14 +479,14 @@ export default function HomePage() {
                         })
                         window.open(`/prepayment?${params.toString()}`, '_blank')
                       }}
-                      className="group inline-flex items-center space-x-4 bg-gradient-to-r from-emerald-500 to-green-500 hover:from-emerald-600 hover:to-green-600 text-white font-bold px-8 py-4 rounded-2xl transition-all duration-300 shadow-lg hover:shadow-2xl hover:shadow-emerald-500/25 transform hover:scale-105 hover:-translate-y-1"
+                      className="group inline-flex items-center space-x-4 bg-blue-500 hover:bg-blue-600 text-white font-bold px-8 py-4 rounded-2xl transition-all duration-300 shadow-lg hover:shadow-2xl hover:shadow-blue-500/25 transform hover:scale-105 hover:-translate-y-1"
                     >
                       <PiggyBank className="w-6 h-6 group-hover:rotate-12 transition-transform duration-300" />
-                      <span className="text-lg">Calculate Smart Prepayment</span>
+                      <span className="text-lg">Try Loan Prepayment Calculator</span>
                       <div className="w-2 h-2 bg-white/30 rounded-full group-hover:w-8 group-hover:h-2 transition-all duration-300"></div>
                     </button>
                     
-                    <p className="text-emerald-200/60 text-sm mt-4">
+                    <p className="text-blue-200/60 text-sm mt-4">
                       Free analysis • No hidden charges • Instant results
                     </p>
                   </div>
@@ -474,6 +496,19 @@ export default function HomePage() {
           </section>
         )}
 
+        {/* Advertisement - Before Educational Summary */}
+        <section className="relative z-10 mt-12">
+          <div className="container mx-auto px-4">
+            <div className="max-w-6xl mx-auto">
+              <EnhancedAdSpace 
+                width="100%" 
+                height="120px" 
+                label="Full Width Banner Ad (Responsive)"
+              />
+            </div>
+          </div>
+        </section>
+
         {/* Educational Summary Section */}
         <EducationalSummary carData={carData} />
 
@@ -481,20 +516,21 @@ export default function HomePage() {
         <section className="relative z-10 mt-12">
           <div className="container mx-auto px-4">
             <div className="max-w-4xl mx-auto">
-              <div className="hidden md:block">
-                <AdSenseAd 
-                  slot="1234567894" 
-                  format="auto"
-                  style={{ width: '728px', height: '90px', margin: '0 auto' }}
-                />
-              </div>
-              <div className="block md:hidden">
-                <AdSenseAd 
-                  slot="1234567895" 
-                  format="auto"
-                  style={{ width: '320px', height: '50px', margin: '0 auto' }}
-                />
-              </div>
+              {/* Desktop Footer Ad */}
+              <EnhancedAdSpace 
+                width="728px" 
+                height="90px" 
+                label="728 x 90 Leaderboard Ad"
+                className="hidden md:block"
+              />
+              
+              {/* Mobile Footer Ad */}
+              <EnhancedAdSpace 
+                width="320px" 
+                height="50px" 
+                label="320 x 50 Mobile Banner Ad"
+                className="block md:hidden"
+              />
             </div>
           </div>
         </section>
@@ -521,19 +557,22 @@ export default function HomePage() {
         </footer>
 
         {/* Sticky Bottom Mobile Ad - 320x50 Mobile Leaderboard */}
-        <div className="fixed bottom-0 left-0 right-0 z-50 block md:hidden bg-white shadow-lg border-t">
+        <div className={`fixed bottom-0 left-0 right-0 z-50 block md:hidden shadow-lg border-t ${isLight ? 'bg-white' : 'bg-black'}`}>
           <div className="flex justify-between items-center p-2">
-            <AdSenseAd 
-              slot="1234567896" 
-              format="auto"
-              style={{ width: '320px', height: '50px', margin: '0 auto' }}
-            />
+            <div className="flex-1">
+              <EnhancedAdSpace 
+                width="300px" 
+                height="50px" 
+                label="320 x 50 Sticky Mobile Ad"
+                className="my-0"
+              />
+            </div>
             <button 
               onClick={(e) => {
                 const stickyAd = e.currentTarget.parentElement?.parentElement;
                 if (stickyAd) stickyAd.style.display = 'none';
               }}
-              className="text-gray-400 hover:text-gray-600 p-1 ml-2"
+              className={`p-1 ml-2 hover:scale-110 transition-transform ${isLight ? 'text-gray-400 hover:text-gray-600' : 'text-white/40 hover:text-white/60'}`}
               aria-label="Close ad"
             >
               ×

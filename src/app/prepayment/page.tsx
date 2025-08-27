@@ -893,6 +893,51 @@ function PrepaymentCalculator() {
             </section>
 
 
+            {/* Advertisement - Before Payment Timeline Chart */}
+            <section className="relative z-10 mb-6">
+              <div className="container mx-auto px-4">
+                <div className="max-w-4xl mx-auto">
+                  {/* Desktop Ad - 970x250 Billboard */}
+                  <div className="text-center my-6 hidden md:block">
+                    <div className={`text-xs mb-2 ${isLight ? 'text-slate-500' : 'text-white/60'}`}>Advertisement</div>
+                    <div 
+                      className={`
+                        border-2 border-dashed rounded-lg flex items-center justify-center mx-auto
+                        ${isLight 
+                          ? 'bg-gradient-to-br from-slate-50 via-white to-slate-50 border-slate-300' 
+                          : 'bg-black border-white/20'
+                        }
+                      `}
+                      style={{ width: '970px', height: '250px' }}
+                    >
+                      <div className={`text-sm font-medium ${isLight ? 'text-slate-400' : 'text-white/40'}`}>
+                        970 x 250 Billboard Ad
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* Mobile Ad - 320x100 Banner */}
+                  <div className="text-center my-6 block md:hidden">
+                    <div className={`text-xs mb-2 ${isLight ? 'text-slate-500' : 'text-white/60'}`}>Advertisement</div>
+                    <div 
+                      className={`
+                        border-2 border-dashed rounded-lg flex items-center justify-center mx-auto
+                        ${isLight 
+                          ? 'bg-gradient-to-br from-slate-50 via-white to-slate-50 border-slate-300' 
+                          : 'bg-black border-white/20'
+                        }
+                      `}
+                      style={{ width: '320px', height: '100px' }}
+                    >
+                      <div className={`text-sm font-medium ${isLight ? 'text-slate-400' : 'text-white/40'}`}>
+                        320 x 100 Large Mobile Banner Ad
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+
             {/* Monthly Payment Timeline Chart */}
             <section className="md-panel-elevated p-4 mb-6">
               <div className={`text-sm font-semibold mb-4 ${isLight ? 'text-slate-900' : 'text-white'}`}>Payment Timeline Comparison</div>
@@ -994,14 +1039,14 @@ function PrepaymentCalculator() {
                       top: 20,
                       right: 30,
                       left: 20,
-                      bottom: 20
+                      bottom: 60
                     }}
                   >
                     <CartesianGrid strokeDasharray="3 3" stroke="#1b2230" />
                     <XAxis 
                       dataKey="month" 
                       tick={{ fill: '#9ab1c9', fontSize: 12 }}
-                      label={{ value: 'Months', position: 'insideBottom', offset: -10, style: { textAnchor: 'middle', fill: '#9ab1c9' } }}
+                      label={{ value: 'Months', position: 'insideBottom', offset: -5, style: { textAnchor: 'middle', fill: '#9ab1c9' } }}
                     />
                     <YAxis 
                       tick={{ fill: '#9ab1c9', fontSize: 12 }}
@@ -1023,7 +1068,7 @@ function PrepaymentCalculator() {
                       labelFormatter={(month) => `Month ${month}`}
                     />
                     <Legend 
-                      wrapperStyle={{ color: '#9ab1c9' }}
+                      wrapperStyle={{ color: '#9ab1c9', paddingTop: '40px' }}
                     />
                     <Line 
                       type="monotone" 
