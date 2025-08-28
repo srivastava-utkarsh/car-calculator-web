@@ -129,109 +129,511 @@ export default function ResultsDisplayV2({ carData, onBack, onRestart }: Results
             className="lg:col-span-2 bg-gradient-to-br from-emerald-500/20 to-cyan-500/20 backdrop-blur-md border border-emerald-400/30 rounded-3xl p-8 shadow-2xl"
           >
             <div className="text-center">
-              {/* Enhanced Loan Details Section */}
+              {/* Ultra-Enhanced Loan Details Section */}
               <div className="mb-8">
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.4 }}
-                  className="text-center mb-6"
+                  className="text-center mb-6 relative"
                 >
-                  <h3 className="text-xl font-bold text-white mb-2 flex items-center justify-center space-x-2">
-                    <Sparkles className="w-5 h-5 text-cyan-300" />
-                    <span>Loan Details</span>
-                    <Sparkles className="w-5 h-5 text-cyan-300" />
-                  </h3>
+                  {/* Animated background orbs */}
+                  <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                    <motion.div
+                      animate={{ 
+                        scale: [1, 1.2, 1],
+                        opacity: [0.3, 0.6, 0.3]
+                      }}
+                      transition={{ 
+                        duration: 3,
+                        repeat: Infinity,
+                        ease: "easeInOut"
+                      }}
+                      className="w-32 h-32 bg-gradient-to-r from-cyan-500/20 to-blue-500/20 rounded-full blur-xl"
+                    />
+                  </div>
+                  
+                  <motion.h3 
+                    initial={{ scale: 0.9 }}
+                    animate={{ scale: 1 }}
+                    transition={{ 
+                      delay: 0.4,
+                      type: "spring",
+                      stiffness: 200,
+                      damping: 10
+                    }}
+                    className="text-2xl font-bold text-white mb-2 flex items-center justify-center space-x-3 relative z-10"
+                  >
+                    <motion.div
+                      animate={{ rotate: [0, 360] }}
+                      transition={{ 
+                        duration: 8,
+                        repeat: Infinity,
+                        ease: "linear"
+                      }}
+                    >
+                      <Sparkles className="w-6 h-6 text-cyan-300" />
+                    </motion.div>
+                    
+                    <span className="bg-gradient-to-r from-cyan-300 to-blue-300 bg-clip-text text-transparent">
+                      Your Loan Journey
+                    </span>
+                    
+                    <motion.div
+                      animate={{ 
+                        scale: [1, 1.1, 1],
+                        rotate: [0, -10, 10, 0]
+                      }}
+                      transition={{ 
+                        duration: 2,
+                        repeat: Infinity,
+                        ease: "easeInOut"
+                      }}
+                    >
+                      <span className="text-2xl">🚗</span>
+                    </motion.div>
+                  </motion.h3>
+                  
+                  {/* Floating particles */}
+                  <motion.div
+                    animate={{ y: [-10, 10, -10] }}
+                    transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                    className="absolute top-0 left-1/4 w-2 h-2 bg-cyan-400/60 rounded-full blur-sm"
+                  />
+                  <motion.div
+                    animate={{ y: [10, -10, 10] }}
+                    transition={{ duration: 3, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
+                    className="absolute top-2 right-1/4 w-1 h-1 bg-blue-400/60 rounded-full blur-sm"
+                  />
+                  <motion.div
+                    animate={{ y: [-5, 15, -5] }}
+                    transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+                    className="absolute top-4 left-3/4 w-1.5 h-1.5 bg-purple-400/60 rounded-full blur-sm"
+                  />
                 </motion.div>
 
                 <div className="grid grid-cols-2 gap-4 mb-4">
                   {/* Completion Date Card */}
                   <motion.div
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: 0.5 }}
-                    whileHover={{ scale: 1.02 }}
-                    className="bg-gradient-to-br from-purple-500/30 to-pink-500/30 rounded-2xl p-4 border border-purple-400/40 shadow-lg hover:shadow-purple-500/25 transition-all duration-300"
+                    initial={{ opacity: 0, scale: 0.9, rotateY: -15 }}
+                    animate={{ opacity: 1, scale: 1, rotateY: 0 }}
+                    transition={{ delay: 0.5, type: "spring", stiffness: 100 }}
+                    whileHover={{ 
+                      scale: 1.05, 
+                      rotateY: 5,
+                      transition: { duration: 0.2 }
+                    }}
+                    whileTap={{ scale: 0.95 }}
+                    className="relative bg-gradient-to-br from-purple-500/30 to-pink-500/30 rounded-2xl p-4 border border-purple-400/40 shadow-lg hover:shadow-purple-500/25 transition-all duration-300 overflow-hidden cursor-pointer group"
+                    style={{
+                      backdropFilter: 'blur(20px)',
+                      WebkitBackdropFilter: 'blur(20px)',
+                    }}
                   >
-                    <div className="flex items-center space-x-2 mb-2">
-                      <Calendar className="w-4 h-4 text-purple-300" />
-                      <p className="text-xs font-medium text-purple-200">Completion Date</p>
+                    {/* Animated background gradient */}
+                    <motion.div
+                      animate={{
+                        background: [
+                          "linear-gradient(45deg, rgba(168, 85, 247, 0.1) 0%, rgba(236, 72, 153, 0.1) 100%)",
+                          "linear-gradient(135deg, rgba(236, 72, 153, 0.15) 0%, rgba(168, 85, 247, 0.15) 100%)",
+                          "linear-gradient(45deg, rgba(168, 85, 247, 0.1) 0%, rgba(236, 72, 153, 0.1) 100%)"
+                        ]
+                      }}
+                      transition={{ duration: 3, repeat: Infinity }}
+                      className="absolute inset-0 rounded-2xl"
+                    />
+                    
+                    {/* Floating icon animation */}
+                    <div className="flex items-center space-x-2 mb-2 relative z-10">
+                      <motion.div
+                        animate={{ 
+                          y: [0, -3, 0],
+                          rotate: [0, 5, -5, 0]
+                        }}
+                        transition={{ 
+                          duration: 2.5, 
+                          repeat: Infinity, 
+                          ease: "easeInOut" 
+                        }}
+                        className="p-1 rounded-lg bg-purple-400/20 group-hover:bg-purple-400/30 transition-colors duration-300"
+                      >
+                        <Calendar className="w-4 h-4 text-purple-300" />
+                      </motion.div>
+                      <p className="text-xs font-medium text-purple-200 group-hover:text-purple-100 transition-colors duration-300">Completion Date</p>
                     </div>
-                    <p className="text-lg font-bold text-white">{formatDate(completionDate)}</p>
+                    
+                    <motion.p 
+                      className="text-lg font-bold text-white relative z-10"
+                      whileHover={{ scale: 1.02 }}
+                    >
+                      {formatDate(completionDate)}
+                    </motion.p>
+                    
+                    {/* Shimmer effect on hover */}
+                    <motion.div
+                      initial={{ x: "-100%" }}
+                      whileHover={{ x: "100%" }}
+                      transition={{ duration: 0.6 }}
+                      className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-transparent via-white/20 to-transparent transform skew-x-12 group-hover:block hidden"
+                    />
                   </motion.div>
 
                   {/* Loan Period Card */}
                   <motion.div
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: 0.6 }}
-                    whileHover={{ scale: 1.02 }}
-                    className="bg-gradient-to-br from-blue-500/30 to-cyan-500/30 rounded-2xl p-4 border border-blue-400/40 shadow-lg hover:shadow-blue-500/25 transition-all duration-300"
+                    initial={{ opacity: 0, scale: 0.9, rotateY: 15 }}
+                    animate={{ opacity: 1, scale: 1, rotateY: 0 }}
+                    transition={{ delay: 0.6, type: "spring", stiffness: 100 }}
+                    whileHover={{ 
+                      scale: 1.05, 
+                      rotateY: -5,
+                      transition: { duration: 0.2 }
+                    }}
+                    whileTap={{ scale: 0.95 }}
+                    className="relative bg-gradient-to-br from-blue-500/30 to-cyan-500/30 rounded-2xl p-4 border border-blue-400/40 shadow-lg hover:shadow-blue-500/25 transition-all duration-300 overflow-hidden cursor-pointer group"
+                    style={{
+                      backdropFilter: 'blur(20px)',
+                      WebkitBackdropFilter: 'blur(20px)',
+                    }}
                   >
-                    <div className="flex items-center space-x-2 mb-2">
-                      <span className="text-blue-300 text-sm">⏱️</span>
-                      <p className="text-xs font-medium text-blue-200">Loan Period</p>
+                    {/* Pulsing background */}
+                    <motion.div
+                      animate={{
+                        scale: [1, 1.1, 1],
+                        opacity: [0.1, 0.2, 0.1]
+                      }}
+                      transition={{ duration: 2.5, repeat: Infinity }}
+                      className="absolute inset-0 bg-gradient-to-r from-blue-400/30 to-cyan-400/30 rounded-2xl"
+                    />
+                    
+                    <div className="flex items-center space-x-2 mb-2 relative z-10">
+                      <motion.span 
+                        animate={{ 
+                          scale: [1, 1.2, 1],
+                          rotate: [0, 10, -10, 0]
+                        }}
+                        transition={{ 
+                          duration: 3, 
+                          repeat: Infinity, 
+                          ease: "easeInOut" 
+                        }}
+                        className="text-blue-300 text-sm bg-blue-400/20 p-1 rounded-lg group-hover:bg-blue-400/30 transition-colors duration-300"
+                      >
+                        ⏱️
+                      </motion.span>
+                      <p className="text-xs font-medium text-blue-200 group-hover:text-blue-100 transition-colors duration-300">Loan Period</p>
                     </div>
-                    <p className="text-lg font-bold text-white">{carData.tenure} Years</p>
+                    <motion.p 
+                      className="text-lg font-bold text-white relative z-10"
+                      whileHover={{ scale: 1.02 }}
+                    >
+                      {carData.tenure} Years
+                    </motion.p>
+                    
+                    {/* Progress indicator */}
+                    <motion.div
+                      initial={{ width: 0 }}
+                      animate={{ width: `${(carData.tenure / 7) * 100}%` }}
+                      transition={{ delay: 0.8, duration: 1 }}
+                      className="absolute bottom-0 left-0 h-1 bg-gradient-to-r from-blue-400 to-cyan-400 rounded-full"
+                    />
                   </motion.div>
 
                   {/* Loan Amount Card */}
                   <motion.div
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: 0.7 }}
-                    whileHover={{ scale: 1.02 }}
-                    className="bg-gradient-to-br from-emerald-500/30 to-green-500/30 rounded-2xl p-4 border border-emerald-400/40 shadow-lg hover:shadow-emerald-500/25 transition-all duration-300"
+                    initial={{ opacity: 0, scale: 0.9, rotateX: -15 }}
+                    animate={{ opacity: 1, scale: 1, rotateX: 0 }}
+                    transition={{ delay: 0.7, type: "spring", stiffness: 100 }}
+                    whileHover={{ 
+                      scale: 1.05, 
+                      rotateX: 5,
+                      y: -2,
+                      transition: { duration: 0.2 }
+                    }}
+                    whileTap={{ scale: 0.95 }}
+                    className="relative bg-gradient-to-br from-emerald-500/30 to-green-500/30 rounded-2xl p-4 border border-emerald-400/40 shadow-lg hover:shadow-emerald-500/25 transition-all duration-300 overflow-hidden cursor-pointer group"
+                    style={{
+                      backdropFilter: 'blur(20px)',
+                      WebkitBackdropFilter: 'blur(20px)',
+                    }}
                   >
-                    <div className="flex items-center space-x-2 mb-2">
-                      <TrendingUp className="w-4 h-4 text-emerald-300" />
-                      <p className="text-xs font-medium text-emerald-200">Loan Amount</p>
+                    {/* Money flow animation */}
+                    <motion.div
+                      animate={{ 
+                        x: [-100, 100],
+                        opacity: [0, 1, 0]
+                      }}
+                      transition={{ 
+                        duration: 3, 
+                        repeat: Infinity, 
+                        ease: "easeInOut",
+                        repeatDelay: 2
+                      }}
+                      className="absolute top-1/2 w-2 h-2 bg-emerald-300/70 rounded-full blur-sm"
+                    />
+                    
+                    <div className="flex items-center space-x-2 mb-2 relative z-10">
+                      <motion.div
+                        animate={{ 
+                          y: [0, -2, 0],
+                          rotate: [0, 5, -5, 0]
+                        }}
+                        transition={{ 
+                          duration: 2, 
+                          repeat: Infinity, 
+                          ease: "easeInOut" 
+                        }}
+                        className="p-1 rounded-lg bg-emerald-400/20 group-hover:bg-emerald-400/30 transition-colors duration-300"
+                      >
+                        <TrendingUp className="w-4 h-4 text-emerald-300" />
+                      </motion.div>
+                      <p className="text-xs font-medium text-emerald-200 group-hover:text-emerald-100 transition-colors duration-300">Loan Amount</p>
                     </div>
-                    <p className="text-lg font-bold text-white">₹{loanAmount.toLocaleString('en-IN')}</p>
+                    <motion.p 
+                      className="text-lg font-bold text-white relative z-10"
+                      whileHover={{ scale: 1.02 }}
+                    >
+                      ₹{loanAmount.toLocaleString('en-IN')}
+                    </motion.p>
                   </motion.div>
 
                   {/* Down Payment Card */}
                   <motion.div
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: 0.8 }}
-                    whileHover={{ scale: 1.02 }}
-                    className="bg-gradient-to-br from-orange-500/30 to-red-500/30 rounded-2xl p-4 border border-orange-400/40 shadow-lg hover:shadow-orange-500/25 transition-all duration-300"
+                    initial={{ opacity: 0, scale: 0.9, rotateZ: -10 }}
+                    animate={{ opacity: 1, scale: 1, rotateZ: 0 }}
+                    transition={{ delay: 0.8, type: "spring", stiffness: 100 }}
+                    whileHover={{ 
+                      scale: 1.05, 
+                      rotateZ: 2,
+                      transition: { duration: 0.2 }
+                    }}
+                    whileTap={{ scale: 0.95 }}
+                    className="relative bg-gradient-to-br from-orange-500/30 to-red-500/30 rounded-2xl p-4 border border-orange-400/40 shadow-lg hover:shadow-orange-500/25 transition-all duration-300 overflow-hidden cursor-pointer group"
+                    style={{
+                      backdropFilter: 'blur(20px)',
+                      WebkitBackdropFilter: 'blur(20px)',
+                    }}
                   >
-                    <div className="flex items-center space-x-2 mb-2">
-                      <span className="text-orange-300 font-bold text-sm">💰</span>
-                      <p className="text-xs font-medium text-orange-200">Down Payment</p>
+                    {/* Coin drop animation */}
+                    <motion.div
+                      animate={{ 
+                        y: [-20, 20, -20],
+                        rotate: [0, 180, 360]
+                      }}
+                      transition={{ 
+                        duration: 4, 
+                        repeat: Infinity, 
+                        ease: "easeInOut" 
+                      }}
+                      className="absolute top-2 right-2 w-3 h-3 bg-yellow-400/60 rounded-full"
+                    />
+                    
+                    <div className="flex items-center space-x-2 mb-2 relative z-10">
+                      <motion.span 
+                        animate={{ 
+                          scale: [1, 1.3, 1],
+                          rotate: [0, 20, -20, 0]
+                        }}
+                        transition={{ 
+                          duration: 2.5, 
+                          repeat: Infinity, 
+                          ease: "easeInOut" 
+                        }}
+                        className="text-orange-300 font-bold text-sm bg-orange-400/20 p-1 rounded-lg group-hover:bg-orange-400/30 transition-colors duration-300"
+                      >
+                        💰
+                      </motion.span>
+                      <p className="text-xs font-medium text-orange-200 group-hover:text-orange-100 transition-colors duration-300">Down Payment</p>
                     </div>
-                    <p className="text-lg font-bold text-white">₹{carData.downPayment.toLocaleString('en-IN')}</p>
+                    <motion.p 
+                      className="text-lg font-bold text-white relative z-10"
+                      whileHover={{ scale: 1.02 }}
+                    >
+                      ₹{carData.downPayment.toLocaleString('en-IN')}
+                    </motion.p>
+                    
+                    {/* Percentage badge */}
+                    <motion.div
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      transition={{ delay: 1 }}
+                      className="absolute top-1 right-1 bg-orange-500/30 text-orange-200 text-xs px-2 py-1 rounded-full border border-orange-400/40"
+                    >
+                      {((carData.downPayment / carData.carPrice) * 100).toFixed(0)}%
+                    </motion.div>
                   </motion.div>
                 </div>
 
-                {/* Total Interest Amount Card */}
+                {/* Total Interest Amount Card - Enhanced */}
                 <motion.div
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: 0.85 }}
-                  whileHover={{ scale: 1.02 }}
-                  className="bg-gradient-to-br from-yellow-500/30 to-amber-500/30 rounded-2xl p-4 border border-yellow-400/40 shadow-lg hover:shadow-yellow-500/25 transition-all duration-300 mb-4 max-w-xs mx-auto"
+                  initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  transition={{ delay: 0.85, type: "spring", stiffness: 150 }}
+                  whileHover={{ 
+                    scale: 1.03, 
+                    y: -3,
+                    boxShadow: "0 20px 40px rgba(251, 191, 36, 0.4)",
+                    transition: { duration: 0.3 }
+                  }}
+                  whileTap={{ scale: 0.97 }}
+                  className="relative bg-gradient-to-br from-yellow-500/30 to-amber-500/30 rounded-3xl p-6 border-2 border-yellow-400/40 shadow-lg hover:shadow-yellow-500/25 transition-all duration-300 mb-4 max-w-sm mx-auto overflow-hidden cursor-pointer group"
+                  style={{
+                    backdropFilter: 'blur(25px)',
+                    WebkitBackdropFilter: 'blur(25px)',
+                  }}
                 >
-                  <div className="flex items-center space-x-2 mb-2 justify-center">
-                    <span className="text-yellow-300 text-sm">💰</span>
-                    <p className="text-xs font-medium text-yellow-200">Total Interest</p>
+                  {/* Animated money particles */}
+                  {[...Array(5)].map((_, i) => (
+                    <motion.div
+                      key={i}
+                      animate={{
+                        x: [Math.random() * 200 - 100, Math.random() * 200 - 100],
+                        y: [Math.random() * 100 - 50, Math.random() * 100 - 50],
+                        opacity: [0, 0.6, 0],
+                        scale: [0.5, 1, 0.5],
+                      }}
+                      transition={{
+                        duration: 4 + Math.random() * 2,
+                        repeat: Infinity,
+                        delay: Math.random() * 2,
+                        ease: "easeInOut"
+                      }}
+                      className="absolute w-1 h-1 bg-yellow-300/60 rounded-full blur-sm"
+                    />
+                  ))}
+                  
+                  <div className="flex items-center space-x-3 mb-3 justify-center relative z-10">
+                    <motion.div
+                      animate={{ 
+                        rotate: [0, 15, -15, 0],
+                        scale: [1, 1.1, 1]
+                      }}
+                      transition={{ 
+                        duration: 3, 
+                        repeat: Infinity, 
+                        ease: "easeInOut" 
+                      }}
+                      className="bg-yellow-400/30 p-2 rounded-full group-hover:bg-yellow-400/40 transition-colors duration-300"
+                    >
+                      <span className="text-yellow-200 text-lg">💰</span>
+                    </motion.div>
+                    <p className="text-sm font-bold text-yellow-100 tracking-wide">Total Interest</p>
                   </div>
-                  <p className="text-lg font-bold text-white text-center">₹{totalInterest.toLocaleString('en-IN', { maximumFractionDigits: 0 })}</p>
-                  <p className="text-yellow-200/70 text-xs text-center mt-1">over {carData.tenure} years</p>
+                  
+                  {/* Animated number counter effect */}
+                  <motion.p 
+                    className="text-2xl font-black text-white text-center relative z-10 mb-2"
+                    whileHover={{ scale: 1.05 }}
+                  >
+                    <motion.span
+                      animate={{ 
+                        textShadow: [
+                          "0 0 10px rgba(251, 191, 36, 0.5)",
+                          "0 0 20px rgba(251, 191, 36, 0.8)",
+                          "0 0 10px rgba(251, 191, 36, 0.5)"
+                        ]
+                      }}
+                      transition={{ duration: 2, repeat: Infinity }}
+                    >
+                      ₹{totalInterest.toLocaleString('en-IN', { maximumFractionDigits: 0 })}
+                    </motion.span>
+                  </motion.p>
+                  
+                  <motion.p 
+                    className="text-yellow-200/80 text-xs text-center relative z-10"
+                    animate={{ opacity: [0.7, 1, 0.7] }}
+                    transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                  >
+                    over {carData.tenure} years
+                  </motion.p>
+                  
+                  {/* Glowing border effect */}
+                  <motion.div
+                    animate={{
+                      opacity: [0.5, 1, 0.5],
+                      scale: [0.98, 1.02, 0.98]
+                    }}
+                    transition={{ duration: 2, repeat: Infinity }}
+                    className="absolute inset-0 rounded-3xl border-2 border-yellow-300/40 pointer-events-none"
+                  />
                 </motion.div>
 
-                {/* Interest Rate Badge */}
+                {/* Interest Rate Badge - Ultra Enhanced */}
                 <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.9 }}
-                  className="inline-flex items-center justify-center bg-gradient-to-r from-yellow-500/30 to-amber-500/30 border border-yellow-400/40 rounded-full px-4 py-2 mx-auto"
+                  initial={{ opacity: 0, y: 10, scale: 0.8 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  transition={{ delay: 0.9, type: "spring", stiffness: 200 }}
+                  whileHover={{ 
+                    scale: 1.05,
+                    rotate: [0, -1, 1, 0],
+                    transition: { duration: 0.3 }
+                  }}
+                  whileTap={{ scale: 0.95 }}
+                  className="inline-flex items-center justify-center bg-gradient-to-r from-yellow-500/30 to-amber-500/30 border-2 border-yellow-400/50 rounded-full px-6 py-3 mx-auto relative overflow-hidden cursor-pointer group"
+                  style={{
+                    backdropFilter: 'blur(20px)',
+                    WebkitBackdropFilter: 'blur(20px)',
+                  }}
                 >
-                  <span className="text-yellow-300 text-sm mr-2">📊</span>
-                  <span className="text-yellow-200 text-sm font-medium">Interest Rate:</span>
-                  <span className="text-white font-bold ml-2">{carData.interestRate}%</span>
+                  {/* Animated background pulse */}
+                  <motion.div
+                    animate={{
+                      scale: [0.5, 2, 0.5],
+                      opacity: [0, 0.3, 0]
+                    }}
+                    transition={{ duration: 3, repeat: Infinity }}
+                    className="absolute inset-0 bg-gradient-to-r from-yellow-400/30 to-amber-400/30 rounded-full"
+                  />
+                  
+                  <motion.span 
+                    animate={{ 
+                      rotate: [0, 360],
+                      scale: [1, 1.1, 1]
+                    }}
+                    transition={{ 
+                      rotate: { duration: 8, repeat: Infinity, ease: "linear" },
+                      scale: { duration: 2, repeat: Infinity, ease: "easeInOut" }
+                    }}
+                    className="text-yellow-300 text-base mr-3 relative z-10"
+                  >
+                    📊
+                  </motion.span>
+                  
+                  <span className="text-yellow-200 text-sm font-semibold mr-2 relative z-10 group-hover:text-yellow-100 transition-colors duration-300">
+                    Interest Rate:
+                  </span>
+                  
+                  <motion.span 
+                    className="text-white font-black text-lg relative z-10"
+                    animate={{ 
+                      textShadow: [
+                        "0 0 5px rgba(255, 255, 255, 0.5)",
+                        "0 0 15px rgba(255, 255, 255, 0.8)",
+                        "0 0 5px rgba(255, 255, 255, 0.5)"
+                      ]
+                    }}
+                    transition={{ duration: 2.5, repeat: Infinity }}
+                  >
+                    {carData.interestRate}%
+                  </motion.span>
+                  
+                  {/* Sparkle effects */}
+                  <motion.div
+                    animate={{
+                      rotate: [0, 360],
+                      scale: [0, 1, 0]
+                    }}
+                    transition={{ duration: 3, repeat: Infinity, delay: 0.5 }}
+                    className="absolute top-1 right-2 w-1 h-1 bg-yellow-200 rounded-full"
+                  />
+                  
+                  <motion.div
+                    animate={{
+                      rotate: [0, -360],
+                      scale: [0, 1, 0]
+                    }}
+                    transition={{ duration: 3, repeat: Infinity, delay: 1.5 }}
+                    className="absolute bottom-1 left-2 w-1 h-1 bg-yellow-200 rounded-full"
+                  />
                 </motion.div>
               </div>
 

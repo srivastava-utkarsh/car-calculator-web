@@ -298,39 +298,29 @@ export default function TotalCostDisplayV2({ carData, updateCarData: _updateCarD
       >
         {/* Main EMI Display - Proportional UX */}
         <div className="text-center mb-4">
-          {/* Loan Details - Dark Blue Background with Header and Icons */}
+          {/* Loan Details - Modern Gradient Background with Header and Icons */}
           {carData.tenure > 0 && emi > 0 && (
-            <div className="bg-slate-700 rounded-2xl p-5 mb-6 shadow-lg">
+            <div className="bg-gradient-to-br from-purple-600 to-indigo-700 rounded-2xl p-5 mb-6 shadow-lg">
               <h3 className="text-white font-bold text-lg mb-4">Loan Details</h3>
               <div className="space-y-3 text-white">
-                <div className="flex justify-between items-center">
+                {/* Loan Amount - Highlighted */}
+                <div className="flex justify-between items-center bg-white/10 rounded-lg p-3 border border-white/20">
                   <div className="flex items-center space-x-2">
-                    <Calendar className="w-4 h-4 text-white" />
-                    <span className="text-sm font-medium">Completion Date</span>
+                    <IndianRupee className="w-5 h-5 text-yellow-300" />
+                    <span className="text-sm font-bold">Loan Amount</span>
                   </div>
-                  <span className="text-sm font-bold">{formatDate(completionDate)}</span>
+                  <span className="text-lg font-black text-yellow-300">₹{loanAmount.toLocaleString('en-IN')}</span>
                 </div>
-                <div className="flex justify-between items-center">
+                
+                {/* Total Interest - Highlighted */}
+                <div className="flex justify-between items-center bg-white/10 rounded-lg p-3 border border-white/20">
                   <div className="flex items-center space-x-2">
-                    <Clock className="w-4 h-4 text-white" />
-                    <span className="text-sm font-medium">Loan Period</span>
+                    <IndianRupee className="w-5 h-5 text-orange-300" />
+                    <span className="text-sm font-bold">Total Interest</span>
                   </div>
-                  <span className="text-sm font-bold">{carData.tenure} Years</span>
+                  <span className="text-lg font-black text-orange-300">₹{totalInterest.toLocaleString('en-IN', { maximumFractionDigits: 0 })}</span>
                 </div>
-                <div className="flex justify-between items-center">
-                  <div className="flex items-center space-x-2">
-                    <IndianRupee className="w-4 h-4 text-white" />
-                    <span className="text-sm font-medium">Loan Amount</span>
-                  </div>
-                  <span className="text-sm font-bold">₹{loanAmount.toLocaleString('en-IN')}</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <div className="flex items-center space-x-2">
-                    <IndianRupee className="w-4 h-4 text-white" />
-                    <span className="text-sm font-medium">Total Interest</span>
-                  </div>
-                  <span className="text-sm font-bold">₹{totalInterest.toLocaleString('en-IN', { maximumFractionDigits: 0 })}</span>
-                </div>
+                
                 <div className="flex justify-between items-center">
                   <div className="flex items-center space-x-2">
                     <IndianRupee className="w-4 h-4 text-white" />
@@ -344,6 +334,20 @@ export default function TotalCostDisplayV2({ carData, updateCarData: _updateCarD
                     <span className="text-sm font-medium">Interest Rate</span>
                   </div>
                   <span className="text-sm font-bold">{carData.interestRate}%</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <div className="flex items-center space-x-2">
+                    <Clock className="w-4 h-4 text-white" />
+                    <span className="text-sm font-medium">Loan Period</span>
+                  </div>
+                  <span className="text-sm font-bold">{carData.tenure} Years</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <div className="flex items-center space-x-2">
+                    <Calendar className="w-4 h-4 text-white" />
+                    <span className="text-sm font-medium">Completion Date</span>
+                  </div>
+                  <span className="text-sm font-bold">{formatDate(completionDate)}</span>
                 </div>
               </div>
             </div>
