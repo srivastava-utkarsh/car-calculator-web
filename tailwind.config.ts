@@ -50,6 +50,9 @@ const config: Config = {
       },
       dropShadow: {
         'glow': '0 0 20px rgba(251, 146, 60, 0.5)',
+      },
+      animation: {
+        'spin-slow': 'spin 6s linear infinite',
       }
     },
   },

@@ -102,6 +102,7 @@ export default function HomePage() {
   const [showResults, setShowResults] = useState(false) // Toggle results view
   const [isLeftCollapsed, setIsLeftCollapsed] = useState(false) // Collapsible state
   const [useMaterialUI, setUseMaterialUI] = useState(false) // Toggle Material UI
+  const [imageOpacity, setImageOpacity] = useState(1) // Image fade opacity
   const monthlyIncomeInputRef = useRef<HTMLInputElement>(null)
   const { isLight, isDark } = useTheme()
 
@@ -126,6 +127,33 @@ export default function HomePage() {
   const updateCarData = (updates: Partial<CarData>) => {
     setCarData(prev => ({ ...prev, ...updates }))
   }
+
+  // Scroll effect for image fade
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollPosition = window.scrollY
+      const fadeStart = 50 // Start fading after 50px
+      const fadeEnd = 300 // Completely faded at 300px
+      
+      if (scrollPosition <= fadeStart) {
+        setImageOpacity(1)
+      } else if (scrollPosition >= fadeEnd) {
+        setImageOpacity(0)
+      } else {
+        // Calculate opacity between fadeStart and fadeEnd
+        const fadeProgress = (scrollPosition - fadeStart) / (fadeEnd - fadeStart)
+        const newOpacity = 1 - fadeProgress
+        setImageOpacity(Math.max(0, Math.min(1, newOpacity)))
+      }
+    }
+
+    // Add initial call to set correct opacity on mount
+    handleScroll()
+    
+    // Add scroll listener with passive option for better performance
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
 
   const hideResultsView = () => setShowResults(false)
 
@@ -197,73 +225,20 @@ export default function HomePage() {
           </div>
         </header>
 
-        {/* 20/4/10 Rule Infographic */}
-        <div className="py-6 flex items-center justify-center">
+        {/* Calculator Info Image */}
+        <div 
+          className="py-6 flex items-center justify-center transition-opacity duration-300 ease-out"
+          style={{ opacity: imageOpacity }}
+        >
           <div className="max-w-6xl mx-auto px-4 sm:px-6">
-            {/* Desktop SVG */}
-            <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="160" viewBox="0 0 920 160" className="hidden md:block max-w-full">
-              <style>
-                {`.bg { fill: #1c1f26; }
-                .title { font: 700 24px system-ui, sans-serif; fill: #ffffff; }
-                .rule { font: 700 18px system-ui, sans-serif; fill: #34e4c9; }
-                .desc { font: 400 14px system-ui, sans-serif; fill: #cdd4e0; }
-                .box { fill:#2a2f3a; rx:12; ry:12; }`}
-              </style>
-              
-              {/* Background */}
-              <rect className="bg" width="920" height="160" rx="12"/>
-              
-              {/* Title */}
-              <text className="title" x="28" y="48">The 20 / 4 / 10 Rule</text>
-              <text className="desc" x="28" y="74">A simple guideline to buy a car you can actually afford</text>
-              
-              {/* Rule 1 */}
-              <g transform="translate(28,95)">
-                <rect className="box" width="260" height="50"/>
-                <text className="rule" x="18" y="28">20% Down Payment</text>
-                <text className="desc" x="18" y="44">Pay at least 20% upfront</text>
-              </g>
-              
-              {/* Rule 2 */}
-              <g transform="translate(308,95)">
-                <rect className="box" width="260" height="50"/>
-                <text className="rule" x="18" y="28">≤ 4 Years Loan</text>
-                <text className="desc" x="18" y="44">Keep the loan term within 4 years</text>
-              </g>
-              
-              {/* Rule 3 */}
-              <g transform="translate(588,95)">
-                <rect className="box" width="304" height="50"/>
-                <text className="rule" x="18" y="28">≤ 10% Income on EMI</text>
-                <text className="desc" x="18" y="44">Monthly EMI ≤ 10% of income</text>
-              </g>
-            </svg>
-
-            {/* Mobile/Tablet Alternative - Responsive Cards */}
-            <div className="block md:hidden">
-              <div className={`rounded-xl p-6 ${isLight ? 'bg-slate-900' : 'bg-gray-900/90'}`}>
-                <div className="text-center mb-6">
-                  <h2 className="text-xl sm:text-2xl font-bold text-white mb-2">The 20 / 4 / 10 Rule</h2>
-                  <p className="text-white/70 text-sm sm:text-base">A simple guideline to buy a car you can actually afford</p>
-                </div>
-                
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                  <div className="bg-gray-800/60 rounded-lg p-4">
-                    <h3 className="text-teal-400 font-bold text-base sm:text-lg mb-1">20% Down Payment</h3>
-                    <p className="text-white/80 text-xs sm:text-sm">Pay at least 20% upfront</p>
-                  </div>
-                  
-                  <div className="bg-gray-800/60 rounded-lg p-4">
-                    <h3 className="text-teal-400 font-bold text-base sm:text-lg mb-1">≤ 4 Years Loan</h3>
-                    <p className="text-white/80 text-xs sm:text-sm">Keep the loan term within 4 years</p>
-                  </div>
-                  
-                  <div className="bg-gray-800/60 rounded-lg p-4">
-                    <h3 className="text-teal-400 font-bold text-base sm:text-lg mb-1">≤ 10% Income on EMI</h3>
-                    <p className="text-white/80 text-xs sm:text-sm leading-tight">Monthly EMI should not exceed 10% of income</p>
-                  </div>
-                </div>
-              </div>
+            <div className="flex justify-center">
+              <Image 
+                src="/calculator_info.png" 
+                alt="Calculator Information" 
+                className="w-full max-w-4xl h-auto object-contain rounded-lg shadow-lg"
+                width={920}
+                height={160}
+              />
             </div>
           </div>
         </div>
