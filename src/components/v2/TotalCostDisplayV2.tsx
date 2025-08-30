@@ -109,13 +109,13 @@ export default function TotalCostDisplayV2({ carData, updateCarData: _updateCarD
   
 
   return (
-    <div className="space-y-10">
+    <div className="space-y-4 lg:space-y-6">
 
       {/* Smart Purchase Score - Always show, but with empty state when required fields not filled */}
         <div 
           id="afford-panel"
           tabIndex={-1}
-          className={`relative p-4 sm:p-5 rounded-2xl border backdrop-blur-xl shadow-xl mb-6 sm:mb-8 transition-all duration-300 hover:shadow-xl hover:scale-[1.01] overflow-hidden focus:outline-none focus:ring-2 focus:ring-blue-400/50 ${
+          className={`relative p-4 sm:p-5 rounded-2xl border backdrop-blur-xl shadow-xl mb-3 sm:mb-4 transition-all duration-300 hover:shadow-xl hover:scale-[1.01] overflow-hidden focus:outline-none focus:ring-2 focus:ring-blue-400/50 ${
             !isAllRequiredFieldsFilled || carData.carPrice <= 0 || carData.tenure <= 0 || emi <= 0
               ? 'bg-gradient-to-br from-slate-500/20 via-slate-600/10 to-slate-700/20 border-slate-400/30 shadow-slate-500/20'
               : isAffordable 
@@ -292,15 +292,15 @@ export default function TotalCostDisplayV2({ carData, updateCarData: _updateCarD
       
       {/* Loan Summary - Compact Display */}
       <motion.div 
-        className="p-6 mb-4 transition-all duration-300"
+        className="p-2 sm:p-4 mb-2 transition-all duration-300"
         animate={completionPercentage === 100 ? { scale: [1, 1.02, 1] } : {}}
         transition={{ duration: 0.6, repeat: 0 }}
       >
         {/* Main EMI Display - Proportional UX */}
-        <div className="text-center mb-4">
+        <div className="text-center mb-2">
           {/* Loan Details - Modern Gradient Background with Header and Icons */}
           {carData.tenure > 0 && emi > 0 && (
-            <div className="bg-gradient-to-br from-purple-600 to-indigo-700 rounded-2xl p-5 mb-6 shadow-lg">
+            <div className="bg-gradient-to-br from-purple-600 to-indigo-700 rounded-2xl p-4 mb-3 shadow-lg">
               <h3 className="text-white font-bold text-lg mb-4">Loan Details</h3>
               <div className="space-y-3 text-white">
                 {/* Loan Amount - Highlighted */}
@@ -359,7 +359,7 @@ export default function TotalCostDisplayV2({ carData, updateCarData: _updateCarD
           )}
 
           {/* Primary EMI Section - Teal design like screenshot */}
-          <div className="bg-gradient-to-r from-teal-500 to-teal-600 rounded-2xl p-6 mb-6 shadow-lg relative overflow-hidden">
+          <div className="bg-gradient-to-r from-teal-500 to-teal-600 rounded-2xl p-4 mb-3 shadow-lg relative overflow-hidden">
             {/* Content container - centered */}
             <div className="text-center relative z-10">
               <h3 className="text-white text-lg font-semibold mb-2 tracking-wide">
@@ -371,50 +371,45 @@ export default function TotalCostDisplayV2({ carData, updateCarData: _updateCarD
             </div>
           </div>
 
-          {/* Monthly Running Cost - Horizontal Layout like Screenshot */}
+          {/* Monthly Running Cost - Tabular format like Yearly section */}
           {(monthlyFuelCost > 0 || monthlyParkingCost > 0) ? (
-            <div className="bg-gradient-to-br from-yellow-400 via-orange-400 to-yellow-500 rounded-2xl p-4 mb-4 shadow-lg">
-              <div className="mb-3">
-                <h3 className="text-black font-bold text-lg mb-2">Monthly Running Cost</h3>
-                <div className="text-black text-3xl font-bold mb-4">
+            <div className="bg-gradient-to-br from-yellow-400 via-orange-400 to-yellow-500 rounded-2xl p-3 mb-2 shadow-lg">
+              <div className="text-center mb-4">
+                <h3 className="text-black font-bold text-lg sm:text-xl tracking-wide mb-3">Monthly Running Cost</h3>
+                <div className="text-black text-2xl sm:text-3xl font-bold mb-4">
                   {formatCurrency(totalMonthlyCarExpenses)}
                 </div>
               </div>
               
-              {/* Horizontal breakdown with separators */}
-              <div className="flex items-center justify-between">
+              {/* Tabular breakdown with icons - same style as yearly cost */}
+              <div className="space-y-2">
                 {emi > 0 && (
-                  <div className="flex-1 text-center">
-                    <div className="text-black font-medium text-sm mb-1">EMI</div>
-                    <div className="text-black font-bold text-lg">{formatCurrency(emi)}</div>
+                  <div className="flex justify-between items-center text-black/90">
+                    <div className="flex items-center space-x-2 min-w-0 flex-1">
+                      <CreditCard className="w-4 h-4 text-black flex-shrink-0" />
+                      <span className="font-medium text-sm sm:text-base truncate">EMI</span>
+                    </div>
+                    <span className="font-bold text-sm sm:text-base ml-2 flex-shrink-0">{formatCurrency(emi)}</span>
                   </div>
-                )}
-                
-                {emi > 0 && monthlyFuelCost > 0 && (
-                  <div className="w-px h-8 bg-black/20 mx-4"></div>
                 )}
                 
                 {monthlyFuelCost > 0 && (
-                  <div className="flex-1 text-center">
-                    <div className="flex items-center justify-center space-x-1 mb-1">
-                      <Fuel className="w-4 h-4 text-black" />
-                      <span className="text-black font-medium text-sm">Fuel</span>
+                  <div className="flex justify-between items-center text-black/90">
+                    <div className="flex items-center space-x-2 min-w-0 flex-1">
+                      <Fuel className="w-4 h-4 text-black flex-shrink-0" />
+                      <span className="font-medium text-sm sm:text-base truncate">Fuel</span>
                     </div>
-                    <div className="text-black font-bold text-lg">{formatCurrency(monthlyFuelCost)}</div>
+                    <span className="font-bold text-sm sm:text-base ml-2 flex-shrink-0">{formatCurrency(monthlyFuelCost)}</span>
                   </div>
                 )}
                 
-                {monthlyFuelCost > 0 && monthlyParkingCost > 0 && (
-                  <div className="w-px h-8 bg-black/20 mx-4"></div>
-                )}
-                
                 {monthlyParkingCost > 0 && (
-                  <div className="flex-1 text-center">
-                    <div className="flex items-center justify-center space-x-1 mb-1">
-                      <div className="w-4 h-4 bg-black rounded text-white text-xs flex items-center justify-center font-bold">P</div>
-                      <span className="text-black font-medium text-sm">Parking</span>
+                  <div className="flex justify-between items-center text-black/90">
+                    <div className="flex items-center space-x-2 min-w-0 flex-1">
+                      <ParkingCircle className="w-4 h-4 text-black flex-shrink-0" />
+                      <span className="font-medium text-sm sm:text-base truncate">Parking</span>
                     </div>
-                    <div className="text-black font-bold text-lg">{formatCurrency(monthlyParkingCost)}</div>
+                    <span className="font-bold text-sm sm:text-base ml-2 flex-shrink-0">{formatCurrency(monthlyParkingCost)}</span>
                   </div>
                 )}
               </div>
@@ -435,9 +430,9 @@ export default function TotalCostDisplayV2({ carData, updateCarData: _updateCarD
                 className="w-full p-2 text-cyan-300 hover:text-cyan-200 transition-all duration-200 cursor-pointer bg-cyan-500/10 hover:bg-cyan-500/20 rounded-lg border border-cyan-400/20 hover:border-cyan-400/40 outline-none"
               >
                 <div className="flex items-center justify-center space-x-2">
-                  <span className="text-xs font-medium">+ Add Fuel Expense</span>
+                  <span className="text-sm font-medium">+ Add Fuel Expense</span>
                 </div>
-                <p className="text-xs text-cyan-400/80 mt-1">Get your complete monthly car cost</p>
+                <p className="text-sm text-cyan-400/80 mt-1">Get your complete monthly car cost</p>
               </button>
             </div>
           )}
@@ -445,7 +440,7 @@ export default function TotalCostDisplayV2({ carData, updateCarData: _updateCarD
 
           {/* Yearly Running Cost - Pink/Red Gradient like Reference */}
           {(emi > 0 || monthlyFuelCost > 0 || monthlyParkingCost > 0 || (carData.insuranceAndMaintenance || 0) > 0 || (carData.maintenanceCostPerYear || 0) > 0) && (
-            <div className="bg-gradient-to-br from-yellow-400 via-orange-400 to-yellow-500 rounded-2xl p-4 mb-4 shadow-lg">
+            <div className="bg-gradient-to-br from-yellow-400 via-orange-400 to-yellow-500 rounded-2xl p-3 mb-2 shadow-lg">
               <div className="text-center mb-4">
                 <h3 className="text-black font-bold text-xl tracking-wide mb-3">Yearly Running Cost</h3>
                 <div className="text-black text-3xl font-bold mb-4">

@@ -118,3 +118,24 @@ export function getThemeStyles(theme: 'light' | 'dark'): ThemeStyles {
 export function themeClass(lightClass: string, darkClass: string, isLight: boolean): string {
   return isLight ? lightClass : darkClass
 }
+
+// Mobile-first responsive design utilities
+export const mobileOptimized = {
+  // Touch-friendly minimum sizes (44px minimum per Apple/Material Design guidelines)
+  minTouchTarget: 'min-h-[44px] min-w-[44px]',
+  touchButton: 'min-h-[48px] px-4 py-3 touch-manipulation',
+  mobileInput: 'py-3 px-4 text-base min-h-[48px] touch-manipulation',
+  
+  // Mobile-friendly typography
+  mobileFriendlyText: 'text-sm sm:text-base leading-relaxed',
+  mobileHeading: 'text-lg sm:text-xl md:text-2xl',
+  mobileLabel: 'text-sm font-medium',
+  
+  // Responsive spacing
+  mobileSpacing: 'gap-4 sm:gap-6 lg:gap-8',
+  mobilePadding: 'p-4 sm:p-5 md:p-6',
+  
+  // Touch interaction optimization
+  touchAction: 'touch-manipulation select-none',
+  tapHighlight: 'tap-highlight-color: transparent',
+}

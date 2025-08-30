@@ -248,7 +248,7 @@ export default function HomePage() {
         
         
         {/* Main Content Section - Fluid Layout */}
-        <section className="relative z-10 pt-4" id="calculator" aria-labelledby="calculator-heading">
+        <section className="relative z-10 pt-2 pb-2" id="calculator" aria-labelledby="calculator-heading">
           <div className="container mx-auto px-4">
             <div className="max-w-6xl mx-auto">
               <h2 id="calculator-heading" className="sr-only">Car Finance Calculator Tool</h2>
@@ -261,10 +261,10 @@ export default function HomePage() {
               </div>
 
               {/* Content Layout - Mobile first responsive design */}
-              <div className="flex flex-col sm:flex-col lg:flex-row gap-4 sm:gap-6 lg:gap-12 relative">
+              <div className="flex flex-col sm:flex-col lg:flex-row gap-2 sm:gap-4 lg:gap-8 relative">
                 
                 {/* Left Column - Calculator Form Panel */}
-                <div className={`transition-all duration-500 ease-in-out ${isLeftCollapsed ? 'w-16 lg:w-16' : 'w-full lg:w-1/2 lg:flex-shrink-0'} space-y-4 sm:space-y-6 order-1 lg:order-1`}>
+                <div className={`transition-all duration-500 ease-in-out ${isLeftCollapsed ? 'w-16 lg:w-16' : 'w-full lg:w-1/2 lg:flex-shrink-0'} space-y-2 sm:space-y-4 order-1 lg:order-1`}>
                   {/* Calculator Form Panel */}
                   <div className="md-panel-elevated p-4">
                     <motion.div 
@@ -424,24 +424,18 @@ export default function HomePage() {
 
                 </div>
 
-                {/* Live Preview Panel - Expands when left is collapsed */}
-                <motion.aside 
-                  className={`transition-all duration-500 ease-in-out ${isLeftCollapsed ? 'flex-1' : 'w-full lg:w-1/2 lg:flex-1'} md-panel-elevated p-4 order-2 lg:order-2`}
+                {/* Live Preview Panel - Flattened structure for more mobile space */}
+                <div 
+                  className={`${isLeftCollapsed ? 'flex-1' : 'w-full lg:w-1/2 lg:flex-1'} order-2 lg:order-2 lg:md-panel-elevated lg:sticky lg:top-8 p-2 sm:p-3 lg:p-4`}
                   aria-labelledby="results-heading"
-                  animate={{ width: isLeftCollapsed ? '100%' : 'auto' }}
+                  style={{ 
+                    minHeight: 'auto',
+                    backgroundColor: 'transparent'
+                  }}
                 >
-                  <div className="lg:sticky lg:top-8 space-y-4">
-                    <motion.div
-                      initial={{ opacity: 0, x: 20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ duration: 0.6, delay: 0.2 }}
-                      className="md-panel-elevated p-3 sm:p-4 lg:p-5"
-                    >
-                      <h3 id="results-heading" className="sr-only">Loan Calculation Results</h3>
-                      <TotalCostDisplayV2 carData={carData} updateCarData={updateCarData} />
-                    </motion.div>
-                  </div>
-                </motion.aside>
+                  <h3 id="results-heading" className="sr-only">Loan Calculation Results</h3>
+                  <TotalCostDisplayV2 carData={carData} updateCarData={updateCarData} />
+                </div>
               </div>
             </div>
           </div>
@@ -456,7 +450,7 @@ export default function HomePage() {
                 width="320px" 
                 height="100px" 
                 label="320 x 100 Mobile Banner Ad"
-                className="my-6"
+                className="my-3"
               />
             </div>
           </div>

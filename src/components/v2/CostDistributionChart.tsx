@@ -289,6 +289,12 @@ export default function CostDistributionChart({ carData }: CostDistributionChart
       className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-6 shadow-2xl max-h-[600px] overflow-auto"
     >
       <div className="text-center mb-6">
+        <h3 className="text-xl font-bold text-white mb-4">Cost Breakdown</h3>
+        
+        {/* Mobile interaction hint */}
+        <div className="block lg:hidden mb-4">
+          <p className="text-white/50 text-xs">Tap chart segments or items below to highlight</p>
+        </div>
         
         {hasValidData && (
           <div className="p-4 bg-white/5 border border-white/10 rounded-lg">
@@ -307,7 +313,7 @@ export default function CostDistributionChart({ carData }: CostDistributionChart
               <div className="flex items-center bg-white/10 rounded-xl p-1 border border-white/20">
                 <button
                   onClick={() => setShowOneYear(true)}
-                  className={`px-3 py-1.5 text-sm font-medium rounded-lg transition-all ${
+                  className={`px-4 py-3 text-sm font-medium rounded-lg transition-all min-h-[44px] touch-manipulation ${
                     showOneYear 
                       ? 'bg-blue-500 text-white shadow-lg' 
                       : 'text-white/70 hover:text-white'
@@ -317,7 +323,7 @@ export default function CostDistributionChart({ carData }: CostDistributionChart
                 </button>
                 <button
                   onClick={() => setShowOneYear(false)}
-                  className={`px-3 py-1.5 text-sm font-medium rounded-lg transition-all ${
+                  className={`px-4 py-3 text-sm font-medium rounded-lg transition-all min-h-[44px] touch-manipulation ${
                     !showOneYear 
                       ? 'bg-blue-500 text-white shadow-lg' 
                       : 'text-white/70 hover:text-white'
@@ -337,7 +343,7 @@ export default function CostDistributionChart({ carData }: CostDistributionChart
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.3 }}
         >
-          <div className="h-48 lg:h-64 mb-4 relative">
+          <div className="h-48 lg:h-64 mb-4 relative touch-manipulation">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie
@@ -352,6 +358,7 @@ export default function CostDistributionChart({ carData }: CostDistributionChart
                   animationDuration={800}
                   onMouseEnter={(_, index) => setHoveredIndex(index)}
                   onMouseLeave={() => setHoveredIndex(null)}
+                  onClick={(_, index) => setHoveredIndex(hoveredIndex === index ? null : index)}
                 >
                   {chartData.map((entry, index) => {
                     const isHovered = hoveredIndex === index
@@ -372,7 +379,8 @@ export default function CostDistributionChart({ carData }: CostDistributionChart
                           transform: isHovered ? 'scale(1.05)' : 'scale(1)',
                           transformOrigin: 'center',
                           transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                          cursor: 'pointer'
+                          cursor: 'pointer',
+                          touchAction: 'manipulation'
                         }}
                       />
                     )
@@ -407,8 +415,11 @@ export default function CostDistributionChart({ carData }: CostDistributionChart
                   }`}
                   onMouseEnter={() => setHoveredIndex(index)}
                   onMouseLeave={() => setHoveredIndex(null)}
+                  onClick={() => setHoveredIndex(hoveredIndex === index ? null : index)}
+                  onTouchStart={() => setHoveredIndex(index)}
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
+                  style={{ touchAction: 'manipulation' }}
                 >
                   <div className="flex items-center space-x-2">
                     <motion.div 
