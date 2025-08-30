@@ -178,7 +178,7 @@ export default function HomePage() {
   }
 
 
-  // Render Version 2 - CRED-inspired fluid design with theme support
+  // Render Version 2 - Modern fluid design with theme support
   return (
       <main className={`min-h-screen font-sans relative ${isLight ? 'bg-gradient-to-br from-slate-50 via-white to-slate-50' : 'bg-black'}`} style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>
         {/* AdSense Script */}
