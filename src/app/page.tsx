@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { PiggyBank, TrendingUp, Clock, ChevronLeft, ChevronRight, Palette } from 'lucide-react'
+import { PiggyBank, ChevronRight, Palette } from 'lucide-react'
 import Image from 'next/image'
 import { useTheme } from '@/contexts/ThemeContext'
 import { themeClass } from '@/utils/themeStyles'
@@ -190,8 +190,8 @@ export default function HomePage() {
         />
         {/* Header Navigation */}
         <header className={isLight ? 'bg-white border-b border-slate-200/60' : 'bg-black border-b border-white/5'}>
-          <div className="container mx-auto px-6 lg:px-8">
-            <div className="flex items-center justify-between h-20">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex items-center justify-between h-16 sm:h-20">
               {/* Logo - Far Left Positioning */}
               <div className="flex items-center space-x-2 sm:space-x-3 flex-shrink-0">
                 <div className="w-10 h-10 sm:w-16 sm:h-16 flex items-center justify-center">
@@ -203,20 +203,20 @@ export default function HomePage() {
                     height={64}
                   />
                 </div>
-                <span className={`text-base sm:text-2xl font-extrabold tracking-tight flex items-center ${isLight ? 'text-slate-900' : 'text-white'}`}>BudgetGear</span>
+                <span className={`text-lg sm:text-xl md:text-2xl font-extrabold tracking-tight flex items-center ${isLight ? 'text-slate-900' : 'text-white'}`}>BudgetGear</span>
               </div>
 
-              {/* Navigation Menu - Center with proper spacing */}
-              <div className="flex-1 flex justify-center">
-                <nav className="flex items-center gap-6" role="navigation" aria-label="Main navigation">
-                  <span className={`font-semibold text-xs sm:text-sm tracking-wide px-3 py-2 text-center rounded-lg ${isLight ? 'text-white bg-blue-600' : 'text-black bg-white'}`}>
-                    Car Affordability Calculator
+              {/* Navigation Menu - Mobile optimized */}
+              <div className="flex-1 flex justify-center px-2">
+                <nav className="flex items-center gap-2 sm:gap-4" role="navigation" aria-label="Main navigation">
+                  <span className={`font-semibold text-xs sm:text-sm tracking-wide px-2 sm:px-3 py-2 text-center rounded-lg min-h-[44px] flex items-center ${isLight ? 'text-white bg-blue-600' : 'text-black bg-white'}`}>
+                    Car Calculator
                   </span>
                   <a 
                     href="/prepayment" 
-                    className={`font-semibold text-xs sm:text-sm tracking-wide px-3 py-2 text-center rounded-lg transition-colors duration-200 hover:scale-105 ${isLight ? 'text-slate-700 hover:text-slate-900 hover:bg-slate-100' : 'text-white/80 hover:text-white hover:bg-white/10'}`}
+                    className={`font-semibold text-xs sm:text-sm tracking-wide px-2 sm:px-3 py-2 text-center rounded-lg transition-colors duration-200 hover:scale-105 min-h-[44px] flex items-center touch-manipulation ${isLight ? 'text-slate-700 hover:text-slate-900 hover:bg-slate-100' : 'text-white/80 hover:text-white hover:bg-white/10'}`}
                   >
-                    Loan Prepayment Calculator
+                    Prepayment Calculator
                   </a>
                 </nav>
               </div>
@@ -255,16 +255,16 @@ export default function HomePage() {
               
               {/* Estimates Notice */}
               <div className="text-left mb-4">
-                <p className={`text-xs ${themeClass('text-slate-600', 'text-white/60', isLight)} font-medium`}>
+                <p className={`text-sm ${themeClass('text-slate-600', 'text-white/60', isLight)} font-medium`}>
                   * All calculations are estimates for informational purposes only
                 </p>
               </div>
 
-              {/* Content Layout - Separate panels design */}
-              <div className="flex flex-col lg:flex-row gap-6 lg:gap-12 relative">
+              {/* Content Layout - Mobile first responsive design */}
+              <div className="flex flex-col sm:flex-col lg:flex-row gap-4 sm:gap-6 lg:gap-12 relative">
                 
                 {/* Left Column - Calculator Form Panel */}
-                <div className={`transition-all duration-500 ease-in-out ${isLeftCollapsed ? 'w-16 lg:w-16' : 'w-full lg:w-1/2 lg:flex-shrink-0'} space-y-6`}>
+                <div className={`transition-all duration-500 ease-in-out ${isLeftCollapsed ? 'w-16 lg:w-16' : 'w-full lg:w-1/2 lg:flex-shrink-0'} space-y-4 sm:space-y-6 order-1 lg:order-1`}>
                   {/* Calculator Form Panel */}
                   <div className="md-panel-elevated p-4">
                     <motion.div 
@@ -276,7 +276,7 @@ export default function HomePage() {
                       <div className="h-full md-panel-elevated p-3 flex flex-col items-center justify-center space-y-6 min-h-[400px]">
                         <button
                           onClick={() => setIsLeftCollapsed(false)}
-                          className={`p-3 rounded-xl transition-all duration-200 hover:scale-110 shadow-lg ${isLight ? 'bg-blue-50 hover:bg-blue-100 text-blue-600 border border-blue-200' : 'bg-blue-500/20 hover:bg-blue-500/30 text-blue-400 border border-blue-400/30'}`}
+                          className={`p-4 rounded-xl transition-all duration-200 hover:scale-110 shadow-lg min-h-[48px] min-w-[48px] touch-manipulation ${isLight ? 'bg-blue-50 hover:bg-blue-100 text-blue-600 border border-blue-200' : 'bg-blue-500/20 hover:bg-blue-500/30 text-blue-400 border border-blue-400/30'}`}
                           aria-label="Show calculator panel"
                           title="Show Calculator"
                         >
@@ -422,27 +422,11 @@ export default function HomePage() {
                     </motion.div>
                   </div>
 
-                  {/* Horizontal Separator */}
-                  {!isLeftCollapsed && (
-                    <div className={`h-px w-full ${isLight ? 'bg-gradient-to-r from-transparent via-slate-300 to-transparent' : 'bg-gradient-to-r from-transparent via-white/20 to-transparent'}`}></div>
-                  )}
-
-                  {/* Cost Distribution Chart - Separate Panel */}
-                  {!isLeftCollapsed && (
-                    <motion.div
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.6, delay: 0.4 }}
-                      className="md-panel-elevated p-4"
-                    >
-                      <CostDistributionChart carData={carData} />
-                    </motion.div>
-                  )}
                 </div>
 
                 {/* Live Preview Panel - Expands when left is collapsed */}
                 <motion.aside 
-                  className={`transition-all duration-500 ease-in-out ${isLeftCollapsed ? 'flex-1' : 'w-full lg:w-1/2 lg:flex-1'} md-panel-elevated p-4`}
+                  className={`transition-all duration-500 ease-in-out ${isLeftCollapsed ? 'flex-1' : 'w-full lg:w-1/2 lg:flex-1'} md-panel-elevated p-4 order-2 lg:order-2`}
                   aria-labelledby="results-heading"
                   animate={{ width: isLeftCollapsed ? '100%' : 'auto' }}
                 >
@@ -462,6 +446,39 @@ export default function HomePage() {
             </div>
           </div>
         </section>
+
+        {/* Advertisement - Between Summary and Chart (Mobile) */}
+        <section className="relative z-10 block lg:hidden">
+          <div className="container mx-auto px-4">
+            <div className="max-w-4xl mx-auto">
+              {/* Mobile Ad - 320x100 Banner */}
+              <EnhancedAdSpace 
+                width="320px" 
+                height="100px" 
+                label="320 x 100 Mobile Banner Ad"
+                className="my-6"
+              />
+            </div>
+          </div>
+        </section>
+
+        {/* Cost Distribution Chart Section - Positioned after summary on mobile, after forms on desktop */}
+        {!isLeftCollapsed && (
+          <section className="relative z-10">
+            <div className="container mx-auto px-4">
+              <div className="max-w-6xl mx-auto">
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 0.4 }}
+                  className="md-panel-elevated p-4"
+                >
+                  <CostDistributionChart carData={carData} />
+                </motion.div>
+              </div>
+            </div>
+          </section>
+        )}
 
 
         {/* Advertisement - Before Prepayment Section */}
