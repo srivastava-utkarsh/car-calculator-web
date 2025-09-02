@@ -225,26 +225,8 @@ export default function HomePage() {
           </div>
         </header>
 
-        {/* Calculator Info Image */}
-        <div 
-          className="py-6 flex items-center justify-center transition-opacity duration-300 ease-out"
-          style={{ opacity: imageOpacity }}
-        >
-          <div className="max-w-6xl mx-auto px-4 sm:px-6">
-            <div className="flex justify-center">
-              <Image 
-                src="/calculator_info.png" 
-                alt="Calculator Information" 
-                className="w-full max-w-4xl h-auto object-contain rounded-lg shadow-lg"
-                width={920}
-                height={160}
-              />
-            </div>
-          </div>
-        </div>
-
-        {/* Immersive Background Gradient - exclude header and infographic */}
-        {isDark && <div className="absolute left-0 right-0 bottom-0 bg-gradient-to-br from-gray-900/50 via-black to-gray-900/30 pointer-events-none" style={{ top: '320px' }}></div>}
+        {/* Immersive Background Gradient - exclude header */}
+        {isDark && <div className="absolute left-0 right-0 bottom-0 bg-gradient-to-br from-gray-900/50 via-black to-gray-900/30 pointer-events-none" style={{ top: '100px' }}></div>}
         
         
         {/* Main Content Section - Fluid Layout */}
@@ -252,6 +234,22 @@ export default function HomePage() {
           <div className="container mx-auto px-4">
             <div className="max-w-6xl mx-auto">
               <h2 id="calculator-heading" className="sr-only">Car Finance Calculator Tool</h2>
+              
+              {/* 20/4/10 Rule Info Image - Inside calculator body */}
+              <div 
+                className="mb-6 flex items-center justify-center transition-opacity duration-300 ease-out"
+                style={{ opacity: imageOpacity }}
+              >
+                <div className="md-panel-elevated p-4 w-full">
+                  <Image 
+                    src="/20-4-10-rule.svg" 
+                    alt="20/4/10 Rule: Smart Car Buying Guide - 20% down payment, 4 years max loan, 10% of income max" 
+                    className="w-full h-auto object-contain rounded-lg"
+                    width={920}
+                    height={220}
+                  />
+                </div>
+              </div>
               
               {/* Estimates Notice */}
               <div className="text-left mb-4">
