@@ -124,7 +124,7 @@ export default function FinancialFormV2({ carData, updateCarData, monthlyIncomeI
               }
             }}
             placeholder="Enter your monthly income"
-            className={`w-full pl-8 pr-4 py-3 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-transparent transition-all text-base bg-white/10 backdrop-blur-md border text-white placeholder-white/50 min-h-[48px] touch-manipulation ${
+            className={`w-full pl-8 pr-4 py-1.5 max-md:py-3 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-transparent transition-all text-sm max-md:text-base bg-white/10 backdrop-blur-md border text-white placeholder-white/50 max-md:min-h-[48px] ${
               shouldHighlightMonthlyIncome 
                 ? 'border-lime-400/60' 
                 : 'border-white/20'
@@ -183,7 +183,7 @@ export default function FinancialFormV2({ carData, updateCarData, monthlyIncomeI
                 }
               }}
               placeholder="Enter Insurance cost"
-              className="w-full pl-8 pr-4 py-3 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all text-base bg-white/10 backdrop-blur-md border border-white/20 text-white placeholder-white/50 min-h-[48px] touch-manipulation"
+              className="w-full pl-8 pr-4 py-1.5 max-md:py-3 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all text-sm max-md:text-base bg-white/10 backdrop-blur-md border border-white/20 text-white placeholder-white/50 max-md:min-h-[48px]"
             />
           </div>
         </div>
@@ -220,7 +220,7 @@ export default function FinancialFormV2({ carData, updateCarData, monthlyIncomeI
                 }
               }}
               placeholder="Enter yearly maintenance cost"
-              className="w-full pl-8 pr-4 py-3 rounded-md focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-transparent transition-all text-base bg-white/10 backdrop-blur-md border border-white/20 text-white placeholder-white/50 min-h-[48px] touch-manipulation"
+              className="w-full pl-8 pr-4 py-1.5 max-md:py-3 rounded-md focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-transparent transition-all text-sm max-md:text-base bg-white/10 backdrop-blur-md border border-white/20 text-white placeholder-white/50 max-md:min-h-[48px]"
             />
           </div>
         </div>
@@ -257,7 +257,7 @@ export default function FinancialFormV2({ carData, updateCarData, monthlyIncomeI
                 }
               }}
               placeholder="Enter monthly fuel expense"
-              className="w-full pl-8 pr-4 py-3 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-transparent transition-all text-base bg-white/10 backdrop-blur-md border border-white/20 text-white placeholder-white/50 min-h-[48px] touch-manipulation"
+              className="w-full pl-8 pr-4 py-1.5 max-md:py-3 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-transparent transition-all text-sm max-md:text-base bg-white/10 backdrop-blur-md border border-white/20 text-white placeholder-white/50 max-md:min-h-[48px]"
             />
           </div>
         </div>
@@ -294,7 +294,7 @@ export default function FinancialFormV2({ carData, updateCarData, monthlyIncomeI
                 }
               }}
               placeholder="Enter parking fee"
-              className="w-full pl-8 pr-4 py-3 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all text-base bg-white/10 backdrop-blur-md border border-white/20 text-white placeholder-white/50 min-h-[48px] touch-manipulation"
+              className="w-full pl-8 pr-4 py-1.5 max-md:py-3 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all text-sm max-md:text-base bg-white/10 backdrop-blur-md border border-white/20 text-white placeholder-white/50 max-md:min-h-[48px]"
             />
           </div>
         </div>

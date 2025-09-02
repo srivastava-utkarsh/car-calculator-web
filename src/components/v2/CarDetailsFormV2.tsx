@@ -124,7 +124,7 @@ export default function CarDetailsFormV2({ carData, updateCarData, monthlyIncome
                   e.preventDefault()
                 }
               }}
-              className="w-full pl-8 pr-4 py-3 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-transparent transition-all text-base bg-white/10 backdrop-blur-md border border-white/20 text-white placeholder-white/50 min-h-[48px] touch-manipulation"
+              className="w-full pl-8 pr-4 py-1.5 max-md:py-3 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-transparent transition-all text-sm max-md:text-base bg-white/10 backdrop-blur-md border border-white/20 text-white placeholder-white/50 max-md:min-h-[48px]"
               placeholder="Enter car price"
             />
           </div>
@@ -137,7 +137,7 @@ export default function CarDetailsFormV2({ carData, updateCarData, monthlyIncome
                   key={preset.value}
                   type="button"
                   onClick={() => handleCarPriceChange(preset.value.toString())}
-                  className={`flex-shrink-0 min-h-[44px] px-3 py-2 text-sm font-medium transition-all duration-200 hover:scale-105 focus:outline-none focus:ring-1 active:scale-95 rounded touch-manipulation ${
+                  className={`flex-shrink-0 min-h-[20px] max-md:min-h-[44px] px-1.5 max-md:px-3 py-0.5 max-md:py-2 text-xs max-md:text-sm font-medium transition-all duration-200 hover:scale-105 focus:outline-none focus:ring-1 active:scale-95 rounded ${
                     carData.carPrice === preset.value
                       ? 'bg-emerald-600 text-white shadow-sm focus:ring-emerald-400/50 border border-emerald-300'
                       : themeClass(
@@ -147,8 +147,8 @@ export default function CarDetailsFormV2({ carData, updateCarData, monthlyIncome
                         )
                   }`}
                   style={{ 
-                    lineHeight: '1.2',
-                    minWidth: '48px'
+                    lineHeight: '1.1',
+                    minWidth: '38px'
                   }}
                 >
                   ₹{preset.label}
@@ -186,7 +186,7 @@ export default function CarDetailsFormV2({ carData, updateCarData, monthlyIncome
                   e.preventDefault()
                 }
               }}
-              className="w-full pl-8 pr-4 py-3 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-transparent transition-all text-base bg-white/10 backdrop-blur-md border border-white/20 text-white placeholder-white/50 min-h-[48px] touch-manipulation"
+              className="w-full pl-8 pr-4 py-1.5 max-md:py-3 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-transparent transition-all text-sm max-md:text-base bg-white/10 backdrop-blur-md border border-white/20 text-white placeholder-white/50 max-md:min-h-[48px]"
               placeholder="Enter down payment"
             />
           </div>
