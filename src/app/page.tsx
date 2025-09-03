@@ -193,28 +193,28 @@ export default function HomePage() {
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between h-16 sm:h-20">
               {/* Logo - Far Left Positioning */}
-              <div className="flex items-center space-x-2 sm:space-x-3 flex-shrink-0">
-                <div className="w-10 h-10 sm:w-16 sm:h-16 flex items-center justify-center">
+              <div className="flex items-center space-x-1.5 sm:space-x-3 flex-shrink-0">
+                <div className="w-8 h-8 sm:w-16 sm:h-16 flex items-center justify-center">
                   <Image 
                     src="/bck-logo.svg" 
                     alt="BudgetGear Logo" 
-                    className="w-10 h-10 sm:w-16 sm:h-16 object-contain"
+                    className="w-8 h-8 sm:w-16 sm:h-16 object-contain"
                     width={64}
                     height={64}
                   />
                 </div>
-                <span className={`text-lg sm:text-xl md:text-2xl font-extrabold tracking-tight flex items-center ${isLight ? 'text-slate-900' : 'text-white'}`}>BudgetGear</span>
+                <span className={`text-base sm:text-xl md:text-2xl font-extrabold tracking-tight flex items-center ${isLight ? 'text-slate-900' : 'text-white'}`}>BudgetGear</span>
               </div>
 
               {/* Navigation Menu - Mobile optimized */}
               <div className="flex-1 flex justify-center px-2">
                 <nav className="flex items-center gap-2 sm:gap-4" role="navigation" aria-label="Main navigation">
-                  <span className={`font-semibold text-xs sm:text-sm tracking-wide px-2 sm:px-3 py-2 text-center rounded-lg min-h-[44px] flex items-center ${isLight ? 'text-white bg-blue-600' : 'text-black bg-white'}`}>
-                    Car Calculator
+                  <span className={`font-semibold text-xs sm:text-sm tracking-wide px-1 sm:px-3 py-1 sm:py-2 text-center rounded-md min-h-[32px] sm:min-h-[44px] flex items-center ${isLight ? 'text-white bg-blue-600' : 'text-black bg-white'}`}>
+                    Car Affordability Calculator
                   </span>
                   <a 
                     href="/prepayment" 
-                    className={`font-semibold text-xs sm:text-sm tracking-wide px-2 sm:px-3 py-2 text-center rounded-lg transition-colors duration-200 hover:scale-105 min-h-[44px] flex items-center touch-manipulation ${isLight ? 'text-slate-700 hover:text-slate-900 hover:bg-slate-100' : 'text-white/80 hover:text-white hover:bg-white/10'}`}
+                    className={`font-semibold text-xs sm:text-sm tracking-wide px-1 sm:px-3 py-1 sm:py-2 text-center rounded-md transition-colors duration-200 hover:scale-105 min-h-[32px] sm:min-h-[44px] flex items-center touch-manipulation ${isLight ? 'text-slate-700 hover:text-slate-900 hover:bg-slate-100' : 'text-white/80 hover:text-white hover:bg-white/10'}`}
                   >
                     Prepayment Calculator
                   </a>
@@ -235,19 +235,68 @@ export default function HomePage() {
             <div className="max-w-6xl mx-auto">
               <h2 id="calculator-heading" className="sr-only">Car Finance Calculator Tool</h2>
               
-              {/* 20/4/10 Rule Info Image - Inside calculator body */}
-              <div 
-                className="mb-6 flex items-center justify-center transition-opacity duration-300 ease-out"
-                style={{ opacity: imageOpacity }}
-              >
-                <div className="md-panel-elevated p-4 w-full">
-                  <Image 
-                    src="/20-4-10-rule.svg" 
-                    alt="20/4/10 Rule: Smart Car Buying Guide - 20% down payment, 4 years max loan, 10% of income max" 
-                    className="w-full h-auto object-contain rounded-lg"
-                    width={920}
-                    height={220}
-                  />
+              {/* 20/4/10 Rule Info - Desktop: SVG image, Mobile: Compact cards */}
+              <div className="mb-4">
+                {/* Desktop version - SVG with scroll fade */}
+                <div 
+                  className="hidden md:flex items-center justify-center transition-opacity duration-300 ease-out"
+                  style={{ opacity: imageOpacity }}
+                >
+                  <div className="md-panel-elevated p-4 w-full">
+                    <Image 
+                      src="/20-4-10-rule-simple.svg" 
+                      alt="20/4/10 Rule: Smart Car Buying Guide - 20% down payment, 4 years max loan, 10% of income max" 
+                      className="w-full h-auto object-contain rounded-lg"
+                      width={800}
+                      height={180}
+                    />
+                  </div>
+                </div>
+
+                {/* Mobile version - Minimal text design */}
+                <div className="md:hidden text-center">
+                  {/* Header with visual separation */}
+                  <div className={`inline-block px-4 py-2 rounded-full mb-4 ${themeClass('bg-blue-100 border border-blue-200', 'bg-blue-900/30 border border-blue-500/30', isLight)}`}>
+                    <h3 className={`text-sm font-bold ${themeClass('text-blue-800', 'text-blue-300', isLight)}`}>
+                      THE 20/4/10 RULE
+                    </h3>
+                    <p className={`text-xs ${themeClass('text-blue-600', 'text-blue-400', isLight)}`}>
+                      Smart car buying guidelines
+                    </p>
+                  </div>
+
+                  {/* Rules as simple text */}
+                  <div className="space-y-3">
+                    {/* Rule 1 */}
+                    <div>
+                      <p className={`font-bold text-base ${themeClass('text-emerald-700', 'text-emerald-400', isLight)}`}>
+                        Pay 20% Down
+                      </p>
+                      <p className={`text-xs ${themeClass('text-slate-600', 'text-white/70', isLight)}`}>
+                        Lower EMI, less total interest
+                      </p>
+                    </div>
+
+                    {/* Rule 2 */}
+                    <div>
+                      <p className={`font-bold text-base ${themeClass('text-blue-700', 'text-blue-400', isLight)}`}>
+                        Max 4 Years
+                      </p>
+                      <p className={`text-xs ${themeClass('text-slate-600', 'text-white/70', isLight)}`}>
+                        Shorter loans = less interest
+                      </p>
+                    </div>
+
+                    {/* Rule 3 */}
+                    <div>
+                      <p className={`font-bold text-base ${themeClass('text-orange-700', 'text-orange-400', isLight)}`}>
+                        Max 10% Income
+                      </p>
+                      <p className={`text-xs ${themeClass('text-slate-600', 'text-white/70', isLight)}`}>
+                        Keep expenses under 10% of income
+                      </p>
+                    </div>
+                  </div>
                 </div>
               </div>
               
@@ -617,29 +666,18 @@ export default function HomePage() {
           </div>
         </footer>
 
-        {/* Sticky Bottom Mobile Ad - 320x50 Mobile Leaderboard */}
-        <div className={`fixed bottom-0 left-0 right-0 z-50 block md:hidden shadow-lg border-t ${isLight ? 'bg-white' : 'bg-black'}`}>
-          <div className="flex justify-between items-center p-2">
-            <div className="flex-1">
+        {/* Final Mobile Ad - 320x50 Static */}
+        <section className="relative z-10 mt-8 block md:hidden">
+          <div className="container mx-auto px-4">
+            <div className="max-w-4xl mx-auto">
               <EnhancedAdSpace 
-                width="300px" 
+                width="320px" 
                 height="50px" 
-                label="320 x 50 Sticky Mobile Ad"
-                className="my-0"
+                label="320 x 50 Mobile Banner Ad"
               />
             </div>
-            <button 
-              onClick={(e) => {
-                const stickyAd = e.currentTarget.parentElement?.parentElement;
-                if (stickyAd) stickyAd.style.display = 'none';
-              }}
-              className={`p-1 ml-2 hover:scale-110 transition-transform ${isLight ? 'text-gray-400 hover:text-gray-600' : 'text-white/40 hover:text-white/60'}`}
-              aria-label="Close ad"
-            >
-              ×
-            </button>
           </div>
-        </div>
+        </section>
       </main>
     )
 }
