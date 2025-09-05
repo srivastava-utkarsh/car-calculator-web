@@ -248,7 +248,7 @@ export default function HomePage() {
                       alt="20/4/10 Rule: Smart Car Buying Guide - 20% down payment, 4 years max loan, 10% of income max" 
                       className="w-full h-auto object-contain rounded-lg"
                       width={800}
-                      height={180}
+                      height={110}
                     />
                   </div>
                 </div>

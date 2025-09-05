@@ -4,6 +4,7 @@ import React, { useRef, useEffect } from 'react'
 import { CarData } from '@/app/page'
 import { useTheme } from '@/contexts/ThemeContext'
 import { getThemeStyles, themeClass } from '@/utils/themeStyles'
+import { safeNumber, sanitizeInput, VALIDATION_LIMITS, formatNumberSafe, calculateSafeEMI } from '@/utils/safeCalculations'
 
 interface FinancialFormV2Props {
   carData: CarData
@@ -15,9 +16,9 @@ export default function FinancialFormV2({ carData, updateCarData, monthlyIncomeI
   const { theme, isLight, isDark } = useTheme()
   const themeStyles = getThemeStyles(theme)
 
-  // Helper function to format number with commas
+  // Use safe formatting functions
   const formatWithCommas = (num: number): string => {
-    return num.toLocaleString('en-IN')
+    return formatNumberSafe(num)
   }
 
   // Helper function to remove commas and convert to number
@@ -28,12 +29,9 @@ export default function FinancialFormV2({ carData, updateCarData, monthlyIncomeI
   const kmInputRef = useRef<HTMLInputElement>(null)
   const fuelCostInputRef = useRef<HTMLInputElement>(null)
   
+  // Replace unsafe EMI calculation with safe version
   const calculateEMI = (principal: number, rate: number, years: number) => {
-    if (principal <= 0 || rate <= 0 || years <= 0) return 0
-    const monthlyRate = rate / (12 * 100)
-    const months = years * 12
-    return (principal * monthlyRate * Math.pow(1 + monthlyRate, months)) / 
-           (Math.pow(1 + monthlyRate, months) - 1)
+    return calculateSafeEMI(principal, rate, years)
   }
 
   // Auto-focus logic based on the requirements
@@ -104,31 +102,48 @@ export default function FinancialFormV2({ carData, updateCarData, monthlyIncomeI
           <span className="absolute left-4 top-1/2 transform -translate-y-1/2 font-semibold text-white/70 z-10">₹</span>
           <input
             type="text"
+            inputMode="numeric"
+            pattern="[0-9,]*"
+            autoComplete="off"
             required
             value={carData.monthlyIncome ? formatWithCommas(carData.monthlyIncome) : ''}
             ref={monthlyIncomeInputRef}
             onChange={(e) => {
-              const numericValue = removeCommas(e.target.value).replace(/[^0-9.]/g, '')
-              let income = parseFloat(numericValue) || 0
-              
-              // Enforce maximum limit
-              if (income > 100000000) {
-                income = 100000000
+              try {
+                const sanitized = sanitizeInput(e.target.value, 'number')
+                const numericValue = removeCommas(sanitized)
+                
+                const income = safeNumber(
+                  parseFloat(numericValue) || 0,
+                  0, // Allow 0 for monthly income to handle empty state
+                  VALIDATION_LIMITS.MONTHLY_INCOME.MAX
+                )
+                
+                updateCarData({ monthlyIncome: income })
+              } catch (error) {
+                console.error('Monthly income input error:', error)
+                updateCarData({ monthlyIncome: 0 })
               }
-              
-              updateCarData({ monthlyIncome: income })
             }}
-            onKeyPress={(e) => {
-              if (!/[0-9.,]/.test(e.key) && e.key !== 'Backspace' && e.key !== 'Delete') {
+            onKeyDown={(e) => {
+              // Enhanced mobile keyboard handling
+              const allowedKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab', 'Enter', 'Escape']
+              const isAllowedKey = allowedKeys.includes(e.key)
+              const isNumber = /^[0-9]$/.test(e.key)
+              const isDecimal = e.key === '.' && !e.currentTarget.value.includes('.')
+              const isComma = e.key === ','
+              
+              if (!isAllowedKey && !isNumber && !isDecimal && !isComma) {
                 e.preventDefault()
               }
             }}
             placeholder="Enter your monthly income"
-            className={`w-full pl-8 pr-4 py-1.5 max-md:py-3 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-transparent transition-all text-sm max-md:text-base bg-white/10 backdrop-blur-md border text-white placeholder-white/50 max-md:min-h-[48px] ${
+            className={`w-full pl-8 pr-4 py-1.5 max-md:py-3 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-transparent transition-all text-sm max-md:text-base bg-white/10 backdrop-blur-md border text-white placeholder-white/50 max-md:min-h-[48px] touch-manipulation ${
               shouldHighlightMonthlyIncome 
                 ? 'border-lime-400/60' 
                 : 'border-white/20'
             }`}
+            style={{ WebkitAppearance: 'none', WebkitTapHighlightColor: 'transparent' }}
           />
         </div>
         <p className={`text-sm flex items-center mt-3 ${themeClass(themeStyles.secondaryText, 'text-white/70', isLight)}`}>
@@ -153,37 +168,61 @@ export default function FinancialFormV2({ carData, updateCarData, monthlyIncomeI
             Insurance Cost
           </label>
           <div className="relative">
-            <span className="absolute left-4 top-1/2 transform -translate-y-1/2 font-semibold text-white/70 z-10">₹</span>
+            <span className="absolute left-4 top-1/2 transform -translate-y-1/2 font-semibold text-white/70 z-10 pointer-events-none">₹</span>
             <input
               type="text"
+              inputMode="numeric"
+              pattern="[0-9,]*"
+              autoComplete="off"
               value={carData.insuranceAndMaintenance ? formatWithCommas(carData.insuranceAndMaintenance) : ''}
               onChange={(e) => {
-                const numericValue = removeCommas(e.target.value).replace(/[^0-9]/g, '')
-                const value = parseFloat(numericValue) || 0
-                
-                // Validate range: 0 to 200,000
-                if (value < 0 || value > 200000) {
-                  return // Don't update if outside valid range
+                try {
+                  const sanitized = sanitizeInput(e.target.value, 'number')
+                  const numericValue = removeCommas(sanitized)
+                  
+                  const value = safeNumber(
+                    parseFloat(numericValue) || 0,
+                    0,
+                    200000 // 2 Lakh limit for insurance
+                  )
+                  
+                  updateCarData({ insuranceAndMaintenance: value })
+                } catch (error) {
+                  console.error('Insurance cost input error:', error)
+                  updateCarData({ insuranceAndMaintenance: 0 })
                 }
-                
-                updateCarData({ insuranceAndMaintenance: value })
               }}
-              onKeyPress={(e) => {
-                if (!/[0-9,]/.test(e.key) && e.key !== 'Backspace' && e.key !== 'Delete') {
+              onKeyDown={(e) => {
+                // Enhanced mobile keyboard handling
+                const allowedKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab', 'Enter', 'Escape']
+                const isAllowedKey = allowedKeys.includes(e.key)
+                const isNumber = /^[0-9]$/.test(e.key)
+                const isComma = e.key === ','
+                const isPeriod = e.key === '.'
+                
+                if (!isAllowedKey && !isNumber && !isComma && !isPeriod) {
                   e.preventDefault()
                 }
               }}
               onBlur={(e) => {
-                const numericValue = removeCommas(e.target.value).replace(/[^0-9]/g, '')
-                const value = parseFloat(numericValue) || 0
-                // Clamp value to valid range on blur
-                const clampedValue = Math.max(0, Math.min(200000, value))
-                if (clampedValue !== value) {
-                  updateCarData({ insuranceAndMaintenance: clampedValue })
+                try {
+                  const sanitized = sanitizeInput(e.target.value, 'number')
+                  const numericValue = removeCommas(sanitized)
+                  const value = parseFloat(numericValue) || 0
+                  
+                  // Ensure value is within safe bounds
+                  const clampedValue = safeNumber(value, 0, 200000)
+                  if (clampedValue !== value) {
+                    updateCarData({ insuranceAndMaintenance: clampedValue })
+                  }
+                } catch (error) {
+                  console.error('Insurance cost blur error:', error)
+                  updateCarData({ insuranceAndMaintenance: 0 })
                 }
               }}
               placeholder="Enter Insurance cost"
-              className="w-full pl-8 pr-4 py-1.5 max-md:py-3 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all text-sm max-md:text-base bg-white/10 backdrop-blur-md border border-white/20 text-white placeholder-white/50 max-md:min-h-[48px]"
+              className="w-full pl-8 pr-4 py-1.5 max-md:py-3 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all text-sm max-md:text-base bg-white/10 backdrop-blur-md border border-white/20 text-white placeholder-white/50 max-md:min-h-[48px] touch-manipulation"
+              style={{ WebkitAppearance: 'none', WebkitTapHighlightColor: 'transparent' }}
             />
           </div>
         </div>
@@ -197,30 +236,45 @@ export default function FinancialFormV2({ carData, updateCarData, monthlyIncomeI
             Maintenance Cost (per year)
           </label>
           <div className="relative">
-            <span className="absolute left-4 top-1/2 transform -translate-y-1/2 font-semibold text-white/70 z-10">₹</span>
+            <span className="absolute left-4 top-1/2 transform -translate-y-1/2 font-semibold text-white/70 z-10 pointer-events-none">₹</span>
             <input
               type="text"
+              inputMode="numeric"
+              pattern="[0-9,]*"
+              autoComplete="off"
               value={carData.maintenanceCostPerYear ? formatWithCommas(carData.maintenanceCostPerYear) : ''}
               onChange={(e) => {
-                const numericValue = removeCommas(e.target.value).replace(/[^0-9.]/g, '')
-                let cost = parseFloat(numericValue) || 0
-                
-                // Enforce limits
-                if (cost > 500000) {
-                  cost = 500000
-                } else if (cost < 0) {
-                  cost = 0
+                try {
+                  const sanitized = sanitizeInput(e.target.value, 'number')
+                  const numericValue = removeCommas(sanitized)
+                  
+                  const cost = safeNumber(
+                    parseFloat(numericValue) || 0,
+                    0,
+                    500000 // 5 Lakh limit for yearly maintenance
+                  )
+                  
+                  updateCarData({ maintenanceCostPerYear: cost })
+                } catch (error) {
+                  console.error('Maintenance cost input error:', error)
+                  updateCarData({ maintenanceCostPerYear: 0 })
                 }
-                
-                updateCarData({ maintenanceCostPerYear: cost })
               }}
-              onKeyPress={(e) => {
-                if (!/[0-9.,]/.test(e.key) && e.key !== 'Backspace' && e.key !== 'Delete') {
+              onKeyDown={(e) => {
+                // Enhanced mobile keyboard handling
+                const allowedKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab', 'Enter', 'Escape']
+                const isAllowedKey = allowedKeys.includes(e.key)
+                const isNumber = /^[0-9]$/.test(e.key)
+                const isDecimal = e.key === '.' && !e.currentTarget.value.includes('.')
+                const isComma = e.key === ','
+                
+                if (!isAllowedKey && !isNumber && !isDecimal && !isComma) {
                   e.preventDefault()
                 }
               }}
               placeholder="Enter yearly maintenance cost"
-              className="w-full pl-8 pr-4 py-1.5 max-md:py-3 rounded-md focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-transparent transition-all text-sm max-md:text-base bg-white/10 backdrop-blur-md border border-white/20 text-white placeholder-white/50 max-md:min-h-[48px]"
+              className="w-full pl-8 pr-4 py-1.5 max-md:py-3 rounded-md focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-transparent transition-all text-sm max-md:text-base bg-white/10 backdrop-blur-md border border-white/20 text-white placeholder-white/50 max-md:min-h-[48px] touch-manipulation"
+              style={{ WebkitAppearance: 'none', WebkitTapHighlightColor: 'transparent' }}
             />
           </div>
         </div>
@@ -234,30 +288,45 @@ export default function FinancialFormV2({ carData, updateCarData, monthlyIncomeI
             Monthly Fuel Expense
           </label>
           <div className="relative">
-            <span className="absolute left-4 top-1/2 transform -translate-y-1/2 font-semibold text-white/70 z-10">₹</span>
+            <span className="absolute left-4 top-1/2 transform -translate-y-1/2 font-semibold text-white/70 z-10 pointer-events-none">₹</span>
             <input
               type="text"
+              inputMode="numeric"
+              pattern="[0-9,]*"
+              autoComplete="off"
               value={carData.monthlyFuelExpense ? formatWithCommas(carData.monthlyFuelExpense) : ''}
               onChange={(e) => {
-                const numericValue = removeCommas(e.target.value).replace(/[^0-9.]/g, '')
-                let expense = parseFloat(numericValue) || 0
-                
-                // Enforce limits
-                if (expense > 100000) {
-                  expense = 100000
-                } else if (expense < 0) {
-                  expense = 0
+                try {
+                  const sanitized = sanitizeInput(e.target.value, 'number')
+                  const numericValue = removeCommas(sanitized)
+                  
+                  const expense = safeNumber(
+                    parseFloat(numericValue) || 0,
+                    0,
+                    VALIDATION_LIMITS.OPERATIONAL_COSTS.MAX // 10 Lakh limit
+                  )
+                  
+                  updateCarData({ monthlyFuelExpense: expense })
+                } catch (error) {
+                  console.error('Fuel expense input error:', error)
+                  updateCarData({ monthlyFuelExpense: 0 })
                 }
-                
-                updateCarData({ monthlyFuelExpense: expense })
               }}
-              onKeyPress={(e) => {
-                if (!/[0-9.,]/.test(e.key) && e.key !== 'Backspace' && e.key !== 'Delete') {
+              onKeyDown={(e) => {
+                // Enhanced mobile keyboard handling
+                const allowedKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab', 'Enter', 'Escape']
+                const isAllowedKey = allowedKeys.includes(e.key)
+                const isNumber = /^[0-9]$/.test(e.key)
+                const isDecimal = e.key === '.' && !e.currentTarget.value.includes('.')
+                const isComma = e.key === ','
+                
+                if (!isAllowedKey && !isNumber && !isDecimal && !isComma) {
                   e.preventDefault()
                 }
               }}
               placeholder="Enter monthly fuel expense"
-              className="w-full pl-8 pr-4 py-1.5 max-md:py-3 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-transparent transition-all text-sm max-md:text-base bg-white/10 backdrop-blur-md border border-white/20 text-white placeholder-white/50 max-md:min-h-[48px]"
+              className="w-full pl-8 pr-4 py-1.5 max-md:py-3 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-transparent transition-all text-sm max-md:text-base bg-white/10 backdrop-blur-md border border-white/20 text-white placeholder-white/50 max-md:min-h-[48px] touch-manipulation"
+              style={{ WebkitAppearance: 'none', WebkitTapHighlightColor: 'transparent' }}
             />
           </div>
         </div>
@@ -271,30 +340,45 @@ export default function FinancialFormV2({ carData, updateCarData, monthlyIncomeI
             Parking Fee (per month)
           </label>
           <div className="relative">
-            <span className="absolute left-4 top-1/2 transform -translate-y-1/2 font-semibold text-white/70 z-10">₹</span>
+            <span className="absolute left-4 top-1/2 transform -translate-y-1/2 font-semibold text-white/70 z-10 pointer-events-none">₹</span>
             <input
               type="text"
+              inputMode="numeric"
+              pattern="[0-9,]*"
+              autoComplete="off"
               value={carData.parkingFee ? formatWithCommas(carData.parkingFee) : ''}
               onChange={(e) => {
-                const numericValue = removeCommas(e.target.value).replace(/[^0-9.]/g, '')
-                let fee = parseFloat(numericValue) || 0
-                
-                // Enforce limits
-                if (fee > 50000) {
-                  fee = 50000
-                } else if (fee < 0) {
-                  fee = 0
+                try {
+                  const sanitized = sanitizeInput(e.target.value, 'number')
+                  const numericValue = removeCommas(sanitized)
+                  
+                  const fee = safeNumber(
+                    parseFloat(numericValue) || 0,
+                    0,
+                    50000 // 50K limit for parking
+                  )
+                  
+                  updateCarData({ parkingFee: fee })
+                } catch (error) {
+                  console.error('Parking fee input error:', error)
+                  updateCarData({ parkingFee: 0 })
                 }
-                
-                updateCarData({ parkingFee: fee })
               }}
-              onKeyPress={(e) => {
-                if (!/[0-9.,]/.test(e.key) && e.key !== 'Backspace' && e.key !== 'Delete') {
+              onKeyDown={(e) => {
+                // Enhanced mobile keyboard handling
+                const allowedKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab', 'Enter', 'Escape']
+                const isAllowedKey = allowedKeys.includes(e.key)
+                const isNumber = /^[0-9]$/.test(e.key)
+                const isDecimal = e.key === '.' && !e.currentTarget.value.includes('.')
+                const isComma = e.key === ','
+                
+                if (!isAllowedKey && !isNumber && !isDecimal && !isComma) {
                   e.preventDefault()
                 }
               }}
               placeholder="Enter parking fee"
-              className="w-full pl-8 pr-4 py-1.5 max-md:py-3 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all text-sm max-md:text-base bg-white/10 backdrop-blur-md border border-white/20 text-white placeholder-white/50 max-md:min-h-[48px]"
+              className="w-full pl-8 pr-4 py-1.5 max-md:py-3 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all text-sm max-md:text-base bg-white/10 backdrop-blur-md border border-white/20 text-white placeholder-white/50 max-md:min-h-[48px] touch-manipulation"
+              style={{ WebkitAppearance: 'none', WebkitTapHighlightColor: 'transparent' }}
             />
           </div>
         </div>

@@ -4,6 +4,7 @@ import React from 'react'
 import { CarData } from '@/app/page'
 import { useTheme } from '@/contexts/ThemeContext'
 import { getThemeStyles, themeClass } from '@/utils/themeStyles'
+import { safeNumber, sanitizeInput, VALIDATION_LIMITS, formatNumberSafe } from '@/utils/safeCalculations'
 
 interface CarDetailsFormV2Props {
   carData: CarData
@@ -50,9 +51,9 @@ export default function CarDetailsFormV2({ carData, updateCarData, monthlyIncome
     { label: '50L', value: 5000000 }
   ]
 
-  // Helper function to format number with commas
+  // Use safe formatting functions
   const formatWithCommas = (num: number): string => {
-    return num.toLocaleString('en-IN')
+    return formatNumberSafe(num)
   }
 
   // Helper function to remove commas and convert to number
@@ -61,42 +62,67 @@ export default function CarDetailsFormV2({ carData, updateCarData, monthlyIncome
   }
 
   const handleCarPriceChange = (value: string) => {
-    // Allow only numbers and enforce limits
-    const numericValue = removeCommas(value).replace(/[^0-9.]/g, '')
-    let price = parseFloat(numericValue) || 0
-    
-    // Enforce maximum limit
-    if (price > 50000000) {
-      price = 50000000
-    }
-    
-    updateCarData({ carPrice: price })
-    
-    // Auto-calculate 20% down payment
-    const downPayment = Math.round(price * 0.2)
-    updateCarData({ downPayment })
-    
-    // Set default loan tenure to 3 years when car price is selected
-    if (price > 0 && carData.tenure === 0) {
-      updateCarData({ tenure: 3 })
+    try {
+      // Sanitize input to prevent malformed data
+      const sanitized = sanitizeInput(value, 'number')
+      const numericValue = removeCommas(sanitized)
+      
+      // Use safe number validation with proper limits
+      const price = safeNumber(
+        parseFloat(numericValue) || 0,
+        VALIDATION_LIMITS.CAR_PRICE.MIN,
+        VALIDATION_LIMITS.CAR_PRICE.MAX
+      )
+      
+      updateCarData({ carPrice: price })
+      
+      // Auto-calculate 20% down payment with safe math
+      if (price > 0) {
+        const downPayment = Math.round(price * 0.2)
+        const safeDownPayment = safeNumber(downPayment, 0, price)
+        updateCarData({ downPayment: safeDownPayment })
+        
+        // Set default loan tenure to 3 years when car price is selected
+        if (carData.tenure === 0) {
+          updateCarData({ tenure: 3 })
+        }
+      }
+    } catch (error) {
+      console.error('Car price input error:', error)
+      // Fallback to safe minimum value
+      updateCarData({ carPrice: VALIDATION_LIMITS.CAR_PRICE.MIN })
     }
   }
 
   const handleDownPaymentChange = (value: string) => {
-    // Allow only numbers and enforce limits
-    const numericValue = removeCommas(value).replace(/[^0-9]/g, '')
-    let payment = parseInt(numericValue) || 0
-    
-    // Enforce maximum limit (car price)
-    if (payment > carData.carPrice) {
-      payment = carData.carPrice
+    try {
+      // Sanitize input to prevent malformed data
+      const sanitized = sanitizeInput(value, 'number')
+      const numericValue = removeCommas(sanitized)
+      
+      // Use safe number validation with car price as maximum
+      const safeCarPrice = safeNumber(carData.carPrice, VALIDATION_LIMITS.CAR_PRICE.MIN, VALIDATION_LIMITS.CAR_PRICE.MAX)
+      const payment = safeNumber(
+        parseInt(numericValue) || 0,
+        VALIDATION_LIMITS.DOWN_PAYMENT.MIN,
+        safeCarPrice // Down payment cannot exceed car price
+      )
+      
+      updateCarData({ downPayment: payment })
+    } catch (error) {
+      console.error('Down payment input error:', error)
+      // Fallback to safe minimum value
+      updateCarData({ downPayment: 0 })
     }
-    
-    updateCarData({ downPayment: payment })
   }
 
 
-  const downPaymentPercentage = carData.carPrice > 0 ? (carData.downPayment / carData.carPrice) * 100 : 0
+  // Safe percentage calculation to prevent division by zero
+  const downPaymentPercentage = (() => {
+    const safeCarPrice = safeNumber(carData.carPrice, 1) // Prevent division by zero
+    const safeDownPayment = safeNumber(carData.downPayment, 0)
+    return safeCarPrice > 0 ? (safeDownPayment / safeCarPrice) * 100 : 0
+  })()
 
 
   const formContent = (
@@ -119,8 +145,15 @@ export default function CarDetailsFormV2({ carData, updateCarData, monthlyIncome
               required
               value={carData.carPrice ? formatWithCommas(carData.carPrice) : ''}
               onChange={(e) => handleCarPriceChange(e.target.value)}
-              onKeyPress={(e) => {
-                if (!/[0-9,.]/.test(e.key) && e.key !== 'Backspace' && e.key !== 'Delete') {
+              onKeyDown={(e) => {
+                // Enhanced key validation to prevent invalid characters
+                const allowedKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab', 'Enter']
+                const isAllowedKey = allowedKeys.includes(e.key)
+                const isNumber = /^[0-9]$/.test(e.key)
+                const isDecimal = e.key === '.' && !e.currentTarget.value.includes('.')
+                const isComma = e.key === ','
+                
+                if (!isAllowedKey && !isNumber && !isDecimal && !isComma) {
                   e.preventDefault()
                 }
               }}
@@ -181,8 +214,14 @@ export default function CarDetailsFormV2({ carData, updateCarData, monthlyIncome
               required
               value={carData.downPayment ? formatWithCommas(carData.downPayment) : ''}
               onChange={(e) => handleDownPaymentChange(e.target.value)}
-              onKeyPress={(e) => {
-                if (!/[0-9,]/.test(e.key) && e.key !== 'Backspace' && e.key !== 'Delete') {
+              onKeyDown={(e) => {
+                // Enhanced key validation for down payment (no decimals)
+                const allowedKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab', 'Enter']
+                const isAllowedKey = allowedKeys.includes(e.key)
+                const isNumber = /^[0-9]$/.test(e.key)
+                const isComma = e.key === ','
+                
+                if (!isAllowedKey && !isNumber && !isComma) {
                   e.preventDefault()
                 }
               }}
@@ -247,9 +286,18 @@ export default function CarDetailsFormV2({ carData, updateCarData, monthlyIncome
                 step="0.01"
                 value={carData.tenure || 1}
                 onChange={(e) => {
-                  const rawValue = parseFloat(e.target.value)
-                  const roundedYears = Math.round(rawValue)
-                  updateCarData({ tenure: roundedYears })
+                  try {
+                    const rawValue = parseFloat(e.target.value)
+                    const safeYears = safeNumber(
+                      Math.round(rawValue),
+                      VALIDATION_LIMITS.TENURE_YEARS.MIN,
+                      VALIDATION_LIMITS.TENURE_YEARS.MAX
+                    )
+                    updateCarData({ tenure: safeYears })
+                  } catch (error) {
+                    console.error('Tenure input error:', error)
+                    updateCarData({ tenure: VALIDATION_LIMITS.TENURE_YEARS.MIN })
+                  }
                 }}
                 className={`w-full h-0.5 rounded-full appearance-none cursor-pointer slider-enhanced transition-all duration-200 ${isLight ? 'light-theme' : 'dark-theme'}`}
                 style={{
@@ -298,7 +346,19 @@ export default function CarDetailsFormV2({ carData, updateCarData, monthlyIncome
                   max="15"
                   step="0.1"
                   value={carData.interestRate}
-                  onChange={(e) => updateCarData({ interestRate: parseFloat(e.target.value) })}
+                  onChange={(e) => {
+                    try {
+                      const rate = safeNumber(
+                        parseFloat(e.target.value),
+                        VALIDATION_LIMITS.INTEREST_RATE.MIN,
+                        VALIDATION_LIMITS.INTEREST_RATE.MAX
+                      )
+                      updateCarData({ interestRate: rate })
+                    } catch (error) {
+                      console.error('Interest rate input error:', error)
+                      updateCarData({ interestRate: VALIDATION_LIMITS.INTEREST_RATE.MIN })
+                    }
+                  }}
                   className={`w-full h-0.5 rounded-full appearance-none cursor-pointer slider-enhanced transition-all duration-200 ${isLight ? 'light-theme' : 'dark-theme'}`}
                   style={{
                     background: `linear-gradient(to right, #06b6d4 0%, #06b6d4 ${((carData.interestRate - 5) / (15 - 5)) * 100}%, ${isLight ? '#e2e8f0' : 'rgba(255,255,255,0.2)'} ${((carData.interestRate - 5) / (15 - 5)) * 100}%, ${isLight ? '#e2e8f0' : 'rgba(255,255,255,0.2)'} 100%)`

@@ -16,6 +16,7 @@ import {
   Target,
   Award
 } from 'lucide-react'
+import { validateCarData, checkAffordabilityRules } from '@/utils/safeCalculations'
 
 interface ResultsDisplayV2Props {
   carData: CarData
@@ -24,38 +25,34 @@ interface ResultsDisplayV2Props {
 }
 
 export default function ResultsDisplayV2({ carData, onBack, onRestart }: ResultsDisplayV2Props) {
-  const calculateEMI = (principal: number, rate: number, years: number) => {
-    if (principal <= 0 || rate <= 0 || years <= 0) return 0
-    const monthlyRate = rate / (12 * 100)
-    const months = years * 12
-    return (principal * monthlyRate * Math.pow(1 + monthlyRate, months)) / 
-           (Math.pow(1 + monthlyRate, months) - 1)
-  }
-
-  // Calculate values
-  const loanAmount = carData.carPrice - carData.downPayment
-  const emi = calculateEMI(loanAmount, carData.interestRate, carData.tenure)
-  const totalInterest = (emi * carData.tenure * 12) - loanAmount
-  const totalPayment = emi * carData.tenure * 12
+  // Use safe validation and calculations
+  const validatedData = validateCarData(carData)
+  const affordabilityResults = checkAffordabilityRules(validatedData)
+  
+  // Calculate values using safe functions
+  const loanAmount = affordabilityResults.loanAmount
+  const emi = affordabilityResults.emi
+  const totalInterest = Math.max(0, (emi * validatedData.tenure * 12) - loanAmount)
+  const totalPayment = emi * validatedData.tenure * 12
   
   // Monthly running cost calculation (assuming 15 km/liter average)
   const fuelEfficiency = 15
-  const monthlyFuelCost = carData.kmPerMonth > 0 && carData.fuelCostPerLiter > 0 
-    ? (carData.kmPerMonth / fuelEfficiency) * carData.fuelCostPerLiter 
+  const monthlyFuelCost = validatedData.kmPerMonth > 0 && validatedData.fuelCostPerLiter > 0 
+    ? (validatedData.kmPerMonth / fuelEfficiency) * validatedData.fuelCostPerLiter 
     : 0
   
-  // Total monthly cost
-  const totalMonthlyCost = emi + monthlyFuelCost
+  // Total monthly cost using safe calculations
+  const totalMonthlyCost = affordabilityResults.totalMonthlyCost
   
-  // Affordability checks
-  const downPaymentPercentage = (carData.downPayment / carData.carPrice) * 100
-  const isDownPaymentOk = downPaymentPercentage >= 20
-  const isTenureOk = carData.tenure <= 4
-  const isAffordable = isDownPaymentOk && isTenureOk
+  // Affordability checks with exact boundary handling
+  const downPaymentPercentage = affordabilityResults.downPaymentPercentage
+  const isDownPaymentOk = affordabilityResults.downPaymentOk
+  const isTenureOk = affordabilityResults.tenureOk
+  const isAffordable = affordabilityResults.isAffordable
 
-  // Calculate completion date
+  // Calculate completion date using validated data
   const currentDate = new Date()
-  const completionDate = new Date(currentDate.getFullYear() + carData.tenure, currentDate.getMonth(), currentDate.getDate())
+  const completionDate = new Date(currentDate.getFullYear() + validatedData.tenure, currentDate.getMonth(), currentDate.getDate())
   const formatDate = (date: Date) => {
     return date.toLocaleDateString('en-IN', { 
       month: 'short', 
