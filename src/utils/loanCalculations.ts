@@ -124,7 +124,7 @@ export const calculatePrepaymentImpact = (
         interestSaved,
         totalSavings: interestSaved,
         penaltyAmount,
-        netSavings: Math.max(0, interestSaved - penaltyAmount)
+        netSavings: interestSaved - penaltyAmount
       };
     }
     
@@ -135,7 +135,7 @@ export const calculatePrepaymentImpact = (
     const originalInterest = calculateRemainingInterest({ principal: safePrincipal, monthlyEMI: safeEMI, remainingTenure: safeTenure, monthlyRate: safeRate });
     const newInterest = calculateTotalInterest(newPrincipal, safeEMI, safeNewTenure);
     const interestSaved = Math.max(0, originalInterest - newInterest);
-    const netSavings = Math.max(0, interestSaved - penaltyAmount);
+    const netSavings = interestSaved - penaltyAmount;
     
     return {
       newTenureMonths: safeNewTenure,

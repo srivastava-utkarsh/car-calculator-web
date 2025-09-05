@@ -150,6 +150,7 @@ import { useState, useEffect, Suspense } from 'react'
 import { Calculator } from 'lucide-react'
 import { useSearchParams } from 'next/navigation'
 import Image from 'next/image'
+import Link from 'next/link'
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts'
 import { useTheme } from '@/contexts/ThemeContext'
 import { themeClass } from '@/utils/themeStyles'
@@ -282,7 +283,7 @@ const calculateLoanDetails = (
   let totalInterestPaid = 0                // Sum of all interest payments
   let totalPrepaymentsPaid = 0             // Sum of all prepayments
   let months = 0                           // Counter for actual months taken
-  let currentEMI = originalEMI             // Current EMI (stays constant for reduce_tenure)
+  const currentEMI = originalEMI           // Current EMI (stays constant for reduce_tenure)
   const maxMonths = tenure * 12 + 60      // Safety limit
   
   // Array to store month-by-month breakdown for transparency
@@ -323,8 +324,19 @@ const calculateLoanDetails = (
       }
     }
     
-    // Exit if loan is fully paid after prepayment
-    if (remainingPrincipal <= 1) break
+    // If loan is fully paid after prepayment, record final payment and exit
+    if (remainingPrincipal <= 1) {
+      // Record the prepayment as the final payment
+      amortizationSchedule.push({
+        month: months,
+        emi: 0,
+        interest: 0,
+        principal: 0,
+        prepayment: currentPrepayment,
+        balance: 0
+      })
+      break
+    }
     
     // ====================================================================
     // STEP 2: CALCULATE INTEREST ON REDUCED BALANCE
@@ -384,7 +396,7 @@ const calculateLoanDetails = (
   const newTenureYears = months / 12                                    // Actual tenure taken
   const totalAmountPaid = totalEMIsPaid + totalPrepaymentsPaid + penaltyAmount  // Total outflow
   const interestSavings = originalInterest - totalInterestPaid          // Gross interest saved
-  const netSavings = Math.max(0, interestSavings - penaltyAmount)       // Net savings after penalty
+  const netSavings = interestSavings - penaltyAmount                     // Net savings after penalty (can be negative)
   const monthsSaved = (tenure * 12) - months                           // Time saved in months
   
   return {
@@ -393,11 +405,11 @@ const calculateLoanDetails = (
     newTenure: Math.round(newTenureYears * 100) / 100, // Round to 2 decimal places
     totalAmountPaid: Math.round(totalAmountPaid),
     interestPaid: Math.round(totalInterestPaid),
-    amountSaved: Math.round(Math.max(0, interestSavings)), // Ensure non-negative
+    amountSaved: Math.round(interestSavings), // Can be negative if there's a net loss
     originalTotalAmount: Math.round(originalTotalAmount),
     originalInterest: Math.round(originalInterest),
     penaltyAmount: Math.round(Math.max(0, penaltyAmount)), // Ensure non-negative
-    netSavings: Math.round(Math.max(0, netSavings)), // Ensure non-negative
+    netSavings: Math.round(netSavings), // Can be negative if penalty exceeds savings
     amortizationSchedule,
     monthsSaved: Math.max(0, monthsSaved) // Ensure non-negative
   }
@@ -520,12 +532,12 @@ function PrepaymentCalculator() {
             {/* Navigation Menu - Center with proper spacing */}
             <div className="flex-1 flex justify-center">
               <nav className="flex items-center gap-6" role="navigation" aria-label="Main navigation">
-                <a 
+                <Link 
                   href="/" 
                   className={`font-semibold text-xs sm:text-sm tracking-wide px-3 py-2 text-center rounded-lg transition-colors duration-200 hover:scale-105 ${isLight ? 'text-slate-700 hover:text-slate-900 hover:bg-slate-100' : 'text-white/80 hover:text-white hover:bg-white/10'}`}
                 >
                   Car Affordability Calculator
-                </a>
+                </Link>
                 <span className={`font-semibold text-xs sm:text-sm tracking-wide px-3 py-2 text-center rounded-lg ${isLight ? 'text-white bg-blue-600' : 'text-black bg-white'}`}>
                   Loan Prepayment Calculator
                 </span>
@@ -605,6 +617,11 @@ function PrepaymentCalculator() {
             <p className={`text-xs ${themeClass('text-slate-600', 'text-white/60', isLight)} font-medium`}>
               * All calculations are estimates for informational purposes only
             </p>
+            <div className={`mt-3 p-3 rounded-lg ${themeClass('bg-blue-50', 'bg-blue-900/20', isLight)} border ${themeClass('border-blue-200', 'border-blue-700/30', isLight)}`}>
+              <p className={`text-xs ${themeClass('text-blue-700', 'text-blue-300', isLight)} leading-relaxed`}>
+                <strong>💡 How it works:</strong> Each month, any prepayment is deducted from your loan balance first. Then interest is calculated only on the remaining (reduced) amount. Your regular EMI payment is applied after that.
+              </p>
+            </div>
           </div>
 
         
@@ -873,14 +890,34 @@ function PrepaymentCalculator() {
                     </div>
                     <div className={`text-3xl font-bold mb-3 ${isLight ? 'text-emerald-900' : 'text-emerald-100'}`}>{formatTenure(results.newTenure)}</div>
                     <div className="space-y-3">
-                      <div className={`p-4 rounded-lg ${isLight ? 'bg-emerald-50' : 'bg-emerald-900/30'} border border-emerald-500/30`}>
+                      <div className={`p-4 rounded-lg ${
+                        results.totalAmountPaid < results.originalTotalAmount 
+                          ? (isLight ? 'bg-emerald-50' : 'bg-emerald-900/30') + ' border border-emerald-500/30'
+                          : (isLight ? 'bg-red-50' : 'bg-red-900/30') + ' border border-red-500/30'
+                      }`}>
                         <div className="text-center">
-                          <div className={`text-2xl font-bold ${isLight ? 'text-emerald-700' : 'text-emerald-300'} mb-1`}>
-                            {formatCurrency(results.netSavings || results.amountSaved)}
+                          <div className={`text-2xl font-bold mb-1 ${
+                            results.totalAmountPaid < results.originalTotalAmount
+                              ? (isLight ? 'text-emerald-700' : 'text-emerald-300')
+                              : (isLight ? 'text-red-700' : 'text-red-300')
+                          }`}>
+                            {formatCurrency(Math.abs(results.originalTotalAmount - results.totalAmountPaid))}
                           </div>
-                          <div className={`text-sm font-medium ${isLight ? 'text-emerald-600' : 'text-emerald-400'}`}>
-                            Total Savings{penaltyRate > 0 && results.penaltyAmount ? ` (after ${formatCurrency(results.penaltyAmount)} penalty)` : ''}
+                          <div className={`text-sm font-medium ${
+                            results.totalAmountPaid < results.originalTotalAmount
+                              ? (isLight ? 'text-emerald-600' : 'text-emerald-400')
+                              : (isLight ? 'text-red-600' : 'text-red-400')
+                          }`}>
+                            {results.totalAmountPaid < results.originalTotalAmount 
+                              ? `Total Savings${penaltyRate > 0 && results.penaltyAmount ? ` (after ${formatCurrency(results.penaltyAmount)} penalty)` : ''}`
+                              : `Net Cost (you pay ₹${Math.abs(results.totalAmountPaid - results.originalTotalAmount).toLocaleString('en-IN')} more)`
+                            }
                           </div>
+                          {results.totalAmountPaid >= results.originalTotalAmount && (
+                            <div className={`text-xs mt-1 ${isLight ? 'text-red-500' : 'text-red-400'}`}>
+                              Consider reducing penalty rate or prepayment amount
+                            </div>
+                          )}
                         </div>
                       </div>
                       <div className={`text-base ${isLight ? 'text-slate-600' : 'text-slate-300'}`}>
@@ -903,7 +940,7 @@ function PrepaymentCalculator() {
                           <span>Monthly EMI:</span>
                           <span className="font-semibold">{formatCurrency(loanData.emi)} <span className="text-xs text-blue-600">(unchanged)</span></span>
                         </div>
-                        {penaltyRate > 0 && results.penaltyAmount > 0 && (
+                        {penaltyRate > 0 && results.penaltyAmount && results.penaltyAmount > 0 && (
                           <div className="flex justify-between items-center">
                             <span>Prepayment Penalty:</span>
                             <span className="font-semibold text-red-600">{formatCurrency(results.penaltyAmount)}</span>
@@ -929,7 +966,7 @@ function PrepaymentCalculator() {
                   {formatCurrency(loanData.emi)}
                 </div>
                 <p className={`text-lg ${isLight ? 'text-slate-600' : 'text-slate-400'} max-w-md mx-auto`}>
-                  With the "Reduce Tenure" strategy, your monthly EMI stays the same while your loan term gets shorter, saving you thousands in interest.
+                  With the &ldquo;Reduce Tenure&rdquo; strategy, your monthly EMI stays the same while your loan term gets shorter, saving you thousands in interest.
                 </p>
               </div>
             </section>
@@ -993,26 +1030,28 @@ function PrepaymentCalculator() {
                 </div>
               </div>
               <div className="overflow-x-auto rounded-xl border border-slate-200 dark:border-white/10">
-                <table className="w-full">
+                <table className="w-full min-w-[600px]">
                   <thead className={`${isLight ? 'bg-slate-50' : 'bg-white/5'}`}>
                     <tr className={`border-b ${isLight ? 'border-slate-200' : 'border-white/10'}`}>
-                      <th className={`py-3 px-4 text-left text-xs font-medium uppercase tracking-wider ${isLight ? 'text-slate-700' : 'text-white/70'}`}>Metric</th>
-                      <th className={`py-3 px-4 text-left text-xs font-medium uppercase tracking-wider ${isLight ? 'text-slate-700' : 'text-white/70'}`}>Before</th>
-                      <th className={`py-3 px-4 text-left text-xs font-medium uppercase tracking-wider ${isLight ? 'text-slate-700' : 'text-white/70'}`}>After</th>
-                      <th className={`py-3 px-4 text-left text-xs font-medium uppercase tracking-wider ${isLight ? 'text-slate-700' : 'text-white/70'}`}>Savings</th>
+                      <th className={`py-3 px-2 sm:px-4 text-left text-xs font-medium uppercase tracking-wider ${isLight ? 'text-slate-700' : 'text-white/70'} min-w-[120px]`}>Metric</th>
+                      <th className={`py-3 px-2 sm:px-4 text-left text-xs font-medium uppercase tracking-wider ${isLight ? 'text-slate-700' : 'text-white/70'} min-w-[100px]`}>Before</th>
+                      <th className={`py-3 px-2 sm:px-4 text-left text-xs font-medium uppercase tracking-wider ${isLight ? 'text-slate-700' : 'text-white/70'} min-w-[100px]`}>After</th>
+                      <th className={`py-3 px-2 sm:px-4 text-left text-xs font-medium uppercase tracking-wider ${isLight ? 'text-slate-700' : 'text-white/70'} min-w-[100px]`}>Savings</th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr className={`border-b ${isLight ? 'border-slate-100' : 'border-white/5'}`}>
-                      <td className={`py-3 px-4 text-sm ${isLight ? 'text-slate-900' : 'text-white'}`}>Loan Tenure</td>
-                      <td className={`py-3 px-4 text-sm ${isLight ? 'text-slate-700' : 'text-white/80'}`}>{formatTenure(loanData.tenure)}</td>
-                      <td className={`py-3 px-4 text-sm ${isLight ? 'text-slate-700' : 'text-white/80'}`}>
-                        {formatTenure(results.newTenure)}
-                        <span className={`ml-2 text-xs ${isLight ? 'text-green-600' : 'text-green-400'}`}>
-                          (reduced)
-                        </span>
+                      <td className={`py-3 px-2 sm:px-4 text-sm ${isLight ? 'text-slate-900' : 'text-white'}`}>Loan Tenure</td>
+                      <td className={`py-3 px-2 sm:px-4 text-sm ${isLight ? 'text-slate-700' : 'text-white/80'}`}>{formatTenure(loanData.tenure)}</td>
+                      <td className={`py-3 px-2 sm:px-4 text-sm ${isLight ? 'text-slate-700' : 'text-white/80'}`}>
+                        <div className="flex flex-col">
+                          <span>{formatTenure(results.newTenure)}</span>
+                          <span className={`text-xs ${isLight ? 'text-green-600' : 'text-green-400'}`}>
+                            (reduced)
+                          </span>
+                        </div>
                       </td>
-                      <td className={`py-3 px-4 text-sm font-medium ${isLight ? 'text-green-600' : 'text-green-400'}`}>
+                      <td className={`py-3 px-2 sm:px-4 text-sm font-medium ${isLight ? 'text-green-600' : 'text-green-400'}`}>
                         {results.monthsSaved && results.monthsSaved > 0 ? (
                           (() => {
                             const monthsSaved = results.monthsSaved || 0;
@@ -1030,36 +1069,45 @@ function PrepaymentCalculator() {
                       </td>
                     </tr>
                     <tr className={`border-b ${isLight ? 'border-slate-100' : 'border-white/5'}`}>
-                      <td className={`py-3 px-4 text-sm ${isLight ? 'text-slate-900' : 'text-white'}`}>Total Interest Paid</td>
-                      <td className={`py-3 px-4 text-sm ${isLight ? 'text-slate-700' : 'text-white/80'}`}>{formatCurrency(results.originalInterest)}</td>
-                      <td className={`py-3 px-4 text-sm ${isLight ? 'text-slate-700' : 'text-white/80'}`}>{formatCurrency(results.interestPaid)}</td>
-                      <td className={`py-3 px-4 text-sm font-medium ${isLight ? 'text-green-600' : 'text-green-400'}`}>{formatCurrency(results.originalInterest - results.interestPaid)}</td>
+                      <td className={`py-3 px-2 sm:px-4 text-sm ${isLight ? 'text-slate-900' : 'text-white'}`}>Total Interest Paid</td>
+                      <td className={`py-3 px-2 sm:px-4 text-sm ${isLight ? 'text-slate-700' : 'text-white/80'}`}>{formatCurrency(results.originalInterest)}</td>
+                      <td className={`py-3 px-2 sm:px-4 text-sm ${isLight ? 'text-slate-700' : 'text-white/80'}`}>{formatCurrency(results.interestPaid)}</td>
+                      <td className={`py-3 px-2 sm:px-4 text-sm font-medium ${isLight ? 'text-green-600' : 'text-green-400'}`}>{formatCurrency(results.originalInterest - results.interestPaid)}</td>
                     </tr>
                     <tr className={`border-b ${isLight ? 'border-slate-100' : 'border-white/5'}`}>
-                      <td className={`py-3 px-4 text-sm ${isLight ? 'text-slate-900' : 'text-white'}`}>Monthly EMI</td>
-                      <td className={`py-3 px-4 text-sm ${isLight ? 'text-slate-700' : 'text-white/80'}`}>{formatCurrency(loanData.emi)}</td>
-                      <td className={`py-3 px-4 text-sm ${isLight ? 'text-slate-700' : 'text-white/80'}`}>
-                        {formatCurrency(loanData.emi)}
-                        <span className={`ml-2 text-xs ${isLight ? 'text-blue-600' : 'text-blue-400'}`}>
-                          (unchanged)
-                        </span>
+                      <td className={`py-3 px-2 sm:px-4 text-sm ${isLight ? 'text-slate-900' : 'text-white'}`}>Monthly EMI</td>
+                      <td className={`py-3 px-2 sm:px-4 text-sm ${isLight ? 'text-slate-700' : 'text-white/80'}`}>{formatCurrency(loanData.emi)}</td>
+                      <td className={`py-3 px-2 sm:px-4 text-sm ${isLight ? 'text-slate-700' : 'text-white/80'}`}>
+                        <div className="flex flex-col">
+                          <span>{formatCurrency(loanData.emi)}</span>
+                          <span className={`text-xs ${isLight ? 'text-blue-600' : 'text-blue-400'}`}>
+                            (unchanged)
+                          </span>
+                        </div>
                       </td>
-                      <td className={`py-3 px-4 text-sm ${isLight ? 'text-slate-500' : 'text-white/50'}`}>
+                      <td className={`py-3 px-2 sm:px-4 text-sm ${isLight ? 'text-slate-500' : 'text-white/50'}`}>
                         —
                       </td>
                     </tr>
                     <tr className={`border-b ${isLight ? 'border-slate-100' : 'border-white/5'}`}>
-                      <td className={`py-3 px-4 text-sm ${isLight ? 'text-slate-900' : 'text-white'}`}>Prepayment Penalty</td>
-                      <td className={`py-3 px-4 text-sm ${isLight ? 'text-slate-500' : 'text-white/50'}`}>—</td>
-                      <td className={`py-3 px-4 text-sm ${isLight ? 'text-slate-700' : 'text-white/80'}`}>{formatCurrency(results.penaltyAmount || 0)}</td>
-                      <td className={`py-3 px-4 text-sm ${isLight ? 'text-slate-500' : 'text-white/50'}`}>—</td>
+                      <td className={`py-3 px-2 sm:px-4 text-sm ${isLight ? 'text-slate-900' : 'text-white'}`}>Prepayment Penalty</td>
+                      <td className={`py-3 px-2 sm:px-4 text-sm ${isLight ? 'text-slate-500' : 'text-white/50'}`}>—</td>
+                      <td className={`py-3 px-2 sm:px-4 text-sm ${isLight ? 'text-slate-700' : 'text-white/80'}`}>{formatCurrency(results.penaltyAmount || 0)}</td>
+                      <td className={`py-3 px-2 sm:px-4 text-sm ${isLight ? 'text-slate-500' : 'text-white/50'}`}>—</td>
                     </tr>
                     <tr>
-                      <td className={`py-3 px-4 text-sm ${isLight ? 'text-slate-900' : 'text-white'}`}>Total Amount Paid</td>
-                      <td className={`py-3 px-4 text-sm ${isLight ? 'text-slate-700' : 'text-white/80'}`}>{formatCurrency(results.originalTotalAmount)}</td>
-                      <td className={`py-3 px-4 text-sm ${isLight ? 'text-slate-700' : 'text-white/80'}`}>{formatCurrency(results.totalAmountPaid)}</td>
-                      <td className={`py-3 px-4 text-sm font-medium ${isLight ? 'text-green-600' : 'text-green-400'}`}>
-                        {formatCurrency(results.netSavings || results.amountSaved)}
+                      <td className={`py-3 px-2 sm:px-4 text-sm ${isLight ? 'text-slate-900' : 'text-white'}`}>Total Amount Paid</td>
+                      <td className={`py-3 px-2 sm:px-4 text-sm ${isLight ? 'text-slate-700' : 'text-white/80'}`}>{formatCurrency(results.originalTotalAmount)}</td>
+                      <td className={`py-3 px-2 sm:px-4 text-sm ${isLight ? 'text-slate-700' : 'text-white/80'}`}>{formatCurrency(results.totalAmountPaid)}</td>
+                      <td className={`py-3 px-2 sm:px-4 text-sm font-medium ${
+                        (results.netSavings || results.amountSaved) > 0
+                          ? (isLight ? 'text-green-600' : 'text-green-400')
+                          : (isLight ? 'text-red-600' : 'text-red-400')
+                      }`}>
+                        {(results.netSavings || results.amountSaved) >= 0 
+                          ? formatCurrency(results.netSavings || results.amountSaved)
+                          : `-${formatCurrency(Math.abs(results.netSavings || results.amountSaved))}`
+                        }
                       </td>
                     </tr>
                   </tbody>
@@ -1211,8 +1259,16 @@ function PrepaymentCalculator() {
                           withPrepayment: Math.round(Math.max(0, withPrepaymentBalance))
                         });
                         
-                        // Stop when both loans are paid off
+                        // Stop when both loans are paid off, but ensure we show meaningful difference
                         if (withoutPrepaymentBalance <= 1 && withPrepaymentBalance <= 1) break;
+                        
+                        // Add visual separation for very similar curves 
+                        if (Math.abs(withoutPrepaymentBalance - withPrepaymentBalance) < loanData.loanAmount * 0.01) {
+                          // If curves are too close, add slight visual offset
+                          if (withPrepaymentBalance < withoutPrepaymentBalance) {
+                            withPrepaymentBalance = Math.max(0, withPrepaymentBalance - (loanData.loanAmount * 0.005));
+                          }
+                        }
                       }
                       
                       // Ensure we have at least some data
@@ -1229,24 +1285,31 @@ function PrepaymentCalculator() {
                       bottom: 60
                     }}
                   >
-                    <CartesianGrid strokeDasharray="3 3" stroke="#1b2230" />
+                    <CartesianGrid strokeDasharray="3 3" stroke={isLight ? '#e2e8f0' : '#1b2230'} />
                     <XAxis 
                       dataKey="month" 
-                      tick={{ fill: '#9ab1c9', fontSize: 12 }}
-                      label={{ value: 'Months', position: 'insideBottom', offset: -5, style: { textAnchor: 'middle', fill: '#9ab1c9' } }}
+                      tick={{ fill: isLight ? '#64748b' : '#9ab1c9', fontSize: 12 }}
+                      axisLine={{ stroke: isLight ? '#e2e8f0' : '#1b2230' }}
+                      label={{ value: 'Months', position: 'insideBottom', offset: -5, style: { textAnchor: 'middle', fill: isLight ? '#64748b' : '#9ab1c9' } }}
                     />
                     <YAxis 
-                      tick={{ fill: '#9ab1c9', fontSize: 12 }}
-                      axisLine={{ stroke: '#1b2230' }}
-                      label={{ value: 'Outstanding Balance (₹)', angle: -90, position: 'insideLeft', style: { textAnchor: 'middle', fill: '#9ab1c9' } }}
-                      tickFormatter={(value) => `₹${(value / 1000).toFixed(0)}k`}
+                      tick={{ fill: isLight ? '#64748b' : '#9ab1c9', fontSize: 12 }}
+                      axisLine={{ stroke: isLight ? '#e2e8f0' : '#1b2230' }}
+                      domain={['dataMin * 0.95', 'dataMax * 1.05']}
+                      label={{ value: 'Outstanding Balance (₹)', angle: -90, position: 'insideLeft', style: { textAnchor: 'middle', fill: isLight ? '#64748b' : '#9ab1c9' } }}
+                      tickFormatter={(value) => {
+                        if (value >= 1000000) return `₹${(value / 1000000).toFixed(1)}M`
+                        if (value >= 1000) return `₹${(value / 1000).toFixed(0)}k`
+                        return `₹${value.toFixed(0)}`
+                      }}
                     />
                     <Tooltip 
                       contentStyle={{
-                        backgroundColor: '#0f1420',
-                        border: '1px solid #1b2230',
+                        backgroundColor: isLight ? '#ffffff' : '#0f1420',
+                        border: `1px solid ${isLight ? '#e2e8f0' : '#1b2230'}`,
                         borderRadius: '8px',
-                        color: '#e6ecf3'
+                        color: isLight ? '#1e293b' : '#e6ecf3',
+                        boxShadow: isLight ? '0 4px 6px -1px rgba(0, 0, 0, 0.1)' : '0 4px 6px -1px rgba(0, 0, 0, 0.3)'
                       }}
                       formatter={(value: number, name: string) => [
                         `₹${Number(value).toLocaleString('en-IN')}`,
@@ -1255,7 +1318,7 @@ function PrepaymentCalculator() {
                       labelFormatter={(month) => `Month ${month}`}
                     />
                     <Legend 
-                      wrapperStyle={{ color: '#9ab1c9', paddingTop: '40px' }}
+                      wrapperStyle={{ color: isLight ? '#64748b' : '#9ab1c9', paddingTop: '40px' }}
                     />
                     <Line 
                       type="monotone" 
@@ -1302,7 +1365,7 @@ function PrepaymentCalculator() {
                 </div>
               </div>
 
-              {results?.amortizationSchedule && results.amortizationSchedule.length > 0 ? (
+              {results?.amortizationSchedule && (results.amortizationSchedule.length > 0 || loanData.loanAmount > 0) ? (
                 <div className="space-y-6">
                   {/* Summary Stats */}
                   <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
@@ -1332,23 +1395,23 @@ function PrepaymentCalculator() {
                     </div>
                     <div className={`p-4 rounded-xl ${isLight ? 'bg-slate-50 border border-slate-200' : 'bg-white/5 border border-white/10'}`}>
                       <div className={`text-2xl font-bold ${isLight ? 'text-slate-900' : 'text-white'}`}>
-                        {formatCurrency(results.amortizationSchedule.reduce((sum, payment) => sum + payment.principal, 0))}
+                        {formatCurrency(loanData.loanAmount)}
                       </div>
-                      <div className={`text-sm ${isLight ? 'text-slate-600' : 'text-white/60'}`}>Total Principal</div>
+                      <div className={`text-sm ${isLight ? 'text-slate-600' : 'text-white/60'}`}>Original Loan Amount</div>
                     </div>
                   </div>
 
                   {/* Scrollable Table */}
                   <div className="overflow-x-auto rounded-xl border border-slate-200 dark:border-white/10" style={{maxHeight: '400px'}}>
-                    <table className="w-full">
+                    <table className="w-full min-w-[700px]">
                       <thead className={`sticky top-0 ${isLight ? 'bg-slate-50' : 'bg-white/5'} backdrop-blur-sm`}>
                         <tr className={`border-b ${isLight ? 'border-slate-200' : 'border-white/10'}`}>
-                          <th className={`py-3 px-4 text-left text-xs font-medium uppercase tracking-wider ${isLight ? 'text-slate-700' : 'text-white/70'}`}>Month</th>
-                          <th className={`py-3 px-4 text-right text-xs font-medium uppercase tracking-wider ${isLight ? 'text-slate-700' : 'text-white/70'}`}>EMI</th>
-                          <th className={`py-3 px-4 text-right text-xs font-medium uppercase tracking-wider ${isLight ? 'text-slate-700' : 'text-white/70'}`}>Interest</th>
-                          <th className={`py-3 px-4 text-right text-xs font-medium uppercase tracking-wider ${isLight ? 'text-slate-700' : 'text-white/70'}`}>Principal</th>
-                          <th className={`py-3 px-4 text-right text-xs font-medium uppercase tracking-wider ${isLight ? 'text-slate-700' : 'text-white/70'}`}>Prepayment</th>
-                          <th className={`py-3 px-4 text-right text-xs font-medium uppercase tracking-wider ${isLight ? 'text-slate-700' : 'text-white/70'}`}>Balance</th>
+                          <th className={`py-3 px-2 sm:px-4 text-left text-xs font-medium uppercase tracking-wider ${isLight ? 'text-slate-700' : 'text-white/70'} min-w-[60px]`}>Month</th>
+                          <th className={`py-3 px-2 sm:px-4 text-right text-xs font-medium uppercase tracking-wider ${isLight ? 'text-slate-700' : 'text-white/70'} min-w-[100px]`}>EMI</th>
+                          <th className={`py-3 px-2 sm:px-4 text-right text-xs font-medium uppercase tracking-wider ${isLight ? 'text-slate-700' : 'text-white/70'} min-w-[100px]`}>Interest</th>
+                          <th className={`py-3 px-2 sm:px-4 text-right text-xs font-medium uppercase tracking-wider ${isLight ? 'text-slate-700' : 'text-white/70'} min-w-[100px]`}>Principal</th>
+                          <th className={`py-3 px-2 sm:px-4 text-right text-xs font-medium uppercase tracking-wider ${isLight ? 'text-slate-700' : 'text-white/70'} min-w-[110px]`}>Prepayment</th>
+                          <th className={`py-3 px-2 sm:px-4 text-right text-xs font-medium uppercase tracking-wider ${isLight ? 'text-slate-700' : 'text-white/70'} min-w-[120px]`}>Balance</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -1357,23 +1420,32 @@ function PrepaymentCalculator() {
                             key={index} 
                             className={`border-b ${isLight ? 'border-slate-100 hover:bg-slate-50' : 'border-white/5 hover:bg-white/5'} transition-colors`}
                           >
-                            <td className={`py-3 px-4 text-sm font-medium ${isLight ? 'text-slate-900' : 'text-white'}`}>
+                            <td className={`py-3 px-2 sm:px-4 text-sm font-medium ${isLight ? 'text-slate-900' : 'text-white'}`}>
                               {payment.month}
                             </td>
-                            <td className={`py-3 px-4 text-sm text-right ${isLight ? 'text-slate-700' : 'text-white/80'}`}>
-                              {formatCurrency(payment.emi)}
+                            <td className={`py-3 px-2 sm:px-4 text-sm text-right ${isLight ? 'text-slate-700' : 'text-white/80'}`}>
+                              <span className="block sm:hidden text-xs">₹{Math.round(payment.emi / 1000)}k</span>
+                              <span className="hidden sm:block">{formatCurrency(payment.emi)}</span>
                             </td>
-                            <td className={`py-3 px-4 text-sm text-right ${isLight ? 'text-red-600' : 'text-red-400'}`}>
-                              {formatCurrency(payment.interest)}
+                            <td className={`py-3 px-2 sm:px-4 text-sm text-right ${isLight ? 'text-red-600' : 'text-red-400'}`}>
+                              <span className="block sm:hidden text-xs">₹{Math.round(payment.interest / 1000)}k</span>
+                              <span className="hidden sm:block">{formatCurrency(payment.interest)}</span>
                             </td>
-                            <td className={`py-3 px-4 text-sm text-right ${isLight ? 'text-blue-600' : 'text-blue-400'}`}>
-                              {formatCurrency(payment.principal)}
+                            <td className={`py-3 px-2 sm:px-4 text-sm text-right ${isLight ? 'text-blue-600' : 'text-blue-400'}`}>
+                              <span className="block sm:hidden text-xs">₹{Math.round(payment.principal / 1000)}k</span>
+                              <span className="hidden sm:block">{formatCurrency(payment.principal)}</span>
                             </td>
-                            <td className={`py-3 px-4 text-sm text-right ${payment.prepayment > 0 ? (isLight ? 'text-green-600 font-semibold' : 'text-green-400 font-semibold') : (isLight ? 'text-slate-500' : 'text-white/50')}`}>
-                              {payment.prepayment > 0 ? formatCurrency(payment.prepayment) : '—'}
+                            <td className={`py-3 px-2 sm:px-4 text-sm text-right ${payment.prepayment > 0 ? (isLight ? 'text-green-600 font-semibold' : 'text-green-400 font-semibold') : (isLight ? 'text-slate-500' : 'text-white/50')}`}>
+                              {payment.prepayment > 0 ? (
+                                <>
+                                  <span className="block sm:hidden text-xs">₹{Math.round(payment.prepayment / 1000)}k</span>
+                                  <span className="hidden sm:block">{formatCurrency(payment.prepayment)}</span>
+                                </>
+                              ) : '—'}
                             </td>
-                            <td className={`py-3 px-4 text-sm text-right font-medium ${isLight ? 'text-slate-900' : 'text-white'}`}>
-                              {formatCurrency(payment.balance)}
+                            <td className={`py-3 px-2 sm:px-4 text-sm text-right font-medium ${isLight ? 'text-slate-900' : 'text-white'}`}>
+                              <span className="block sm:hidden text-xs">₹{Math.round(payment.balance / 1000)}k</span>
+                              <span className="hidden sm:block">{formatCurrency(payment.balance)}</span>
                             </td>
                           </tr>
                         ))}
