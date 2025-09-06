@@ -256,7 +256,7 @@ export default function CarDetailsFormV2({ carData, updateCarData, monthlyIncome
 
       {/* Loan Details Section Header */}
       <div className="flex items-center space-x-3 mb-3">
-        <h4 className="text-lg font-semibold text-white">
+        <h4 className="text-lg font-semibold text-blue-400">
           Loan Details
         </h4>
         <div className={`h-px w-16 ${themeClass('bg-slate-300', 'bg-white/30', isLight)}`}></div>

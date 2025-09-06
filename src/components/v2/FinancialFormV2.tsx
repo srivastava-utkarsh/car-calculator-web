@@ -81,7 +81,7 @@ export default function FinancialFormV2({ carData, updateCarData, monthlyIncomeI
     <>
       {/* Monthly Income - Required for calculations */}
       <div className="flex items-center space-x-3 mb-3">
-        <h4 className="text-lg font-semibold text-white">
+        <h4 className="text-lg font-semibold text-blue-400">
           Monthly Income
         </h4>
         <div className={`h-px w-16 ${themeClass('bg-slate-300', 'bg-white/30', isLight)}`}></div>
@@ -154,7 +154,7 @@ export default function FinancialFormV2({ carData, updateCarData, monthlyIncomeI
 
       {/* Operational Cost Section Header */}
       <div className="flex items-center space-x-3 mb-3">
-        <h4 className="text-lg font-semibold text-white">
+        <h4 className="text-lg font-semibold text-blue-400">
           Operational Cost
         </h4>
         <div className={`h-px w-16 ${themeClass('bg-slate-300', 'bg-white/30', isLight)}`}></div>
