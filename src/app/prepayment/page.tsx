@@ -617,10 +617,24 @@ function PrepaymentCalculator() {
             <p className={`text-xs ${themeClass('text-slate-600', 'text-white/60', isLight)} font-medium`}>
               * All calculations are estimates for informational purposes only
             </p>
-            <div className={`mt-3 p-3 rounded-lg ${themeClass('bg-blue-50', 'bg-blue-900/20', isLight)} border ${themeClass('border-blue-200', 'border-blue-700/30', isLight)}`}>
-              <p className={`text-xs ${themeClass('text-blue-700', 'text-blue-300', isLight)} leading-relaxed`}>
-                <strong>💡 How it works:</strong> Each month, any prepayment is deducted from your loan balance first. Then interest is calculated only on the remaining (reduced) amount. Your regular EMI payment is applied after that.
-              </p>
+            <div className={`mt-4 p-4 rounded-xl ${themeClass('bg-gradient-to-r from-emerald-50 to-teal-50', 'bg-gradient-to-r from-emerald-900/30 to-teal-900/30', isLight)} border-2 ${themeClass('border-emerald-200', 'border-emerald-500/40', isLight)} shadow-sm`}>
+              <div className="flex items-start gap-3">
+                <div className={`flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center ${themeClass('bg-emerald-100', 'bg-emerald-500/20', isLight)}`}>
+                  <svg className={`w-4 h-4 ${themeClass('text-emerald-600', 'text-emerald-400', isLight)}`} fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                  </svg>
+                </div>
+                <div className="flex-1">
+                  <h4 className={`font-semibold text-sm ${themeClass('text-emerald-800', 'text-emerald-300', isLight)} mb-2`}>
+                    How it works
+                  </h4>
+                  <p className={`text-sm ${themeClass('text-slate-700', 'text-slate-300', isLight)} leading-relaxed`}>
+                    Each month, any prepayment is <span className={`font-medium ${themeClass('text-emerald-700', 'text-emerald-400', isLight)}`}>deducted from your loan balance first</span>. 
+                    Then interest is calculated only on the <span className={`font-medium ${themeClass('text-emerald-700', 'text-emerald-400', isLight)}`}>remaining (reduced) amount</span>. 
+                    Your regular EMI payment is applied after that.
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
 
