@@ -16,14 +16,14 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Smart Loan Prepayment Calculator",
     description: "Unlock interest savings. Explore prepayment schedules and see instant impact on your loan!",
-    images: ["https://budgetgear.com/prepayment_og.png"],
-    url: "https://budgetgear.com/prepayment",
+    images: ["https://budgetgear.in/prepayment_og.png"],
+    url: "https://budgetgear.in/prepayment",
   },
   twitter: {
     card: "summary_large_image",
     title: "Smart Loan Prepayment Calculator",
     description: "Calculate prepayment savings and reduce your loan burden with our comprehensive tool.",
-    images: ["https://budgetgear.com/prepayment_og.png"],
+    images: ["https://budgetgear.in/prepayment_og.png"],
   },
   alternates: { 
     canonical: "/prepayment" 
@@ -105,13 +105,13 @@ export default function PrepaymentLayout({
           "@type": "ListItem",
           "position": 1,
           "name": "Home",
-          "item": "https://budgetgear.com"
+          "item": "https://budgetgear.in"
         },
         {
           "@type": "ListItem",
           "position": 2, 
           "name": "Loan Prepayment Calculator",
-          "item": "https://budgetgear.com/prepayment"
+          "item": "https://budgetgear.in/prepayment"
         }
       ]
     }

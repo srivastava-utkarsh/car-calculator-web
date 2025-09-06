@@ -39,18 +39,18 @@ export const metadata: Metadata = {
     address: false,
     telephone: false,
   },
-  metadataBase: new URL('https://budgetgear.com'),
+  metadataBase: new URL('https://budgetgear.in'),
   alternates: {
     canonical: '/',
   },
   openGraph: {
     title: "BudgetGear - Car Finance Calculator | EMI Calculator & Loan Affordability Tool",
     description: "Calculate car EMI, check loan affordability with the proven 20/4/10 rule, and make smart car financing decisions. Free online car loan calculator with instant results.",
-    url: 'https://budgetgear.com',
+    url: 'https://budgetgear.in',
     siteName: 'BudgetGear',
     images: [
       {
-        url: 'https://budgetgear.com/brand_img.png',
+        url: 'https://budgetgear.in/brand_img.png',
         width: 1200,
         height: 630,
         alt: 'BudgetGear Car Finance Calculator',
@@ -63,7 +63,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: "BudgetGear - Car Finance Calculator | EMI Calculator & Loan Affordability Tool",
     description: "Calculate car EMI, check loan affordability with the proven 20/4/10 rule, and make smart car financing decisions. Free online calculator.",
-    images: ['https://budgetgear.com/brand_img.png'],
+    images: ['https://budgetgear.in/brand_img.png'],
     creator: '@BudgetGear',
   },
   robots: {
@@ -99,7 +99,7 @@ export default function RootLayout({
       "name": "BudgetGear Car Finance Calculator",
       "applicationCategory": "FinanceApplication",
       "description": "Calculate car EMI, check loan affordability with the proven 20/4/10 rule, and make smart car financing decisions. Free online car loan calculator with instant results.",
-      "url": "https://budgetgear.com",
+      "url": "https://budgetgear.in",
       "author": {
         "@type": "Organization",
         "name": "BudgetGear"
@@ -174,13 +174,13 @@ export default function RootLayout({
           "@type": "ListItem",
           "position": 1,
           "name": "Home",
-          "item": "https://budgetgear.com"
+          "item": "https://budgetgear.in"
         },
         {
           "@type": "ListItem", 
           "position": 2,
           "name": "Car Loan Calculator",
-          "item": "https://budgetgear.com"
+          "item": "https://budgetgear.in"
         }
       ]
     }
