@@ -254,46 +254,57 @@ export default function HomePage() {
                 </div>
 
                 {/* Mobile version - Minimal text design */}
-                <div className="md:hidden text-center">
+                <div className={`md:hidden ${themeClass('bg-slate-50 border border-slate-200', 'bg-slate-800/50 border border-slate-600/30', isLight)} rounded-2xl p-5 mx-2`}>
                   {/* Header with visual separation */}
-                  <div className={`inline-block px-6 py-3 rounded-xl mb-6 ${themeClass('bg-blue-50 border border-blue-100', 'bg-blue-900/20 border border-blue-400/30', isLight)}`}>
-                    <h3 className={`text-lg font-extrabold tracking-wide ${themeClass('text-blue-900', 'text-blue-200', isLight)}`}>
-                      THE 20/4/10 RULE
-                    </h3>
-                    <p className={`text-sm mt-1 ${themeClass('text-blue-700', 'text-blue-300', isLight)}`}>
-                      Smart car buying guidelines
-                    </p>
+                  <div className="text-center mb-4">
+                    <div className={`inline-block px-4 py-2 rounded-lg mb-3 ${themeClass('bg-blue-50 border border-blue-100', 'bg-blue-900/30 border border-blue-400/30', isLight)}`}>
+                      <h3 className={`text-base font-bold tracking-wide ${themeClass('text-blue-900', 'text-blue-200', isLight)}`}>
+                        THE 20/4/10 RULE
+                      </h3>
+                      <p className={`text-xs ${themeClass('text-blue-700', 'text-blue-300', isLight)}`}>
+                        Smart car buying suggestion
+                      </p>
+                    </div>
                   </div>
 
                   {/* Rules as simple text */}
-                  <div className="space-y-4">
+                  <div className="space-y-3">
                     {/* Rule 1 */}
-                    <div className="py-2">
-                      <p className={`font-bold text-lg ${themeClass('text-emerald-600', 'text-emerald-300', isLight)}`}>
+                    <div className={`p-3 rounded-lg ${themeClass('bg-emerald-50/50 border border-emerald-100', 'bg-emerald-900/20 border border-emerald-400/20', isLight)}`}>
+                      <p className={`font-bold text-base ${themeClass('text-emerald-700', 'text-emerald-300', isLight)}`}>
                         Pay 20% Down
                       </p>
-                      <p className={`text-sm mt-1 ${themeClass('text-slate-500', 'text-white/60', isLight)}`}>
+                      <p className={`text-xs mt-0.5 ${themeClass('text-slate-600', 'text-white/70', isLight)}`}>
                         Lower EMI, less total interest
+                      </p>
+                      <p className={`text-xs mt-0.5 ${themeClass('text-emerald-600', 'text-emerald-400', isLight)}`}>
+                        Example: ₹20L car → ₹4L down payment
                       </p>
                     </div>
 
                     {/* Rule 2 */}
-                    <div className="py-2">
-                      <p className={`font-bold text-lg ${themeClass('text-blue-600', 'text-blue-300', isLight)}`}>
+                    <div className={`p-3 rounded-lg ${themeClass('bg-blue-50/50 border border-blue-100', 'bg-blue-900/20 border border-blue-400/20', isLight)}`}>
+                      <p className={`font-bold text-base ${themeClass('text-blue-700', 'text-blue-300', isLight)}`}>
                         Max 4 Years
                       </p>
-                      <p className={`text-sm mt-1 ${themeClass('text-slate-500', 'text-white/60', isLight)}`}>
+                      <p className={`text-xs mt-0.5 ${themeClass('text-slate-600', 'text-white/70', isLight)}`}>
                         Shorter loans = less interest
+                      </p>
+                      <p className={`text-xs mt-0.5 ${themeClass('text-blue-600', 'text-blue-400', isLight)}`}>
+                        Example: 3 years is even better!
                       </p>
                     </div>
 
                     {/* Rule 3 */}
-                    <div className="py-2">
-                      <p className={`font-bold text-lg ${themeClass('text-orange-600', 'text-orange-300', isLight)}`}>
+                    <div className={`p-3 rounded-lg ${themeClass('bg-orange-50/50 border border-orange-100', 'bg-orange-900/20 border border-orange-400/20', isLight)}`}>
+                      <p className={`font-bold text-base ${themeClass('text-orange-700', 'text-orange-300', isLight)}`}>
                         Max 10% Income
                       </p>
-                      <p className={`text-sm mt-1 ${themeClass('text-slate-500', 'text-white/60', isLight)}`}>
+                      <p className={`text-xs mt-0.5 ${themeClass('text-slate-600', 'text-white/70', isLight)}`}>
                         Keep expenses under 10% of income
+                      </p>
+                      <p className={`text-xs mt-0.5 ${themeClass('text-orange-600', 'text-orange-400', isLight)}`}>
+                        Example: ₹50K income → ₹5K max EMI
                       </p>
                     </div>
                   </div>

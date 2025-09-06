@@ -1,0 +1,82 @@
+### SEO Audit (car-calculator-web, `v2` branch)
+
+**Strengths (SEO best practices already present):**
+- **Title, Meta Description, and Keywords:** Present and relevant in `layout.tsx` via Next.js metadata API.
+- **Open Graph & Twitter Card Tags:** Fully specified, including social image, descriptions, and titles for rich social sharing (OG & Twitter blocks in metadata).
+- **Canonical URL:** Set via `alternates.canonical` in metadata.
+- **Structured Data:** Implements JSON-LD for a WebApplication (schema.org), describing the app, category, offers, features, and author organization.
+- **robots.txt and sitemap:** Both auto-generated in `src/app/robots.ts` and `src/app/sitemap.ts` (Next.js 13+ route handlers for SEO).
+- **Index/follow/Googlebot:** Configured for optimal discoverability.
+- **Alt tags:** Images via `next/image` (generally enforces alt text, but check if all `alt` are descriptive in image components).
+- **Perf-oriented:** Loads fast, good accessibility via modern design and theming.
+- **Ad script loads (for monetization):** Not SEO-negative, but should not block rendering.
+
+***
+
+### Weaknesses/Gaps & **SEO Suggestions for Improvement**
+
+1. **Page-level Metadata Customization**
+   - Currently most SEO metadata in `layout.tsx` applies globally.
+   - **Tip:** Each key page (e.g., `/prepayment`) should override/call its own `generateMetadata` or export static `metadata` (Next.js app router best practice).  
+     Add unique `<title>`, `<meta name="description">`, and OG tags for prepayment calculator, affordability, etc.
+
+2. **Social Image Path**
+   - OG image uses a relative path (e.g., `/brand_img.png`).
+   - **Tip:** Use a fully qualified URL (e.g., `https://budgetgear.com/brand_img.png`) for reliable previews on X/Facebook.
+
+3. **Image Alt Text**
+   - Some `next/image` components may have generic or missing alt tags.
+   - **Tip:** Manually audit `alt` on every `Image` and make human-readable and keyword-targeted, e.g., `"Car Loan Calculator dashboard screenshot"`.
+
+4. **Headings Hierarchy**
+   - Maintain semantic heading order (`<h1>`, `<h2>`, …).
+   - **Tip:** Audit all heading use to ensure one `<h1>` per page, with logical descendant headings for each section (improves crawl and accessibility).
+
+5. **Structured Data Expansion**
+   - Already has basic `WebApplication` schema.
+   - **Tip:** Add `BreadcrumbList`, `FAQPage` (for guides/help), and “HowTo” schemas to help with Google rich snippets.
+
+6. **Language/HTML Attributes**
+   - Ensure `<html lang="en">` and region info in `_document.tsx` (or app layout); improves global SEO and accessibility.
+
+7. **Content Depth**
+   - Consider FAQ/educational content in structured format (FAQPage, HowTo) for both main and prepayment calculators—enhances long-tail search pickup.
+
+8. **Accessibility (indirect SEO)**
+   - Confirm ARIA labels and input field labels are robust, especially on calculators and forms.
+
+9. **External Links**
+   - If linking externally in guides/disclaimers, set `rel="noopener noreferrer"` and descriptive anchor text.
+
+***
+
+### **Sample improvement for `/prepayment` page:**
+
+```tsx
+// in src/app/prepayment/page.tsx (Next.js App Router)
+export const metadata = {
+  title: "Loan Prepayment Calculator | Save Interest & Loan Tenure - BudgetGear",
+  description: "Calculate your savings from loan prepayment. Instantly compare interest vs penalty, reduce EMI or loan duration, and plan smart repayments.",
+  openGraph: {
+    title: "Smart Loan Prepayment Calculator",
+    description: "Unlock interest savings. Explore prepayment schedules and see instant impact!",
+    images: ["https://budgetgear.com/prepayment_og.png"], // example, use real path
+  },
+  alternates: { canonical: "/prepayment" },
+}
+```
+
+***
+
+### **Conclusion:**
+
+You are well ahead of most open-source projects in SEO.  
+**Action priorities:**  
+- Add **unique metadata/OG for every route/page**.
+- Expand structured data with FAQ/Breadcrumb for rich results.
+- Check alt/headings/labels for clarity and intentional keyword use.
+- Use absolute URLs for all social images.
+
+If you want code snippets/templates for structured data or FAQ schema, just ask!
+
+[1](https://github.com/srivastava-utkarsh/car-calculator-web/blob/v2/src/app/prepayment/page.tsx)
