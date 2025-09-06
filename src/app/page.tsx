@@ -282,57 +282,55 @@ export default function HomePage() {
                   </div>
                 </div>
 
-                {/* Mobile version - Minimal text design */}
-                <div className={`md:hidden ${themeClass('bg-slate-50 border border-slate-200', 'bg-slate-800/50 border border-slate-600/30', isLight)} rounded-2xl p-5 mx-2`}>
-                  {/* Header with visual separation */}
-                  <div className="text-center mb-4">
-                    <div className={`inline-block px-4 py-2 rounded-lg mb-3 ${themeClass('bg-blue-50 border border-blue-100', 'bg-blue-900/30 border border-blue-400/30', isLight)}`}>
-                      <h3 className={`text-base font-bold tracking-wide ${themeClass('text-blue-900', 'text-blue-200', isLight)}`}>
-                        THE 20/4/10 RULE
-                      </h3>
-                      <p className={`text-xs ${themeClass('text-blue-700', 'text-blue-300', isLight)}`}>
-                        Smart car buying suggestion
-                      </p>
-                    </div>
+                {/* Mobile version - Compact design */}
+                <div className={`md:hidden ${themeClass('bg-slate-50 border border-slate-200', 'bg-slate-800/50 border border-slate-600/30', isLight)} rounded-xl p-3 mx-2`}>
+                  {/* Compact Header */}
+                  <div className="text-center mb-2">
+                    <h3 className={`text-sm font-bold ${themeClass('text-blue-900', 'text-blue-200', isLight)}`}>
+                      20/4/10 RULE
+                    </h3>
                   </div>
 
-                  {/* Rules as simple text */}
-                  <div className="space-y-3">
-                    {/* Rule 1 */}
-                    <div className={`p-3 rounded-lg ${themeClass('bg-emerald-50/50 border border-emerald-100', 'bg-emerald-900/20 border border-emerald-400/20', isLight)}`}>
-                      <p className={`font-bold text-base ${themeClass('text-emerald-700', 'text-emerald-300', isLight)}`}>
-                        Pay 20% Down
+                  {/* Compact Rules */}
+                  <div className="space-y-2">
+                    {/* Rule 1 - Compact */}
+                    <div className={`p-2 rounded-lg text-center ${themeClass('bg-slate-50/50 border border-slate-200', 'bg-slate-700/50 border border-slate-600/30', isLight)}`}>
+                      <p className={`font-bold text-sm flex items-center justify-center ${themeClass('text-emerald-700', 'text-emerald-300', isLight)}`}>
+                        <span className="text-base mr-1">💰</span>
+                        Pay <span className="text-green-500 text-base font-black mx-1">20</span>% Down
                       </p>
-                      <p className={`text-xs mt-0.5 ${themeClass('text-slate-600', 'text-white/70', isLight)}`}>
+                      <p className={`text-xs mt-1 font-medium ${themeClass('text-slate-600', 'text-white/80', isLight)}`}>
                         Lower EMI, less total interest
                       </p>
-                      <p className={`text-xs mt-0.5 ${themeClass('text-emerald-600', 'text-emerald-400', isLight)}`}>
+                      <p className={`text-xs mt-1 ${themeClass('text-emerald-600', 'text-emerald-400', isLight)}`}>
                         Example: ₹20L car → ₹4L down payment
                       </p>
                     </div>
 
-                    {/* Rule 2 */}
-                    <div className={`p-3 rounded-lg ${themeClass('bg-blue-50/50 border border-blue-100', 'bg-blue-900/20 border border-blue-400/20', isLight)}`}>
-                      <p className={`font-bold text-base ${themeClass('text-blue-700', 'text-blue-300', isLight)}`}>
-                        Max 4 Years
+                    {/* Rule 2 - Compact */}
+                    <div className={`p-2 rounded-lg text-center ${themeClass('bg-slate-50/50 border border-slate-200', 'bg-slate-700/50 border border-slate-600/30', isLight)}`}>
+                      <p className={`font-bold text-sm flex items-center justify-center ${themeClass('text-orange-700', 'text-orange-300', isLight)}`}>
+                        <span className="text-base mr-1">⏳</span>
+                        Max <span className="text-orange-500 text-base font-black mx-1">4</span> Years
                       </p>
-                      <p className={`text-xs mt-0.5 ${themeClass('text-slate-600', 'text-white/70', isLight)}`}>
+                      <p className={`text-xs mt-1 font-medium ${themeClass('text-slate-600', 'text-white/80', isLight)}`}>
                         Shorter loans = less interest
                       </p>
-                      <p className={`text-xs mt-0.5 ${themeClass('text-blue-600', 'text-blue-400', isLight)}`}>
+                      <p className={`text-xs mt-1 ${themeClass('text-orange-600', 'text-orange-400', isLight)}`}>
                         Example: 3 years is even better!
                       </p>
                     </div>
 
-                    {/* Rule 3 */}
-                    <div className={`p-3 rounded-lg ${themeClass('bg-orange-50/50 border border-orange-100', 'bg-orange-900/20 border border-orange-400/20', isLight)}`}>
-                      <p className={`font-bold text-base ${themeClass('text-orange-700', 'text-orange-300', isLight)}`}>
-                        Max 10% Income
+                    {/* Rule 3 - Compact */}
+                    <div className={`p-2 rounded-lg text-center ${themeClass('bg-slate-50/50 border border-slate-200', 'bg-slate-700/50 border border-slate-600/30', isLight)}`}>
+                      <p className={`font-bold text-sm flex items-center justify-center ${themeClass('text-blue-700', 'text-blue-300', isLight)}`}>
+                        <span className="text-base mr-1">📊</span>
+                        Max <span className="text-blue-500 text-base font-black mx-1">10</span>% Income
                       </p>
-                      <p className={`text-xs mt-0.5 ${themeClass('text-slate-600', 'text-white/70', isLight)}`}>
+                      <p className={`text-xs mt-1 font-medium ${themeClass('text-slate-600', 'text-white/80', isLight)}`}>
                         Keep expenses under 10% of income
                       </p>
-                      <p className={`text-xs mt-0.5 ${themeClass('text-orange-600', 'text-orange-400', isLight)}`}>
+                      <p className={`text-xs mt-1 ${themeClass('text-blue-600', 'text-blue-400', isLight)}`}>
                         Example: ₹50K income → ₹5K max EMI
                       </p>
                     </div>

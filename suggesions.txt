@@ -1,8 +1,5 @@
 Visual & Design Improvements
 
-Alignment & Balance
-
-Right now, blocks feel stacked and heavy. Try making them horizontal cards (side-by-side) if it’s going on a website header, or keep vertical but with equal spacing.
 
 Color consistency
 

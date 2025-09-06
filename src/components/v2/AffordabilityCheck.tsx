@@ -183,19 +183,21 @@ export default function AffordabilityCheck({ carData }: AffordabilityCheckProps)
             style={{ backdropFilter: 'blur(8px)' }}
           >
             <div className="flex items-center justify-between mb-2">
-              <span className={`font-semibold flex items-center text-sm ${themeClass(themeStyles.secondaryText, 'text-white/90', isLight)}`}>
-                <div className={`w-6 h-6 rounded-lg mr-2 flex items-center justify-center ${
-                  isDownPaymentOk ? 'bg-emerald-500/20' : 'bg-red-500/20'
+              <span className={`font-bold flex items-center text-sm ${themeClass(themeStyles.secondaryText, 'text-white/90', isLight)}`}>
+                <div className={`w-8 h-8 rounded-lg mr-3 flex items-center justify-center ${
+                  isDownPaymentOk ? 'bg-green-500/20' : 'bg-red-500/20'
                 }`}>
-                  <span className="text-yellow-400 text-xs font-bold">₹</span>
+                  <span className="text-2xl">💰</span>
                 </div>
-                <span className="text-white/90">20% Down Payment</span>
+                <span className="text-white">
+                  <span className="text-green-400 text-xl font-black mr-1">20</span>% Down Payment
+                </span>
               </span>
               <div className="flex items-center space-x-2">
-                <span className={`font-bold text-base px-2 py-1 rounded-lg ${
+                <span className={`font-black text-lg px-3 py-1 rounded-lg shadow-lg ${
                   isDownPaymentOk 
-                    ? 'bg-emerald-500/20 text-emerald-200' 
-                    : 'bg-red-500/20 text-red-200'
+                    ? 'bg-green-500/30 text-green-100 border border-green-400/40' 
+                    : 'bg-red-500/30 text-red-100 border border-red-400/40'
                 }`}>{formatPercentage(downPaymentPercentage)}%</span>
                 {isDownPaymentOk ? (
                   <div className="w-6 h-6 rounded-full bg-emerald-500/30 flex items-center justify-center">
@@ -230,19 +232,21 @@ export default function AffordabilityCheck({ carData }: AffordabilityCheckProps)
             style={{ backdropFilter: 'blur(8px)' }}
           >
             <div className="flex items-center justify-between mb-2">
-              <span className={`font-semibold flex items-center text-sm ${themeClass(themeStyles.secondaryText, 'text-white/90', isLight)}`}>
-                <div className={`w-6 h-6 rounded-lg mr-2 flex items-center justify-center ${
-                  isTenureOk ? 'bg-emerald-500/20' : 'bg-red-500/20'
+              <span className={`font-bold flex items-center text-sm ${themeClass(themeStyles.secondaryText, 'text-white/90', isLight)}`}>
+                <div className={`w-8 h-8 rounded-lg mr-3 flex items-center justify-center ${
+                  isTenureOk ? 'bg-green-500/20' : 'bg-red-500/20'
                 }`}>
-                  <Clock className="w-3 h-3 text-blue-400" />
+                  <span className="text-2xl">⏳</span>
                 </div>
-                <span className="text-white/90">Max 4 Years</span>
+                <span className="text-white">
+                  <span className="text-orange-400 text-xl font-black mr-1">4</span> Years Max
+                </span>
               </span>
               <div className="flex items-center space-x-2">
-                <span className={`font-bold text-base px-2 py-1 rounded-lg ${
+                <span className={`font-black text-lg px-3 py-1 rounded-lg shadow-lg ${
                   isTenureOk 
-                    ? 'bg-emerald-500/20 text-emerald-200' 
-                    : 'bg-red-500/20 text-red-200'
+                    ? 'bg-green-500/30 text-green-100 border border-green-400/40' 
+                    : 'bg-red-500/30 text-red-100 border border-red-400/40'
                 }`}>{carData.tenure || 0}y</span>
                 {isTenureOk ? (
                   <div className="w-6 h-6 rounded-full bg-emerald-500/30 flex items-center justify-center">
@@ -277,19 +281,21 @@ export default function AffordabilityCheck({ carData }: AffordabilityCheckProps)
             style={{ backdropFilter: 'blur(8px)' }}
           >
             <div className="flex items-center justify-between mb-2">
-              <span className={`font-semibold flex items-center text-sm ${themeClass(themeStyles.secondaryText, 'text-white/90', isLight)}`}>
-                <div className={`w-6 h-6 rounded-lg mr-2 flex items-center justify-center ${
-                  isExpenseOk ? 'bg-emerald-500/20' : 'bg-red-500/20'
+              <span className={`font-bold flex items-center text-sm ${themeClass(themeStyles.secondaryText, 'text-white/90', isLight)}`}>
+                <div className={`w-8 h-8 rounded-lg mr-3 flex items-center justify-center ${
+                  isExpenseOk ? 'bg-green-500/20' : 'bg-red-500/20'
                 }`}>
-                  <Percent className="w-3 h-3 text-purple-400" />
+                  <span className="text-2xl">📊</span>
                 </div>
-                <span className="text-white/90">Max 10% Income</span>
+                <span className="text-white">
+                  <span className="text-blue-400 text-xl font-black mr-1">10</span>% Income Max
+                </span>
               </span>
               <div className="flex items-center space-x-2">
-                <span className={`font-bold text-base px-2 py-1 rounded-lg ${
+                <span className={`font-black text-lg px-3 py-1 rounded-lg shadow-lg ${
                   isExpenseOk 
-                    ? 'bg-emerald-500/20 text-emerald-200' 
-                    : 'bg-red-500/20 text-red-200'
+                    ? 'bg-green-500/30 text-green-100 border border-green-400/40' 
+                    : 'bg-red-500/30 text-red-100 border border-red-400/40'
                 }`}>{formatPercentage(expensePercentage)}%</span>
                 {isExpenseOk ? (
                   <div className="w-6 h-6 rounded-full bg-emerald-500/30 flex items-center justify-center">

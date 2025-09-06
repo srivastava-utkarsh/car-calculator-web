@@ -60,38 +60,47 @@ export default function EducationalSummary({ carData }: EducationalSummaryProps)
                 <div className="space-y-4">
                   <div className="bg-white/5 rounded-lg p-4 border border-white/10">
                     <div className="flex items-center justify-between mb-2">
-                      <h4 className="font-semibold text-white">20% Down Payment</h4>
-                      <span className={`text-sm px-2 py-1 rounded ${
-                        downPaymentPercentage >= 20 ? 'bg-green-500/20 text-green-400' : 'bg-orange-500/20 text-orange-400'
+                      <h4 className="font-bold text-white flex items-center">
+                        <span className="text-2xl mr-2">💰</span>
+                        <span className="text-green-400 text-3xl font-black mr-2">20</span>% Down Payment
+                      </h4>
+                      <span className={`text-sm px-3 py-1 rounded-full font-semibold ${
+                        downPaymentPercentage >= 20 ? 'bg-green-500/20 text-green-300 border border-green-400/30' : 'bg-red-500/20 text-red-300 border border-red-400/30'
                       }`}>
-                        currently at {downPaymentPercentage.toFixed(1)}%
+                        {downPaymentPercentage.toFixed(1)}%
                       </span>
                     </div>
-                    <p className="text-white/70 text-sm">Pay at least 20% upfront to reduce loan amount and interest</p>
+                    <p className="text-white/80 text-sm font-medium">Pay at least 20% upfront to reduce loan amount and interest</p>
                   </div>
 
                   <div className="bg-white/5 rounded-lg p-4 border border-white/10">
                     <div className="flex items-center justify-between mb-2">
-                      <h4 className="font-semibold text-white">4 Year Max Loan</h4>
-                      <span className={`text-sm px-2 py-1 rounded ${
-                        (carData.tenure || 0) <= 4 ? 'bg-green-500/20 text-green-400' : 'bg-orange-500/20 text-orange-400'
+                      <h4 className="font-bold text-white flex items-center">
+                        <span className="text-2xl mr-2">⏳</span>
+                        <span className="text-orange-400 text-3xl font-black mr-2">4</span> Years Max
+                      </h4>
+                      <span className={`text-sm px-3 py-1 rounded-full font-semibold ${
+                        (carData.tenure || 0) <= 4 ? 'bg-green-500/20 text-green-300 border border-green-400/30' : 'bg-red-500/20 text-red-300 border border-red-400/30'
                       }`}>
-                        {carData.tenure || 0} years
+                        {carData.tenure || 0}y
                       </span>
                     </div>
-                    <p className="text-white/70 text-sm">Keep loan term ≤ 4 years to avoid excessive interest</p>
+                    <p className="text-white/80 text-sm font-medium">Keep loan term ≤ 4 years to avoid excessive interest</p>
                   </div>
 
                   <div className="bg-white/5 rounded-lg p-4 border border-white/10">
                     <div className="flex items-center justify-between mb-2">
-                      <h4 className="font-semibold text-white">10% of Income</h4>
-                      <span className={`text-sm px-2 py-1 rounded ${
-                        transportationPercentage <= 10 ? 'bg-green-500/20 text-green-400' : 'bg-orange-500/20 text-orange-400'
+                      <h4 className="font-bold text-white flex items-center">
+                        <span className="text-2xl mr-2">📊</span>
+                        <span className="text-blue-400 text-3xl font-black mr-2">10</span>% Income Max
+                      </h4>
+                      <span className={`text-sm px-3 py-1 rounded-full font-semibold ${
+                        transportationPercentage <= 10 ? 'bg-green-500/20 text-green-300 border border-green-400/30' : 'bg-red-500/20 text-red-300 border border-red-400/30'
                       }`}>
-                        currently at {transportationPercentage.toFixed(1)}%
+                        {transportationPercentage.toFixed(1)}%
                       </span>
                     </div>
-                    <p className="text-white/70 text-sm">Total transport costs should not exceed 10% of monthly income</p>
+                    <p className="text-white/80 text-sm font-medium">Total transport costs should not exceed 10% of monthly income</p>
                   </div>
                 </div>
               </div>
