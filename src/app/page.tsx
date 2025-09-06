@@ -256,43 +256,43 @@ export default function HomePage() {
                 {/* Mobile version - Minimal text design */}
                 <div className="md:hidden text-center">
                   {/* Header with visual separation */}
-                  <div className={`inline-block px-4 py-2 rounded-full mb-4 ${themeClass('bg-blue-100 border border-blue-200', 'bg-blue-900/30 border border-blue-500/30', isLight)}`}>
-                    <h3 className={`text-sm font-bold ${themeClass('text-blue-800', 'text-blue-300', isLight)}`}>
+                  <div className={`inline-block px-6 py-3 rounded-xl mb-6 ${themeClass('bg-blue-50 border border-blue-100', 'bg-blue-900/20 border border-blue-400/30', isLight)}`}>
+                    <h3 className={`text-lg font-extrabold tracking-wide ${themeClass('text-blue-900', 'text-blue-200', isLight)}`}>
                       THE 20/4/10 RULE
                     </h3>
-                    <p className={`text-xs ${themeClass('text-blue-600', 'text-blue-400', isLight)}`}>
+                    <p className={`text-sm mt-1 ${themeClass('text-blue-700', 'text-blue-300', isLight)}`}>
                       Smart car buying guidelines
                     </p>
                   </div>
 
                   {/* Rules as simple text */}
-                  <div className="space-y-3">
+                  <div className="space-y-4">
                     {/* Rule 1 */}
-                    <div>
-                      <p className={`font-bold text-base ${themeClass('text-emerald-700', 'text-emerald-400', isLight)}`}>
+                    <div className="py-2">
+                      <p className={`font-bold text-lg ${themeClass('text-emerald-600', 'text-emerald-300', isLight)}`}>
                         Pay 20% Down
                       </p>
-                      <p className={`text-xs ${themeClass('text-slate-600', 'text-white/70', isLight)}`}>
+                      <p className={`text-sm mt-1 ${themeClass('text-slate-500', 'text-white/60', isLight)}`}>
                         Lower EMI, less total interest
                       </p>
                     </div>
 
                     {/* Rule 2 */}
-                    <div>
-                      <p className={`font-bold text-base ${themeClass('text-blue-700', 'text-blue-400', isLight)}`}>
+                    <div className="py-2">
+                      <p className={`font-bold text-lg ${themeClass('text-blue-600', 'text-blue-300', isLight)}`}>
                         Max 4 Years
                       </p>
-                      <p className={`text-xs ${themeClass('text-slate-600', 'text-white/70', isLight)}`}>
+                      <p className={`text-sm mt-1 ${themeClass('text-slate-500', 'text-white/60', isLight)}`}>
                         Shorter loans = less interest
                       </p>
                     </div>
 
                     {/* Rule 3 */}
-                    <div>
-                      <p className={`font-bold text-base ${themeClass('text-orange-700', 'text-orange-400', isLight)}`}>
+                    <div className="py-2">
+                      <p className={`font-bold text-lg ${themeClass('text-orange-600', 'text-orange-300', isLight)}`}>
                         Max 10% Income
                       </p>
-                      <p className={`text-xs ${themeClass('text-slate-600', 'text-white/70', isLight)}`}>
+                      <p className={`text-sm mt-1 ${themeClass('text-slate-500', 'text-white/60', isLight)}`}>
                         Keep expenses under 10% of income
                       </p>
                     </div>
