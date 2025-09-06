@@ -50,7 +50,9 @@ const AdSenseAd = ({ slot, format, style, responsive = true }: {
       // @ts-expect-error - AdSense global not typed
       (window.adsbygoogle = window.adsbygoogle || []).push({});
     } catch (err) {
-      console.error('AdSense error:', err);
+      if (process.env.NODE_ENV === 'development') {
+        console.error('AdSense error:', err);
+      }
     }
   }, []);
 
@@ -60,7 +62,7 @@ const AdSenseAd = ({ slot, format, style, responsive = true }: {
       <ins
         className="adsbygoogle"
         style={{ display: 'block', ...style }}
-        data-ad-client="ca-pub-XXXXXXXXXXXXXXXXX" // Replace with your AdSense client ID
+        data-ad-client={process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID || "ca-pub-XXXXXXXXXXXXXXXXX"}
         data-ad-slot={slot}
         data-ad-format={format}
         data-full-width-responsive={responsive ? 'true' : 'false'}
@@ -213,7 +215,7 @@ export default function HomePage() {
         {/* AdSense Script */}
         <Script
           async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXXX"
+          src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID || "ca-pub-XXXXXXXXXXXXXXXXX"}`}
           crossOrigin="anonymous"
           strategy="afterInteractive"
         />

@@ -3,6 +3,8 @@
  * Handles all boundary conditions and edge cases from suggestions.txt
  */
 
+import { CarData } from '@/app/page';
+
 // Constants for validation limits
 export const VALIDATION_LIMITS = {
   CAR_PRICE: { MIN: 1, MAX: 50000000 }, // ₹1 to ₹5 Crore
@@ -105,7 +107,7 @@ export const calculateSafeEMI = (principal: number, annualRate: number, years: n
 /**
  * Validate car data inputs with comprehensive boundary checking
  */
-export const validateCarData = (data: Record<string, unknown>) => {
+export const validateCarData = (data: CarData | Record<string, unknown>) => {
   const validated = {
     carPrice: safeNumber(data.carPrice, VALIDATION_LIMITS.CAR_PRICE.MIN, VALIDATION_LIMITS.CAR_PRICE.MAX),
     downPayment: safeNumber(data.downPayment, VALIDATION_LIMITS.DOWN_PAYMENT.MIN, VALIDATION_LIMITS.DOWN_PAYMENT.MAX),

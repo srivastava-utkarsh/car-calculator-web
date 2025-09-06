@@ -43,7 +43,9 @@ export const useAdBlockerDetection = () => {
         setIsAdBlockerEnabled(isBlocked || additionalChecks)
         
       } catch (error) {
-        console.log('Ad blocker detection failed:', error)
+        if (process.env.NODE_ENV === 'development') {
+          console.log('Ad blocker detection failed:', error);
+        }
         setIsAdBlockerEnabled(false)
       } finally {
         setIsLoading(false)

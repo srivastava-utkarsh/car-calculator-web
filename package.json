@@ -8,6 +8,9 @@
     "dev:clean": "rm -rf .next && next dev --turbo",
     "build": "next build",
     "build:clean": "rm -rf .next && next build",
+    "build:cf": "open-next build",
+    "preview": "wrangler dev",
+    "deploy": "wrangler deploy",
     "start": "next start",
     "lint": "next lint"
   },
@@ -25,6 +28,7 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@opennextjs/cloudflare": "^1.8.0",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
@@ -33,6 +37,7 @@
     "eslint-config-next": "15.4.5",
     "postcss": "^8.4.49",
     "tailwindcss": "^3.4.16",
-    "typescript": "^5"
+    "typescript": "^5",
+    "wrangler": "^4.34.0"
   }
 }

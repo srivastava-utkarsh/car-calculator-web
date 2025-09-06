@@ -1,7 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  // Production optimizations
+  compress: true,
+  poweredByHeader: false,
   
   // Configure Turbopack (now stable in Next.js 15)
   turbopack: {
@@ -14,14 +16,44 @@ const nextConfig: NextConfig = {
     },
   },
   
-  // Webpack configuration (only applies when not using Turbopack)
-  webpack: (config, { dev, isServer, webpack }) => {
-    // Only apply webpack config when not using Turbopack
-    if (!dev || process.env.NEXT_RUNTIME !== 'edge') {
-      if (dev && !isServer) {
-        config.devtool = 'eval-source-map';
-      }
+  // Security headers
+  async headers() {
+    return [
+      {
+        source: '/(.*)',
+        headers: [
+          {
+            key: 'X-Frame-Options',
+            value: 'DENY',
+          },
+          {
+            key: 'X-Content-Type-Options',
+            value: 'nosniff',
+          },
+          {
+            key: 'Referrer-Policy',
+            value: 'strict-origin-when-cross-origin',
+          },
+        ],
+      },
+    ];
+  },
+  
+  // Webpack configuration (production optimizations)
+  webpack: (config, { dev, isServer }) => {
+    // Production optimizations
+    if (!dev) {
+      config.optimization = {
+        ...config.optimization,
+        minimize: true,
+      };
     }
+    
+    // Development source maps
+    if (dev && !isServer) {
+      config.devtool = 'eval-source-map';
+    }
+    
     return config;
   },
 };
