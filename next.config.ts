@@ -1,6 +1,13 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // Static export configuration
+  output: 'export',
+  trailingSlash: true,
+  images: {
+    unoptimized: true,
+  },
+  
   // Production optimizations
   compress: true,
   poweredByHeader: false,
@@ -16,28 +23,8 @@ const nextConfig: NextConfig = {
     },
   },
   
-  // Security headers
-  async headers() {
-    return [
-      {
-        source: '/(.*)',
-        headers: [
-          {
-            key: 'X-Frame-Options',
-            value: 'DENY',
-          },
-          {
-            key: 'X-Content-Type-Options',
-            value: 'nosniff',
-          },
-          {
-            key: 'Referrer-Policy',
-            value: 'strict-origin-when-cross-origin',
-          },
-        ],
-      },
-    ];
-  },
+  // Security headers (not supported in static export)
+  // Will be handled by Cloudflare Pages
   
   // Webpack configuration (production optimizations)
   webpack: (config, { dev, isServer }) => {
