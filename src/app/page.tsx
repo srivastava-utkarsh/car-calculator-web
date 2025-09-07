@@ -373,54 +373,33 @@ export default function HomePage() {
                   </div>
                 </div>
 
-                {/* Mobile version - Compact with same text as desktop */}
+                {/* Mobile version - Simple compact layout */}
                 <div className={`md:hidden ${themeClass('bg-slate-50 border border-slate-200', 'bg-slate-800/50 border border-slate-600/30', isLight)} rounded-lg p-3 mx-2`}>
                   {/* Compact header */}
-                  <div className="text-center mb-2">
-                    <p className={`text-xs font-medium ${themeClass('text-slate-600', 'text-white/70', isLight)}`}>
-                      🎯 Smart car buying guidelines
+                  <div className="text-center mb-3">
+                    <p className={`text-xs font-semibold ${themeClass('text-slate-600', 'text-white/70', isLight)}`}>
+                      🎯 Smart Car Buying: 20/4/10 Rule
                     </p>
                   </div>
 
-                  {/* Compact rules grid */}
-                  <div className="space-y-2">
-                    {/* Rule 1 - Pay 20% Down */}
-                    <div className="text-center">
-                      <div className={`text-lg font-bold mb-1 ${themeClass('text-green-600', 'text-green-400', isLight)}`}>
-                        Pay 20% Down
-                      </div>
-                      <div className={`text-xs font-medium mb-1 ${themeClass('text-slate-700', 'text-white/90', isLight)}`}>
-                        Lower EMI, less total interest
-                      </div>
-                      <div className={`text-xs ${themeClass('text-slate-600', 'text-white/70', isLight)}`}>
-                        Example: ₹20L car → ₹4L down payment
-                      </div>
+                  {/* Horizontal layout */}
+                  <div className="flex justify-center items-center gap-6 text-center">
+                    <div>
+                      <div className={`text-lg font-bold ${themeClass('text-green-600', 'text-green-400', isLight)}`}>20%</div>
+                      <div className={`text-xs font-medium ${themeClass('text-slate-700', 'text-white/90', isLight)}`}>Down Payment</div>
+                      <div className={`text-xs ${themeClass('text-slate-500', 'text-white/60', isLight)}`}>Lower EMI</div>
                     </div>
 
-                    {/* Rule 2 - Max 4 Years */}
-                    <div className="text-center">
-                      <div className={`text-lg font-bold mb-1 ${themeClass('text-blue-600', 'text-blue-400', isLight)}`}>
-                        Max 4 Years
-                      </div>
-                      <div className={`text-xs font-medium mb-1 ${themeClass('text-slate-700', 'text-white/90', isLight)}`}>
-                        Shorter loans = less interest
-                      </div>
-                      <div className={`text-xs ${themeClass('text-slate-600', 'text-white/70', isLight)}`}>
-                        Example: 3 years is even better!
-                      </div>
+                    <div>
+                      <div className={`text-lg font-bold ${themeClass('text-blue-600', 'text-blue-400', isLight)}`}>4yr</div>
+                      <div className={`text-xs font-medium ${themeClass('text-slate-700', 'text-white/90', isLight)}`}>Max Tenure</div>
+                      <div className={`text-xs ${themeClass('text-slate-500', 'text-white/60', isLight)}`}>Less interest</div>
                     </div>
 
-                    {/* Rule 3 - Max 10% Income */}
-                    <div className="text-center">
-                      <div className={`text-lg font-bold mb-1 ${themeClass('text-orange-600', 'text-orange-400', isLight)}`}>
-                        Max 10% Income
-                      </div>
-                      <div className={`text-xs font-medium mb-1 ${themeClass('text-slate-700', 'text-white/90', isLight)}`}>
-                        Keep expenses under 10% of income
-                      </div>
-                      <div className={`text-xs ${themeClass('text-slate-600', 'text-white/70', isLight)}`}>
-                        Example: ₹50K income → ₹5K max EMI
-                      </div>
+                    <div>
+                      <div className={`text-lg font-bold ${themeClass('text-orange-600', 'text-orange-400', isLight)}`}>10%</div>
+                      <div className={`text-xs font-medium ${themeClass('text-slate-700', 'text-white/90', isLight)}`}>Of Income</div>
+                      <div className={`text-xs ${themeClass('text-slate-500', 'text-white/60', isLight)}`}>EMI limit</div>
                     </div>
                   </div>
                 </div>
@@ -616,6 +595,7 @@ export default function HomePage() {
                   </div>
                 </div>
               )}
+
             </div>
           </div>
         </section>
