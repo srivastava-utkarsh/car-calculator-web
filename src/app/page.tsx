@@ -578,9 +578,9 @@ export default function HomePage() {
                     </div>
                   </div>
 
-                  {/* Cost Distribution Chart - Lazy loaded only when needed */}
+                  {/* Cost Distribution Chart - Desktop only (hidden on mobile) */}
                   {!isLeftCollapsed && carData.carPrice > 0 && carData.tenure > 0 && (
-                    <div className="md-panel-elevated p-4">
+                    <div className="hidden lg:block md-panel-elevated p-4">
                       <Suspense fallback={<div className="h-64 bg-gray-100 animate-pulse rounded-lg"></div>}>
                         <div className="animate-fadeIn">
                           <CostDistributionChart carData={carData} />
@@ -603,6 +603,19 @@ export default function HomePage() {
                   </div>
                 </aside>
               </div>
+
+              {/* Cost Distribution Chart - Mobile only (after Summary) */}
+              {!isLeftCollapsed && carData.carPrice > 0 && carData.tenure > 0 && (
+                <div className="block lg:hidden mt-6">
+                  <div className="md-panel-elevated p-4">
+                    <Suspense fallback={<div className="h-64 bg-gray-100 animate-pulse rounded-lg"></div>}>
+                      <div className="animate-fadeIn">
+                        <CostDistributionChart carData={carData} />
+                      </div>
+                    </Suspense>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </section>
@@ -717,8 +730,8 @@ export default function HomePage() {
             <div className="max-w-7xl mx-auto">
               <div className="flex flex-col lg:flex-row gap-8">
                 
-                {/* Left Navigation Panel */}
-                <aside className={`lg:w-1/4 ${isLight ? 'bg-slate-900' : 'bg-slate-900'} rounded-lg p-6`}>
+                {/* Left Navigation Panel - Desktop only */}
+                <aside className={`hidden lg:block lg:w-1/4 ${isLight ? 'bg-slate-900' : 'bg-slate-900'} rounded-lg p-6`}>
                   <nav className="space-y-2 sticky top-8">
                     {[
                       { id: 'what-is-calculator', label: 'What is a car affordability calculator' },

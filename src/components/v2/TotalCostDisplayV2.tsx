@@ -75,7 +75,7 @@ export default function TotalCostDisplayV2({ carData }: TotalCostDisplayV2Props)
   ];
   const isAllRequiredFieldsFilled = requiredFields.every(Boolean);
 
-  // Auto-focus the afford panel when all mandatory fields are completed
+  // Auto-focus the afford panel when all mandatory fields are completed (desktop only)
   // Only focus if no input is currently focused to prevent interrupting user input
   React.useEffect(() => {
     if (isAllRequiredFieldsFilled && carData.tenure > 0 && emi > 0) {
@@ -89,8 +89,11 @@ export default function TotalCostDisplayV2({ carData }: TotalCostDisplayV2Props)
         (activeElement as HTMLElement).contentEditable === 'true'
       );
       
-      // Only focus the panel if no input is currently focused
-      if (affordPanel && !isInputFocused) {
+      // Check if we're on desktop (screen width >= 1024px for lg breakpoint)
+      const isDesktop = window.innerWidth >= 1024;
+      
+      // Only focus the panel if no input is currently focused and we're on desktop
+      if (affordPanel && !isInputFocused && isDesktop) {
         affordPanel.scrollIntoView({ behavior: 'smooth', block: 'center' });
         affordPanel.focus();
       }
@@ -292,7 +295,7 @@ export default function TotalCostDisplayV2({ carData }: TotalCostDisplayV2Props)
       
       {/* Loan Summary - Compact Display */}
       <div 
-        className={`p-2 sm:p-4 mb-2 transition-all duration-300 ${completionPercentage === 100 ? 'animate-pulse' : ''}`}
+        className="p-2 sm:p-4 mb-2 transition-all duration-300"
       >
         {/* Main EMI Display - Proportional UX */}
         <div className="text-center mb-2">
