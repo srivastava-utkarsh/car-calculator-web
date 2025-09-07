@@ -12,7 +12,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 1,
     },
     {
-      url: 'https://budgetgear.in/prepayment',
+      url: 'https://budgetgear.in/car-loan-prepayment-calculator',
       lastModified: new Date(),
       changeFrequency: 'monthly',
       priority: 0.8,

@@ -221,7 +221,7 @@ export default function RootLayout({
       "name": "Car Loan Prepayment Calculator",
       "applicationCategory": "FinanceApplication",
       "description": "Professional car loan prepayment calculator. Calculate prepayment savings, penalty charges, and compare scenarios for early loan closure.",
-      "url": "https://budgetgear.in/prepayment",
+      "url": "https://budgetgear.in/car-loan-prepayment-calculator",
       "offers": {
         "@type": "Offer",
         "price": "0",

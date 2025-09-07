@@ -152,7 +152,7 @@ export default function PrepaymentLayout({
           "@type": "ListItem",
           "position": 2, 
           "name": "Loan Prepayment Calculator",
-          "item": "https://budgetgear.in/prepayment"
+          "item": "https://budgetgear.in/car-loan-prepayment-calculator"
         }
       ]
     }
