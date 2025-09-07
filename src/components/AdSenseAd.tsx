@@ -7,12 +7,12 @@ interface AdSenseAdProps {
 
 declare global {
   interface Window {
-    adsbygoogle: any[];
+    adsbygoogle: Record<string, unknown>[];
   }
 }
 
 export default function AdSenseAd({ slot, style }: AdSenseAdProps) {
-  const adRef = useRef<HTMLInsElement>(null);
+  const adRef = useRef<HTMLModElement>(null);
 
   useEffect(() => {
     try {
