@@ -623,7 +623,7 @@ export default function HomePage() {
 
 
         {/* Advertisement - Before Prepayment Section */}
-        {carData.carPrice > 0 && carData.downPayment >= 0 && carData.tenure > 0 && (
+        {carData.carPrice > 0 && (
           <section className="relative z-10 mt-12">
             <div className="container mx-auto px-4">
               <div className="max-w-4xl mx-auto">
@@ -648,7 +648,7 @@ export default function HomePage() {
         )}
 
         {/* Smart Prepayment Section */}
-        {carData.carPrice > 0 && carData.downPayment >= 0 && carData.tenure > 0 && (
+        {carData.carPrice > 0 && (
           <section className="relative z-10 mt-12">
             <div className="container mx-auto px-4">
               <div className="max-w-4xl mx-auto">
