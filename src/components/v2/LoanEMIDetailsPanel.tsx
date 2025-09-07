@@ -7,6 +7,12 @@ import { TrendingUp, Clock, Percent } from 'lucide-react'
 import { useTheme } from '@/contexts/ThemeContext'
 import { getThemeStyles, themeClass } from '@/utils/themeStyles'
 
+declare global {
+  interface Window {
+    adsbygoogle: Record<string, unknown>[];
+  }
+}
+
 // AdSense Component
 const AdSenseAd = ({ slot, format, style, responsive = true }: {
   slot: string;
@@ -16,7 +22,6 @@ const AdSenseAd = ({ slot, format, style, responsive = true }: {
 }) => {
   useEffect(() => {
     try {
-      // @ts-expect-error - AdSense global not typed
       (window.adsbygoogle = window.adsbygoogle || []).push({});
     } catch (err) {
       if (process.env.NODE_ENV === 'development') {
