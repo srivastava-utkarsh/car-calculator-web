@@ -559,7 +559,7 @@ function PrepaymentCalculator() {
       {/* AdSense Script */}
       <Script
         async
-        src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4285007880246877"
+        src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID}`}
         crossOrigin="anonymous"
         strategy="afterInteractive"
       />

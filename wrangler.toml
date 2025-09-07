@@ -7,8 +7,8 @@ compatibility_flags = ["nodejs_compat"]
 pages_build_output_dir = "out"
 
 # Environment variables (if needed)
-# [vars]
-# MY_VAR = "production"
+[vars]
+NEXT_PUBLIC_ADSENSE_CLIENT_ID = "ca-pub-4285007880246877"
 
 # Production environment overrides
 [env.production]
