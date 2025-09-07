@@ -12,18 +12,13 @@ import FinancialFormV2 from '@/components/v2/FinancialFormV2'
 import ResultsDisplayV2 from '@/components/v2/ResultsDisplayV2'
 import TotalCostDisplayV2 from '@/components/v2/TotalCostDisplayV2'
 
+// Import FAQ data directly
+import { carCalculatorFAQs } from '@/data/faqData'
+
 // Lazy load heavy components
 const CostDistributionChart = lazy(() => import('@/components/v2/CostDistributionChart'))
 const EducationalSummary = lazy(() => import('@/components/v2/EducationalSummary'))
 const FAQ = lazy(() => import('@/components/FAQ'))
-
-// Lazy loaded FAQ component
-const LazyFAQSection = lazy(() => import('@/data/faqData').then(module => {
-  const FAQComponent = () => {
-    return <FAQ title="Frequently Asked Questions" faqs={module.carCalculatorFAQs} />
-  }
-  return { default: FAQComponent }
-}))
 
 export interface CarData {
   carPrice: number
@@ -847,7 +842,7 @@ export default function HomePage() {
                     </h2>
                     <ul className={`space-y-3 ${isLight ? 'text-slate-700' : 'text-white/80'}`}>
                       <li>
-                        <strong className={isLight ? 'text-slate-900' : 'text-white'}>Include All Expenses:</strong> Don't overlook insurance, fuel, and maintenance.
+                        <strong className={isLight ? 'text-slate-900' : 'text-white'}>Include All Expenses:</strong> Don&apos;t overlook insurance, fuel, and maintenance.
                       </li>
                       <li>
                         <strong className={isLight ? 'text-slate-900' : 'text-white'}>Adjust Loan Terms:</strong> Compare different tenures for optimal EMI.
@@ -899,7 +894,7 @@ export default function HomePage() {
         <section className="relative z-10 mt-16">
           <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
             <Suspense fallback={<div className="h-64 bg-gray-100 animate-pulse rounded-lg"></div>}>
-              <LazyFAQSection />
+              <FAQ title="Frequently Asked Questions" faqs={carCalculatorFAQs} />
             </Suspense>
           </div>
         </section>
