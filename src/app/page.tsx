@@ -1,8 +1,7 @@
 'use client'
 
-import { useState, useRef, useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-import { PiggyBank, ChevronRight, Palette } from 'lucide-react'
+import { useState, useRef, useEffect, lazy, Suspense } from 'react'
+import { PiggyBank, ChevronRight } from 'lucide-react'
 import Image from 'next/image'
 import { useTheme } from '@/contexts/ThemeContext'
 import { themeClass } from '@/utils/themeStyles'
@@ -12,10 +11,19 @@ import CarDetailsFormV2 from '@/components/v2/CarDetailsFormV2'
 import FinancialFormV2 from '@/components/v2/FinancialFormV2'
 import ResultsDisplayV2 from '@/components/v2/ResultsDisplayV2'
 import TotalCostDisplayV2 from '@/components/v2/TotalCostDisplayV2'
-import CostDistributionChart from '@/components/v2/CostDistributionChart'
-import EducationalSummary from '@/components/v2/EducationalSummary'
-import FAQ, { FAQItem } from '@/components/FAQ'
-// Material UI components implemented inline
+
+// Lazy load heavy components
+const CostDistributionChart = lazy(() => import('@/components/v2/CostDistributionChart'))
+const EducationalSummary = lazy(() => import('@/components/v2/EducationalSummary'))
+const FAQ = lazy(() => import('@/components/FAQ'))
+
+// Lazy loaded FAQ component
+const LazyFAQSection = lazy(() => import('@/data/faqData').then(module => {
+  const FAQComponent = () => {
+    return <FAQ title="Frequently Asked Questions" faqs={module.carCalculatorFAQs} />
+  }
+  return { default: FAQComponent }
+}))
 
 export interface CarData {
   carPrice: number
@@ -38,38 +46,6 @@ export interface CarData {
 }
 
 
-// AdSense Component
-const AdSenseAd = ({ slot, format, style, responsive = true }: {
-  slot: string;
-  format?: string;
-  style?: React.CSSProperties;
-  responsive?: boolean;
-}) => {
-  useEffect(() => {
-    try {
-      // @ts-expect-error - AdSense global not typed
-      (window.adsbygoogle = window.adsbygoogle || []).push({});
-    } catch (err) {
-      if (process.env.NODE_ENV === 'development') {
-        console.error('AdSense error:', err);
-      }
-    }
-  }, []);
-
-  return (
-    <div className="text-center my-4">
-      <div className="text-xs text-gray-500 mb-2">Advertisement</div>
-      <ins
-        className="adsbygoogle"
-        style={{ display: 'block', ...style }}
-        data-ad-client={process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID || "ca-pub-XXXXXXXXXXXXXXXXX"}
-        data-ad-slot={slot}
-        data-ad-format={format}
-        data-full-width-responsive={responsive ? 'true' : 'false'}
-      />
-    </div>
-  );
-};
 
 // Enhanced Ad Space Component with matching background and dotted border
 const EnhancedAdSpace = ({ width, height, label, className = "" }: {
@@ -101,39 +77,13 @@ const EnhancedAdSpace = ({ width, height, label, className = "" }: {
   );
 };
 
-// FAQ data for car calculator page
-const carCalculatorFAQs: FAQItem[] = [
-  {
-    question: "What is the 20/4/10 rule for car buying?",
-    answer: "The 20/4/10 rule is a smart car buying guideline that suggests:\n\n• 20% Down Payment: Pay at least 20% of the car's price upfront to reduce your loan amount and lower monthly EMI\n• 4 Years Maximum: Keep your loan tenure to a maximum of 4 years to minimize total interest paid\n• 10% of Income: Your total monthly car expenses (EMI + insurance + maintenance + fuel) should not exceed 10% of your gross monthly income\n\nFollowing this rule helps ensure you can afford the car without straining your finances."
-  },
-  {
-    question: "How is EMI calculated for car loans?",
-    answer: "EMI (Equated Monthly Installment) is calculated using the standard PMT formula:\n\nEMI = P × r × (1+r)^n / [(1+r)^n - 1]\n\nWhere:\n• P = Principal loan amount (car price - down payment)\n• r = Monthly interest rate (annual rate ÷ 12 ÷ 100)\n• n = Total number of months (tenure in years × 12)\n\nExample: For a ₹10 lakh loan at 8% interest for 5 years:\nEMI = ₹20,276 per month"
-  },
-  {
-    question: "What factors should I consider for car loan affordability?",
-    answer: "Key factors that affect car loan affordability include:\n\n• Monthly Income: Your gross monthly salary determines how much EMI you can afford\n• Existing EMIs: Other loan commitments reduce your borrowing capacity\n• Down Payment: Higher down payment means lower loan amount and EMI\n• Interest Rate: Lower rates reduce your monthly payment\n• Loan Tenure: Longer tenure means lower EMI but higher total interest\n• Additional Costs: Insurance, maintenance, fuel, and parking expenses\n\nUse our calculator to see how these factors impact your budget."
-  },
-  {
-    question: "Should I choose a longer or shorter loan tenure?",
-    answer: "The choice depends on your financial situation:\n\nShorter Tenure (2-3 years):\n• Lower total interest paid\n• Higher monthly EMI\n• Builds equity faster\n• Less financial risk\n\nLonger Tenure (5-7 years):\n• Lower monthly EMI\n• Higher total interest cost\n• More budget flexibility\n• Higher financial risk if income changes\n\nRecommendation: Follow the 20/4/10 rule and keep it under 4 years for optimal balance."
-  },
-  {
-    question: "How much down payment should I make?",
-    answer: "Down payment recommendations:\n\nMinimum: 10-15% (lender requirement)\nRecommended: 20-25% (20/4/10 rule)\nOptimal: 30-40% (if you have surplus funds)\n\nBenefits of higher down payment:\n• Lower EMI amount\n• Reduced total interest cost\n• Better loan approval chances\n• Less risk of being underwater on the loan\n\nExample: On a ₹15 lakh car:\n• 20% down payment = ₹3 lakh down, ₹12 lakh loan\n• 30% down payment = ₹4.5 lakh down, ₹10.5 lakh loan"
-  },
-  {
-    question: "What additional costs should I budget for a car?",
-    answer: "Beyond the EMI, budget for these ongoing costs:\n\nMonthly Costs:\n• Fuel: ₹3,000-8,000 (depending on usage)\n• Parking: ₹500-2,000 in cities\n• Insurance: ₹800-1,500 (annual premium ÷ 12)\n\nAnnual Costs:\n• Service & Maintenance: ₹10,000-25,000\n• Insurance renewal: ₹10,000-18,000\n• Registration renewal: ₹1,000-5,000\n\nOne-time Costs:\n• Registration & RTO: ₹8,000-15,000\n• Extended warranty: ₹20,000-40,000 (optional)\n\nTotal monthly car ownership cost typically ranges from ₹15,000-35,000."
-  }
-]
 
 export default function HomePage() {
   const [showResults, setShowResults] = useState(false) // Toggle results view
   const [isLeftCollapsed, setIsLeftCollapsed] = useState(false) // Collapsible state
-  const [useMaterialUI, setUseMaterialUI] = useState(false) // Toggle Material UI
+  const [useMaterialUI] = useState(false) // Toggle Material UI - disabled for performance
   const [imageOpacity, setImageOpacity] = useState(1) // Image fade opacity
+  const [activeSection, setActiveSection] = useState('what-is-calculator') // Active navigation section
   const monthlyIncomeInputRef = useRef<HTMLInputElement>(null)
   const { isLight, isDark } = useTheme()
 
@@ -186,6 +136,58 @@ export default function HomePage() {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
+  // Scroll effect for navigation highlighting using Intersection Observer
+  useEffect(() => {
+    const sections = [
+      'what-is-calculator',
+      'factors-affect', 
+      'how-calculator-works',
+      'emi-formula',
+      'tips-calculator'
+    ]
+
+    // Use Intersection Observer for better performance and accuracy
+    const observer = new IntersectionObserver(
+      (entries) => {
+        // Find the entry that's most visible
+        let mostVisibleEntry = entries[0]
+        let maxIntersectionRatio = 0
+
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && entry.intersectionRatio > maxIntersectionRatio) {
+            maxIntersectionRatio = entry.intersectionRatio
+            mostVisibleEntry = entry
+          }
+        })
+
+        // If we have a visible entry, update the active section
+        if (mostVisibleEntry && mostVisibleEntry.isIntersecting) {
+          const sectionId = mostVisibleEntry.target.id
+          setActiveSection(sectionId)
+          console.log('Active section changed to:', sectionId)
+        }
+      },
+      {
+        // Trigger when 30% of the section is visible
+        threshold: [0.1, 0.3, 0.5],
+        // Use some margin to trigger earlier
+        rootMargin: '-20% 0px -70% 0px'
+      }
+    )
+
+    // Observe all sections
+    sections.forEach((sectionId) => {
+      const element = document.getElementById(sectionId)
+      if (element) {
+        observer.observe(element)
+      }
+    })
+
+    return () => {
+      observer.disconnect()
+    }
+  }, [])
+
   const hideResultsView = () => setShowResults(false)
 
   const restart = () => {
@@ -228,7 +230,7 @@ export default function HomePage() {
                 <div className="w-8 h-8 sm:w-16 sm:h-16 flex items-center justify-center">
                   <Image 
                     src="/bck-logo.svg" 
-                    alt="BudgetGear Logo" 
+                    alt="BudgetGear Car Affordability Calculator Logo - Free EMI Calculator" 
                     className="w-8 h-8 sm:w-16 sm:h-16 object-contain"
                     width={64}
                     height={64}
@@ -244,10 +246,11 @@ export default function HomePage() {
                     Car Affordability Calculator
                   </span>
                   <a 
-                    href="/prepayment" 
+                    href="/car-loan-prepayment-calculator" 
                     className={`font-semibold text-xs sm:text-sm tracking-wide px-1 sm:px-3 py-1 sm:py-2 text-center rounded-md transition-colors duration-200 hover:scale-105 min-h-[32px] sm:min-h-[44px] flex items-center touch-manipulation ${isLight ? 'text-slate-700 hover:text-slate-900 hover:bg-slate-100' : 'text-white/80 hover:text-white hover:bg-white/10'}`}
+                    title="Car Loan Prepayment Calculator - Calculate Interest Savings"
                   >
-                    Prepayment Calculator
+                    Loan Prepayment Calculator
                   </a>
                 </nav>
               </div>
@@ -260,81 +263,167 @@ export default function HomePage() {
         {isDark && <div className="absolute left-0 right-0 bottom-0 bg-gradient-to-br from-gray-900/50 via-black to-gray-900/30 pointer-events-none" style={{ top: '100px' }}></div>}
         
         
+        {/* Structured Data for SEO */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "WebApplication",
+              "name": "Car Affordability Calculator",
+              "description": "Calculate car loan EMI with proven 20/4/10 rule. Free budget calculator with prepayment analysis, eligibility check & professional calculations.",
+              "applicationCategory": "FinanceApplication",
+              "operatingSystem": "Web Browser",
+              "offers": {
+                "@type": "Offer",
+                "price": "0",
+                "priceCurrency": "INR"
+              },
+              "featureList": [
+                "Car loan EMI calculation",
+                "20/4/10 rule analysis", 
+                "Prepayment analysis",
+                "Eligibility check",
+                "Professional calculations"
+              ]
+            })
+          }}
+        />
+
         {/* Main Content Section - Fluid Layout */}
-        <section className="relative z-10 pt-4" id="calculator" aria-labelledby="calculator-heading">
+        <section className="relative z-10 pt-4" id="calculator" aria-labelledby="main-heading" itemScope itemType="https://schema.org/WebApplication">
           <div className="container mx-auto px-4">
             <div className="max-w-6xl mx-auto">
-              <h2 id="calculator-heading" className="sr-only">Car Finance Calculator Tool</h2>
+              {/* Mobile-optimized heading */}
+              <div className="block md:hidden text-center mb-4">
+                <h1 className={`text-base font-semibold mb-2 ${isLight ? 'text-slate-800' : 'text-white/90'}`} itemProp="name">
+                  Car Affordability Calculator
+                </h1>
+                <p className={`text-sm ${isLight ? 'text-slate-600' : 'text-white/80'}`}>
+                  Check how much car you can afford
+                </p>
+                <div className={`text-xs mt-2 ${isLight ? 'text-slate-500' : 'text-white/70'}`} itemProp="description">
+                  Free EMI calculator with 20/4/10 rule & prepayment analysis
+                </div>
+              </div>
+
+              {/* Desktop heading */}
+              <div className="hidden md:block text-center mb-6">
+                <h1 id="main-heading" className={`text-xl lg:text-2xl font-semibold mb-3 ${isLight ? 'text-slate-800' : 'text-white/90'}`} itemProp="name">
+                  Car Affordability Calculator | Check How Much Car You Can Afford
+                </h1>
+                <p className="text-base lg:text-lg font-medium" itemProp="description">
+                  Calculate car loan EMI with proven 20/4/10 rule • Free budget calculator with prepayment analysis, eligibility check & professional calculations
+                </p>
+              </div>
               
               {/* 20/4/10 Rule Info - Desktop: SVG image, Mobile: Compact cards */}
               <div className="mb-4">
-                {/* Desktop version - SVG with scroll fade */}
+                {/* Desktop version - Optimized compact design */}
                 <div 
-                  className="hidden md:flex items-center justify-center transition-opacity duration-300 ease-out"
+                  className="hidden md:block transition-opacity duration-300 ease-out"
                   style={{ opacity: imageOpacity }}
                 >
-                  <div className="md-panel-elevated p-4 w-full">
-                    <Image 
-                      src="/20-4-10-rule-simple.svg" 
-                      alt="20/4/10 Rule: Smart Car Buying Guide - 20% down payment, 4 years max loan, 10% of income max" 
-                      className="w-full h-auto object-contain rounded-lg"
-                      width={800}
-                      height={110}
-                    />
+                  <div className={`${themeClass('bg-slate-50 border border-slate-200', 'bg-slate-800/50 border border-slate-600/30', isLight)} rounded-xl p-4 mx-4`}>
+                    {/* Header */}
+                    <div className="text-center mb-3">
+                      <p className={`text-sm font-medium ${themeClass('text-slate-600', 'text-white/70', isLight)}`}>
+                        Smart car buying guidelines
+                      </p>
+                    </div>
+
+                    {/* Horizontal Rules */}
+                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                      {/* Rule 1 - Pay 20% Down */}
+                      <div className="text-center">
+                        <div className={`text-xl font-bold mb-1 ${themeClass('text-green-600', 'text-green-400', isLight)}`}>
+                          Pay 20% Down
+                        </div>
+                        <div className={`text-xs font-medium mb-1 ${themeClass('text-slate-700', 'text-white/90', isLight)}`}>
+                          Lower EMI, less total interest
+                        </div>
+                        <div className={`text-xs ${themeClass('text-slate-600', 'text-white/70', isLight)}`}>
+                          Example: ₹20L car → ₹4L down payment
+                        </div>
+                      </div>
+
+                      {/* Rule 2 - Max 4 Years */}
+                      <div className="text-center">
+                        <div className={`text-xl font-bold mb-1 ${themeClass('text-blue-600', 'text-blue-400', isLight)}`}>
+                          Max 4 Years
+                        </div>
+                        <div className={`text-xs font-medium mb-1 ${themeClass('text-slate-700', 'text-white/90', isLight)}`}>
+                          Shorter loans = less interest
+                        </div>
+                        <div className={`text-xs ${themeClass('text-slate-600', 'text-white/70', isLight)}`}>
+                          Example: 3 years is even better!
+                        </div>
+                      </div>
+
+                      {/* Rule 3 - Max 10% Income */}
+                      <div className="text-center">
+                        <div className={`text-xl font-bold mb-1 ${themeClass('text-orange-600', 'text-orange-400', isLight)}`}>
+                          Max 10% Income
+                        </div>
+                        <div className={`text-xs font-medium mb-1 ${themeClass('text-slate-700', 'text-white/90', isLight)}`}>
+                          Keep expenses under 10% of income
+                        </div>
+                        <div className={`text-xs ${themeClass('text-slate-600', 'text-white/70', isLight)}`}>
+                          Example: ₹50K income → ₹5K max EMI
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
 
-                {/* Mobile version - Compact design */}
-                <div className={`md:hidden ${themeClass('bg-slate-50 border border-slate-200', 'bg-slate-800/50 border border-slate-600/30', isLight)} rounded-xl p-3 mx-2`}>
-                  {/* Compact Header */}
+                {/* Mobile version - Compact with same text as desktop */}
+                <div className={`md:hidden ${themeClass('bg-slate-50 border border-slate-200', 'bg-slate-800/50 border border-slate-600/30', isLight)} rounded-lg p-3 mx-2`}>
+                  {/* Compact header */}
                   <div className="text-center mb-2">
-                    <h3 className={`text-sm font-bold ${themeClass('text-blue-900', 'text-blue-200', isLight)}`}>
-                      20/4/10 RULE
-                    </h3>
+                    <p className={`text-xs font-medium ${themeClass('text-slate-600', 'text-white/70', isLight)}`}>
+                      🎯 Smart car buying guidelines
+                    </p>
                   </div>
 
-                  {/* Compact Rules */}
+                  {/* Compact rules grid */}
                   <div className="space-y-2">
-                    {/* Rule 1 - Compact */}
-                    <div className={`p-2 rounded-lg text-center ${themeClass('bg-slate-50/50 border border-slate-200', 'bg-slate-700/50 border border-slate-600/30', isLight)}`}>
-                      <p className={`font-bold text-sm flex items-center justify-center ${themeClass('text-emerald-700', 'text-emerald-300', isLight)}`}>
-                        <span className="text-base mr-1">💰</span>
-                        Pay <span className="text-green-500 text-base font-black mx-1">20</span>% Down
-                      </p>
-                      <p className={`text-xs mt-1 font-medium ${themeClass('text-slate-600', 'text-white/80', isLight)}`}>
+                    {/* Rule 1 - Pay 20% Down */}
+                    <div className="text-center">
+                      <div className={`text-lg font-bold mb-1 ${themeClass('text-green-600', 'text-green-400', isLight)}`}>
+                        Pay 20% Down
+                      </div>
+                      <div className={`text-xs font-medium mb-1 ${themeClass('text-slate-700', 'text-white/90', isLight)}`}>
                         Lower EMI, less total interest
-                      </p>
-                      <p className={`text-xs mt-1 ${themeClass('text-emerald-600', 'text-emerald-400', isLight)}`}>
+                      </div>
+                      <div className={`text-xs ${themeClass('text-slate-600', 'text-white/70', isLight)}`}>
                         Example: ₹20L car → ₹4L down payment
-                      </p>
+                      </div>
                     </div>
 
-                    {/* Rule 2 - Compact */}
-                    <div className={`p-2 rounded-lg text-center ${themeClass('bg-slate-50/50 border border-slate-200', 'bg-slate-700/50 border border-slate-600/30', isLight)}`}>
-                      <p className={`font-bold text-sm flex items-center justify-center ${themeClass('text-orange-700', 'text-orange-300', isLight)}`}>
-                        <span className="text-base mr-1">⏳</span>
-                        Max <span className="text-orange-500 text-base font-black mx-1">4</span> Years
-                      </p>
-                      <p className={`text-xs mt-1 font-medium ${themeClass('text-slate-600', 'text-white/80', isLight)}`}>
+                    {/* Rule 2 - Max 4 Years */}
+                    <div className="text-center">
+                      <div className={`text-lg font-bold mb-1 ${themeClass('text-blue-600', 'text-blue-400', isLight)}`}>
+                        Max 4 Years
+                      </div>
+                      <div className={`text-xs font-medium mb-1 ${themeClass('text-slate-700', 'text-white/90', isLight)}`}>
                         Shorter loans = less interest
-                      </p>
-                      <p className={`text-xs mt-1 ${themeClass('text-orange-600', 'text-orange-400', isLight)}`}>
+                      </div>
+                      <div className={`text-xs ${themeClass('text-slate-600', 'text-white/70', isLight)}`}>
                         Example: 3 years is even better!
-                      </p>
+                      </div>
                     </div>
 
-                    {/* Rule 3 - Compact */}
-                    <div className={`p-2 rounded-lg text-center ${themeClass('bg-slate-50/50 border border-slate-200', 'bg-slate-700/50 border border-slate-600/30', isLight)}`}>
-                      <p className={`font-bold text-sm flex items-center justify-center ${themeClass('text-blue-700', 'text-blue-300', isLight)}`}>
-                        <span className="text-base mr-1">📊</span>
-                        Max <span className="text-blue-500 text-base font-black mx-1">10</span>% Income
-                      </p>
-                      <p className={`text-xs mt-1 font-medium ${themeClass('text-slate-600', 'text-white/80', isLight)}`}>
+                    {/* Rule 3 - Max 10% Income */}
+                    <div className="text-center">
+                      <div className={`text-lg font-bold mb-1 ${themeClass('text-orange-600', 'text-orange-400', isLight)}`}>
+                        Max 10% Income
+                      </div>
+                      <div className={`text-xs font-medium mb-1 ${themeClass('text-slate-700', 'text-white/90', isLight)}`}>
                         Keep expenses under 10% of income
-                      </p>
-                      <p className={`text-xs mt-1 ${themeClass('text-blue-600', 'text-blue-400', isLight)}`}>
+                      </div>
+                      <div className={`text-xs ${themeClass('text-slate-600', 'text-white/70', isLight)}`}>
                         Example: ₹50K income → ₹5K max EMI
-                      </p>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -354,10 +443,7 @@ export default function HomePage() {
                 <div className={`transition-all duration-500 ease-in-out ${isLeftCollapsed ? 'w-16 lg:w-16' : 'w-full lg:w-1/2 lg:flex-shrink-0'} space-y-4 sm:space-y-6 order-1 lg:order-1`}>
                   {/* Calculator Form Panel */}
                   <div className="md-panel-elevated p-4">
-                    <motion.div 
-                      className="transition-all duration-500 ease-in-out"
-                      animate={{ width: isLeftCollapsed ? 64 : 'auto' }}
-                    >
+                    <div className="transition-all duration-500 ease-in-out">
                     {isLeftCollapsed ? (
                       // Collapsed State - Small Label
                       <div className="h-full md-panel-elevated p-3 flex flex-col items-center justify-center space-y-6 min-h-[400px]">
@@ -376,16 +462,8 @@ export default function HomePage() {
                     ) : (
                       // Expanded State - Full Form
                       <div className="relative">
-                        <AnimatePresence mode="wait">
-                          {!showResults ? (
-                            <motion.div
-                              key="form"
-                              initial={{ opacity: 0, y: 20 }}
-                              animate={{ opacity: 1, y: 0 }}
-                              exit={{ opacity: 0, y: -20 }}
-                              transition={{ duration: 0.4, ease: "easeOut" }}
-                              className="md-panel-elevated p-3 sm:p-4 lg:p-5"
-                            >
+                        {!showResults ? (
+                            <div key="form" className="md-panel-elevated p-3 sm:p-4 lg:p-5 transition-all duration-400 ease-out">
                               {/* Collapse Button */}
                               <div className="flex justify-between items-center mb-4">
                                 <div className="flex items-center space-x-3">
@@ -402,7 +480,7 @@ export default function HomePage() {
                                   <div className="space-y-4">
                                     <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
                                       <div className="flex items-center space-x-2 mb-2">
-                                        <Palette className="w-5 h-5 text-blue-600" />
+                                        <div className="w-5 h-5 bg-blue-600 rounded"></div>
                                         <h3 className="text-blue-900 font-semibold">Material Design Mode</h3>
                                       </div>
                                       <p className="text-blue-700 text-sm">Material Design styling applied to form components</p>
@@ -479,16 +557,9 @@ export default function HomePage() {
                                   </>
                                 )}
                               </div>
-                            </motion.div>
+                            </div>
                           ) : (
-                            <motion.div
-                              key="results"
-                              initial={{ opacity: 0, y: 20 }}
-                              animate={{ opacity: 1, y: 0 }}
-                              exit={{ opacity: 0, y: -20 }}
-                              transition={{ duration: 0.4, ease: "easeOut" }}
-                              className="md-panel-elevated p-3 sm:p-4 lg:p-5"
-                            >
+                            <div key="results" className="md-panel-elevated p-3 sm:p-4 lg:p-5 transition-all duration-400 ease-out">
                               {/* Collapse Button */}
                               <div className="flex justify-between items-center mb-4">
                                 <h3 className={`text-lg font-semibold ${isLight ? 'text-slate-900' : 'text-white'}`}>
@@ -501,46 +572,37 @@ export default function HomePage() {
                                 onBack={hideResultsView}
                                 onRestart={restart}
                               />
-                            </motion.div>
+                            </div>
                           )}
-                        </AnimatePresence>
                       </div>
                     )}
-                    </motion.div>
+                    </div>
                   </div>
 
                   {/* Cost Distribution Chart - Positioned in left column area */}
                   {!isLeftCollapsed && (
                     <div className="md-panel-elevated p-4">
-                      <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.6, delay: 0.4 }}
-                      >
-                        <CostDistributionChart carData={carData} />
-                      </motion.div>
+                      <Suspense fallback={<div className="h-64 bg-gray-100 animate-pulse rounded-lg"></div>}>
+                        <div className="opacity-0 animate-fadeIn">
+                          <CostDistributionChart carData={carData} />
+                        </div>
+                      </Suspense>
                     </div>
                   )}
                 </div>
 
                 {/* Live Preview Panel - Expands when left is collapsed */}
-                <motion.aside 
+                <aside 
                   className={`transition-all duration-500 ease-in-out ${isLeftCollapsed ? 'flex-1' : 'w-full lg:w-1/2 lg:flex-1'} md-panel-elevated p-4 order-2 lg:order-2`}
                   aria-labelledby="results-heading"
-                  animate={{ width: isLeftCollapsed ? '100%' : 'auto' }}
                 >
                   <div className="lg:sticky lg:top-8 space-y-4">
-                    <motion.div
-                      initial={{ opacity: 0, x: 20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ duration: 0.6, delay: 0.2 }}
-                      className="md-panel-elevated p-3 sm:p-4 lg:p-5"
-                    >
+                    <div className="md-panel-elevated p-3 sm:p-4 lg:p-5 opacity-0 animate-slideIn">
                       <h3 id="results-heading" className="sr-only">Loan Calculation Results</h3>
                       <TotalCostDisplayV2 carData={carData} updateCarData={updateCarData} />
-                    </motion.div>
+                    </div>
                   </div>
-                </motion.aside>
+                </aside>
               </div>
             </div>
           </div>
@@ -592,12 +654,7 @@ export default function HomePage() {
           <section className="relative z-10 mt-12">
             <div className="container mx-auto px-4">
               <div className="max-w-4xl mx-auto">
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: 0.3 }}
-                  className="bg-blue-600/15 backdrop-blur-xl rounded-3xl border border-blue-400/20 p-8 shadow-2xl hover:shadow-blue-500/10 transition-all duration-500"
-                >
+                <div className="bg-blue-600/15 backdrop-blur-xl rounded-3xl border border-blue-400/20 p-8 shadow-2xl hover:shadow-blue-500/10 transition-all duration-500 opacity-0 animate-slideUp">
                   <div className="text-center">
                     <div className="flex justify-center mb-4">
                       <div className="w-16 h-16 bg-blue-500 rounded-2xl flex items-center justify-center">
@@ -606,7 +663,7 @@ export default function HomePage() {
                     </div>
                     <h3 className="text-white font-bold text-2xl mb-3">Ready to Pay Off Your Loan Faster?</h3>
                     <p className="text-white/70 text-lg mb-6 max-w-2xl mx-auto">
-                      Use our loan prepayment calculator to discover how strategic prepayments help you pay off your loan faster and save lakhs in interest
+                      Use our <a href="/car-loan-prepayment-calculator" className="text-blue-300 hover:text-blue-200 underline">car loan prepayment calculator</a> to discover how strategic prepayments help you pay off your loan faster and save lakhs in interest
                     </p>
                     
                     {/* Centered Message */}
@@ -627,7 +684,7 @@ export default function HomePage() {
                           interestRate: (carData.interestRate || 8).toString(),
                           tenure: (carData.tenure || 0).toString()
                         })
-                        window.open(`/prepayment?${params.toString()}`, '_blank')
+                        window.open(`/car-loan-prepayment-calculator?${params.toString()}`, '_blank')
                       }}
                       className="group inline-flex items-center space-x-4 bg-blue-500 hover:bg-blue-600 text-white font-bold px-8 py-4 rounded-2xl transition-all duration-300 shadow-lg hover:shadow-2xl hover:shadow-blue-500/25 transform hover:scale-105 hover:-translate-y-1"
                     >
@@ -640,7 +697,7 @@ export default function HomePage() {
                       Free analysis • No hidden charges • Instant results
                     </p>
                   </div>
-                </motion.div>
+                </div>
               </div>
             </div>
           </section>
@@ -659,8 +716,161 @@ export default function HomePage() {
           </div>
         </section>
 
+
+        {/* Car Affordability Education Section with Navigation */}
+        <section className="relative z-10 mt-16" id="education-section">
+          <div className="container mx-auto px-4">
+            <div className="max-w-7xl mx-auto">
+              <div className="flex flex-col lg:flex-row gap-8">
+                
+                {/* Left Navigation Panel */}
+                <aside className={`lg:w-1/4 ${isLight ? 'bg-slate-900' : 'bg-slate-900'} rounded-lg p-6`}>
+                  <nav className="space-y-2 sticky top-8">
+                    {[
+                      { id: 'what-is-calculator', label: 'What is a car affordability calculator' },
+                      { id: 'factors-affect', label: 'What Factors Affect Car Affordability?' },
+                      { id: 'how-calculator-works', label: 'How Car Affordability Calculator Work' },
+                      { id: 'emi-formula', label: 'EMI Calculation Formula' },
+                      { id: 'tips-calculator', label: 'Tips for Car Affordability' }
+                    ].map((item) => (
+                      <a
+                        key={item.id}
+                        href={`#${item.id}`}
+                        onClick={(e) => {
+                          e.preventDefault()
+                          const element = document.getElementById(item.id)
+                          if (element) {
+                            // Calculate offset to account for any fixed headers
+                            const yOffset = -100 // Adjust this value based on your header height
+                            const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset
+                            
+                            window.scrollTo({
+                              top: y,
+                              behavior: 'smooth'
+                            })
+                            
+                            // Also update active section immediately for instant feedback
+                            setActiveSection(item.id)
+                          }
+                        }}
+                        className={`block py-2 px-3 rounded text-sm font-medium transition-colors cursor-pointer ${
+                          activeSection === item.id
+                            ? 'text-white hover:bg-slate-800 border-l-4 border-yellow-500'
+                            : 'text-white/70 hover:text-white hover:bg-slate-800'
+                        }`}
+                      >
+                        {item.label}
+                      </a>
+                    ))}
+                  </nav>
+                </aside>
+
+                {/* Right Content Panel */}
+                <main className="lg:w-3/4 space-y-8">
+                  
+                  {/* What is a Car Affordability Calculator */}
+                  <div id="what-is-calculator" className="p-8">
+                    <h2 className={`text-2xl font-bold mb-6 ${isLight ? 'text-slate-900' : 'text-white'}`}>
+                      What is a car affordability calculator
+                    </h2>
+                    <p className={`leading-relaxed ${isLight ? 'text-slate-700' : 'text-white/80'}`}>
+                      This calculator helps you check if you can afford your <strong>dream car with your current salary</strong> by 
+                      determining if your <strong>income and expenses</strong> align with the cost of owning a car. By considering 
+                      <strong>income, loan terms, and operational cost</strong>, it provides a realistic budget estimate, ensuring you 
+                      make a <strong>financially stable</strong> car purchase without overextending your finances.
+                    </p>
+                  </div>
+
+                  {/* What Factors Affect Car Affordability */}
+                  <div id="factors-affect" className="p-8">
+                    <h2 className={`text-2xl font-bold mb-6 ${isLight ? 'text-slate-900' : 'text-white'}`}>
+                      What Factors Affect Car Affordability?
+                    </h2>
+                    <ul className={`space-y-3 ${isLight ? 'text-slate-700' : 'text-white/80'}`}>
+                      <li>
+                        <strong className={isLight ? 'text-slate-900' : 'text-white'}>Monthly Income</strong> — Higher income allows for a larger car budget.
+                      </li>
+                      <li>
+                        <strong className={isLight ? 'text-slate-900' : 'text-white'}>Down Payment</strong> — Reduces loan amount and monthly payments.
+                      </li>
+                      <li>
+                        <strong className={isLight ? 'text-slate-900' : 'text-white'}>Interest Rate</strong> — Impacts overall loan cost and EMI.
+                      </li>
+                      <li>
+                        <strong className={isLight ? 'text-slate-900' : 'text-white'}>Loan Tenure</strong> — Longer loans lower EMI but increase total interest.
+                      </li>
+                      <li>
+                        <strong className={isLight ? 'text-slate-900' : 'text-white'}>Operational Costs</strong> — Fuel, maintenance, and insurance expenses.
+                      </li>
+                    </ul>
+                  </div>
+
+
+                  {/* How Car Affordability Calculator Works */}
+                  <div id="how-calculator-works" className="p-8">
+                    <h2 className={`text-2xl font-bold mb-6 ${isLight ? 'text-slate-900' : 'text-white'}`}>
+                      How Car Affordability Calculator Work
+                    </h2>
+                    <p className={`mb-4 ${isLight ? 'text-slate-700' : 'text-white/80'}`}>
+                      This calculator analyzes your financial situation and car costs to determine affordability based on income, loan terms, and ongoing expenses.
+                    </p>
+                  </div>
+
+                  {/* EMI Calculation Formula */}
+                  <div id="emi-formula" className="p-8">
+                    <h2 className={`text-2xl font-bold mb-6 ${isLight ? 'text-slate-900' : 'text-white'}`}>
+                      EMI Calculation Formula
+                    </h2>
+                    <p className={`mb-4 ${isLight ? 'text-slate-700' : 'text-white/80'}`}>
+                      This calculator use this formula to calculate monthly EMI:
+                    </p>
+                    <div className={`p-4 rounded-lg font-mono text-center mb-6 ${isLight ? 'bg-slate-100 border border-slate-300' : 'bg-slate-800'}`}>
+                      <code className={`text-lg ${isLight ? 'text-slate-800' : 'text-white'}`}>
+                        EMI=P*r*(1+r)^n/((1+r)^n-1)
+                      </code>
+                    </div>
+                    <div className={isLight ? 'text-slate-700' : 'text-white/80'}>
+                      <p className={`font-semibold mb-3 ${isLight ? 'text-slate-900' : 'text-white'}`}>Where:</p>
+                      <ol className="space-y-2 list-decimal list-inside">
+                        <li><strong className={isLight ? 'text-slate-900' : 'text-white'}>EMI</strong> = Equated Monthly Instalment (monthly loan payment)</li>
+                        <li><strong className={isLight ? 'text-slate-900' : 'text-white'}>P</strong> = Loan Principal Amount (total loan borrowed)</li>
+                        <li><strong className={isLight ? 'text-slate-900' : 'text-white'}>r</strong> = Monthly Interest Rate (Annual interest rate ÷ 12 ÷ 100)</li>
+                        <li><strong className={isLight ? 'text-slate-900' : 'text-white'}>n</strong> = Loan Tenure (total number of months)</li>
+                      </ol>
+                    </div>
+                  </div>
+
+                  {/* Tips for Car Affordability */}
+                  <div id="tips-calculator" className="p-8">
+                    <h2 className={`text-2xl font-bold mb-6 ${isLight ? 'text-slate-900' : 'text-white'}`}>
+                      Tips for Car Affordability
+                    </h2>
+                    <ul className={`space-y-3 ${isLight ? 'text-slate-700' : 'text-white/80'}`}>
+                      <li>
+                        <strong className={isLight ? 'text-slate-900' : 'text-white'}>Include All Expenses:</strong> Don't overlook insurance, fuel, and maintenance.
+                      </li>
+                      <li>
+                        <strong className={isLight ? 'text-slate-900' : 'text-white'}>Adjust Loan Terms:</strong> Compare different tenures for optimal EMI.
+                      </li>
+                      <li>
+                        <strong className={isLight ? 'text-slate-900' : 'text-white'}>Check Your Credit Score:</strong> A good score helps secure better interest rates.
+                      </li>
+                      <li>
+                        <strong className={isLight ? 'text-slate-900' : 'text-white'}>Keep a Financial Cushion:</strong> Avoid maxing out your affordability range to stay financially flexible.
+                      </li>
+                    </ul>
+                  </div>
+
+                </main>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* Educational Summary Section */}
-        <EducationalSummary carData={carData} />
+        <Suspense fallback={<div className="h-96 bg-gray-100 animate-pulse rounded-lg mt-12"></div>}>
+          <EducationalSummary carData={carData} />
+        </Suspense>
 
         {/* Footer Ad - 728x90 Leaderboard */}
         <section className="relative z-10 mt-12">
@@ -688,10 +898,9 @@ export default function HomePage() {
         {/* FAQ Section */}
         <section className="relative z-10 mt-16">
           <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-            <FAQ 
-              title="Frequently Asked Questions" 
-              faqs={carCalculatorFAQs}
-            />
+            <Suspense fallback={<div className="h-64 bg-gray-100 animate-pulse rounded-lg"></div>}>
+              <LazyFAQSection />
+            </Suspense>
           </div>
         </section>
 

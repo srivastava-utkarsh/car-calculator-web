@@ -6,12 +6,11 @@ PREPAYMENT CALCULATOR - COMPREHENSIVE IMPLEMENTATION
 ===============================================================================
 
 OVERVIEW:
-This module implements a loan prepayment calculator following RBI guidelines and 
-industry best practices as used by major Indian banks (HDFC, SBI, ICICI, Axis).
+This module implements a loan prepayment calculator following industry best practices as used by major Indian banks (HDFC, SBI, ICICI, Axis).
 
 KEY FEATURES:
 - Single strategy: "Reduce Loan Tenure" (industry-preferred approach)
-- RBI-compliant prepayment penalty handling
+- Industry-standard prepayment penalty handling
 - Industry-standard calculation methodology
 - Real-time amortization schedule generation
 
@@ -42,8 +41,8 @@ CALCULATION METHODOLOGY
    - Monthly: Applied every month (month % 1 === 0)
    - Uses modulo operator for consistent scheduling
 
-4. PENALTY CALCULATION (RBI Guidelines):
-   - Floating Rate Loans: 0% penalty (RBI mandated)
+4. PENALTY CALCULATION (Industry Guidelines):
+   - Floating Rate Loans: 0% penalty (industry standard)
    - Fixed Rate Loans: Typically 2-5% of prepaid amount
    - Penalty = Total Prepayments × Penalty Rate / 100
 
@@ -70,7 +69,7 @@ Loop continues until:
 - Maximum months reached (safety limit)
 
 ===============================================================================
-RBI COMPLIANCE & INDUSTRY STANDARDS
+INDUSTRY STANDARDS & COMPLIANCE
 ===============================================================================
 
 1. PREPAYMENT CHARGES:
@@ -139,7 +138,7 @@ UI/UX CONSIDERATIONS
    - Time and money savings highlighted
 
 3. EDUCATIONAL CONTENT:
-   - RBI guideline explanations
+   - Industry guideline explanations
    - Industry best practice notes
    - Clear benefit explanations
 
@@ -211,14 +210,14 @@ const calculateEMI = (principal: number, rate: number, years: number): number =>
  * MAIN PREPAYMENT CALCULATION ENGINE
  * 
  * This function implements the complete loan prepayment calculation logic
- * following industry best practices and RBI guidelines.
+ * following industry best practices and guidelines.
  * 
  * KEY IMPLEMENTATION DETAILS:
  * 1. Prepayment applied BEFORE monthly interest calculation (industry standard)
  * 2. Interest calculated on reduced balance after prepayment
  * 3. Only "Reduce Tenure" strategy (most beneficial for customers)
  * 4. Comprehensive amortization schedule generation
- * 5. RBI-compliant penalty handling
+ * 5. Industry-standard penalty handling
  * 
  * @param loanAmount - Principal loan amount (₹)
  * @param interestRate - Annual interest rate (%)
@@ -419,7 +418,19 @@ const calculateLoanDetails = (
 // FAQ data for prepayment calculator page
 const prepaymentFAQs: FAQItem[] = [
   {
-    question: "What is loan prepayment and how does it work?",
+    question: "What are industry standards for car loan prepayment penalties?",
+    answer: "Following modern industry standards and best practices:\n\n• Minimal or zero prepayment penalties on car loans for individuals\n• Applies to both floating and fixed rate loans\n• Makes prepayment more attractive for faster debt freedom\n• Most lenders offer flexible prepayment options\n• Industry trend towards customer-friendly prepayment policies\n\nThese industry standards make car loan prepayment a smart financial strategy with guaranteed savings and minimal penalty costs."
+  },
+  {
+    question: "Which is better: EMI reduction or tenure reduction after prepayment?",
+    answer: "Tenure reduction is generally better for maximum savings:\n\n**Tenure Reduction (Recommended):**\n• Keep same EMI, finish loan faster\n• Maximum interest savings over loan life\n• Builds financial discipline\n• Frees up future cash flow sooner\n\n**EMI Reduction:**\n• Lower monthly payments\n• Better cash flow flexibility\n• Less total interest savings\n• Good for tight monthly budgets\n\nOur calculator uses tenure reduction strategy as it provides optimal savings. Most financial experts recommend this approach for long-term wealth building."
+  },
+  {
+    question: "How do I calculate interest savings after partial prepayment?",
+    answer: "Interest savings calculation follows this method:\n\n1. **Original Interest:** Total interest without prepayment\n2. **Prepayment Impact:** Reduces principal, lowering future interest\n3. **New Interest:** Total interest with prepayment applied\n4. **Gross Savings:** Original Interest - New Interest\n5. **Net Savings:** Gross Savings - Prepayment Penalty (if any)\n\nOur calculator shows:\n• Month-by-month breakdown\n• Total interest saved\n• Time saved in months/years\n• Net benefit after penalties\n\nEarly prepayments save more as they reduce the principal base for all future interest calculations."
+  },
+  {
+    question: "What is car loan prepayment and how does it work?",
     answer: "Loan prepayment is making additional payments towards your loan principal beyond your regular EMI. This reduces your outstanding loan balance and can significantly reduce the total interest you pay.\n\nHow it works:\n• Additional payment is applied directly to the principal balance\n• Interest for subsequent months is calculated on the reduced balance\n• You can either reduce your EMI amount or shorten the loan tenure\n• Our calculator uses the 'Reduce Tenure' strategy, keeping EMI same while shortening loan duration"
   },
   {
@@ -428,7 +439,7 @@ const prepaymentFAQs: FAQItem[] = [
   },
   {
     question: "What are prepayment penalties and when do they apply?",
-    answer: "Prepayment penalties are charges levied by banks for early loan repayment:\n\nRBI Guidelines:\n• Floating rate loans: No prepayment penalty allowed\n• Fixed rate loans: Banks can charge penalty (typically 2-5%)\n• Penalty only on prepaid amount, not entire loan\n\nWhen Penalties Apply:\n• Usually in first 1-3 years of loan\n• Only for fixed interest rate loans\n• Varies by bank and loan agreement\n\nTip: Check your loan agreement for specific penalty terms. Many banks waive penalties after certain period or for small prepayments."
+    answer: "Prepayment penalties are charges levied by banks for early loan repayment:\n\nIndustry Guidelines:\n• Floating rate loans: No prepayment penalty allowed\n• Fixed rate loans: Banks can charge penalty (typically 2-5%)\n• Penalty only on prepaid amount, not entire loan\n\nWhen Penalties Apply:\n• Usually in first 1-3 years of loan\n• Only for fixed interest rate loans\n• Varies by bank and loan agreement\n\nTip: Check your loan agreement for specific penalty terms. Many banks waive penalties after certain period or for small prepayments."
   },
   {
     question: "How much should I prepay each month/year?",
@@ -644,6 +655,55 @@ function PrepaymentCalculator() {
       
       <div className="container mx-auto px-4">
         <div className="max-w-6xl mx-auto">
+          
+          {/* Mobile-optimized heading */}
+          <div className="block md:hidden text-center mb-4">
+            <h1 className={`text-lg font-semibold mb-2 ${isLight ? 'text-slate-800' : 'text-white/90'}`}>
+              Car Loan Prepayment Calculator
+            </h1>
+            <p className={`text-sm ${isLight ? 'text-slate-600' : 'text-white/80'}`}>
+              Calculate savings with tenure reduction
+            </p>
+            <div className="mt-4">
+              <Link 
+                href="/" 
+                className={`inline-flex items-center px-3 py-2 rounded-lg text-xs font-medium transition-all duration-200 ${isLight ? 'bg-blue-50 text-blue-700 hover:bg-blue-100 hover:text-blue-800' : 'bg-blue-900/30 text-blue-400 hover:bg-blue-900/50 hover:text-blue-300'} border ${isLight ? 'border-blue-200 hover:border-blue-300' : 'border-blue-500/40 hover:border-blue-500/60'}`}
+              >
+                <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                </svg>
+                Car Affordability Calculator
+              </Link>
+            </div>
+          </div>
+
+          {/* Desktop heading */}
+          <div className="hidden md:block text-center mb-6">
+            <h1 className={`text-xl lg:text-2xl font-semibold mb-3 ${isLight ? 'text-slate-800' : 'text-white/90'}`}>
+              Car Loan Prepayment Calculator | Tenure Reduction
+            </h1>
+            <p className={`text-base lg:text-lg font-medium max-w-4xl mx-auto ${isLight ? 'text-slate-600' : 'text-slate-400'}`}>
+              Calculate savings for early loan closure and partial prepayments with tenure reduction strategy • 
+              Get instant results following <span className={`font-semibold ${isLight ? 'text-blue-600' : 'text-blue-400'}`}>industry standard practices</span>!
+            </p>
+            <div className="mt-6">
+              <p className={`text-sm ${isLight ? 'text-slate-500' : 'text-slate-400'} mb-2`}>
+                Need to calculate your car budget first?
+              </p>
+              <Link 
+                href="/" 
+                className={`inline-flex items-center px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${isLight ? 'bg-blue-50 text-blue-700 hover:bg-blue-100 hover:text-blue-800' : 'bg-blue-900/30 text-blue-400 hover:bg-blue-900/50 hover:text-blue-300'} border ${isLight ? 'border-blue-200 hover:border-blue-300' : 'border-blue-500/40 hover:border-blue-500/60'}`}
+              >
+                <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                </svg>
+                Try our Car Affordability Calculator
+                <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                </svg>
+              </Link>
+            </div>
+          </div>
           
           {/* Estimates Notice */}
           <div className="text-left mb-4">
