@@ -581,7 +581,7 @@ export default function HomePage() {
                   {!isLeftCollapsed && carData.carPrice > 0 && carData.tenure > 0 && (
                     <div className="md-panel-elevated p-4">
                       <Suspense fallback={<div className="h-64 bg-gray-100 animate-pulse rounded-lg"></div>}>
-                        <div className="opacity-0 animate-fadeIn">
+                        <div className="animate-fadeIn">
                           <CostDistributionChart carData={carData} />
                         </div>
                       </Suspense>
@@ -595,7 +595,7 @@ export default function HomePage() {
                   aria-labelledby="results-heading"
                 >
                   <div className="lg:sticky lg:top-8 space-y-4">
-                    <div className="md-panel-elevated p-3 sm:p-4 lg:p-5 opacity-0 animate-slideIn">
+                    <div className="md-panel-elevated p-3 sm:p-4 lg:p-5 animate-slideIn">
                       <h3 id="results-heading" className="sr-only">Loan Calculation Results</h3>
                       <TotalCostDisplayV2 carData={carData} updateCarData={updateCarData} />
                     </div>
