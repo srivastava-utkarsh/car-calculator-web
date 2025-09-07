@@ -150,6 +150,7 @@ import { Calculator } from 'lucide-react'
 import { useSearchParams } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
+import Script from 'next/script'
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts'
 import { useTheme } from '@/contexts/ThemeContext'
 import { themeClass } from '@/utils/themeStyles'
@@ -555,6 +556,13 @@ function PrepaymentCalculator() {
 
   return (
     <main className={`min-h-screen font-sans relative ${isLight ? 'bg-gradient-to-br from-slate-50 via-white to-slate-50' : 'bg-black'}`} style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>
+      {/* AdSense Script */}
+      <Script
+        async
+        src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4285007880246877"
+        crossOrigin="anonymous"
+        strategy="afterInteractive"
+      />
       {/* Header Navigation - Same as Car Affordability Page */}
       <header className={isLight ? 'bg-white border-b border-slate-200/60' : 'bg-black border-b border-white/5'}>
         <div className="container mx-auto px-6 lg:px-8">
