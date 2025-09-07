@@ -13,6 +13,8 @@ NEXT_PUBLIC_ADSENSE_CLIENT_ID = "ca-pub-4285007880246877"
 # Production environment overrides
 [env.production]
 name = "budgetgear-calculator"
+[env.production.vars]
+NEXT_PUBLIC_ADSENSE_CLIENT_ID = "ca-pub-4285007880246877"
 
 # Preview/staging environment overrides  
 [env.preview]
