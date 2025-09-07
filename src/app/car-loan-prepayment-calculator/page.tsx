@@ -155,6 +155,7 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 import { useTheme } from '@/contexts/ThemeContext'
 import { themeClass } from '@/utils/themeStyles'
 import FAQ, { FAQItem } from '@/components/FAQ'
+import AdSenseAd from '@/components/AdSenseAd'
 
 interface LoanData {
   loanAmount: number
@@ -1091,41 +1092,13 @@ function PrepaymentCalculator() {
               <div className="container mx-auto px-4">
                 <div className="max-w-4xl mx-auto">
                   {/* Desktop Ad - 970x250 Billboard */}
-                  <div className="text-center my-6 hidden md:block">
-                    <div className={`text-xs mb-2 ${isLight ? 'text-slate-500' : 'text-white/60'}`}>Advertisement</div>
-                    <div 
-                      className={`
-                        border-2 border-dashed rounded-lg flex items-center justify-center mx-auto
-                        ${isLight 
-                          ? 'bg-gradient-to-br from-slate-50 via-white to-slate-50 border-slate-300' 
-                          : 'bg-black border-white/20'
-                        }
-                      `}
-                      style={{ width: '970px', height: '250px' }}
-                    >
-                      <div className={`text-sm font-medium ${isLight ? 'text-slate-400' : 'text-white/40'}`}>
-                        970 x 250 Billboard Ad
-                      </div>
-                    </div>
+                  <div className="hidden md:block" style={{ textAlign: 'center', margin: '24px 0' }}>
+                    <AdSenseAd slot="5678901234" style={{ margin: "24px 0" }} />
                   </div>
                   
                   {/* Mobile Ad - 320x100 Banner */}
-                  <div className="text-center my-6 block md:hidden">
-                    <div className={`text-xs mb-2 ${isLight ? 'text-slate-500' : 'text-white/60'}`}>Advertisement</div>
-                    <div 
-                      className={`
-                        border-2 border-dashed rounded-lg flex items-center justify-center mx-auto
-                        ${isLight 
-                          ? 'bg-gradient-to-br from-slate-50 via-white to-slate-50 border-slate-300' 
-                          : 'bg-black border-white/20'
-                        }
-                      `}
-                      style={{ width: '320px', height: '100px' }}
-                    >
-                      <div className={`text-sm font-medium ${isLight ? 'text-slate-400' : 'text-white/40'}`}>
-                        320 x 100 Large Mobile Banner Ad
-                      </div>
-                    </div>
+                  <div className="block md:hidden" style={{ textAlign: 'center', margin: '24px 0' }}>
+                    <AdSenseAd slot="6789012345" style={{ margin: "24px 0" }} />
                   </div>
                 </div>
               </div>
@@ -1248,41 +1221,13 @@ function PrepaymentCalculator() {
               <div className="container mx-auto px-4">
                 <div className="max-w-4xl mx-auto">
                   {/* Desktop Ad - 970x250 Billboard */}
-                  <div className="text-center my-6 hidden md:block">
-                    <div className={`text-xs mb-2 ${isLight ? 'text-slate-500' : 'text-white/60'}`}>Advertisement</div>
-                    <div 
-                      className={`
-                        border-2 border-dashed rounded-lg flex items-center justify-center mx-auto
-                        ${isLight 
-                          ? 'bg-gradient-to-br from-slate-50 via-white to-slate-50 border-slate-300' 
-                          : 'bg-black border-white/20'
-                        }
-                      `}
-                      style={{ width: '970px', height: '250px' }}
-                    >
-                      <div className={`text-sm font-medium ${isLight ? 'text-slate-400' : 'text-white/40'}`}>
-                        970 x 250 Billboard Ad
-                      </div>
-                    </div>
+                  <div className="hidden md:block" style={{ textAlign: 'center', margin: '24px 0' }}>
+                    <AdSenseAd slot="7890123456" style={{ margin: "24px 0" }} />
                   </div>
                   
                   {/* Mobile Ad - 320x100 Banner */}
-                  <div className="text-center my-6 block md:hidden">
-                    <div className={`text-xs mb-2 ${isLight ? 'text-slate-500' : 'text-white/60'}`}>Advertisement</div>
-                    <div 
-                      className={`
-                        border-2 border-dashed rounded-lg flex items-center justify-center mx-auto
-                        ${isLight 
-                          ? 'bg-gradient-to-br from-slate-50 via-white to-slate-50 border-slate-300' 
-                          : 'bg-black border-white/20'
-                        }
-                      `}
-                      style={{ width: '320px', height: '100px' }}
-                    >
-                      <div className={`text-sm font-medium ${isLight ? 'text-slate-400' : 'text-white/40'}`}>
-                        320 x 100 Large Mobile Banner Ad
-                      </div>
-                    </div>
+                  <div className="block md:hidden" style={{ textAlign: 'center', margin: '24px 0' }}>
+                    <AdSenseAd slot="8901234567" style={{ margin: "24px 0" }} />
                   </div>
                 </div>
               </div>

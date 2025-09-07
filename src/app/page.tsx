@@ -11,6 +11,7 @@ import CarDetailsFormV2 from '@/components/v2/CarDetailsFormV2'
 import FinancialFormV2 from '@/components/v2/FinancialFormV2'
 // ResultsDisplayV2 now lazy loaded above
 import TotalCostDisplayV2 from '@/components/v2/TotalCostDisplayV2'
+import AdSenseAd from '@/components/AdSenseAd'
 
 // Import FAQ data directly
 import { carCalculatorFAQs } from '@/data/faqData'
@@ -611,12 +612,9 @@ export default function HomePage() {
           <div className="container mx-auto px-4">
             <div className="max-w-4xl mx-auto">
               {/* Mobile Ad - 320x100 Banner */}
-              <EnhancedAdSpace 
-                width="320px" 
-                height="100px" 
-                label="320 x 100 Mobile Banner Ad"
-                className="my-6"
-              />
+              <div style={{ textAlign: 'center', margin: '24px 0' }}>
+                <AdSenseAd slot="1234567890" style={{ margin: "24px 0" }} />
+              </div>
             </div>
           </div>
         </section>
@@ -705,11 +703,9 @@ export default function HomePage() {
         <section className="relative z-10 mt-12">
           <div className="container mx-auto px-4">
             <div className="max-w-6xl mx-auto">
-              <EnhancedAdSpace 
-                width="100%" 
-                height="120px" 
-                label="Full Width Banner Ad (Responsive)"
-              />
+              <div style={{ textAlign: 'center', margin: '24px 0' }}>
+                <AdSenseAd slot="2345678901" style={{ margin: "24px 0" }} />
+              </div>
             </div>
           </div>
         </section>
@@ -875,20 +871,14 @@ export default function HomePage() {
           <div className="container mx-auto px-4">
             <div className="max-w-4xl mx-auto">
               {/* Desktop Footer Ad */}
-              <EnhancedAdSpace 
-                width="728px" 
-                height="90px" 
-                label="728 x 90 Leaderboard Ad"
-                className="hidden md:block"
-              />
+              <div className="hidden md:block" style={{ textAlign: 'center', margin: '24px 0' }}>
+                <AdSenseAd slot="3456789012" style={{ margin: "24px 0" }} />
+              </div>
               
               {/* Mobile Footer Ad */}
-              <EnhancedAdSpace 
-                width="320px" 
-                height="50px" 
-                label="320 x 50 Mobile Banner Ad"
-                className="block md:hidden"
-              />
+              <div className="block md:hidden" style={{ textAlign: 'center', margin: '24px 0' }}>
+                <AdSenseAd slot="4567890123" style={{ margin: "24px 0" }} />
+              </div>
             </div>
           </div>
         </section>
