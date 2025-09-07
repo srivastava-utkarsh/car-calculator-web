@@ -2,6 +2,13 @@
 
 import { useState, useEffect } from 'react'
 
+declare global {
+  interface Window {
+    googletag?: unknown;
+    adsbygoogle: Record<string, unknown>[];
+  }
+}
+
 export const useAdBlockerDetection = () => {
   const [isAdBlockerEnabled, setIsAdBlockerEnabled] = useState<boolean | null>(null)
   const [isLoading, setIsLoading] = useState(true)
@@ -32,9 +39,7 @@ export const useAdBlockerDetection = () => {
         
         // Method 2: Check for common ad blocker properties
         const additionalChecks = 
-          // @ts-expect-error - googletag may not be defined if ad blocker is active
           typeof window.googletag === 'undefined' &&
-          // @ts-expect-error - adsbygoogle may not be defined if ad blocker is active
           typeof window.adsbygoogle === 'undefined' &&
           // Check for blocked scripts
           !document.querySelector('script[src*="googletagmanager"]') &&
