@@ -7,28 +7,45 @@ import { ThemeProvider } from "@/contexts/ThemeContext";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
+  display: 'swap',
 });
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+  display: 'swap',
 });
 
 export const metadata: Metadata = {
-  title: "BudgetGear - Car Finance Calculator | EMI Calculator & Loan Affordability Tool",
-  description: "Calculate car EMI, check loan affordability with the proven 20/4/10 rule, and make smart car financing decisions. Free online car loan calculator with instant results and affordability insights.",
+  title: "Car Affordability Calculator | Car Loan EMI Calculator & Prepayment Estimator India",
+  description: "Calculate car affordability, EMI, and prepayment savings with professional calculator. Check loan eligibility, compare scenarios, and save interest. How much car can I afford on my salary?",
   keywords: [
-    "car loan calculator",
-    "EMI calculator",
-    "car finance calculator", 
-    "auto loan calculator",
     "car affordability calculator",
-    "loan EMI calculation",
-    "car loan EMI",
-    "vehicle finance calculator",
+    "car loan eligibility calculator", 
+    "how much car can I afford",
+    "car budget calculator",
+    "vehicle affordability tool",
+    "salary car calculator",
+    "EMI calculator car",
+    "car payment calculator",
+    "car purchase estimator",
+    "buy a car calculator",
+    "car loan prepayment calculator",
+    "car loan prepayment penalty",
+    "car loan foreclosure",
+    "car loan part payment",
+    "prepayment calculator car loan",
+    "prepayment of car loan",
+    "car loan prepayment charges",
+    "car loan early closure calculator",
+    "how much car can I afford on my salary",
+    "what is a good down payment for a car",
+    "best way to pay off car loan early",
+    "should I prepay car loan",
+    "pros and cons of prepaying car loan",
+    "car loan prepayment strategy India",
     "20/4/10 rule",
     "car financing",
-    "budget calculator",
     "loan affordability"
   ],
   authors: [{ name: "BudgetGear" }],
@@ -44,13 +61,13 @@ export const metadata: Metadata = {
     canonical: '/',
   },
   openGraph: {
-    title: "BudgetGear - Car Finance Calculator | EMI Calculator & Loan Affordability Tool",
-    description: "Calculate car EMI, check loan affordability with the proven 20/4/10 rule, and make smart car financing decisions. Free online car loan calculator with instant results.",
+    title: "Car Affordability Calculator | Car Loan EMI Calculator & Prepayment Estimator India",
+    description: "Calculate car affordability, EMI, and prepayment savings with professional calculator. Check loan eligibility, compare scenarios, and save interest. How much car can I afford on my salary?",
     url: 'https://budgetgear.in',
     siteName: 'BudgetGear',
     images: [
       {
-        url: 'https://budgetgear.in/brand_img.png',
+        url: 'https://budgetgear.in/bck-logo.svg',
         width: 1200,
         height: 630,
         alt: 'BudgetGear Car Finance Calculator',
@@ -61,9 +78,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: "BudgetGear - Car Finance Calculator | EMI Calculator & Loan Affordability Tool",
-    description: "Calculate car EMI, check loan affordability with the proven 20/4/10 rule, and make smart car financing decisions. Free online calculator.",
-    images: ['https://budgetgear.in/brand_img.png'],
+    title: "Car Affordability Calculator | Car Loan EMI Calculator & Prepayment Estimator India",
+    description: "Calculate car affordability, EMI, and prepayment savings with professional calculator. Check loan eligibility, compare scenarios, and save interest.",
+    images: ['https://budgetgear.in/bck-logo.svg'],
     creator: '@BudgetGear',
   },
   robots: {
@@ -81,9 +98,9 @@ export const metadata: Metadata = {
     google: 'google-site-verification-code-here',
   },
   icons: {
-    icon: "/bck-co-logo.ico",
-    shortcut: "/bck-co-logo.ico",
-    apple: "/brand_img.png",
+    icon: "/favicon.ico",
+    shortcut: "/favicon.ico",
+    apple: "/bck-logo.svg",
   },
 };
 
@@ -96,9 +113,9 @@ export default function RootLayout({
     {
       "@context": "https://schema.org",
       "@type": "WebApplication",
-      "name": "BudgetGear Car Finance Calculator",
+      "name": "Car Affordability Calculator | BudgetGear",
       "applicationCategory": "FinanceApplication",
-      "description": "Calculate car EMI, check loan affordability with the proven 20/4/10 rule, and make smart car financing decisions. Free online car loan calculator with instant results.",
+      "description": "Calculate car affordability, car loan EMI, and prepayment savings. Check loan eligibility with 20/4/10 rule. Professional prepayment calculator for smart car financing decisions.",
       "url": "https://budgetgear.in",
       "author": {
         "@type": "Organization",
@@ -110,9 +127,17 @@ export default function RootLayout({
         "priceCurrency": "INR"
       },
       "featureList": [
-        "Car EMI Calculator",
-        "Loan Affordability Check", 
+        "Car Affordability Calculator",
+        "Car Loan Eligibility Calculator", 
+        "EMI Calculator Car",
+        "Car Loan Prepayment Calculator",
         "20/4/10 Rule Validation",
+        "Car Budget Calculator",
+        "Vehicle Affordability Tool",
+        "Salary Car Calculator",
+        "Car Payment Calculator",
+        "Prepayment Penalty Calculator",
+        "Car Loan Foreclosure Calculator",
         "Interest Rate Calculator",
         "Down Payment Calculator",
         "Total Cost Analysis"
@@ -163,7 +188,52 @@ export default function RootLayout({
             "@type": "Answer",
             "text": "Minimum: 10-15% (lender requirement), Recommended: 20-25% (20/4/10 rule), Optimal: 30-40% (if surplus funds available). Higher down payment benefits include lower EMI, reduced total interest cost, better loan approval chances, and less risk of being underwater on the loan."
           }
+        },
+        {
+          "@type": "Question",
+          "name": "Should I prepay my car loan?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Prepaying car loans can save significant interest if: you have surplus funds, loan interest rate is high (>10%), you have no penalty (floating rate loans), and you lack higher-return investment options. Consider prepayment penalty, tax benefits, and opportunity cost before deciding."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is car loan prepayment penalty?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Car loan prepayment penalty is a charge for paying off your loan early. Industry standard: 0% penalty for floating rate loans, 2-5% penalty for fixed rate loans. Always check with your bank before prepaying to understand charges and calculate net savings."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How much car can I afford on my salary?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Follow the 20/4/10 rule: 20% down payment, 4 years max tenure, 10% of gross monthly income for total car expenses (EMI + insurance + fuel + maintenance). Example: ₹50,000 salary = ₹5,000 max monthly car expenses, ₹15-20 lakh car affordability."
+          }
         }
+      ]
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "Car Loan Prepayment Calculator",
+      "applicationCategory": "FinanceApplication",
+      "description": "Professional car loan prepayment calculator. Calculate prepayment savings, penalty charges, and compare scenarios for early loan closure.",
+      "url": "https://budgetgear.in/prepayment",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "INR"
+      },
+      "featureList": [
+        "Car Loan Prepayment Calculator",
+        "Prepayment Penalty Calculator",
+        "Interest Savings Calculator", 
+        "Loan Tenure Reduction",
+        "Industry Standard Compliance",
+        "Fixed vs Floating Rate Comparison"
       ]
     },
     {
@@ -189,9 +259,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <link rel="icon" href="/bck-co-logo.ico" sizes="any" />
-        <link rel="icon" href="/brand_img.png" type="image/png" />
-        <link rel="apple-touch-icon" href="/brand_img.png" />
+        <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link rel="icon" href="/bck-logo.svg" type="image/svg+xml" />
+        <link rel="apple-touch-icon" href="/bck-logo.svg" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}

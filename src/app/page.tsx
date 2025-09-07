@@ -9,16 +9,17 @@ import Script from 'next/script'
 // Import Version 2 components
 import CarDetailsFormV2 from '@/components/v2/CarDetailsFormV2'
 import FinancialFormV2 from '@/components/v2/FinancialFormV2'
-import ResultsDisplayV2 from '@/components/v2/ResultsDisplayV2'
+// ResultsDisplayV2 now lazy loaded above
 import TotalCostDisplayV2 from '@/components/v2/TotalCostDisplayV2'
 
 // Import FAQ data directly
 import { carCalculatorFAQs } from '@/data/faqData'
 
-// Lazy load heavy components
+// Lazy load heavy components with dynamic imports to reduce bundle size
 const CostDistributionChart = lazy(() => import('@/components/v2/CostDistributionChart'))
 const EducationalSummary = lazy(() => import('@/components/v2/EducationalSummary'))
 const FAQ = lazy(() => import('@/components/FAQ'))
+const ResultsDisplayV2 = lazy(() => import('@/components/v2/ResultsDisplayV2'))
 
 export interface CarData {
   carPrice: number
@@ -562,11 +563,13 @@ export default function HomePage() {
                                 </h3>
                               </div>
                               
-                              <ResultsDisplayV2 
-                                carData={carData}
-                                onBack={hideResultsView}
-                                onRestart={restart}
-                              />
+                              <Suspense fallback={<div className="h-64 bg-gray-100 animate-pulse rounded-lg"></div>}>
+                                <ResultsDisplayV2 
+                                  carData={carData}
+                                  onBack={hideResultsView}
+                                  onRestart={restart}
+                                />
+                              </Suspense>
                             </div>
                           )}
                       </div>
@@ -574,8 +577,8 @@ export default function HomePage() {
                     </div>
                   </div>
 
-                  {/* Cost Distribution Chart - Positioned in left column area */}
-                  {!isLeftCollapsed && (
+                  {/* Cost Distribution Chart - Lazy loaded only when needed */}
+                  {!isLeftCollapsed && carData.carPrice > 0 && carData.tenure > 0 && (
                     <div className="md-panel-elevated p-4">
                       <Suspense fallback={<div className="h-64 bg-gray-100 animate-pulse rounded-lg"></div>}>
                         <div className="opacity-0 animate-fadeIn">

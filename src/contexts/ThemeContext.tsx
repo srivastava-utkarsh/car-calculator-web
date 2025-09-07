@@ -19,18 +19,25 @@ interface ThemeProviderProps {
 
 export function ThemeProvider({ children }: ThemeProviderProps) {
   const [theme, setTheme] = useState<Theme>('dark')
+  const [mounted, setMounted] = useState(false)
 
-  // Always use dark theme - localStorage loading disabled
+  // Handle hydration and localStorage safely
   useEffect(() => {
-    // Force dark theme and save to localStorage
-    setTheme('dark')
-    localStorage.setItem('theme', 'dark')
+    setMounted(true)
+    
+    // Check localStorage on client-side only
+    if (typeof window !== 'undefined') {
+      const savedTheme = localStorage.getItem('theme') as Theme || 'dark'
+      setTheme(savedTheme)
+    }
   }, [])
 
-  // Save theme to localStorage whenever it changes
+  // Save theme to localStorage whenever it changes (client-side only)
   useEffect(() => {
-    localStorage.setItem('theme', theme)
-  }, [theme])
+    if (mounted && typeof window !== 'undefined') {
+      localStorage.setItem('theme', theme)
+    }
+  }, [theme, mounted])
 
   const toggleTheme = () => {
     setTheme(prev => prev === 'light' ? 'dark' : 'light')
@@ -41,6 +48,15 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
     toggleTheme,
     isDark: theme === 'dark',
     isLight: theme === 'light'
+  }
+
+  // Prevent hydration mismatch by not rendering until mounted
+  if (!mounted) {
+    return (
+      <ThemeContext.Provider value={{ theme: 'dark', toggleTheme: () => {}, isDark: true, isLight: false }}>
+        {children}
+      </ThemeContext.Provider>
+    )
   }
 
   return (

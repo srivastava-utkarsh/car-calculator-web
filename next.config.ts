@@ -23,8 +23,10 @@ const nextConfig: NextConfig = {
     },
   },
   
-  // Security headers (not supported in static export)
-  // Will be handled by Cloudflare Pages
+  // Experimental features for better performance
+  experimental: {
+    webpackBuildWorker: true,
+  },
   
   // Webpack configuration (production optimizations)
   webpack: (config, { dev, isServer }) => {
@@ -33,6 +35,32 @@ const nextConfig: NextConfig = {
       config.optimization = {
         ...config.optimization,
         minimize: true,
+        splitChunks: {
+          chunks: 'all',
+          cacheGroups: {
+            vendor: {
+              test: /[\\/]node_modules[\\/]/,
+              name: 'vendors',
+              chunks: 'all',
+            },
+            framerMotion: {
+              test: /[\\/]node_modules[\\/]framer-motion[\\/]/,
+              name: 'framer-motion',
+              chunks: 'async',
+            },
+            recharts: {
+              test: /[\\/]node_modules[\\/]recharts[\\/]/,
+              name: 'recharts',
+              chunks: 'async',
+            },
+            common: {
+              name: 'common',
+              minChunks: 2,
+              chunks: 'all',
+              enforce: true,
+            },
+          },
+        },
       };
     }
     

@@ -1,9 +1,9 @@
 'use client'
 
-import React, { useState } from 'react'
-import { motion } from 'framer-motion'
+import React from 'react'
 import { CarData } from '@/app/page'
-import { TrendingUp, CheckCircle, XCircle, Percent, Clock, Info, Calendar, DollarSign, TrendingDown, CreditCard, Car, IndianRupee, Fuel, ParkingCircle } from 'lucide-react'
+// Only import icons that are actually used to reduce bundle size
+import { CheckCircle, XCircle, Percent, Clock, Info, Calendar, CreditCard, Car, IndianRupee, Fuel, ParkingCircle } from 'lucide-react'
 import { useTheme } from '@/contexts/ThemeContext'
 import { getThemeStyles, themeClass } from '@/utils/themeStyles'
 
@@ -12,9 +12,9 @@ interface TotalCostDisplayV2Props {
   updateCarData: (updates: Partial<CarData>) => void
 }
 
-export default function TotalCostDisplayV2({ carData, updateCarData: _updateCarData }: TotalCostDisplayV2Props) {
-  const { theme, isLight, isDark } = useTheme()
-  const themeStyles = getThemeStyles(theme)
+export default function TotalCostDisplayV2({ carData }: TotalCostDisplayV2Props) {
+  const { isLight } = useTheme()
+  const themeStyles = getThemeStyles('dark')
   
   // Use monthly fuel expense from form input
   const monthlyFuelCost = carData.monthlyFuelExpense || 0
@@ -291,10 +291,8 @@ export default function TotalCostDisplayV2({ carData, updateCarData: _updateCarD
       </div>
       
       {/* Loan Summary - Compact Display */}
-      <motion.div 
-        className="p-2 sm:p-4 mb-2 transition-all duration-300"
-        animate={completionPercentage === 100 ? { scale: [1, 1.02, 1] } : {}}
-        transition={{ duration: 0.6, repeat: 0 }}
+      <div 
+        className={`p-2 sm:p-4 mb-2 transition-all duration-300 ${completionPercentage === 100 ? 'animate-pulse' : ''}`}
       >
         {/* Main EMI Display - Proportional UX */}
         <div className="text-center mb-2">
@@ -530,7 +528,7 @@ export default function TotalCostDisplayV2({ carData, updateCarData: _updateCarD
           </div>
         )}
 
-      </motion.div>
+      </div>
 
 
 
