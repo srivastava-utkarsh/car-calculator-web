@@ -475,7 +475,7 @@ function PrepaymentCalculator() {
       }
       
       // Apply min/max limits: 0 to 10 crores (10,00,00,000)
-      let newAmount = Math.max(0, Math.min(100000000, parsedValue))
+      const newAmount = Math.max(0, Math.min(100000000, parsedValue))
       
       setLoanData(prev => ({ ...prev, loanAmount: newAmount, emi: 0 }))
       
