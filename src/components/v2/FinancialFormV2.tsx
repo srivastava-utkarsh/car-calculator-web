@@ -15,6 +15,34 @@ interface FinancialFormV2Props {
 export default function FinancialFormV2({ carData, updateCarData, monthlyIncomeInputRef }: FinancialFormV2Props) {
   const { theme, isLight, isDark } = useTheme()
   const themeStyles = getThemeStyles(theme)
+  
+  // Local state for display values during editing (to avoid real-time validation)
+  const [monthlyIncomeDisplay, setMonthlyIncomeDisplay] = React.useState('')
+  const [insuranceDisplay, setInsuranceDisplay] = React.useState('')
+  const [maintenanceDisplay, setMaintenanceDisplay] = React.useState('')
+  const [fuelExpenseDisplay, setFuelExpenseDisplay] = React.useState('')
+  const [parkingFeeDisplay, setParkingFeeDisplay] = React.useState('')
+  
+  // Update display values when actual data changes from external sources
+  React.useEffect(() => {
+    setMonthlyIncomeDisplay(carData.monthlyIncome ? formatWithCommas(carData.monthlyIncome) : '')
+  }, [carData.monthlyIncome])
+  
+  React.useEffect(() => {
+    setInsuranceDisplay(carData.insuranceAndMaintenance ? formatWithCommas(carData.insuranceAndMaintenance) : '')
+  }, [carData.insuranceAndMaintenance])
+  
+  React.useEffect(() => {
+    setMaintenanceDisplay(carData.maintenanceCostPerYear ? formatWithCommas(carData.maintenanceCostPerYear) : '')
+  }, [carData.maintenanceCostPerYear])
+  
+  React.useEffect(() => {
+    setFuelExpenseDisplay(carData.monthlyFuelExpense ? formatWithCommas(carData.monthlyFuelExpense) : '')
+  }, [carData.monthlyFuelExpense])
+  
+  React.useEffect(() => {
+    setParkingFeeDisplay(carData.parkingFee ? formatWithCommas(carData.parkingFee) : '')
+  }, [carData.parkingFee])
 
   // Use safe formatting functions
   const formatWithCommas = (num: number): string => {
@@ -32,6 +60,162 @@ export default function FinancialFormV2({ carData, updateCarData, monthlyIncomeI
   // Replace unsafe EMI calculation with safe version
   const calculateEMI = (principal: number, rate: number, years: number) => {
     return calculateSafeEMI(principal, rate, years)
+  }
+
+  // Blur handlers for inputs (focus-based validation)
+  const handleMonthlyIncomeBlur = (value: string) => {
+    try {
+      const sanitized = sanitizeInput(value, 'number')
+      const numericValue = removeCommas(sanitized)
+      
+      if (numericValue === '' || numericValue === '0') {
+        updateCarData({ monthlyIncome: 0 })
+        setMonthlyIncomeDisplay('')
+        return
+      }
+      
+      const parsedValue = parseFloat(numericValue)
+      
+      if (isNaN(parsedValue) || parsedValue < 0) {
+        updateCarData({ monthlyIncome: 0 })
+        setMonthlyIncomeDisplay('')
+        return
+      }
+      
+      const income = safeNumber(
+        parsedValue,
+        0, // Allow 0 for monthly income to handle empty state
+        VALIDATION_LIMITS.MONTHLY_INCOME.MAX
+      )
+      
+      updateCarData({ monthlyIncome: income })
+      setMonthlyIncomeDisplay(formatWithCommas(income))
+      
+    } catch (error) {
+      console.error('Monthly income input error:', error)
+      updateCarData({ monthlyIncome: 0 })
+      setMonthlyIncomeDisplay('')
+    }
+  }
+
+  const handleInsuranceBlur = (value: string) => {
+    try {
+      const sanitized = sanitizeInput(value, 'number')
+      const numericValue = removeCommas(sanitized)
+      
+      if (numericValue === '' || numericValue === '0') {
+        updateCarData({ insuranceAndMaintenance: 0 })
+        setInsuranceDisplay('')
+        return
+      }
+      
+      const parsedValue = parseFloat(numericValue)
+      
+      if (isNaN(parsedValue) || parsedValue < 0) {
+        updateCarData({ insuranceAndMaintenance: 0 })
+        setInsuranceDisplay('')
+        return
+      }
+      
+      const cost = safeNumber(parsedValue, 0, 200000) // 2 Lakh limit for insurance
+      updateCarData({ insuranceAndMaintenance: cost })
+      setInsuranceDisplay(formatWithCommas(cost))
+      
+    } catch (error) {
+      console.error('Insurance cost input error:', error)
+      updateCarData({ insuranceAndMaintenance: 0 })
+      setInsuranceDisplay('')
+    }
+  }
+
+  const handleMaintenanceBlur = (value: string) => {
+    try {
+      const sanitized = sanitizeInput(value, 'number')
+      const numericValue = removeCommas(sanitized)
+      
+      if (numericValue === '' || numericValue === '0') {
+        updateCarData({ maintenanceCostPerYear: 0 })
+        setMaintenanceDisplay('')
+        return
+      }
+      
+      const parsedValue = parseFloat(numericValue)
+      
+      if (isNaN(parsedValue) || parsedValue < 0) {
+        updateCarData({ maintenanceCostPerYear: 0 })
+        setMaintenanceDisplay('')
+        return
+      }
+      
+      const cost = safeNumber(parsedValue, 0, 500000) // 5 Lakh limit for yearly maintenance
+      updateCarData({ maintenanceCostPerYear: cost })
+      setMaintenanceDisplay(formatWithCommas(cost))
+      
+    } catch (error) {
+      console.error('Maintenance cost input error:', error)
+      updateCarData({ maintenanceCostPerYear: 0 })
+      setMaintenanceDisplay('')
+    }
+  }
+
+  const handleFuelExpenseBlur = (value: string) => {
+    try {
+      const sanitized = sanitizeInput(value, 'number')
+      const numericValue = removeCommas(sanitized)
+      
+      if (numericValue === '' || numericValue === '0') {
+        updateCarData({ monthlyFuelExpense: 0 })
+        setFuelExpenseDisplay('')
+        return
+      }
+      
+      const parsedValue = parseFloat(numericValue)
+      
+      if (isNaN(parsedValue) || parsedValue < 0) {
+        updateCarData({ monthlyFuelExpense: 0 })
+        setFuelExpenseDisplay('')
+        return
+      }
+      
+      const expense = safeNumber(parsedValue, 0, VALIDATION_LIMITS.OPERATIONAL_COSTS.MAX) // 10 Lakh limit
+      updateCarData({ monthlyFuelExpense: expense })
+      setFuelExpenseDisplay(formatWithCommas(expense))
+      
+    } catch (error) {
+      console.error('Fuel expense input error:', error)
+      updateCarData({ monthlyFuelExpense: 0 })
+      setFuelExpenseDisplay('')
+    }
+  }
+
+  const handleParkingFeeBlur = (value: string) => {
+    try {
+      const sanitized = sanitizeInput(value, 'number')
+      const numericValue = removeCommas(sanitized)
+      
+      if (numericValue === '' || numericValue === '0') {
+        updateCarData({ parkingFee: 0 })
+        setParkingFeeDisplay('')
+        return
+      }
+      
+      const parsedValue = parseFloat(numericValue)
+      
+      if (isNaN(parsedValue) || parsedValue < 0) {
+        updateCarData({ parkingFee: 0 })
+        setParkingFeeDisplay('')
+        return
+      }
+      
+      const fee = safeNumber(parsedValue, 0, 50000) // 50K limit for parking
+      updateCarData({ parkingFee: fee })
+      setParkingFeeDisplay(formatWithCommas(fee))
+      
+    } catch (error) {
+      console.error('Parking fee input error:', error)
+      updateCarData({ parkingFee: 0 })
+      setParkingFeeDisplay('')
+    }
   }
 
   // Auto-focus logic based on the requirements
@@ -106,24 +290,14 @@ export default function FinancialFormV2({ carData, updateCarData, monthlyIncomeI
             pattern="[0-9,]*"
             autoComplete="off"
             required
-            value={carData.monthlyIncome ? formatWithCommas(carData.monthlyIncome) : ''}
+            value={monthlyIncomeDisplay}
             ref={monthlyIncomeInputRef}
             onChange={(e) => {
-              try {
-                const sanitized = sanitizeInput(e.target.value, 'number')
-                const numericValue = removeCommas(sanitized)
-                
-                const income = safeNumber(
-                  parseFloat(numericValue) || 0,
-                  0, // Allow 0 for monthly income to handle empty state
-                  VALIDATION_LIMITS.MONTHLY_INCOME.MAX
-                )
-                
-                updateCarData({ monthlyIncome: income })
-              } catch (error) {
-                console.error('Monthly income input error:', error)
-                updateCarData({ monthlyIncome: 0 })
-              }
+              // Store exactly what user types - no processing until blur
+              setMonthlyIncomeDisplay(e.target.value)
+            }}
+            onBlur={(e) => {
+              handleMonthlyIncomeBlur(e.target.value)
             }}
             onKeyDown={(e) => {
               // Enhanced mobile keyboard handling
@@ -167,30 +341,20 @@ export default function FinancialFormV2({ carData, updateCarData, monthlyIncomeI
           <label className={`text-sm font-medium ${themeClass(themeStyles.primaryText, 'text-white', isLight)}`} style={{ lineHeight: '1.5' }}>
             Insurance Cost
           </label>
-          <div className="relative">
+          <div className="relative rounded-md border-2 border-white/20 focus-within:border-green-400 focus-within:ring-2 focus-within:ring-green-400/20 transition-all duration-200">
             <span className="absolute left-4 top-1/2 transform -translate-y-1/2 font-semibold text-white/70 z-10 pointer-events-none">₹</span>
             <input
               type="text"
               inputMode="numeric"
               pattern="[0-9,]*"
               autoComplete="off"
-              value={carData.insuranceAndMaintenance ? formatWithCommas(carData.insuranceAndMaintenance) : ''}
+              value={insuranceDisplay}
               onChange={(e) => {
-                try {
-                  const sanitized = sanitizeInput(e.target.value, 'number')
-                  const numericValue = removeCommas(sanitized)
-                  
-                  const value = safeNumber(
-                    parseFloat(numericValue) || 0,
-                    0,
-                    200000 // 2 Lakh limit for insurance
-                  )
-                  
-                  updateCarData({ insuranceAndMaintenance: value })
-                } catch (error) {
-                  console.error('Insurance cost input error:', error)
-                  updateCarData({ insuranceAndMaintenance: 0 })
-                }
+                // Store exactly what user types - no processing until blur
+                setInsuranceDisplay(e.target.value)
+              }}
+              onBlur={(e) => {
+                handleInsuranceBlur(e.target.value)
               }}
               onKeyDown={(e) => {
                 // Enhanced mobile keyboard handling
@@ -204,24 +368,8 @@ export default function FinancialFormV2({ carData, updateCarData, monthlyIncomeI
                   e.preventDefault()
                 }
               }}
-              onBlur={(e) => {
-                try {
-                  const sanitized = sanitizeInput(e.target.value, 'number')
-                  const numericValue = removeCommas(sanitized)
-                  const value = parseFloat(numericValue) || 0
-                  
-                  // Ensure value is within safe bounds
-                  const clampedValue = safeNumber(value, 0, 200000)
-                  if (clampedValue !== value) {
-                    updateCarData({ insuranceAndMaintenance: clampedValue })
-                  }
-                } catch (error) {
-                  console.error('Insurance cost blur error:', error)
-                  updateCarData({ insuranceAndMaintenance: 0 })
-                }
-              }}
               placeholder="Enter Insurance cost"
-              className="w-full pl-8 pr-4 py-1.5 max-md:py-3 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all text-sm max-md:text-base bg-white/10 backdrop-blur-md border border-white/20 text-white placeholder-white/50 max-md:min-h-[48px] touch-manipulation"
+              className="w-full pl-8 pr-4 py-1.5 max-md:py-3 rounded-md focus:outline-none border-0 bg-transparent text-sm max-md:text-base text-white placeholder-white/50 max-md:min-h-[48px] touch-manipulation"
               style={{ WebkitAppearance: 'none', WebkitTapHighlightColor: 'transparent' }}
             />
           </div>
@@ -235,30 +383,20 @@ export default function FinancialFormV2({ carData, updateCarData, monthlyIncomeI
           <label className={`text-sm font-medium ${themeClass(themeStyles.primaryText, 'text-white', isLight)}`} style={{ lineHeight: '1.5' }}>
             Maintenance Cost (per year)
           </label>
-          <div className="relative">
+          <div className="relative rounded-md border-2 border-white/20 focus-within:border-green-400 focus-within:ring-2 focus-within:ring-green-400/20 transition-all duration-200">
             <span className="absolute left-4 top-1/2 transform -translate-y-1/2 font-semibold text-white/70 z-10 pointer-events-none">₹</span>
             <input
               type="text"
               inputMode="numeric"
               pattern="[0-9,]*"
               autoComplete="off"
-              value={carData.maintenanceCostPerYear ? formatWithCommas(carData.maintenanceCostPerYear) : ''}
+              value={maintenanceDisplay}
               onChange={(e) => {
-                try {
-                  const sanitized = sanitizeInput(e.target.value, 'number')
-                  const numericValue = removeCommas(sanitized)
-                  
-                  const cost = safeNumber(
-                    parseFloat(numericValue) || 0,
-                    0,
-                    500000 // 5 Lakh limit for yearly maintenance
-                  )
-                  
-                  updateCarData({ maintenanceCostPerYear: cost })
-                } catch (error) {
-                  console.error('Maintenance cost input error:', error)
-                  updateCarData({ maintenanceCostPerYear: 0 })
-                }
+                // Store exactly what user types - no processing until blur
+                setMaintenanceDisplay(e.target.value)
+              }}
+              onBlur={(e) => {
+                handleMaintenanceBlur(e.target.value)
               }}
               onKeyDown={(e) => {
                 // Enhanced mobile keyboard handling
@@ -273,7 +411,7 @@ export default function FinancialFormV2({ carData, updateCarData, monthlyIncomeI
                 }
               }}
               placeholder="Enter yearly maintenance cost"
-              className="w-full pl-8 pr-4 py-1.5 max-md:py-3 rounded-md focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-transparent transition-all text-sm max-md:text-base bg-white/10 backdrop-blur-md border border-white/20 text-white placeholder-white/50 max-md:min-h-[48px] touch-manipulation"
+              className="w-full pl-8 pr-4 py-1.5 max-md:py-3 rounded-md focus:outline-none border-0 bg-transparent text-sm max-md:text-base text-white placeholder-white/50 max-md:min-h-[48px] touch-manipulation"
               style={{ WebkitAppearance: 'none', WebkitTapHighlightColor: 'transparent' }}
             />
           </div>
@@ -287,30 +425,20 @@ export default function FinancialFormV2({ carData, updateCarData, monthlyIncomeI
           <label className={`text-sm font-medium ${themeClass(themeStyles.primaryText, 'text-white', isLight)}`} style={{ lineHeight: '1.5' }}>
             Monthly Fuel Expense
           </label>
-          <div className="relative">
+          <div className="relative rounded-md border-2 border-white/20 focus-within:border-green-400 focus-within:ring-2 focus-within:ring-green-400/20 transition-all duration-200">
             <span className="absolute left-4 top-1/2 transform -translate-y-1/2 font-semibold text-white/70 z-10 pointer-events-none">₹</span>
             <input
               type="text"
               inputMode="numeric"
               pattern="[0-9,]*"
               autoComplete="off"
-              value={carData.monthlyFuelExpense ? formatWithCommas(carData.monthlyFuelExpense) : ''}
+              value={fuelExpenseDisplay}
               onChange={(e) => {
-                try {
-                  const sanitized = sanitizeInput(e.target.value, 'number')
-                  const numericValue = removeCommas(sanitized)
-                  
-                  const expense = safeNumber(
-                    parseFloat(numericValue) || 0,
-                    0,
-                    VALIDATION_LIMITS.OPERATIONAL_COSTS.MAX // 10 Lakh limit
-                  )
-                  
-                  updateCarData({ monthlyFuelExpense: expense })
-                } catch (error) {
-                  console.error('Fuel expense input error:', error)
-                  updateCarData({ monthlyFuelExpense: 0 })
-                }
+                // Store exactly what user types - no processing until blur
+                setFuelExpenseDisplay(e.target.value)
+              }}
+              onBlur={(e) => {
+                handleFuelExpenseBlur(e.target.value)
               }}
               onKeyDown={(e) => {
                 // Enhanced mobile keyboard handling
@@ -325,7 +453,7 @@ export default function FinancialFormV2({ carData, updateCarData, monthlyIncomeI
                 }
               }}
               placeholder="Enter monthly fuel expense"
-              className="w-full pl-8 pr-4 py-1.5 max-md:py-3 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-transparent transition-all text-sm max-md:text-base bg-white/10 backdrop-blur-md border border-white/20 text-white placeholder-white/50 max-md:min-h-[48px] touch-manipulation"
+              className="w-full pl-8 pr-4 py-1.5 max-md:py-3 rounded-md focus:outline-none border-0 bg-transparent text-sm max-md:text-base text-white placeholder-white/50 max-md:min-h-[48px] touch-manipulation"
               style={{ WebkitAppearance: 'none', WebkitTapHighlightColor: 'transparent' }}
             />
           </div>
@@ -339,30 +467,20 @@ export default function FinancialFormV2({ carData, updateCarData, monthlyIncomeI
           <label className={`text-sm font-medium ${themeClass(themeStyles.primaryText, 'text-white', isLight)}`} style={{ lineHeight: '1.5' }}>
             Parking Fee (per month)
           </label>
-          <div className="relative">
+          <div className="relative rounded-md border-2 border-white/20 focus-within:border-green-400 focus-within:ring-2 focus-within:ring-green-400/20 transition-all duration-200">
             <span className="absolute left-4 top-1/2 transform -translate-y-1/2 font-semibold text-white/70 z-10 pointer-events-none">₹</span>
             <input
               type="text"
               inputMode="numeric"
               pattern="[0-9,]*"
               autoComplete="off"
-              value={carData.parkingFee ? formatWithCommas(carData.parkingFee) : ''}
+              value={parkingFeeDisplay}
               onChange={(e) => {
-                try {
-                  const sanitized = sanitizeInput(e.target.value, 'number')
-                  const numericValue = removeCommas(sanitized)
-                  
-                  const fee = safeNumber(
-                    parseFloat(numericValue) || 0,
-                    0,
-                    50000 // 50K limit for parking
-                  )
-                  
-                  updateCarData({ parkingFee: fee })
-                } catch (error) {
-                  console.error('Parking fee input error:', error)
-                  updateCarData({ parkingFee: 0 })
-                }
+                // Store exactly what user types - no processing until blur
+                setParkingFeeDisplay(e.target.value)
+              }}
+              onBlur={(e) => {
+                handleParkingFeeBlur(e.target.value)
               }}
               onKeyDown={(e) => {
                 // Enhanced mobile keyboard handling
@@ -377,7 +495,7 @@ export default function FinancialFormV2({ carData, updateCarData, monthlyIncomeI
                 }
               }}
               placeholder="Enter parking fee"
-              className="w-full pl-8 pr-4 py-1.5 max-md:py-3 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all text-sm max-md:text-base bg-white/10 backdrop-blur-md border border-white/20 text-white placeholder-white/50 max-md:min-h-[48px] touch-manipulation"
+              className="w-full pl-8 pr-4 py-1.5 max-md:py-3 rounded-md focus:outline-none border-0 bg-transparent text-sm max-md:text-base text-white placeholder-white/50 max-md:min-h-[48px] touch-manipulation"
               style={{ WebkitAppearance: 'none', WebkitTapHighlightColor: 'transparent' }}
             />
           </div>

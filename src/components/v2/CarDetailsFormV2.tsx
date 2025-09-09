@@ -15,6 +15,19 @@ interface CarDetailsFormV2Props {
 export default function CarDetailsFormV2({ carData, updateCarData, monthlyIncomeInputRef }: CarDetailsFormV2Props) {
   const { theme, isLight, isDark } = useTheme()
   const themeStyles = getThemeStyles(theme)
+  
+  // Local state for display values during editing (to avoid real-time validation)
+  const [carPriceDisplay, setCarPriceDisplay] = React.useState('')
+  const [downPaymentDisplay, setDownPaymentDisplay] = React.useState('')
+  
+  // Update display values when actual data changes from external sources
+  React.useEffect(() => {
+    setCarPriceDisplay(carData.carPrice ? formatWithCommas(carData.carPrice) : '')
+  }, [carData.carPrice])
+  
+  React.useEffect(() => {
+    setDownPaymentDisplay(carData.downPayment ? formatWithCommas(carData.downPayment) : '')
+  }, [carData.downPayment])
 
   // Removed auto-fill of car price - let user choose explicitly
   
@@ -61,20 +74,38 @@ export default function CarDetailsFormV2({ carData, updateCarData, monthlyIncome
     return str.replace(/,/g, '')
   }
 
-  const handleCarPriceChange = (value: string) => {
+  // Handle car price input validation only on blur (when user finishes editing)
+  const handleCarPriceBlur = (value: string) => {
     try {
       // Sanitize input to prevent malformed data
       const sanitized = sanitizeInput(value, 'number')
       const numericValue = removeCommas(sanitized)
       
+      if (numericValue === '' || numericValue === '0') {
+        updateCarData({ carPrice: 0 })
+        setCarPriceDisplay('')
+        return
+      }
+      
+      const parsedValue = parseFloat(numericValue)
+      
+      if (isNaN(parsedValue) || parsedValue <= 0) {
+        updateCarData({ carPrice: 0 })
+        setCarPriceDisplay('')
+        return
+      }
+      
       // Use safe number validation with proper limits
       const price = safeNumber(
-        parseFloat(numericValue) || 0,
+        parsedValue,
         VALIDATION_LIMITS.CAR_PRICE.MIN,
         VALIDATION_LIMITS.CAR_PRICE.MAX
       )
       
       updateCarData({ carPrice: price })
+      
+      // Update display with formatted value
+      setCarPriceDisplay(formatWithCommas(price))
       
       // Auto-calculate 20% down payment with safe math
       if (price > 0) {
@@ -89,30 +120,48 @@ export default function CarDetailsFormV2({ carData, updateCarData, monthlyIncome
       }
     } catch (error) {
       console.error('Car price input error:', error)
-      // Fallback to safe minimum value
-      updateCarData({ carPrice: VALIDATION_LIMITS.CAR_PRICE.MIN })
+      updateCarData({ carPrice: 0 })
+      setCarPriceDisplay('')
     }
   }
 
-  const handleDownPaymentChange = (value: string) => {
+  // Handle down payment input validation only on blur (when user finishes editing)
+  const handleDownPaymentBlur = (value: string) => {
     try {
       // Sanitize input to prevent malformed data
       const sanitized = sanitizeInput(value, 'number')
       const numericValue = removeCommas(sanitized)
       
+      if (numericValue === '' || numericValue === '0') {
+        updateCarData({ downPayment: 0 })
+        setDownPaymentDisplay('')
+        return
+      }
+      
+      const parsedValue = parseInt(numericValue)
+      
+      if (isNaN(parsedValue) || parsedValue < 0) {
+        updateCarData({ downPayment: 0 })
+        setDownPaymentDisplay('')
+        return
+      }
+      
       // Use safe number validation with car price as maximum
       const safeCarPrice = safeNumber(carData.carPrice, VALIDATION_LIMITS.CAR_PRICE.MIN, VALIDATION_LIMITS.CAR_PRICE.MAX)
       const payment = safeNumber(
-        parseInt(numericValue) || 0,
+        parsedValue,
         VALIDATION_LIMITS.DOWN_PAYMENT.MIN,
         safeCarPrice // Down payment cannot exceed car price
       )
       
       updateCarData({ downPayment: payment })
+      
+      // Update display with formatted value
+      setDownPaymentDisplay(formatWithCommas(payment))
     } catch (error) {
       console.error('Down payment input error:', error)
-      // Fallback to safe minimum value
       updateCarData({ downPayment: 0 })
+      setDownPaymentDisplay('')
     }
   }
 
@@ -143,8 +192,14 @@ export default function CarDetailsFormV2({ carData, updateCarData, monthlyIncome
               id="car-price-input"
               type="text"
               required
-              value={carData.carPrice ? formatWithCommas(carData.carPrice) : ''}
-              onChange={(e) => handleCarPriceChange(e.target.value)}
+              value={carPriceDisplay}
+              onChange={(e) => {
+                // Store exactly what user types - no processing until blur
+                setCarPriceDisplay(e.target.value)
+              }}
+              onBlur={(e) => {
+                handleCarPriceBlur(e.target.value)
+              }}
               onKeyDown={(e) => {
                 // Enhanced key validation to prevent invalid characters
                 const allowedKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab', 'Enter']
@@ -169,7 +224,10 @@ export default function CarDetailsFormV2({ carData, updateCarData, monthlyIncome
                 <button
                   key={preset.value}
                   type="button"
-                  onClick={() => handleCarPriceChange(preset.value.toString())}
+                  onClick={() => {
+                    setCarPriceDisplay(formatWithCommas(preset.value))
+                    handleCarPriceBlur(preset.value.toString())
+                  }}
                   className={`flex-shrink-0 min-h-[20px] max-md:min-h-[44px] px-1.5 max-md:px-3 py-0.5 max-md:py-2 text-xs max-md:text-sm font-medium transition-all duration-200 hover:scale-105 focus:outline-none focus:ring-1 active:scale-95 rounded ${
                     carData.carPrice === preset.value
                       ? 'bg-emerald-600 text-white shadow-sm focus:ring-emerald-400/50 border border-emerald-300'
@@ -212,8 +270,14 @@ export default function CarDetailsFormV2({ carData, updateCarData, monthlyIncome
             <input
               type="text"
               required
-              value={carData.downPayment ? formatWithCommas(carData.downPayment) : ''}
-              onChange={(e) => handleDownPaymentChange(e.target.value)}
+              value={downPaymentDisplay}
+              onChange={(e) => {
+                // Store exactly what user types - no processing until blur
+                setDownPaymentDisplay(e.target.value)
+              }}
+              onBlur={(e) => {
+                handleDownPaymentBlur(e.target.value)
+              }}
               onKeyDown={(e) => {
                 // Enhanced key validation for down payment (no decimals)
                 const allowedKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab', 'Enter']
@@ -239,7 +303,11 @@ export default function CarDetailsFormV2({ carData, updateCarData, monthlyIncome
                 max={carData.carPrice}
                 step="1000"
                 value={carData.downPayment}
-                onChange={(e) => handleDownPaymentChange(e.target.value)}
+                onChange={(e) => {
+                  const value = e.target.value
+                  setDownPaymentDisplay(formatWithCommas(parseInt(value)))
+                  handleDownPaymentBlur(value)
+                }}
                 className={`w-full h-0.5 rounded-full appearance-none cursor-pointer slider-enhanced transition-all duration-200 ${isLight ? 'light-theme' : 'dark-theme'}`}
                 style={{
                   background: `linear-gradient(to right, ${downPaymentPercentage >= 20 ? '#06b6d4' : '#f97316'} 0%, ${downPaymentPercentage >= 20 ? '#06b6d4' : '#f97316'} ${(carData.downPayment / carData.carPrice) * 100}%, ${isLight ? '#e2e8f0' : 'rgba(255,255,255,0.2)'} ${(carData.downPayment / carData.carPrice) * 100}%, ${isLight ? '#e2e8f0' : 'rgba(255,255,255,0.2)'} 100%)`
