@@ -154,7 +154,8 @@ import Script from 'next/script'
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts'
 import { useTheme } from '@/contexts/ThemeContext'
 import { themeClass } from '@/utils/themeStyles'
-import FAQ, { FAQItem } from '@/components/FAQ'
+import FAQ from '@/components/FAQ'
+import { prepaymentFAQs } from '@/data/prepaymentFAQData'
 import AdSenseAd from '@/components/AdSenseAd'
 
 interface LoanData {
@@ -417,49 +418,6 @@ const calculateLoanDetails = (
   }
 }
 
-// FAQ data for prepayment calculator page
-const prepaymentFAQs: FAQItem[] = [
-  {
-    question: "What are industry standards for car loan prepayment penalties?",
-    answer: "Following modern industry standards and best practices:\n\n• Minimal or zero prepayment penalties on car loans for individuals\n• Applies to both floating and fixed rate loans\n• Makes prepayment more attractive for faster debt freedom\n• Most lenders offer flexible prepayment options\n• Industry trend towards customer-friendly prepayment policies\n\nThese industry standards make car loan prepayment a smart financial strategy with guaranteed savings and minimal penalty costs."
-  },
-  {
-    question: "Which is better: EMI reduction or tenure reduction after prepayment?",
-    answer: "Tenure reduction is generally better for maximum savings:\n\n**Tenure Reduction (Recommended):**\n• Keep same EMI, finish loan faster\n• Maximum interest savings over loan life\n• Builds financial discipline\n• Frees up future cash flow sooner\n\n**EMI Reduction:**\n• Lower monthly payments\n• Better cash flow flexibility\n• Less total interest savings\n• Good for tight monthly budgets\n\nOur calculator uses tenure reduction strategy as it provides optimal savings. Most financial experts recommend this approach for long-term wealth building."
-  },
-  {
-    question: "How do I calculate interest savings after partial prepayment?",
-    answer: "Interest savings calculation follows this method:\n\n1. **Original Interest:** Total interest without prepayment\n2. **Prepayment Impact:** Reduces principal, lowering future interest\n3. **New Interest:** Total interest with prepayment applied\n4. **Gross Savings:** Original Interest - New Interest\n5. **Net Savings:** Gross Savings - Prepayment Penalty (if any)\n\nOur calculator shows:\n• Month-by-month breakdown\n• Total interest saved\n• Time saved in months/years\n• Net benefit after penalties\n\nEarly prepayments save more as they reduce the principal base for all future interest calculations."
-  },
-  {
-    question: "What is car loan prepayment and how does it work?",
-    answer: "Loan prepayment is making additional payments towards your loan principal beyond your regular EMI. This reduces your outstanding loan balance and can significantly reduce the total interest you pay.\n\nHow it works:\n• Additional payment is applied directly to the principal balance\n• Interest for subsequent months is calculated on the reduced balance\n• You can either reduce your EMI amount or shorten the loan tenure\n• Our calculator uses the 'Reduce Tenure' strategy, keeping EMI same while shortening loan duration"
-  },
-  {
-    question: "Should I make monthly, quarterly, or yearly prepayments?",
-    answer: "The frequency depends on your cash flow and savings goals:\n\nMonthly Prepayments:\n• Maximum interest savings\n• Requires consistent monthly surplus\n• Best for salaried employees with steady income\n\nQuarterly Prepayments:\n• Good balance between savings and flexibility\n• Suitable for business income or bonuses\n• Easier to manage than monthly\n\nYearly Prepayments:\n• Convenient for annual bonuses or tax refunds\n• Still provides significant savings\n• Less frequent monitoring required\n\nRecommendation: Choose based on your income pattern and financial discipline."
-  },
-  {
-    question: "What are prepayment penalties and when do they apply?",
-    answer: "Prepayment penalties are charges levied by banks for early loan repayment:\n\nIndustry Guidelines:\n• Floating rate loans: No prepayment penalty allowed\n• Fixed rate loans: Banks can charge penalty (typically 2-5%)\n• Penalty only on prepaid amount, not entire loan\n\nWhen Penalties Apply:\n• Usually in first 1-3 years of loan\n• Only for fixed interest rate loans\n• Varies by bank and loan agreement\n\nTip: Check your loan agreement for specific penalty terms. Many banks waive penalties after certain period or for small prepayments."
-  },
-  {
-    question: "How much should I prepay each month/year?",
-    answer: "The ideal prepayment amount depends on your financial situation:\n\nGeneral Guidelines:\n• Start with 5-10% of your EMI as additional payment\n• Use surplus income after all expenses and savings\n• Consider using bonuses, increments, or tax refunds\n• Don't compromise your emergency fund\n\nRecommended Sources for Prepayment:\n• Annual bonus (allocate 50-70% to loan prepayment)\n• Salary increments (use additional amount for prepayment)\n• Tax refunds or investment returns\n• Expense reductions or lifestyle changes\n\nRule of thumb: Prepay if loan interest rate > your investment returns"
-  },
-  {
-    question: "Is it better to reduce EMI or reduce loan tenure?",
-    answer: "Both strategies have advantages depending on your goals:\n\nReduce Tenure (Recommended):\n• Keep same EMI, pay off loan faster\n• Maximum interest savings\n• Builds financial discipline\n• Frees up future cash flow sooner\n• Our calculator uses this approach\n\nReduce EMI:\n• Lower monthly payments\n• More breathing room in monthly budget\n• Better for tight cash flow situations\n• Less total interest savings than reducing tenure\n\nMost financial experts recommend reducing tenure for maximum long-term savings."
-  },
-  {
-    question: "When should I avoid loan prepayment?",
-    answer: "Avoid prepayment in these situations:\n\nFinancial Constraints:\n• Emergency fund is insufficient (less than 6 months expenses)\n• High-interest debt exists (credit cards, personal loans)\n• Unstable income or job uncertainty\n• Major upcoming expenses (wedding, education)\n\nInvestment Opportunities:\n• Can earn returns higher than loan interest rate\n• Tax-saving investments pending (PPF, ELSS)\n• Business expansion opportunities\n• Real estate investments with good potential\n\nLoan Terms:\n• High prepayment penalty (>3% of prepaid amount)\n• Very few EMIs remaining (last 1-2 years)\n• Very low interest rate loans (<6% per annum)\n\nPrioritize high-interest debt repayment and emergency fund before loan prepayment."
-  },
-  {
-    question: "How do I calculate if prepayment is beneficial?",
-    answer: "Use this simple comparison method:\n\n1. Compare Interest Rates:\n• Loan interest rate: ___% \n• Investment return rate: ___%\n• If loan rate > investment rate → Prepay\n• If investment rate > loan rate → Invest instead\n\n2. Consider Tax Benefits:\n• Loan interest may be tax deductible\n• Investment returns might be taxable\n• Factor in your tax bracket for accurate comparison\n\n3. Check Penalties:\n• Calculate total penalty amount\n• Ensure savings exceed penalty costs\n\n4. Use Our Calculator:\n• Input your loan details\n• See exact savings with different prepayment amounts\n• Compare scenarios to find optimal strategy\n\nRemember: Guaranteed savings from prepayment vs uncertain investment returns."
-  }
-]
 
 function PrepaymentCalculator() {
   const searchParams = useSearchParams()
@@ -473,11 +431,113 @@ function PrepaymentCalculator() {
     emi: 0
   })
   
+  // Display state for loan amount input (to avoid real-time validation issues)
+  const [loanAmountDisplay, setLoanAmountDisplay] = useState('')
+  
   const [prepaymentAmount, setPrepaymentAmount] = useState(0)
+  // Display state for prepayment amount input (to avoid real-time validation issues)
+  const [prepaymentAmountDisplay, setPrepaymentAmountDisplay] = useState('')
   const [prepaymentFrequency, setPrepaymentFrequency] = useState<'monthly' | 'quarterly' | 'yearly' | 'lumpsum'>('yearly')
   const prepaymentStrategy = 'reduce_tenure' // Fixed to reduce tenure only
   const [penaltyRate, setPenaltyRate] = useState(0)
   const [tenureDisplayFormat] = useState<'years' | 'months'>('years')
+  const [showResults, setShowResults] = useState(false)
+
+  // Sync display state when loan amount changes from external sources
+  useEffect(() => {
+    setLoanAmountDisplay(loanData.loanAmount ? loanData.loanAmount.toLocaleString('en-IN') : '')
+  }, [loanData.loanAmount])
+
+  // Sync display state when prepayment amount changes from external sources
+  useEffect(() => {
+    setPrepaymentAmountDisplay(prepaymentAmount ? prepaymentAmount.toLocaleString('en-IN') : '')
+  }, [prepaymentAmount])
+
+  // Handle loan amount validation only on blur (when user finishes editing)
+  const handleLoanAmountBlur = (value: string) => {
+    try {
+      const numericValue = value.replace(/,/g, '')
+      
+      if (numericValue === '' || numericValue === '0') {
+        setLoanData(prev => ({ ...prev, loanAmount: 0, emi: 0 }))
+        setLoanAmountDisplay('')
+        setShowResults(false)
+        return
+      }
+      
+      const parsedValue = parseFloat(numericValue)
+      
+      if (isNaN(parsedValue) || parsedValue <= 0) {
+        setLoanData(prev => ({ ...prev, loanAmount: 0, emi: 0 }))
+        setLoanAmountDisplay('')
+        setShowResults(false)
+        return
+      }
+      
+      // Apply min/max limits: 0 to 10 crores (10,00,00,000)
+      let newAmount = Math.max(0, Math.min(100000000, parsedValue))
+      
+      setLoanData(prev => ({ ...prev, loanAmount: newAmount, emi: 0 }))
+      
+      // Update display with formatted value
+      setLoanAmountDisplay(newAmount.toLocaleString('en-IN'))
+      
+      // Reset prepayment if it exceeds new loan amount
+      if (prepaymentAmount > newAmount) {
+        setPrepaymentAmount(0)
+        setPrepaymentAmountDisplay('')
+      }
+      
+      setShowResults(false)
+      
+    } catch (error) {
+      console.error('Loan amount input error:', error)
+      setLoanData(prev => ({ ...prev, loanAmount: 0, emi: 0 }))
+      setLoanAmountDisplay('')
+      setShowResults(false)
+    }
+  }
+
+  // Handle prepayment amount validation only on blur (when user finishes editing)
+  const handlePrepaymentAmountBlur = (value: string) => {
+    try {
+      const numericValue = value.replace(/,/g, '')
+      
+      if (numericValue === '' || numericValue === '0') {
+        setPrepaymentAmount(0)
+        setPrepaymentAmountDisplay('')
+        setShowResults(false)
+        return
+      }
+      
+      const parsedValue = parseFloat(numericValue)
+      
+      if (isNaN(parsedValue) || parsedValue <= 0) {
+        setPrepaymentAmount(0)
+        setPrepaymentAmountDisplay('')
+        setShowResults(false)
+        return
+      }
+      
+      // Ensure prepayment cannot exceed loan amount
+      let newPrepayment = Math.min(parsedValue, loanData.loanAmount)
+      
+      // Ensure prepayment is not negative
+      if (newPrepayment < 0) {
+        newPrepayment = 0
+      }
+      
+      setPrepaymentAmount(newPrepayment)
+      setPrepaymentAmountDisplay(newPrepayment.toLocaleString('en-IN'))
+      setShowResults(false)
+      
+    } catch (error) {
+      console.error('Prepayment amount input error:', error)
+      setPrepaymentAmount(0)
+      setPrepaymentAmountDisplay('')
+      setShowResults(false)
+    }
+  }
 
   useEffect(() => {
     // Extract parameters from URL with safe parsing
@@ -515,7 +575,7 @@ function PrepaymentCalculator() {
     setIsLoading(false)
   }, [searchParams])
 
-  const results = loanData.loanAmount > 0 ? calculateLoanDetails(
+  const results = (showResults && loanData.loanAmount > 0) ? calculateLoanDetails(
     loanData.loanAmount,
     loanData.interestRate,
     loanData.tenure,
@@ -523,6 +583,15 @@ function PrepaymentCalculator() {
     prepaymentFrequency,
     penaltyRate
   ) : null
+
+  const handleCalculate = () => {
+    // Calculate EMI when showing results
+    if (loanData.loanAmount > 0) {
+      const newEMI = calculateEMI(loanData.loanAmount, loanData.interestRate, loanData.tenure)
+      setLoanData(prev => ({ ...prev, emi: newEMI }))
+    }
+    setShowResults(true)
+  }
 
   const formatCurrency = (amount: number) => {
     return `₹${Math.round(amount).toLocaleString('en-IN')}`
@@ -762,22 +831,13 @@ function PrepaymentCalculator() {
                 <span className={`absolute left-4 top-1/2 transform -translate-y-1/2 text-lg font-semibold ${isLight ? 'text-slate-600 group-focus-within:text-blue-600' : 'text-white/70 group-focus-within:text-blue-400'} transition-colors`}>₹</span>
                 <input 
                   type="text" 
-                  value={loanData.loanAmount ? loanData.loanAmount.toLocaleString('en-IN') : ''}
+                  value={loanAmountDisplay}
                   onChange={(e) => {
-                    const value = e.target.value.replace(/,/g, '')
-                    let newAmount = parseFloat(value) || 0
-                    
-                    // Apply min/max limits: 0 to 10 crores (10,00,00,000)
-                    if (newAmount < 0) newAmount = 0
-                    if (newAmount > 100000000) newAmount = 100000000
-                    
-                    const newEMI = newAmount > 0 ? calculateEMI(newAmount, loanData.interestRate, loanData.tenure) : 0
-                    setLoanData(prev => ({ ...prev, loanAmount: newAmount, emi: newEMI }))
-                    
-                    // Reset prepayment if it exceeds new loan amount
-                    if (prepaymentAmount > newAmount) {
-                      setPrepaymentAmount(0)
-                    }
+                    // Store exactly what user types - no processing until blur
+                    setLoanAmountDisplay(e.target.value)
+                  }}
+                  onBlur={(e) => {
+                    handleLoanAmountBlur(e.target.value)
                   }}
                   placeholder="Enter amount between ₹0 and ₹10,00,00,000"
                   aria-label="Loan Amount"
@@ -797,8 +857,8 @@ function PrepaymentCalculator() {
                   value={loanData.interestRate || ''}
                   onChange={(e) => {
                     const newRate = Math.min(20, Math.max(0.1, parseFloat(e.target.value) || 8))
-                    const newEMI = loanData.loanAmount > 0 ? calculateEMI(loanData.loanAmount, newRate, loanData.tenure) : 0
-                    setLoanData(prev => ({ ...prev, interestRate: newRate, emi: newEMI }))
+                    setLoanData(prev => ({ ...prev, interestRate: newRate, emi: 0 }))
+                    setShowResults(false)
                   }}
  
                   aria-label="Interest Rate"
@@ -815,8 +875,8 @@ function PrepaymentCalculator() {
                   value={loanData.tenure || ''}
                   onChange={(e) => {
                     const newTenure = parseFloat(e.target.value) || 3
-                    const newEMI = loanData.loanAmount > 0 ? calculateEMI(loanData.loanAmount, loanData.interestRate, newTenure) : 0
-                    setLoanData(prev => ({ ...prev, tenure: newTenure, emi: newEMI }))
+                    setLoanData(prev => ({ ...prev, tenure: newTenure, emi: 0 }))
+                    setShowResults(false)
                   }}
                   aria-label="Loan Tenure"
                   className={`w-full px-4 py-4 rounded-xl border-0 focus:outline-none text-lg font-medium ${isLight ? 'bg-transparent text-slate-900' : 'bg-transparent text-white'} appearance-none cursor-pointer`}
@@ -873,6 +933,7 @@ function PrepaymentCalculator() {
                       value === 'Quarterly' ? 'quarterly' : 
                       value === 'Monthly' ? 'monthly' : 'lumpsum'
                     )
+                    setShowResults(false)
                   }}
                   className={`w-full px-4 py-4 rounded-xl border-0 focus:outline-none text-lg font-medium ${isLight ? 'bg-transparent text-slate-900' : 'bg-transparent text-white'} appearance-none cursor-pointer`}
                 >
@@ -895,22 +956,13 @@ function PrepaymentCalculator() {
                 <span className={`absolute left-4 top-1/2 transform -translate-y-1/2 text-lg font-semibold ${isLight ? 'text-slate-600 group-focus-within:text-orange-600' : 'text-white/70 group-focus-within:text-orange-400'} transition-colors`}>₹</span>
                 <input 
                   type="text" 
-                  value={prepaymentAmount ? prepaymentAmount.toLocaleString('en-IN') : ''}
+                  value={prepaymentAmountDisplay}
                   onChange={(e) => {
-                    const value = e.target.value.replace(/,/g, '')
-                    let newPrepayment = parseFloat(value) || 0
-                    
-                    // Ensure prepayment cannot exceed loan amount
-                    if (newPrepayment > loanData.loanAmount) {
-                      newPrepayment = loanData.loanAmount
-                    }
-                    
-                    // Ensure prepayment is not negative
-                    if (newPrepayment < 0) {
-                      newPrepayment = 0
-                    }
-                    
-                    setPrepaymentAmount(newPrepayment)
+                    // Store exactly what user types - no processing until blur
+                    setPrepaymentAmountDisplay(e.target.value)
+                  }}
+                  onBlur={(e) => {
+                    handlePrepaymentAmountBlur(e.target.value)
                   }}
                   placeholder={`Max: ${loanData.loanAmount ? formatCurrency(loanData.loanAmount) : '₹0'}`}
                   aria-label="Prepayment Amount"
@@ -939,6 +991,7 @@ function PrepaymentCalculator() {
                     } else {
                       setPenaltyRate(value);
                     }
+                    setShowResults(false);
                   }}
  
                   aria-label="Prepayment Penalty"
@@ -947,6 +1000,22 @@ function PrepaymentCalculator() {
                 <span className={`absolute right-4 top-1/2 transform -translate-y-1/2 text-sm font-semibold ${isLight ? 'text-slate-600 group-focus-within:text-red-600' : 'text-white/70 group-focus-within:text-red-400'} transition-colors`}>%</span>
               </div>
             </div>
+          </div>
+        </section>
+
+        {/* Calculate Button */}
+        <section className="mb-8">
+          <div className="flex justify-center">
+            <button 
+              onClick={handleCalculate}
+              className="group relative px-12 py-5 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-bold text-lg rounded-2xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 flex items-center space-x-4"
+            >
+              <svg className="w-6 h-6 group-hover:scale-110 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+              </svg>
+              <span>Calculate Prepayment Savings</span>
+              <div className="absolute inset-0 rounded-2xl bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            </button>
           </div>
         </section>
 
@@ -1203,7 +1272,7 @@ function PrepaymentCalculator() {
               </div>
               <div className="flex justify-center mt-8">
                 <button 
-                  onClick={() => window.location.reload()}
+                  onClick={() => setShowResults(false)}
                   className="group relative px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-bold rounded-2xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 flex items-center space-x-3"
                 >
                   <svg className="w-5 h-5 group-hover:rotate-180 transition-transform duration-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">

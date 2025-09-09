@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { prepaymentFAQs } from "@/data/prepaymentFAQData";
 
 export const metadata: Metadata = {
   title: "Car Loan Prepayment Calculator | Tenure Reduction Calculator India",
@@ -64,56 +65,14 @@ export default function PrepaymentLayout({
     {
       "@context": "https://schema.org",
       "@type": "FAQPage",
-      "mainEntity": [
-        {
-          "@type": "Question",
-          "name": "What is loan prepayment and how does it work?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Loan prepayment is making additional payments towards your loan principal beyond your regular EMI. Additional payment is applied directly to the principal balance, interest for subsequent months is calculated on the reduced balance, and you can either reduce your EMI amount or shorten the loan tenure."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "Should I make monthly, quarterly, or yearly prepayments?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Monthly prepayments provide maximum interest savings but require consistent surplus. Quarterly prepayments offer good balance between savings and flexibility. Yearly prepayments are convenient for bonuses or tax refunds. Choose based on your income pattern and financial discipline."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "What are prepayment penalties and when do they apply?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Industry guidelines: Floating rate loans have no prepayment penalty, while fixed rate loans can have 2-5% penalty on prepaid amount. Penalties usually apply in first 1-3 years and vary by bank. Check your loan agreement for specific penalty terms."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "Is it better to reduce EMI or reduce loan tenure?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Reduce Tenure (recommended): Keep same EMI, pay off loan faster, maximum interest savings, builds financial discipline. Reduce EMI: Lower monthly payments, more budget flexibility, but less total interest savings. Most experts recommend reducing tenure for maximum long-term savings."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "What are industry standards for car loan prepayment penalties?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Industry standards increasingly favor zero prepayment penalties on car loans for individuals. This applies to both floating and fixed rate loans, making prepayment more attractive for faster debt freedom and interest savings."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "How much can I save by prepaying my car loan early?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Interest savings depend on prepayment amount, timing, and remaining tenure. Early prepayments save more as they reduce the principal on which future interest is calculated. Use our calculator to see exact savings for your loan scenario."
-          }
+      "mainEntity": prepaymentFAQs.map(faq => ({
+        "@type": "Question",
+        "name": faq.question,
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": faq.answer.replace(/\n/g, ' ').replace(/•/g, '-')
         }
-      ]
+      }))
     },
     {
       "@context": "https://schema.org",
