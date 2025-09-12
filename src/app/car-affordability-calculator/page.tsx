@@ -322,11 +322,10 @@ export default function CarAffordabilityCalculatorPage() {
               {/* Left Column - Calculator Form Panel */}
               <div className={`transition-all duration-500 ease-in-out ${isLeftCollapsed ? 'w-16 lg:w-16' : 'w-full lg:w-1/2 lg:flex-shrink-0'} space-y-4 sm:space-y-6 order-1 lg:order-1`}>
                 {/* Calculator Form Panel */}
-                <div className="md-panel-elevated p-4">
-                  <div className="transition-all duration-500 ease-in-out">
+                <div className={`md-panel-elevated transition-all duration-500 ease-in-out ${isLeftCollapsed ? 'h-full p-3 flex flex-col items-center justify-center space-y-6 min-h-[400px]' : 'p-4'}`}>
                   {isLeftCollapsed ? (
                     // Collapsed State - Small Label
-                    <div className="h-full md-panel-elevated p-3 flex flex-col items-center justify-center space-y-6 min-h-[400px]">
+                    <>
                       <button
                         onClick={() => setIsLeftCollapsed(false)}
                         className={`p-4 rounded-xl transition-all duration-200 hover:scale-110 shadow-lg min-h-[48px] min-w-[48px] touch-manipulation ${isLight ? 'bg-blue-50 hover:bg-blue-100 text-blue-600 border border-blue-200' : 'bg-blue-500/20 hover:bg-blue-500/30 text-blue-400 border border-blue-400/30'}`}
@@ -338,12 +337,12 @@ export default function CarAffordabilityCalculatorPage() {
                       <div className={`text-xs font-bold tracking-wider transform -rotate-90 whitespace-nowrap ${isLight ? 'text-slate-600' : 'text-white/70'}`}>
                         CALCULATOR
                       </div>
-                    </div>
+                    </>
                   ) : (
                     // Expanded State - Full Form
                     <div className="relative">
                       {!showResults ? (
-                          <div key="form" className="md-panel-elevated p-3 sm:p-4 lg:p-5 transition-all duration-400 ease-out">
+                          <div key="form" className="transition-all duration-400 ease-out">
                             {/* Collapse Button */}
                             <div className="flex justify-between items-center mb-4">
                               <div className="flex items-center space-x-3">
@@ -439,7 +438,7 @@ export default function CarAffordabilityCalculatorPage() {
                             </div>
                           </div>
                         ) : (
-                          <div key="results" className="md-panel-elevated p-3 sm:p-4 lg:p-5 transition-all duration-400 ease-out">
+                          <div key="results" className="transition-all duration-400 ease-out">
                             {/* Collapse Button */}
                             <div className="flex justify-between items-center mb-4">
                               <h3 className={`text-lg font-semibold ${isLight ? 'text-slate-900' : 'text-white'}`}>
@@ -458,16 +457,13 @@ export default function CarAffordabilityCalculatorPage() {
                         )}
                     </div>
                   )}
-                  </div>
                 </div>
 
                 {/* Cost Distribution Chart - Desktop only (hidden on mobile) */}
                 {!isLeftCollapsed && carData.carPrice > 0 && carData.tenure > 0 && (
-                  <div className="hidden lg:block md-panel-elevated p-4">
+                  <div className="hidden lg:block md-panel-elevated p-4 animate-fadeIn">
                     <Suspense fallback={<div className="h-64 bg-gray-100 animate-pulse rounded-lg"></div>}>
-                      <div className="animate-fadeIn">
-                        <CostDistributionChart carData={carData} />
-                      </div>
+                      <CostDistributionChart carData={carData} />
                     </Suspense>
                   </div>
                 )}
@@ -475,28 +471,22 @@ export default function CarAffordabilityCalculatorPage() {
 
               {/* Live Preview Panel - Expands when left is collapsed */}
               <aside 
-                className={`transition-all duration-500 ease-in-out ${isLeftCollapsed ? 'flex-1' : 'w-full lg:w-1/2 lg:flex-1'} md-panel-elevated p-4 order-2 lg:order-2`}
+                className={`transition-all duration-500 ease-in-out ${isLeftCollapsed ? 'flex-1' : 'w-full lg:w-1/2 lg:flex-1'} md-panel-elevated p-3 sm:p-4 lg:p-5 order-2 lg:order-2 animate-slideIn`}
                 aria-labelledby="results-heading"
               >
                 <div className="lg:sticky lg:top-8 space-y-4">
-                  <div className="md-panel-elevated p-3 sm:p-4 lg:p-5 animate-slideIn">
-                    <h3 id="results-heading" className="sr-only">Loan Calculation Results</h3>
-                    <TotalCostDisplayV2 carData={carData} updateCarData={updateCarData} />
-                  </div>
+                  <h3 id="results-heading" className="sr-only">Loan Calculation Results</h3>
+                  <TotalCostDisplayV2 carData={carData} updateCarData={updateCarData} />
                 </div>
               </aside>
             </div>
 
             {/* Cost Distribution Chart - Mobile only (after Summary) */}
             {!isLeftCollapsed && carData.carPrice > 0 && carData.tenure > 0 && (
-              <div className="block lg:hidden mt-6">
-                <div className="md-panel-elevated p-4">
-                  <Suspense fallback={<div className="h-64 bg-gray-100 animate-pulse rounded-lg"></div>}>
-                    <div className="animate-fadeIn">
-                      <CostDistributionChart carData={carData} />
-                    </div>
-                  </Suspense>
-                </div>
+              <div className="block lg:hidden mt-6 md-panel-elevated p-4 animate-fadeIn">
+                <Suspense fallback={<div className="h-64 bg-gray-100 animate-pulse rounded-lg"></div>}>
+                  <CostDistributionChart carData={carData} />
+                </Suspense>
               </div>
             )}
           </div>

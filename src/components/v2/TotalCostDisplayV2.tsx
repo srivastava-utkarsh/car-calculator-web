@@ -299,6 +299,24 @@ export default function TotalCostDisplayV2({ carData }: TotalCostDisplayV2Props)
       >
         {/* Main EMI Display - Proportional UX */}
         <div className="text-center mb-2">
+          {/* Primary EMI Section - Teal design like screenshot */}
+          <div className="bg-gradient-to-r from-teal-500 to-teal-600 rounded-2xl p-4 mb-3 shadow-lg relative overflow-hidden">
+            {/* Content container - centered */}
+            <div className="text-center relative z-10">
+              <h3 className="text-white text-lg font-semibold mb-2 tracking-wide">
+                Monthly EMI
+              </h3>
+              <div className="text-white text-4xl font-bold tracking-tight">
+                {formatCurrency(emi)}
+              </div>
+            </div>
+          </div>
+
+          {/* Horizontal Separator */}
+          {carData.tenure > 0 && emi > 0 && (
+            <div className="border-t border-gray-600/30 my-4"></div>
+          )}
+
           {/* Loan Details - Modern Gradient Background with Header and Icons */}
           {carData.tenure > 0 && emi > 0 && (
             <div className="bg-gradient-to-br from-purple-600 to-indigo-700 rounded-2xl p-4 mb-3 shadow-lg">
@@ -353,24 +371,6 @@ export default function TotalCostDisplayV2({ carData }: TotalCostDisplayV2Props)
               </div>
             </div>
           )}
-
-          {/* Horizontal Separator */}
-          {carData.tenure > 0 && emi > 0 && (
-            <div className="border-t border-gray-600/30 my-4"></div>
-          )}
-
-          {/* Primary EMI Section - Teal design like screenshot */}
-          <div className="bg-gradient-to-r from-teal-500 to-teal-600 rounded-2xl p-4 mb-3 shadow-lg relative overflow-hidden">
-            {/* Content container - centered */}
-            <div className="text-center relative z-10">
-              <h3 className="text-white text-lg font-semibold mb-2 tracking-wide">
-                Monthly EMI
-              </h3>
-              <div className="text-white text-4xl font-bold tracking-tight">
-                {formatCurrency(emi)}
-              </div>
-            </div>
-          </div>
 
           {/* Monthly Running Cost - Tabular format like Yearly section */}
           {(monthlyFuelCost > 0 || monthlyParkingCost > 0) ? (
