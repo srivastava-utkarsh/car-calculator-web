@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { prepaymentFAQs } from "@/data/prepaymentFAQData";
 
 export const metadata: Metadata = {
   title: "Car Loan Prepayment Calculator | Tenure Reduction Calculator India",
@@ -62,18 +61,6 @@ export default function PrepaymentLayout({
   children: React.ReactNode
 }) {
   const structuredData = [
-    {
-      "@context": "https://schema.org",
-      "@type": "FAQPage",
-      "mainEntity": prepaymentFAQs.map(faq => ({
-        "@type": "Question",
-        "name": faq.question,
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": faq.answer.replace(/\n/g, ' ').replace(/•/g, '-')
-        }
-      }))
-    },
     {
       "@context": "https://schema.org",
       "@type": "HowTo",

@@ -10,53 +10,9 @@ import { useTheme } from '@/contexts/ThemeContext'
 export default function HomePage() {
   const { isLight } = useTheme()
 
-  // FAQ structured data for rich snippets
-  const faqStructuredData = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "What is the 20/4/10 rule for car buying?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "The 20/4/10 rule is a smart car buying guideline: Pay at least 20% down payment, keep loan tenure under 4 years maximum, and ensure total car expenses do not exceed 10% of your monthly income."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "How do car affordability calculators work?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Car affordability calculators analyze your income, expenses, down payment, and loan terms to determine how much car you can comfortably afford without straining your finances."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Should I prepay my car loan?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Prepaying car loans can save significant interest, especially if you have surplus funds and the loan has a high interest rate. Use a prepayment calculator to compare scenarios."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "What factors affect car affordability?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Key factors include monthly income, existing EMIs, down payment amount, interest rates, loan tenure, and ongoing car expenses like insurance, fuel, and maintenance."
-        }
-      }
-    ]
-  }
 
   return (
     <main className={`min-h-screen ${isLight ? 'bg-gradient-to-br from-slate-50 via-white to-slate-50' : 'bg-black'}`}>
-      {/* Structured Data */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqStructuredData) }}
-      />
       {/* Header */}
       <header className={`${isLight ? 'bg-white border-b border-slate-200/60' : 'bg-black border-b border-white/5'}`}>
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">

@@ -1,91 +1,21 @@
-Your repo and website could **significantly increase SEO performance** by targeting higher-ranking and more relevant keywords. Here’s an **SEO improvement analysis** and a list of **suggested keyword additions** based on current 2025 search trends for India:
+Here are the actual **detected issues** for your FAQ page in Google Search Console for budgetgear.in:
 
-***
+- **2 invalid FAQ items detected.**
+- Both are listed as “Unnamed item” with **1 critical issue each**.
+- Error detail for each:  
+  **Critical issue: Duplicate field 'FAQPage'**.
+- Because of this error, the affected items (and the page) are **not eligible for Google Search's rich results**.
 
-### **Current Content Issues**
-- Your current branding and copy focus on "car calculator" and "prepayment calculator," but *do not sufficiently cover high-ranking user intent keywords* and *broad/long-tail search terms* people use in India for car finance, EMI, or regulatory queries.
-- There's a *missed opportunity* to leverage RBI 2025 guideline updates—many search terms revolve around “RBI car loan rules,” “prepayment charges,” and new compliance standards.
-- Both car affordability and loan prepayment content should include *broader and more specific phrases* found on high-traffic competitor sites.
+**What this means:**  
+Your FAQ schema is being detected more than once on the same page (most likely because two separate <script type="application/ld+json"> FAQPage blocks are present), which violates Google’s structured data rules: a single page should include only **one** FAQPage schema block containing all FAQ entries as an array.
 
-***
+**How to fix:**
+- Combine all your FAQ entries into a **single FAQPage schema block**.
+- Avoid multiple FAQPage blocks on the same page.
+- Validate your final schema using Google’s Rich Results Test tool before publishing.
 
-### **High Ranking & Trending Keywords for 2025**
+Once fixed, the validation errors and “unnamed item” warnings should disappear, restoring eligibility for FAQ rich results in Google Search.[1][2]
 
-#### Car Loan Calculator / Car Affordability
-- car loan emi calculator
-- car affordability calculator India
-- car loan interest rate calculator
-- best car loan calculator online India
-- budget car EMI calculator
-- car purchase loan eligibility calculator
-- car loan repayment schedule
-- car EMI with prepayment calculator
-- 20/4/10 car rule India
-- total car cost calculator
-- vehicle finance eligibility calculator
-- car EMI calculator with prepayment
-- new car loan calculator 2025
-- loan against car calculator
-- calculate EMI for car loan RBI
-- car finance calculator India
-- car loan process India 2025
-
-#### Loan Prepayment & RBI Compliance
-- RBI loan prepayment rules 2025
-- loan prepayment calculator India
-- RBI car loan prepayment charges
-- prepay car loan India
-- RBI car loan rules for 2025
-- prepayment vs foreclosure car loan
-- RBI guidelines car loan closure
-- car loan part payment calculator
-- car loan prepayment penalty India
-- RBI compliance loan calculator
-- RBI floating rate loan rules
-- loan prepayment interest savings
-- best time to prepay car loan India
-- prepayment charges removed 2025
-- zero prepayment penalty car loan
-
-#### Supplementary/Supporting
-- how to lower car EMI India
-- car loan calculator with part payment
-- car finance calculator for used cars
-
-***
-
-### **SEO Recommendations & Best Practices**
-- **Insert these keywords strategically:** in meta title, meta description, alt text for images, headings (h2/h3), internal links, and section summaries across your public website and README/docs.
-- **Update your web/app copy:** For example, use “Car Loan EMI Calculator India (RBI Compliant)” or “Car Affordability Calculator—2025 Updated for RBI Rules” as top-level tags/titles.
-- **Add FAQ schema** with long-tail keywords: Google indexes questions like “How do I calculate car loan EMI as per RBI rules?” or “Is there a penalty for prepaying my car loan in India?”
-- **Dedicated landing pages:** If possible, create sections/landing pages targeting “RBI guidelines car loan prepayment 2025,” “Best car affordability calculator India,” etc.
-- **Leverage new RBI guideline trending terms:** “zero prepayment penalty,” “RBI loan rules 2025,” “car loan refinancing no penalty,” etc.[1][2]
-- **Benchmark against sites like Groww, BankBazaar, ICICI, HDFC loan calculators:** Review their meta content and keyword use.
-
-***
-
-**Summary:**  
-To maximum your search visibility, *proactively target user intent keywords* for 2025, insert trending and regulatory phrases directly into your content, and create informational content that answers top user questions with these terms. Doing so will help you rank alongside or above leading car loan and EMI calculators in India.[2][1]
-
-
-
-[1](https://www.techmagnate.com/blog/auto-finance-search-trends/)
-[2](https://www.lawrbit.com/article/rbi-prepayment-charges-on-loans-2025-key-guidelines-borrower-impact/)
-[3](https://www.wordstream.com/popular-keywords/automotive-keywords)
-[4](https://embryo.com/blog/100-of-the-most-searched-keywords-for-the-finance-industry/)
-[5](https://www.rankontechnologies.com/seo-for-car-dealerships/)
-[6](https://www.spyne.ai/blogs/best-seo-keywords-for-car-dealerships)
-[7](https://seoprofy.com/blog/automotive-seo/)
-[8](https://ecarstrade.com/blog/keyword-research-in-automotive-seo)
-[9](https://www.spyne.ai/blogs/seo-for-car-dealers)
-[10](https://sarthaklaw.com/rbi-update-rbi-issues-directions-on-pre-payment-charges-on-loans/)
-[11](https://www.wordstream.com/popular-keywords/finance-keywords)
-[12](https://www.autocorp.ai/blog/car-dealer-seo-in-2025-what-still-works)
-[13](https://housing.com/news/how-to-file-rbi-complaint/)
-[14](https://www.techmagnate.com/seo-case-study-for-two-wheeler-and-used-car-loan-provider/)
-[15](https://www.tekmetric.com/post/auto-repair-seo-the-complete-guide-for-2025)
-[16](https://www.pondiuni.edu.in/wp-content/uploads/2024/01/Syllabus-BTechMBABankingTechnology2024-25Onwards.pdf)
-[17](https://groww.in/calculators/car-loan-emi-calculator)
-[18](https://zero1byzerodha.com/calculators)
-[19](https://iccs.ac.in/assets/images/publication/Sameeksha-Final-2023.pdf)
-[20](https://www.pagetraffic.com/blog/most-popular-keywords-on-search-engines/)
+[1](https://support.google.com/webmasters/answer/9012289#enhancements)
+[2](https://developers.google.com/search/docs/data-types/faqpage)
+[3](https://search.google.com/search-console/r/faq/drilldown?resource_id=sc-domain%3Abudgetgear.in&amp;item_key=CgsIFBoHRkFRUGFnZRADGA0)
