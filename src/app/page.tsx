@@ -88,7 +88,7 @@ export default function HomePage() {
             
             {/* Subtitle */}
             <p className={`text-lg sm:text-xl mb-12 font-medium max-w-3xl mx-auto ${isLight ? 'text-slate-600' : 'text-white/80'}`}>
-              Best car loan EMI calculator online India. Calculate car affordability, interest rate, and prepayment savings with proven 20/4/10 rule for smart car financing decisions.
+              Best car loan EMI calculator online India. Calculate car affordability for budget cars under 10 lakh, fuel efficient vehicles, interest rates, and prepayment savings with proven 20/4/10 rule for smart financing decisions.
             </p>
 
             {/* Features Grid - More Prominent */}
@@ -102,7 +102,7 @@ export default function HomePage() {
                   Best Car Affordability Calculator India
                 </h2>
                 <p className={`text-lg mb-6 leading-relaxed ${isLight ? 'text-slate-600' : 'text-white/80'}`}>
-                  Budget car EMI calculator with 20/4/10 rule. Calculate how much car you can afford with our car purchase loan eligibility calculator.
+                  Budget car EMI calculator with 20/4/10 rule. Calculate how much car you can afford with our car budget afford calculator and car purchase loan eligibility calculator.
                 </p>
                 <Link 
                   href="/car-affordability-calculator"

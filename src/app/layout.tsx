@@ -18,10 +18,13 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Car Loan EMI Calculator India | Best Car Affordability Calculator Online India",
-  description: "Best car loan EMI calculator online India. Calculate car affordability, interest rate, prepayment savings with 20/4/10 rule. Free budget car EMI calculator with prepayment analysis.",
+  description: "Best car loan EMI calculator online India. Calculate car affordability, budget cars under 10 lakh, fuel efficient vehicles, and prepayment savings with 20/4/10 rule. Free budget car EMI calculator with 100% financing options.",
   keywords: [
     "car loan emi calculator",
-    "car affordability calculator India",
+    "car affordability calculator India", 
+    "car afford budget calculator India",
+    "car budget afford calculator",
+    "affordable car budget India",
     "car loan interest rate calculator",
     "best car loan calculator online India",
     "budget car EMI calculator",
@@ -29,6 +32,8 @@ export const metadata: Metadata = {
     "car loan repayment schedule",
     "car EMI with prepayment calculator",
     "20/4/10 car rule India",
+    "20/4/10 car buying rule",
+    "20 4 10 rule car loan",
     "total car cost calculator",
     "vehicle finance eligibility calculator",
     "car EMI calculator with prepayment",
@@ -52,14 +57,49 @@ export const metadata: Metadata = {
     "car affordability calculator",
     "car loan eligibility calculator", 
     "how much car can I afford",
+    "can I buy a car",
+    "should I buy a car",
+    "car within my budget",
+    "car buying capacity calculator",
+    "car I can purchase with income",
+    "which car suits my salary",
+    "best car for my budget",
+    "car affordability based on income",
     "car budget calculator",
     "vehicle affordability tool",
     "salary car calculator",
     "EMI calculator car",
     "car payment calculator",
     "20/4/10 rule",
+    "20 percent down payment rule",
+    "4 year car loan rule", 
+    "10 percent income rule car",
+    "car buying rule",
     "car financing",
-    "loan affordability"
+    "loan affordability",
+    "car under 10 lakh India",
+    "best mileage cars India",
+    "fuel efficient cars India",
+    "budget friendly cars",
+    "most economical cars India",
+    "affordable cars India",
+    "car loan eligibility India",
+    "car loan interest rate India",
+    "car loan documents required",
+    "car loan approval",
+    "used car loan calculator",
+    "new car loan calculator",
+    "auto loan calculator India",
+    "vehicle loan EMI calculator",
+    "car EMI calculation formula",
+    "80% financing car loan",
+    "100% financing car loan",
+    "car loan tenure 1-7 years",
+    "monthly car payment calculator",
+    "total car cost calculator India",
+    "on road price calculator",
+    "car insurance EMI calculator",
+    "car maintenance cost calculator"
   ],
   authors: [{ name: "BudgetGear" }],
   creator: "BudgetGear",
@@ -237,6 +277,22 @@ export default function RootLayout({
           "acceptedAnswer": {
             "@type": "Answer",
             "text": "Follow the 20/4/10 rule: 20% down payment, 4 years max tenure, 10% of gross monthly income for total car expenses (EMI + insurance + fuel + maintenance). Example: ₹50,000 salary = ₹5,000 max monthly car expenses, ₹15-20 lakh car affordability."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I afford a car with ₹30,000 salary?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "With ₹30,000 monthly salary, you can afford up to ₹3,000 monthly car expenses (10% rule). This allows for a car worth ₹8-12 lakhs with proper down payment and 3-4 year loan tenure."
+          }
+        },
+        {
+          "@type": "Question", 
+          "name": "What car can I afford with ₹50,000 salary?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "With ₹50,000 monthly salary, you can afford ₹5,000 monthly car expenses. This enables purchasing a car worth ₹15-25 lakhs depending on down payment amount and loan terms."
           }
         }
       ]
