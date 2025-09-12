@@ -1,0 +1,67 @@
+{
+  "name": "BudgetGear - Car Loan EMI Calculator India",
+  "short_name": "BudgetGear",
+  "description": "Best car loan EMI calculator online India. Calculate car affordability, budget cars under 10 lakh, and prepayment savings.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#3b82f6",
+  "orientation": "portrait-primary",
+  "categories": ["finance", "tools", "productivity"],
+  "lang": "en-US",
+  "dir": "ltr",
+  "scope": "/",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "32x32",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "/bck-logo.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/bck-logo.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "/bck-logo.svg", 
+      "sizes": "512x512",
+      "type": "image/svg+xml"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/bck-logo.svg",
+      "sizes": "1280x720",
+      "type": "image/svg+xml",
+      "form_factor": "wide"
+    },
+    {
+      "src": "/bck-logo.svg",
+      "sizes": "750x1334", 
+      "type": "image/svg+xml",
+      "form_factor": "narrow"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Car Affordability Calculator",
+      "short_name": "Affordability", 
+      "description": "Calculate how much car you can afford",
+      "url": "/car-affordability-calculator",
+      "icons": [{ "src": "/bck-logo.svg", "sizes": "96x96" }]
+    },
+    {
+      "name": "Prepayment Calculator",
+      "short_name": "Prepayment",
+      "description": "Calculate loan prepayment savings",
+      "url": "/car-loan-prepayment-calculator", 
+      "icons": [{ "src": "/bck-logo.svg", "sizes": "96x96" }]
+    }
+  ]
+}

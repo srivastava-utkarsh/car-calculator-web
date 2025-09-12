@@ -101,9 +101,10 @@ export const metadata: Metadata = {
     "car insurance EMI calculator",
     "car maintenance cost calculator"
   ],
-  authors: [{ name: "BudgetGear" }],
-  creator: "BudgetGear",
-  publisher: "BudgetGear",
+  authors: [{ name: "BudgetGear", url: "https://budgetgear.in/about" }],
+  creator: "BudgetGear Financial Calculator Experts",
+  publisher: "BudgetGear - Professional Financial Tools",
+  category: "Finance",
   formatDetection: {
     email: false,
     address: false,
@@ -115,7 +116,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: "Car Loan EMI Calculator India | Best Car Affordability Calculator Online India",
-    description: "Best car loan EMI calculator online India. Calculate car affordability, interest rate, prepayment savings with 20/4/10 rule. Free budget car EMI calculator with prepayment analysis.",
+    description: "Best car loan EMI calculator online India. Calculate car affordability, budget cars under 10 lakh, fuel efficient vehicles, and prepayment savings with 20/4/10 rule. Free budget car EMI calculator with 100% financing options.",
     url: 'https://budgetgear.in',
     siteName: 'BudgetGear',
     images: [
@@ -147,8 +148,22 @@ export const metadata: Metadata = {
       'max-snippet': -1,
     },
   },
+  viewport: {
+    width: 'device-width',
+    initialScale: 1,
+    maximumScale: 5,
+    userScalable: true,
+    viewportFit: 'cover',
+  },
   verification: {
     google: 'google-site-verification-code-here',
+  },
+  other: {
+    'mobile-web-app-capable': 'yes',
+    'apple-mobile-web-app-capable': 'yes',
+    'apple-mobile-web-app-status-bar-style': 'default',
+    'theme-color': '#ffffff',
+    'color-scheme': 'light dark',
   },
   icons: {
     icon: [
@@ -322,6 +337,7 @@ export default function RootLayout({
       "@context": "https://schema.org",
       "@type": "Organization",
       "name": "BudgetGear",
+      "alternateName": "BudgetGear Financial Tools",
       "url": "https://budgetgear.in",
       "logo": {
         "@type": "ImageObject",
@@ -330,7 +346,26 @@ export default function RootLayout({
         "height": 200,
         "contentUrl": "https://budgetgear.in/bck-logo.svg"
       },
-      "description": "Professional financial calculators for smart financial decisions. Calculate car affordability, loan EMI, and prepayment savings.",
+      "description": "Professional financial calculators and tools for smart car purchasing decisions in India. Trusted by thousands of users for accurate EMI calculations, car affordability assessment, and loan prepayment planning.",
+      "foundingDate": "2024",
+      "expertise": "Financial Technology, Car Loan Calculators, EMI Planning",
+      "knowsAbout": [
+        "Car Loan EMI Calculation",
+        "Vehicle Affordability Assessment", 
+        "Loan Prepayment Strategies",
+        "20/4/10 Car Buying Rule",
+        "Financial Planning India"
+      ],
+      "areaServed": {
+        "@type": "Country",
+        "name": "India"
+      },
+      "serviceType": "Financial Calculator Tools",
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "contactType": "customer service",
+        "availableLanguage": "English"
+      },
       "sameAs": [
         "https://budgetgear.in"
       ]
@@ -368,6 +403,12 @@ export default function RootLayout({
         <link rel="icon" href="/bck-logo.svg" type="image/svg+xml" sizes="any" />
         <link rel="apple-touch-icon" href="/bck-logo.svg" />
         <link rel="shortcut icon" href="/favicon.ico" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://pagead2.googlesyndication.com" />
+        <link rel="manifest" href="/manifest.json" />
+        <meta name="format-detection" content="telephone=no" />
+        <meta httpEquiv="x-ua-compatible" content="ie=edge" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}

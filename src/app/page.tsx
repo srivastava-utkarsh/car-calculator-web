@@ -232,7 +232,10 @@ export default function HomePage() {
               Making car purchase decisions easier with smart financial tools
             </p>
             <p className={`text-xs ${isLight ? 'text-slate-500' : 'text-white/60'}`}>
-              All calculations are estimates for informational purposes only. Consult with financial advisors for personalized advice.
+              All calculations are estimates for informational purposes only. Consult with financial advisors for personalized advice. Last updated: {new Date().getFullYear()}.
+            </p>
+            <p className={`text-xs mt-2 ${isLight ? 'text-slate-500' : 'text-white/60'}`}>
+              Trusted by thousands of users across India for accurate car loan calculations.
             </p>
           </div>
         </div>
