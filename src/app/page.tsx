@@ -1,6 +1,6 @@
 'use client'
 
-import { Car, Calculator, TrendingUp, Shield } from 'lucide-react'
+import { Calculator, TrendingUp, Shield } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useTheme } from '@/contexts/ThemeContext'
@@ -83,12 +83,12 @@ export default function HomePage() {
           <div className="text-center max-w-4xl mx-auto">
             {/* Main Heading */}
             <h1 className={`text-4xl sm:text-5xl lg:text-6xl font-bold mb-6 tracking-tight ${isLight ? 'text-slate-900' : 'text-white'}`}>
-              Car Affordability & Prepayment Calculator
+              Car Loan EMI Calculator India
             </h1>
             
             {/* Subtitle */}
             <p className={`text-lg sm:text-xl mb-12 font-medium max-w-3xl mx-auto ${isLight ? 'text-slate-600' : 'text-white/80'}`}>
-              Calculate how much car you can afford and optimize loan prepayments to save thousands on interest.
+              Best car loan EMI calculator online India. Calculate car affordability, interest rate, and prepayment savings with proven 20/4/10 rule for smart car financing decisions.
             </p>
 
             {/* Features Grid - More Prominent */}
@@ -99,10 +99,10 @@ export default function HomePage() {
                   <Calculator className={`w-10 h-10 ${isLight ? 'text-blue-600' : 'text-blue-400'}`} />
                 </div>
                 <h2 className={`text-2xl font-bold mb-4 ${isLight ? 'text-slate-900' : 'text-white'}`}>
-                  Car Affordability Calculator
+                  Best Car Affordability Calculator India
                 </h2>
                 <p className={`text-lg mb-6 leading-relaxed ${isLight ? 'text-slate-600' : 'text-white/80'}`}>
-                  Discover how much car you can comfortably afford using the proven 20/4/10 financial rule.
+                  Budget car EMI calculator with 20/4/10 rule. Calculate how much car you can afford with our car purchase loan eligibility calculator.
                 </p>
                 <Link 
                   href="/car-affordability-calculator"
@@ -118,10 +118,10 @@ export default function HomePage() {
                   <TrendingUp className={`w-10 h-10 ${isLight ? 'text-green-600' : 'text-green-400'}`} />
                 </div>
                 <h2 className={`text-2xl font-bold mb-4 ${isLight ? 'text-slate-900' : 'text-white'}`}>
-                  Loan Prepayment Calculator
+                  Car Loan Prepayment Calculator India
                 </h2>
                 <p className={`text-lg mb-6 leading-relaxed ${isLight ? 'text-slate-600' : 'text-white/80'}`}>
-                  Optimize your loan strategy and save thousands with strategic prepayment planning.
+                  Calculate prepayment interest savings with our car loan part payment calculator. Zero prepayment penalty analysis included.
                 </p>
                 <Link 
                   href="/car-loan-prepayment-calculator"
