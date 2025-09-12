@@ -17,8 +17,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Car Affordability Calculator | Car Loan EMI Calculator & Prepayment Estimator India",
-  description: "Calculate car affordability, EMI, and prepayment savings with professional calculator. Check loan eligibility, compare scenarios, and save interest. How much car can I afford on my salary?",
+  title: "Car Affordability & Loan Prepayment Calculator | BudgetGear",
+  description: "Professional car finance calculators for smart purchasing decisions. Calculate affordability, EMI, prepayment savings with 20/4/10 rule. Free tools for car buyers in India.",
   keywords: [
     "car affordability calculator",
     "car loan eligibility calculator", 
@@ -26,6 +26,8 @@ export const metadata: Metadata = {
     "car budget calculator",
     "vehicle affordability tool",
     "salary car calculator",
+    "car afford calculator",
+    "afford card calculator",
     "EMI calculator car",
     "car payment calculator",
     "car purchase estimator",
@@ -61,8 +63,8 @@ export const metadata: Metadata = {
     canonical: '/',
   },
   openGraph: {
-    title: "Car Affordability Calculator | Car Loan EMI Calculator & Prepayment Estimator India",
-    description: "Calculate car affordability, EMI, and prepayment savings with professional calculator. Check loan eligibility, compare scenarios, and save interest. How much car can I afford on my salary?",
+    title: "Car Affordability & Loan Prepayment Calculator | BudgetGear",
+    description: "Professional car finance calculators for smart purchasing decisions. Calculate affordability, EMI, prepayment savings with 20/4/10 rule. Free tools for car buyers in India.",
     url: 'https://budgetgear.in',
     siteName: 'BudgetGear',
     images: [
@@ -78,8 +80,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: "Car Affordability Calculator | Car Loan EMI Calculator & Prepayment Estimator India",
-    description: "Calculate car affordability, EMI, and prepayment savings with professional calculator. Check loan eligibility, compare scenarios, and save interest.",
+    title: "Car Affordability & Loan Prepayment Calculator | BudgetGear",
+    description: "Professional car finance calculators for smart purchasing decisions. Calculate affordability, EMI, prepayment savings with 20/4/10 rule.",
     images: ['https://budgetgear.in/bck-logo.svg'],
     creator: '@BudgetGear',
   },
@@ -98,7 +100,10 @@ export const metadata: Metadata = {
     google: 'google-site-verification-code-here',
   },
   icons: {
-    icon: "/favicon.ico",
+    icon: [
+      { url: "/favicon.ico", sizes: "32x32", type: "image/x-icon" },
+      { url: "/bck-logo.svg", sizes: "any", type: "image/svg+xml" }
+    ],
     shortcut: "/favicon.ico",
     apple: "/bck-logo.svg",
   },
@@ -112,14 +117,24 @@ export default function RootLayout({
   const structuredData = [
     {
       "@context": "https://schema.org",
-      "@type": "WebApplication",
-      "name": "Car Affordability Calculator | BudgetGear",
-      "applicationCategory": "FinanceApplication",
-      "description": "Calculate car affordability, car loan EMI, and prepayment savings. Check loan eligibility with 20/4/10 rule. Professional prepayment calculator for smart car financing decisions.",
+      "@type": "WebSite",
+      "name": "BudgetGear - Car Finance Calculators",
+      "description": "Professional car finance calculators and tools for smart car purchasing decisions. Calculate affordability, EMI, and prepayment savings.",
       "url": "https://budgetgear.in",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://budgetgear.in/car-affordability-calculator",
+        "query-input": "required name=search_term_string"
+      },
       "author": {
         "@type": "Organization",
-        "name": "BudgetGear"
+        "name": "BudgetGear",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://budgetgear.in/bck-logo.svg",
+          "width": 200,
+          "height": 200
+        }
       },
       "offers": {
         "@type": "Offer",
@@ -238,6 +253,23 @@ export default function RootLayout({
     },
     {
       "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "BudgetGear",
+      "url": "https://budgetgear.in",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://budgetgear.in/bck-logo.svg",
+        "width": 200,
+        "height": 200,
+        "contentUrl": "https://budgetgear.in/bck-logo.svg"
+      },
+      "description": "Professional financial calculators for smart financial decisions. Calculate car affordability, loan EMI, and prepayment savings.",
+      "sameAs": [
+        "https://budgetgear.in"
+      ]
+    },
+    {
+      "@context": "https://schema.org",
       "@type": "BreadcrumbList",
       "itemListElement": [
         {
@@ -249,8 +281,14 @@ export default function RootLayout({
         {
           "@type": "ListItem", 
           "position": 2,
-          "name": "Car Loan Calculator",
-          "item": "https://budgetgear.in"
+          "name": "Car Affordability Calculator",
+          "item": "https://budgetgear.in/car-affordability-calculator"
+        },
+        {
+          "@type": "ListItem", 
+          "position": 3,
+          "name": "Car Loan Prepayment Calculator", 
+          "item": "https://budgetgear.in/car-loan-prepayment-calculator"
         }
       ]
     }
@@ -259,9 +297,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <link rel="icon" href="/favicon.ico" sizes="any" />
-        <link rel="icon" href="/bck-logo.svg" type="image/svg+xml" />
+        <link rel="icon" href="/favicon.ico" sizes="32x32" />
+        <link rel="icon" href="/bck-logo.svg" type="image/svg+xml" sizes="any" />
         <link rel="apple-touch-icon" href="/bck-logo.svg" />
+        <link rel="shortcut icon" href="/favicon.ico" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
