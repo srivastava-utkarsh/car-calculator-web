@@ -22,6 +22,7 @@ export default function FinancialFormV2({ carData, updateCarData, monthlyIncomeI
   const [maintenanceDisplay, setMaintenanceDisplay] = React.useState('')
   const [fuelExpenseDisplay, setFuelExpenseDisplay] = React.useState('')
   const [parkingFeeDisplay, setParkingFeeDisplay] = React.useState('')
+  const [isOperationalCostExpanded, setIsOperationalCostExpanded] = React.useState(false)
   
   // Update display values when actual data changes from external sources
   React.useEffect(() => {
@@ -339,15 +340,37 @@ export default function FinancialFormV2({ carData, updateCarData, monthlyIncomeI
       </div>
 
       {/* Operational Cost Section Header */}
-      <div className="flex items-center space-x-3 mb-3">
-        <h4 className="text-lg font-semibold text-blue-400">
-          Operational Cost
-        </h4>
-        <div className={`h-px w-16 ${themeClass('bg-slate-300', 'bg-white/30', isLight)}`}></div>
+      <div 
+        className="flex items-center justify-between mb-3 md:cursor-default cursor-pointer md:pointer-events-none"
+        onClick={() => setIsOperationalCostExpanded(!isOperationalCostExpanded)}
+      >
+        <div className="flex items-center space-x-3">
+          <h4 className="text-lg font-semibold text-blue-400">
+            Operational Cost
+          </h4>
+          <div className={`h-px w-16 ${themeClass('bg-slate-300', 'bg-white/30', isLight)}`}></div>
+        </div>
+        {/* Collapse/Expand arrow - only visible on mobile */}
+        <div className="md:hidden">
+          <svg 
+            className={`w-5 h-5 text-blue-400 transition-transform duration-200 ${isOperationalCostExpanded ? 'rotate-180' : ''}`}
+            fill="none" 
+            stroke="currentColor" 
+            viewBox="0 0 24 24"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+          </svg>
+        </div>
       </div>
 
-      {/* Insurance Cost and Maintenance Cost Row */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6 mb-6 relative">
+      {/* Operational Cost Content - Collapsible on mobile */}
+      <div className={`transition-all duration-300 ease-in-out overflow-hidden md:max-h-screen md:opacity-100 ${
+        isOperationalCostExpanded 
+          ? 'max-h-screen opacity-100' 
+          : 'max-h-0 opacity-0'
+      }`}>
+        {/* Insurance Cost and Maintenance Cost Row */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6 mb-6 relative">
         {/* Insurance Cost */}
         <div className="space-y-2">
           <label className={`text-sm font-medium ${themeClass(themeStyles.primaryText, 'text-white', isLight)}`} style={{ lineHeight: '1.5' }}>
@@ -560,6 +583,7 @@ export default function FinancialFormV2({ carData, updateCarData, monthlyIncomeI
             />
           </div>
         </div>
+      </div>
       </div>
 
 
