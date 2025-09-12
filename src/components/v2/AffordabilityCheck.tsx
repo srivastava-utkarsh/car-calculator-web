@@ -2,7 +2,7 @@
 
 import React from 'react'
 import { CarData } from '@/types/CarData'
-import { CheckCircle, XCircle, Percent, Clock } from 'lucide-react'
+import { CheckCircle, XCircle } from 'lucide-react'
 import { useTheme } from '@/contexts/ThemeContext'
 import { getThemeStyles, themeClass } from '@/utils/themeStyles'
 

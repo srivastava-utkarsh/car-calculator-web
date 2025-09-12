@@ -1,7 +1,7 @@
 'use client'
 
 import React from 'react'
-import { CarData } from '@/app/page'
+import { CarData } from '@/types/CarData'
 // Only import icons that are actually used to reduce bundle size
 import { CheckCircle, XCircle, Percent, Clock, Info, Calendar, CreditCard, Car, IndianRupee, Fuel, ParkingCircle } from 'lucide-react'
 import { useTheme } from '@/contexts/ThemeContext'

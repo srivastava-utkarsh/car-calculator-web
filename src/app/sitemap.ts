@@ -8,14 +8,20 @@ export default function sitemap(): MetadataRoute.Sitemap {
     {
       url: 'https://budgetgear.in',
       lastModified: new Date(),
-      changeFrequency: 'monthly',
+      changeFrequency: 'weekly',
       priority: 1,
+    },
+    {
+      url: 'https://budgetgear.in/car-affordability-calculator',
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.9,
     },
     {
       url: 'https://budgetgear.in/car-loan-prepayment-calculator',
       lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.8,
+      changeFrequency: 'weekly',
+      priority: 0.9,
     },
   ]
 }

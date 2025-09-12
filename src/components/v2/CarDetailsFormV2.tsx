@@ -1,7 +1,7 @@
 'use client'
 
 import React from 'react'
-import { CarData } from '@/app/page'
+import { CarData } from '@/types/CarData'
 import { useTheme } from '@/contexts/ThemeContext'
 import { getThemeStyles, themeClass } from '@/utils/themeStyles'
 import { safeNumber, sanitizeInput, VALIDATION_LIMITS, formatNumberSafe } from '@/utils/safeCalculations'
@@ -13,7 +13,7 @@ interface CarDetailsFormV2Props {
 }
 
 export default function CarDetailsFormV2({ carData, updateCarData, monthlyIncomeInputRef }: CarDetailsFormV2Props) {
-  const { theme, isLight, isDark } = useTheme()
+  const { theme, isLight } = useTheme()
   const themeStyles = getThemeStyles(theme)
   
   // Local state for display values during editing (to avoid real-time validation)
@@ -194,8 +194,20 @@ export default function CarDetailsFormV2({ carData, updateCarData, monthlyIncome
               required
               value={carPriceDisplay}
               onChange={(e) => {
-                // Store exactly what user types - no processing until blur
-                setCarPriceDisplay(e.target.value)
+                // Store exactly what user types, allowing for empty states
+                const value = e.target.value
+                if (value === '') {
+                  setCarPriceDisplay('')
+                  return
+                }
+                // Format with commas as user types
+                const numericOnly = value.replace(/[^0-9.]/g, '')
+                if (numericOnly === '') {
+                  setCarPriceDisplay('')
+                  return
+                }
+                const formatted = numericOnly.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+                setCarPriceDisplay(formatted)
               }}
               onBlur={(e) => {
                 handleCarPriceBlur(e.target.value)
@@ -272,8 +284,20 @@ export default function CarDetailsFormV2({ carData, updateCarData, monthlyIncome
               required
               value={downPaymentDisplay}
               onChange={(e) => {
-                // Store exactly what user types - no processing until blur
-                setDownPaymentDisplay(e.target.value)
+                // Store exactly what user types, allowing for empty states
+                const value = e.target.value
+                if (value === '') {
+                  setDownPaymentDisplay('')
+                  return
+                }
+                // Format with commas as user types
+                const numericOnly = value.replace(/[^0-9]/g, '')
+                if (numericOnly === '') {
+                  setDownPaymentDisplay('')
+                  return
+                }
+                const formatted = numericOnly.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+                setDownPaymentDisplay(formatted)
               }}
               onBlur={(e) => {
                 handleDownPaymentBlur(e.target.value)

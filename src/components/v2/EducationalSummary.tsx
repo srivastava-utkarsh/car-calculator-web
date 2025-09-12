@@ -1,7 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { CarData } from '@/app/page'
+import { CarData } from '@/types/CarData'
 
 interface EducationalSummaryProps {
   carData: CarData
@@ -16,7 +16,7 @@ export default function EducationalSummary({ carData }: EducationalSummaryProps)
       const months = years * 12
       const emi = (principal * monthlyRate * Math.pow(1 + monthlyRate, months)) / (Math.pow(1 + monthlyRate, months) - 1)
       return isNaN(emi) || !isFinite(emi) ? 0 : emi
-    } catch (error) {
+    } catch {
       return 0
     }
   }

@@ -3,7 +3,7 @@
  * Handles all boundary conditions and edge cases from suggestions.txt
  */
 
-import { CarData } from '@/app/page';
+import { CarData } from '@/types/CarData';
 
 // Constants for validation limits
 export const VALIDATION_LIMITS = {
@@ -45,7 +45,7 @@ export const safeNumber = (value: unknown, min: number = 0, max: number = Number
     
     // Clamp to valid range
     return Math.max(min, Math.min(max, num));
-  } catch (error) {
+  } catch {
     // Fallback for any conversion errors
     return min;
   }
@@ -79,7 +79,7 @@ export const calculateSafeEMI = (principal: number, annualRate: number, years: n
     let powerTerm: number;
     try {
       powerTerm = Math.pow(1 + monthlyRate, totalMonths);
-    } catch (error) {
+    } catch {
       // Fallback if power calculation fails
       return safePrincipal / totalMonths;
     }

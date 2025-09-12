@@ -1,11 +1,11 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { motion } from 'framer-motion'
-import { CarData } from '@/app/page'
+import { CarData } from '@/types/CarData'
 import { TrendingUp, Clock, Percent } from 'lucide-react'
 import { useTheme } from '@/contexts/ThemeContext'
-import { getThemeStyles, themeClass } from '@/utils/themeStyles'
+import { themeClass } from '@/utils/themeStyles'
 
 declare global {
   interface Window {
@@ -14,36 +14,36 @@ declare global {
 }
 
 // AdSense Component
-const AdSenseAd = ({ slot, format, style, responsive = true }: {
-  slot: string;
-  format?: string;
-  style?: React.CSSProperties;
-  responsive?: boolean;
-}) => {
-  useEffect(() => {
-    try {
-      (window.adsbygoogle = window.adsbygoogle || []).push({});
-    } catch (err) {
-      if (process.env.NODE_ENV === 'development') {
-        console.error('AdSense error:', err);
-      }
-    }
-  }, []);
+// const AdSenseAd = ({ slot, format, style, responsive = true }: {
+//   slot: string;
+//   format?: string;
+//   style?: React.CSSProperties;
+//   responsive?: boolean;
+// }) => {
+//   useEffect(() => {
+//     try {
+//       (window.adsbygoogle = window.adsbygoogle || []).push({});
+//     } catch (err) {
+//       if (process.env.NODE_ENV === 'development') {
+//         console.error('AdSense error:', err);
+//       }
+//     }
+//   }, []);
 
-  return (
-    <div className="text-center my-4">
-      <div className="text-xs text-gray-500 mb-2">Advertisement</div>
-      <ins
-        className="adsbygoogle"
-        style={{ display: 'block', ...style }}
-        data-ad-client={process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID || "ca-pub-XXXXXXXXXXXXXXXXX"}
-        data-ad-slot={slot}
-        data-ad-format={format}
-        data-full-width-responsive={responsive ? 'true' : 'false'}
-      />
-    </div>
-  );
-};
+//   return (
+//     <div className="text-center my-4">
+//       <div className="text-xs text-gray-500 mb-2">Advertisement</div>
+//       <ins
+//         className="adsbygoogle"
+//         style={{ display: 'block', ...style }}
+//         data-ad-client={process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID || "ca-pub-XXXXXXXXXXXXXXXXX"}
+//         data-ad-slot={slot}
+//         data-ad-format={format}
+//         data-full-width-responsive={responsive ? 'true' : 'false'}
+//       />
+//     </div>
+//   );
+// };
 
 interface LoanEMIDetailsPanelProps {
   carData: CarData
@@ -51,11 +51,11 @@ interface LoanEMIDetailsPanelProps {
   onHoverChange?: (index: number | null) => void
 }
 
-export default function LoanEMIDetailsPanel({ carData, hoveredIndex, onHoverChange }: LoanEMIDetailsPanelProps) {
+export default function LoanEMIDetailsPanel({ carData }: LoanEMIDetailsPanelProps) {
   const [durationToggle, setDurationToggle] = useState<'months' | 'years'>('months')
   const [paymentToggle, setPaymentToggle] = useState<'1year' | 'fullloan'>('fullloan')
-  const { theme, isLight } = useTheme()
-  const themeStyles = getThemeStyles(theme)
+  const { isLight } = useTheme()
+  // const themeStyles = getThemeStyles(theme)
   
   const calculateEMI = (principal: number, rate: number, years: number) => {
     if (principal <= 0 || rate <= 0 || years <= 0) return 0
@@ -148,10 +148,10 @@ export default function LoanEMIDetailsPanel({ carData, hoveredIndex, onHoverChan
     return `₹${Math.round(value).toLocaleString('en-IN')}`
   }
   
-  const formatDuration = () => {
-    if (carData.tenure === 0) return '--'
-    return durationToggle === 'months' ? `${carData.tenure * 12} months` : `${carData.tenure} years`
-  }
+  // const formatDuration = () => {
+  //   if (carData.tenure === 0) return '--'
+  //   return durationToggle === 'months' ? `${carData.tenure * 12} months` : `${carData.tenure} years`
+  // }
 
   const getLastEMIDate = () => {
     if (carData.tenure <= 0) return '--'

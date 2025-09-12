@@ -1,7 +1,7 @@
 'use client'
 
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts'
-import { CarData } from '@/app/page'
+import { CarData } from '@/types/CarData'
 import { motion } from 'framer-motion'
 import { useState } from 'react'
 
@@ -24,13 +24,13 @@ interface TooltipProps {
   }>
 }
 
-interface LegendProps {
-  payload?: Array<{
-    value: string
-    color: string
-    payload: ChartDataItem
-  }>
-}
+// interface LegendProps {
+//   payload?: Array<{
+//     value: string
+//     color: string
+//     payload: ChartDataItem
+//   }>
+// }
 
 export default function CostDistributionChart({ carData }: CostDistributionChartProps) {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
@@ -91,10 +91,10 @@ export default function CostDistributionChart({ carData }: CostDistributionChart
   const monthlyFuelCost = monthlyFuelCostFromInput > 0 ? monthlyFuelCostFromInput : monthlyFuelCostFromKm
   
   // Calculate total costs based on selected period
-  const yearsToShow = showOneYear ? 1 : safeCarData.tenure
-  const totalFuelCost = yearsToShow > 0 ? monthlyFuelCost * yearsToShow * 12 : 0
+  // const yearsToShow = showOneYear ? 1 : safeCarData.tenure
+  // const totalFuelCost = yearsToShow > 0 ? monthlyFuelCost * yearsToShow * 12 : 0
   const insuranceAndMaintenance = safeCarData.insuranceAndMaintenance || 0
-  const processingFee = safeCarData.processingFee || 0
+  // const processingFee = safeCarData.processingFee || 0
 
   // Calculate principal and interest breakdown for both views
   const calculateLoanBreakdown = () => {
@@ -246,38 +246,38 @@ export default function CostDistributionChart({ carData }: CostDistributionChart
     return null
   }
 
-  const CustomLegend = ({ payload }: LegendProps) => {
-    if (!payload || !Array.isArray(payload)) return null
-    
-    return (
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mt-4">
-        {payload.map((entry, index: number) => {
-          const safeEntry = entry || {}
-          const safePayload = safeEntry.payload || {}
-          
-          return (
-            <div key={`legend-${index}`} className="flex items-center justify-between bg-white/5 rounded-lg p-2 border border-white/10">
-              <div className="flex items-center space-x-2">
-                <div 
-                  className="w-3 h-3 rounded-full"
-                  style={{ backgroundColor: safeEntry.color || '#fff' }}
-                />
-                <span className="text-white/80 text-sm font-medium">{safeEntry.value || 'Unknown'}</span>
-              </div>
-              <div className="text-right">
-                <div className="text-white font-bold text-sm">
-                  {formatCurrency(safePayload.value || 0)}
-                </div>
-                <div className="text-white/60 text-xs">
-                  {(safePayload.percentage || 0).toFixed(1)}%
-                </div>
-              </div>
-            </div>
-          )
-        })}
-      </div>
-    )
-  }
+  // const CustomLegend = ({ payload }: LegendProps) => {
+  //   if (!payload || !Array.isArray(payload)) return null
+  //   
+  //   return (
+  //     <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mt-4">
+  //       {payload.map((entry, index: number) => {
+  //         const safeEntry = entry || {}
+  //         const safePayload = safeEntry.payload || {}
+  //         
+  //         return (
+  //           <div key={`legend-${index}`} className="flex items-center justify-between bg-white/5 rounded-lg p-2 border border-white/10">
+  //             <div className="flex items-center space-x-2">
+  //               <div 
+  //                 className="w-3 h-3 rounded-full"
+  //                 style={{ backgroundColor: safeEntry.color || '#fff' }}
+  //               />
+  //               <span className="text-white/80 text-sm font-medium">{safeEntry.value || 'Unknown'}</span>
+  //             </div>
+  //             <div className="text-right">
+  //               <div className="text-white font-bold text-sm">
+  //                 {formatCurrency(safePayload.value || 0)}
+  //               </div>
+  //               <div className="text-white/60 text-xs">
+  //                 {(safePayload.percentage || 0).toFixed(1)}%
+  //               </div>
+  //             </div>
+  //           </div>
+  //         )
+  //       })}
+  //     </div>
+  //   )
+  // }
 
   const hasValidData = chartData.length > 0 && totalCost > 0
 

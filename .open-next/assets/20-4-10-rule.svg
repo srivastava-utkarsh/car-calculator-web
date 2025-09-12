@@ -1,0 +1,132 @@
+<svg width="920" height="220" viewBox="0 0 920 220" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#1e3a8a;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#3730a3;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1e3a8a;stop-opacity:1" />
+    </linearGradient>
+    
+    <linearGradient id="cardGradient1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#10b981;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#059669;stop-opacity:1" />
+    </linearGradient>
+    
+    <linearGradient id="cardGradient2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#3b82f6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#2563eb;stop-opacity:1" />
+    </linearGradient>
+    
+    <linearGradient id="cardGradient3" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#f59e0b;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#d97706;stop-opacity:1" />
+    </linearGradient>
+    
+    <!-- Different colored badge gradients -->
+    <linearGradient id="badge1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ef4444;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#dc2626;stop-opacity:1" />
+    </linearGradient>
+    
+    <linearGradient id="badge2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#8b5cf6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#7c3aed;stop-opacity:1" />
+    </linearGradient>
+    
+    <linearGradient id="badge3" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#06b6d4;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#0891b2;stop-opacity:1" />
+    </linearGradient>
+    
+    <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="2" dy="4" stdDeviation="3" flood-color="#000000" flood-opacity="0.3"/>
+    </filter>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="920" height="220" fill="url(#bgGradient)" rx="12"/>
+  
+  <!-- Header -->
+  <text x="460" y="28" text-anchor="middle" fill="white" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="700">
+    SMART CAR BUYING: THE 20/4/10 RULE
+  </text>
+  <text x="460" y="48" text-anchor="middle" fill="#e0e7ff" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="500">
+    Follow these 3 simple guidelines for a financially smart car purchase
+  </text>
+  
+  <!-- Card 1: 20% Down Payment -->
+  <g filter="url(#shadow)">
+    <rect x="30" y="70" width="280" height="120" fill="url(#cardGradient1)" rx="12"/>
+    <circle cx="80" cy="100" r="20" fill="url(#badge1)"/>
+    <text x="80" y="106" text-anchor="middle" fill="white" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="700">20%</text>
+    
+    <text x="115" y="88" fill="white" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="700">
+      Pay 20% Down
+    </text>
+    <text x="115" y="106" fill="#e0fff4" font-family="Inter, Arial, sans-serif" font-size="13" font-weight="500">
+      Save money on interest &amp;
+    </text>
+    <text x="115" y="120" fill="#e0fff4" font-family="Inter, Arial, sans-serif" font-size="13" font-weight="500">
+      reduce monthly payments
+    </text>
+    
+    <text x="40" y="150" fill="#a7f3d0" font-family="Inter, Arial, sans-serif" font-size="11" font-weight="500">
+      Example: ₹20L car → ₹4L down payment
+    </text>
+    <text x="40" y="165" fill="#a7f3d0" font-family="Inter, Arial, sans-serif" font-size="11" font-weight="500">
+      Benefits: Lower EMI, less total interest
+    </text>
+  </g>
+  
+  <!-- Card 2: 4 Years Max -->
+  <g filter="url(#shadow)">
+    <rect x="320" y="70" width="280" height="120" fill="url(#cardGradient2)" rx="12"/>
+    <circle cx="370" cy="100" r="20" fill="url(#badge2)"/>
+    <text x="370" y="106" text-anchor="middle" fill="white" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="700">4</text>
+    
+    <text x="405" y="88" fill="white" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="700">
+      Loan for 4 Years Max
+    </text>
+    <text x="405" y="106" fill="#dbeafe" font-family="Inter, Arial, sans-serif" font-size="13" font-weight="500">
+      Shorter loans = less interest
+    </text>
+    <text x="405" y="120" fill="#dbeafe" font-family="Inter, Arial, sans-serif" font-size="13" font-weight="500">
+      paid over time
+    </text>
+    
+    <text x="330" y="150" fill="#93c5fd" font-family="Inter, Arial, sans-serif" font-size="11" font-weight="500">
+      Example: 3 years is even better!
+    </text>
+    <text x="330" y="165" fill="#93c5fd" font-family="Inter, Arial, sans-serif" font-size="11" font-weight="500">
+      Benefits: Pay less total interest
+    </text>
+  </g>
+  
+  <!-- Card 3: 10% of Income -->
+  <g filter="url(#shadow)">
+    <rect x="610" y="70" width="280" height="120" fill="url(#cardGradient3)" rx="12"/>
+    <circle cx="660" cy="100" r="20" fill="url(#badge3)"/>
+    <text x="660" y="106" text-anchor="middle" fill="white" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="700">10%</text>
+    
+    <text x="695" y="88" fill="white" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="700">
+      Max 10% of Income
+    </text>
+    <text x="695" y="106" fill="#fef3c7" font-family="Inter, Arial, sans-serif" font-size="13" font-weight="500">
+      Keep car expenses under
+    </text>
+    <text x="695" y="120" fill="#fef3c7" font-family="Inter, Arial, sans-serif" font-size="13" font-weight="500">
+      10% of monthly income
+    </text>
+    
+    <text x="620" y="150" fill="#fcd34d" font-family="Inter, Arial, sans-serif" font-size="11" font-weight="500">
+      Example: ₹50K income → ₹5K max EMI
+    </text>
+    <text x="620" y="165" fill="#fcd34d" font-family="Inter, Arial, sans-serif" font-size="11" font-weight="500">
+      Benefits: Maintain financial balance
+    </text>
+  </g>
+  
+  <!-- Footer -->
+  <text x="460" y="205" text-anchor="middle" fill="#c7d2fe" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="400">
+    Following this rule helps ensure your car purchase fits comfortably within your budget
+  </text>
+</svg>

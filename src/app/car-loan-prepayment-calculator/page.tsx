@@ -438,7 +438,7 @@ function PrepaymentCalculator() {
   // Display state for prepayment amount input (to avoid real-time validation issues)
   const [prepaymentAmountDisplay, setPrepaymentAmountDisplay] = useState('')
   const [prepaymentFrequency, setPrepaymentFrequency] = useState<'monthly' | 'quarterly' | 'yearly' | 'lumpsum'>('yearly')
-  const prepaymentStrategy = 'reduce_tenure' // Fixed to reduce tenure only
+  // const prepaymentStrategy = 'reduce_tenure' // Fixed to reduce tenure only
   const [penaltyRate, setPenaltyRate] = useState(0)
   const [tenureDisplayFormat] = useState<'years' | 'months'>('years')
   const [showResults, setShowResults] = useState(false)
@@ -638,7 +638,7 @@ function PrepaymentCalculator() {
         <div className="container mx-auto px-6 lg:px-8">
           <div className="flex items-center justify-between h-20">
             {/* Logo - Far Left Positioning */}
-            <div className="flex items-center space-x-2 sm:space-x-3 flex-shrink-0">
+            <Link href="/" className="flex items-center space-x-2 sm:space-x-3 flex-shrink-0 cursor-pointer hover:opacity-80 transition-opacity">
               <div className="w-10 h-10 sm:w-16 sm:h-16 flex items-center justify-center">
                 <Image 
                   src="/bck-logo.svg" 
@@ -649,7 +649,7 @@ function PrepaymentCalculator() {
                 />
               </div>
               <span className={`text-base sm:text-2xl font-extrabold tracking-tight flex items-center ${isLight ? 'text-slate-900' : 'text-white'}`}>BudgetGear</span>
-            </div>
+            </Link>
 
             {/* Navigation Menu - Center with proper spacing */}
             <div className="flex-1 flex justify-center">

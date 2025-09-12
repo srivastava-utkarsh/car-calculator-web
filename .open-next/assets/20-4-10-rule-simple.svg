@@ -1,0 +1,34 @@
+<svg width="800" height="110" viewBox="0 0 800 110" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#0f172a;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#334155;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="800" height="110" fill="url(#bgGradient)" rx="8"/>
+  
+  <!-- Header -->
+  <text x="400" y="20" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="16" font-weight="bold">
+    20/4/10 RULE
+  </text>
+  <text x="400" y="35" text-anchor="middle" fill="#cbd5e1" font-family="Arial, sans-serif" font-size="11">
+    Smart car buying suggestion
+  </text>
+  
+  <!-- Rule 1: 20% -->
+  <text x="140" y="58" text-anchor="middle" fill="#10b981" font-family="Arial, sans-serif" font-size="15" font-weight="bold">Pay 20% Down</text>
+  <text x="140" y="75" text-anchor="middle" fill="#d1fae5" font-family="Arial, sans-serif" font-size="11">Lower EMI, less total interest</text>
+  <text x="140" y="88" text-anchor="middle" fill="#a7f3d0" font-family="Arial, sans-serif" font-size="9">Example: ₹20L car → ₹4L down payment</text>
+  
+  <!-- Rule 2: 4 Years -->
+  <text x="400" y="58" text-anchor="middle" fill="#3b82f6" font-family="Arial, sans-serif" font-size="15" font-weight="bold">Max 4 Years</text>
+  <text x="400" y="75" text-anchor="middle" fill="#dbeafe" font-family="Arial, sans-serif" font-size="11">Shorter loans = less interest</text>
+  <text x="400" y="88" text-anchor="middle" fill="#93c5fd" font-family="Arial, sans-serif" font-size="9">Example: 3 years is even better!</text>
+  
+  <!-- Rule 3: 10% -->
+  <text x="660" y="58" text-anchor="middle" fill="#f59e0b" font-family="Arial, sans-serif" font-size="15" font-weight="bold">Max 10% Income</text>
+  <text x="660" y="75" text-anchor="middle" fill="#fef3c7" font-family="Arial, sans-serif" font-size="11">Keep expenses under 10% of income</text>
+  <text x="660" y="88" text-anchor="middle" fill="#fcd34d" font-family="Arial, sans-serif" font-size="9">Example: ₹50K income → ₹5K max EMI</text>
+</svg>

@@ -1,7 +1,7 @@
 'use client'
 
-import React, { useRef, useEffect } from 'react'
-import { CarData } from '@/app/page'
+import React, { useEffect } from 'react'
+import { CarData } from '@/types/CarData'
 import { useTheme } from '@/contexts/ThemeContext'
 import { getThemeStyles, themeClass } from '@/utils/themeStyles'
 import { safeNumber, sanitizeInput, VALIDATION_LIMITS, formatNumberSafe, calculateSafeEMI } from '@/utils/safeCalculations'
@@ -13,7 +13,7 @@ interface FinancialFormV2Props {
 }
 
 export default function FinancialFormV2({ carData, updateCarData, monthlyIncomeInputRef }: FinancialFormV2Props) {
-  const { theme, isLight, isDark } = useTheme()
+  const { theme, isLight } = useTheme()
   const themeStyles = getThemeStyles(theme)
   
   // Local state for display values during editing (to avoid real-time validation)
@@ -54,8 +54,8 @@ export default function FinancialFormV2({ carData, updateCarData, monthlyIncomeI
     return str.replace(/,/g, '')
   }
   
-  const kmInputRef = useRef<HTMLInputElement>(null)
-  const fuelCostInputRef = useRef<HTMLInputElement>(null)
+  // const kmInputRef = useRef<HTMLInputElement>(null)
+  // const fuelCostInputRef = useRef<HTMLInputElement>(null)
   
   // Replace unsafe EMI calculation with safe version
   const calculateEMI = (principal: number, rate: number, years: number) => {
@@ -76,7 +76,7 @@ export default function FinancialFormV2({ carData, updateCarData, monthlyIncomeI
       
       const parsedValue = parseFloat(numericValue)
       
-      if (isNaN(parsedValue) || parsedValue < 0) {
+      if (isNaN(parsedValue) || parsedValue <= 0) {
         updateCarData({ monthlyIncome: 0 })
         setMonthlyIncomeDisplay('')
         return
@@ -111,7 +111,7 @@ export default function FinancialFormV2({ carData, updateCarData, monthlyIncomeI
       
       const parsedValue = parseFloat(numericValue)
       
-      if (isNaN(parsedValue) || parsedValue < 0) {
+      if (isNaN(parsedValue) || parsedValue <= 0) {
         updateCarData({ insuranceAndMaintenance: 0 })
         setInsuranceDisplay('')
         return
@@ -141,7 +141,7 @@ export default function FinancialFormV2({ carData, updateCarData, monthlyIncomeI
       
       const parsedValue = parseFloat(numericValue)
       
-      if (isNaN(parsedValue) || parsedValue < 0) {
+      if (isNaN(parsedValue) || parsedValue <= 0) {
         updateCarData({ maintenanceCostPerYear: 0 })
         setMaintenanceDisplay('')
         return
@@ -171,7 +171,7 @@ export default function FinancialFormV2({ carData, updateCarData, monthlyIncomeI
       
       const parsedValue = parseFloat(numericValue)
       
-      if (isNaN(parsedValue) || parsedValue < 0) {
+      if (isNaN(parsedValue) || parsedValue <= 0) {
         updateCarData({ monthlyFuelExpense: 0 })
         setFuelExpenseDisplay('')
         return
@@ -201,7 +201,7 @@ export default function FinancialFormV2({ carData, updateCarData, monthlyIncomeI
       
       const parsedValue = parseFloat(numericValue)
       
-      if (isNaN(parsedValue) || parsedValue < 0) {
+      if (isNaN(parsedValue) || parsedValue <= 0) {
         updateCarData({ parkingFee: 0 })
         setParkingFeeDisplay('')
         return
@@ -232,29 +232,29 @@ export default function FinancialFormV2({ carData, updateCarData, monthlyIncomeI
         }, 100)
       }
     }
-  }, [carData.kmPerMonth, carData.fuelCostPerLiter, carData.carPrice, carData.downPayment, carData.interestRate, carData.tenure, monthlyIncomeInputRef])
+  }, [carData.kmPerMonth, carData.fuelCostPerLiter, carData.carPrice, carData.downPayment, carData.interestRate, carData.tenure, carData.monthlyIncome, monthlyIncomeInputRef])
 
   
-  const maxTenure = 7
-  const minTenure = 1
+  // const maxTenure = 7
+  // const minTenure = 1
 
 
 
   // Check if Smart Purchase Score requirements are met and additional details are missing
-  const requiredFields = [
-    carData.carPrice > 0,
-    carData.downPayment >= 0,
-    carData.monthlyIncome > 0
-  ];
-  const isAllRequiredFieldsFilled = requiredFields.every(Boolean);
+  // const requiredFields = [
+  //   carData.carPrice > 0,
+  //   carData.downPayment >= 0,
+  //   carData.monthlyIncome > 0
+  // ];
+  // const isAllRequiredFieldsFilled = requiredFields.every(Boolean);
   
-  const additionalFields = [
-    carData.kmPerMonth > 0,
-    carData.fuelCostPerLiter > 0,
-    (carData.insuranceAndMaintenance || 0) > 0
-  ];
-  const isAdditionalDetailsMissing = isAllRequiredFieldsFilled && !additionalFields.every(Boolean);
-  const missingAdditionalCount = additionalFields.filter(Boolean).length;
+  // const additionalFields = [
+  //   carData.kmPerMonth > 0,
+  //   carData.fuelCostPerLiter > 0,
+  //   (carData.insuranceAndMaintenance || 0) > 0
+  // ];
+  // const isAdditionalDetailsMissing = isAllRequiredFieldsFilled && !additionalFields.every(Boolean);
+  // const missingAdditionalCount = additionalFields.filter(Boolean).length;
 
   // Check if all required fields except Monthly Income are filled
   const allOtherFieldsFilled = carData.carPrice > 0 && carData.downPayment >= 0 && carData.tenure > 0
@@ -293,8 +293,20 @@ export default function FinancialFormV2({ carData, updateCarData, monthlyIncomeI
             value={monthlyIncomeDisplay}
             ref={monthlyIncomeInputRef}
             onChange={(e) => {
-              // Store exactly what user types - no processing until blur
-              setMonthlyIncomeDisplay(e.target.value)
+              // Store exactly what user types, allowing for empty states
+              const value = e.target.value
+              if (value === '') {
+                setMonthlyIncomeDisplay('')
+                return
+              }
+              // Format with commas as user types
+              const numericOnly = value.replace(/[^0-9.]/g, '')
+              if (numericOnly === '') {
+                setMonthlyIncomeDisplay('')
+                return
+              }
+              const formatted = numericOnly.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+              setMonthlyIncomeDisplay(formatted)
             }}
             onBlur={(e) => {
               handleMonthlyIncomeBlur(e.target.value)
@@ -350,8 +362,20 @@ export default function FinancialFormV2({ carData, updateCarData, monthlyIncomeI
               autoComplete="off"
               value={insuranceDisplay}
               onChange={(e) => {
-                // Store exactly what user types - no processing until blur
-                setInsuranceDisplay(e.target.value)
+                // Store exactly what user types, allowing for empty states
+                const value = e.target.value
+                if (value === '') {
+                  setInsuranceDisplay('')
+                  return
+                }
+                // Format with commas as user types
+                const numericOnly = value.replace(/[^0-9.]/g, '')
+                if (numericOnly === '') {
+                  setInsuranceDisplay('')
+                  return
+                }
+                const formatted = numericOnly.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+                setInsuranceDisplay(formatted)
               }}
               onBlur={(e) => {
                 handleInsuranceBlur(e.target.value)
@@ -392,8 +416,20 @@ export default function FinancialFormV2({ carData, updateCarData, monthlyIncomeI
               autoComplete="off"
               value={maintenanceDisplay}
               onChange={(e) => {
-                // Store exactly what user types - no processing until blur
-                setMaintenanceDisplay(e.target.value)
+                // Store exactly what user types, allowing for empty states
+                const value = e.target.value
+                if (value === '') {
+                  setMaintenanceDisplay('')
+                  return
+                }
+                // Format with commas as user types
+                const numericOnly = value.replace(/[^0-9.]/g, '')
+                if (numericOnly === '') {
+                  setMaintenanceDisplay('')
+                  return
+                }
+                const formatted = numericOnly.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+                setMaintenanceDisplay(formatted)
               }}
               onBlur={(e) => {
                 handleMaintenanceBlur(e.target.value)
@@ -434,8 +470,20 @@ export default function FinancialFormV2({ carData, updateCarData, monthlyIncomeI
               autoComplete="off"
               value={fuelExpenseDisplay}
               onChange={(e) => {
-                // Store exactly what user types - no processing until blur
-                setFuelExpenseDisplay(e.target.value)
+                // Store exactly what user types, allowing for empty states
+                const value = e.target.value
+                if (value === '') {
+                  setFuelExpenseDisplay('')
+                  return
+                }
+                // Format with commas as user types
+                const numericOnly = value.replace(/[^0-9.]/g, '')
+                if (numericOnly === '') {
+                  setFuelExpenseDisplay('')
+                  return
+                }
+                const formatted = numericOnly.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+                setFuelExpenseDisplay(formatted)
               }}
               onBlur={(e) => {
                 handleFuelExpenseBlur(e.target.value)
@@ -476,8 +524,20 @@ export default function FinancialFormV2({ carData, updateCarData, monthlyIncomeI
               autoComplete="off"
               value={parkingFeeDisplay}
               onChange={(e) => {
-                // Store exactly what user types - no processing until blur
-                setParkingFeeDisplay(e.target.value)
+                // Store exactly what user types, allowing for empty states
+                const value = e.target.value
+                if (value === '') {
+                  setParkingFeeDisplay('')
+                  return
+                }
+                // Format with commas as user types
+                const numericOnly = value.replace(/[^0-9.]/g, '')
+                if (numericOnly === '') {
+                  setParkingFeeDisplay('')
+                  return
+                }
+                const formatted = numericOnly.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+                setParkingFeeDisplay(formatted)
               }}
               onBlur={(e) => {
                 handleParkingFeeBlur(e.target.value)

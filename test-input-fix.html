@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Input Fix Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #1a1a2e;
+            color: white;
+        }
+        .test-section {
+            background-color: #16213e;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        input {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            border: 1px solid #333;
+            border-radius: 4px;
+            background-color: rgba(255,255,255,0.1);
+            color: white;
+            margin: 10px 0;
+        }
+        .result {
+            padding: 10px;
+            background-color: rgba(0,255,0,0.1);
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        h2 {
+            color: #4fc3f7;
+        }
+        .instructions {
+            background-color: rgba(255,193,7,0.2);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Car Price Input Fix Test</h1>
+    
+    <div class="instructions">
+        <h3>Test Instructions (Fixed: No Auto-Validation During Editing):</h3>
+        <ol>
+            <li><strong>Primary Test:</strong> Enter "200000", then delete the first digit "2" and type "3"
+                <ul>
+                    <li>The input should show what you're typing without resetting</li>
+                    <li>Validation only happens when you click outside or press Tab</li>
+                </ul>
+            </li>
+            <li><strong>Edge Cases to Test:</strong>
+                <ul>
+                    <li>Delete first digit of "200000" → should show "00000" (not reset to blank)</li>
+                    <li>Type in the middle: "20|0000" → delete "0" → type "5" → should show "250000"</li>
+                    <li>Delete all digits one by one → should show empty, not reset to blank</li>
+                    <li>Type random characters like "abc200def" → should show exactly what you type</li>
+                </ul>
+            </li>
+            <li><strong>Final Validation:</strong> Only when you click outside the input:
+                <ul>
+                    <li>Invalid characters are stripped</li>
+                    <li>Numbers are formatted with commas</li>
+                    <li>Empty/invalid inputs are cleared</li>
+                </ul>
+            </li>
+        </ol>
+    </div>
+
+    <div class="test-section">
+        <h2>Test 1: Basic Number Editing</h2>
+        <label>Car Price (₹):</label>
+        <input type="text" id="carPrice" placeholder="Enter car price" onblur="handleCarPriceBlur(this.value)">
+        <div class="result">
+            Current Value: <span id="carPriceResult">0</span>
+            <div style="font-size: 12px; color: #888; margin-top: 5px;">
+                Status: <span id="editingStatus">Ready</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>Test 2: Focus-Based Validation</h2>
+        <label>Car Price with Focus-Based Validation (₹):</label>
+        <input type="text" id="carPriceFormatted" placeholder="Enter car price" 
+               oninput="handleInputChange(this.value)" 
+               onblur="handleFormattedInputBlur(this.value)"
+               onfocus="handleInputFocus()">
+        <div class="result">
+            Display Value: <span id="displayResult">₹0</span><br>
+            Validated Value: <span id="formattedResult">0</span>
+            <div style="font-size: 12px; color: #888; margin-top: 5px;">
+                Status: <span id="focusStatus">Ready</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Simulate the fixed validation logic
+        function removeCommas(str) {
+            return str.replace(/,/g, '');
+        }
+
+        function sanitizeInput(value) {
+            if (!value) return '';
+            return value.replace(/[^0-9.,]/g, '');
+        }
+
+        function formatWithCommas(num) {
+            return num.toLocaleString('en-IN');
+        }
+
+        function safeNumber(value, min = 1, max = 50000000) {
+            if (typeof value !== 'number' || isNaN(value) || !isFinite(value)) {
+                return min;
+            }
+            return Math.max(min, Math.min(max, value));
+        }
+
+        // NEW: Focus-based validation (validation only happens on blur)
+        function handleCarPriceBlur(value) {
+            try {
+                console.log('Blur - validating value:', value);
+                document.getElementById('editingStatus').textContent = 'Validating...';
+                
+                const sanitized = sanitizeInput(value);
+                const numericValue = removeCommas(sanitized);
+                
+                console.log('Sanitized:', sanitized, 'Numeric:', numericValue);
+                
+                if (numericValue === '' || numericValue === '0') {
+                    document.getElementById('carPriceResult').textContent = '0';
+                    document.getElementById('editingStatus').textContent = 'Cleared';
+                    return;
+                }
+                
+                const parsedValue = parseFloat(numericValue);
+                console.log('Parsed value:', parsedValue);
+                
+                if (isNaN(parsedValue) || parsedValue <= 0) {
+                    document.getElementById('carPriceResult').textContent = '0';
+                    document.getElementById('editingStatus').textContent = 'Invalid input';
+                    return;
+                }
+                
+                const price = safeNumber(parsedValue, 1, 50000000);
+                console.log('Final price:', price);
+                
+                document.getElementById('carPriceResult').textContent = price.toLocaleString('en-IN');
+                document.getElementById('editingStatus').textContent = 'Validated ✓';
+                
+            } catch (error) {
+                console.error('Car price blur error:', error);
+                document.getElementById('editingStatus').textContent = 'Error';
+            }
+        }
+
+        function handleInputFocus() {
+            document.getElementById('focusStatus').textContent = 'Editing...';
+        }
+
+        function handleInputChange(value) {
+            // Only update display, no validation or processing during typing
+            document.getElementById('displayResult').textContent = '₹' + (value || '0');
+            document.getElementById('focusStatus').textContent = 'Typing... "' + value + '"';
+        }
+
+        function handleFormattedInputBlur(value) {
+            try {
+                console.log('Formatted blur - validating value:', value);
+                document.getElementById('focusStatus').textContent = 'Validating...';
+                
+                const sanitized = sanitizeInput(value);
+                const numericValue = removeCommas(sanitized);
+                
+                if (numericValue === '' || numericValue === '0') {
+                    document.getElementById('formattedResult').textContent = '0';
+                    document.getElementById('displayResult').textContent = '₹0';
+                    document.getElementById('carPriceFormatted').value = '';
+                    document.getElementById('focusStatus').textContent = 'Cleared';
+                    return;
+                }
+                
+                const parsedValue = parseFloat(numericValue);
+                
+                if (isNaN(parsedValue) || parsedValue <= 0) {
+                    document.getElementById('formattedResult').textContent = '0';
+                    document.getElementById('displayResult').textContent = '₹0';
+                    document.getElementById('carPriceFormatted').value = '';
+                    document.getElementById('focusStatus').textContent = 'Invalid input';
+                    return;
+                }
+                
+                const price = safeNumber(parsedValue, 1, 50000000);
+                
+                document.getElementById('formattedResult').textContent = price;
+                document.getElementById('displayResult').textContent = '₹' + price.toLocaleString('en-IN');
+                
+                // Update the input field with properly formatted value
+                document.getElementById('carPriceFormatted').value = formatWithCommas(price);
+                document.getElementById('focusStatus').textContent = 'Validated ✓';
+                
+            } catch (error) {
+                console.error('Formatted input blur error:', error);
+                document.getElementById('focusStatus').textContent = 'Error';
+            }
+        }
+
+        // Initialize with test value
+        window.onload = function() {
+            document.getElementById('carPrice').value = '200000';
+            document.getElementById('carPriceFormatted').value = '2,00,000';
+            
+            // Initialize the results
+            handleCarPriceBlur('200000');
+            handleFormattedInputBlur('200000');
+        };
+    </script>
+</body>
+</html>
