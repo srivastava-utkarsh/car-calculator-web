@@ -18,7 +18,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Car Buying Calculator - Calculate Your Ideal Car Budget | Loan EMI Prepayment Calculator | How Much Car Can I Afford?",
-  description: "Car Buying Calculator - Calculate Your Ideal Car Budget based on your income and salary. Loan EMI Prepayment Calculator for interest savings. How to Calculate a Car Budget? This calculator considers factors like salary and loan EMI to provide insights into your budget for your dream car. Want to Buy a New Car? Here is How Much You Can Spend.",
+  description: "Car Buying Calculator - Figure out the total buying and monthly cost of the car and make affordability decision accordingly. Reduce loan faster, reduce EMI faster. Get overall cost of running a car monthly basis after purchase. Calculate total car ownership expenses.",
   keywords: [
     "car buying calculator",
     "calculate your ideal car budget", 
@@ -33,6 +33,16 @@ export const metadata: Metadata = {
     "EMI prepayment savings",
     "loan prepayment interest calculator",
     "prepayment calculator EMI",
+    "total buying cost of car",
+    "monthly cost of car",
+    "figure out total buying cost car",
+    "make affordability decision",
+    "reduce loan faster",
+    "reduce EMI faster",
+    "overall cost of running car monthly",
+    "monthly car running cost calculator",
+    "total car ownership cost",
+    "car monthly expenses calculator",
     "car loan emi calculator",
     "car affordability calculator India", 
     "car afford budget calculator India",
@@ -129,7 +139,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: "Car Buying Calculator - Calculate Your Ideal Car Budget | Loan EMI Prepayment Calculator",
-    description: "Car Buying Calculator - Calculate Your Ideal Car Budget based on your income and salary. Loan EMI Prepayment Calculator for interest savings. How to Calculate a Car Budget? This calculator considers factors like salary and loan EMI.",
+    description: "Figure out the total buying and monthly cost of the car and make affordability decision accordingly. Reduce loan faster, reduce EMI faster. Get overall cost of running car monthly basis after purchase.",
     url: 'https://budgetgear.in',
     siteName: 'BudgetGear',
     images: [
@@ -146,7 +156,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: "Car Buying Calculator - Calculate Your Ideal Car Budget | Loan EMI Prepayment Calculator",
-    description: "Car Buying Calculator - How to Calculate a Car Budget Based on Your Income? Loan EMI Prepayment Calculator for interest savings. This calculator considers factors like salary and loan EMI.",
+    description: "Figure out the total buying and monthly cost of car and make affordability decision. Reduce loan faster, reduce EMI faster. Get overall cost of running car monthly basis after purchase.",
     images: ['https://budgetgear.in/bck-logo.svg'],
     creator: '@BudgetGear',
   },
@@ -345,6 +355,30 @@ export default function RootLayout({
           "acceptedAnswer": {
             "@type": "Answer",
             "text": "Our Loan EMI Prepayment Calculator helps you calculate interest savings when you prepay your car loan. Input your current EMI details, prepayment amount, and get instant calculations for reduced tenure and total interest savings. Calculate prepayment benefits before making extra payments."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How to Figure Out the Total Buying Cost of Car?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Calculate total buying cost including car price, loan interest, insurance, registration, and taxes. Use our calculator to figure out monthly cost breakdown and make affordability decision based on your budget and financial capacity."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How to Get Overall Cost of Running Car Monthly After Purchase?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Monthly car running cost includes EMI, fuel, insurance, maintenance, parking, and servicing. Calculate total car ownership cost to understand ongoing monthly expenses and plan your budget accordingly."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How to Reduce Loan Faster and Reduce EMI Faster?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Reduce loan faster through prepayments, higher down payment, or shorter tenure. Reduce EMI faster by refinancing at lower rates, making partial prepayments, or increasing payment frequency to save on total interest costs."
           }
         }
       ]

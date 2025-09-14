@@ -44,7 +44,7 @@ export default function HomePage() {
             
             {/* Subtitle */}
             <p className={`text-lg sm:text-xl mb-12 font-medium max-w-3xl mx-auto ${isLight ? 'text-slate-600' : 'text-white/80'}`}>
-              How to Calculate a Car Budget Based on Your Income? This calculator considers factors like salary and loan EMI to provide insights into your budget for your dream car. Want to buy a new car? Here is how much you can spend with our proven 20/4/10 rule.
+              Figure out the total buying and monthly cost of the car and make affordability decision accordingly. Reduce loan faster and reduce EMI faster with our calculators. Get overall cost of running a car monthly basis after purchase using our proven 20/4/10 rule.
             </p>
 
             {/* Features Grid - More Prominent */}
@@ -61,7 +61,7 @@ export default function HomePage() {
                   How Much Car Can I Afford?
                 </h2>
                 <p className={`text-lg mb-6 leading-relaxed flex-grow ${isLight ? 'text-slate-600' : 'text-white/80'}`}>
-                  Calculate your ideal car budget based on salary and income. This car buying calculator considers your loan EMI capacity to determine how much you can afford to spend on your dream car.
+                  Figure out the total buying cost of car and monthly cost breakdown. Make affordability decision based on your salary. Calculate overall cost of running a car monthly to determine total car ownership expenses.
                 </p>
                 <div className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold text-lg px-10 py-4 rounded-full transition-all duration-200 hover:scale-105 shadow-lg hover:shadow-xl">
                   Calculate Affordability
@@ -80,7 +80,7 @@ export default function HomePage() {
                   Car Loan Prepayment Calculator India
                 </h2>
                 <p className={`text-lg mb-6 leading-relaxed flex-grow ${isLight ? 'text-slate-600' : 'text-white/80'}`}>
-                  Calculate prepayment interest savings with our car loan part payment calculator. Zero prepayment penalty analysis included.
+                  Reduce loan faster and reduce EMI faster with prepayment strategies. Calculate monthly cost savings and total buying cost reduction through smart prepayment planning.
                 </p>
                 <div className="inline-block bg-green-600 hover:bg-green-700 text-white font-semibold text-lg px-10 py-4 rounded-full transition-all duration-200 hover:scale-105 shadow-lg hover:shadow-xl">
                   Plan Prepayments
@@ -181,6 +181,36 @@ export default function HomePage() {
                 </h3>
                 <p className={`text-lg ${isLight ? 'text-slate-600' : 'text-white/80'}`}>
                   Our Loan EMI Prepayment Calculator helps you calculate interest savings when you prepay your car loan. Input your current EMI details, prepayment amount, and get instant calculations for reduced tenure and total interest savings.
+                </p>
+              </div>
+
+              {/* FAQ 7 - Total Buying Cost */}
+              <div className={`p-6 rounded-2xl border ${isLight ? 'bg-slate-50 border-slate-200' : 'bg-slate-800/30 border-slate-700'}`}>
+                <h3 className={`text-xl font-bold mb-3 ${isLight ? 'text-slate-900' : 'text-white'}`}>
+                  How to Figure Out the Total Buying Cost of Car?
+                </h3>
+                <p className={`text-lg ${isLight ? 'text-slate-600' : 'text-white/80'}`}>
+                  Calculate total buying cost including car price, loan interest, insurance, registration, and taxes. Use our calculator to figure out monthly cost breakdown and make affordability decision based on your budget and financial capacity.
+                </p>
+              </div>
+
+              {/* FAQ 8 - Monthly Running Cost */}
+              <div className={`p-6 rounded-2xl border ${isLight ? 'bg-slate-50 border-slate-200' : 'bg-slate-800/30 border-slate-700'}`}>
+                <h3 className={`text-xl font-bold mb-3 ${isLight ? 'text-slate-900' : 'text-white'}`}>
+                  How to Get Overall Cost of Running Car Monthly After Purchase?
+                </h3>
+                <p className={`text-lg ${isLight ? 'text-slate-600' : 'text-white/80'}`}>
+                  Monthly car running cost includes EMI, fuel, insurance, maintenance, parking, and servicing. Calculate total car ownership cost to understand ongoing monthly expenses and plan your budget accordingly.
+                </p>
+              </div>
+
+              {/* FAQ 9 - Reduce Loan Faster */}
+              <div className={`p-6 rounded-2xl border ${isLight ? 'bg-slate-50 border-slate-200' : 'bg-slate-800/30 border-slate-700'}`}>
+                <h3 className={`text-xl font-bold mb-3 ${isLight ? 'text-slate-900' : 'text-white'}`}>
+                  How to Reduce Loan Faster and Reduce EMI Faster?
+                </h3>
+                <p className={`text-lg ${isLight ? 'text-slate-600' : 'text-white/80'}`}>
+                  Reduce loan faster through prepayments, higher down payment, or shorter tenure. Reduce EMI faster by refinancing at lower rates, making partial prepayments, or increasing payment frequency to save on total interest costs.
                 </p>
               </div>
             </div>
