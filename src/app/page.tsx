@@ -39,53 +39,53 @@ export default function HomePage() {
           <div className="text-center max-w-4xl mx-auto">
             {/* Main Heading */}
             <h1 className={`text-4xl sm:text-5xl lg:text-6xl font-bold mb-6 tracking-tight ${isLight ? 'text-slate-900' : 'text-white'}`}>
-              Car Loan EMI Calculator India
+              Car Buying Calculator - Calculate Your Ideal Car Budget
             </h1>
             
             {/* Subtitle */}
             <p className={`text-lg sm:text-xl mb-12 font-medium max-w-3xl mx-auto ${isLight ? 'text-slate-600' : 'text-white/80'}`}>
-              Best car loan EMI calculator online India. Calculate car affordability for budget cars under 10 lakh, fuel efficient vehicles, interest rates, and prepayment savings with proven 20/4/10 rule for smart financing decisions.
+              How to Calculate a Car Budget Based on Your Income? This calculator considers factors like salary and loan EMI to provide insights into your budget for your dream car. Want to buy a new car? Here is how much you can spend with our proven 20/4/10 rule.
             </p>
 
             {/* Features Grid - More Prominent */}
             <div className="grid md:grid-cols-2 gap-8 mb-12 max-w-4xl mx-auto">
               {/* Car Affordability */}
-              <div className={`text-center p-10 rounded-3xl border ${isLight ? 'bg-white border-slate-200 shadow-lg hover:shadow-xl' : 'bg-slate-800/40 border-slate-700 hover:bg-slate-800/60'} transition-all duration-300 hover:scale-105`}>
+              <Link 
+                href="/car-affordability-calculator"
+                className={`block text-center p-10 rounded-3xl border min-h-[400px] flex flex-col ${isLight ? 'bg-white border-slate-200 shadow-lg hover:shadow-xl' : 'bg-slate-800/40 border-slate-700 hover:bg-slate-800/60'} transition-all duration-300 hover:scale-105`}
+              >
                 <div className={`w-20 h-20 rounded-3xl flex items-center justify-center mx-auto mb-6 ${isLight ? 'bg-blue-100' : 'bg-blue-500/20'}`}>
                   <Calculator className={`w-10 h-10 ${isLight ? 'text-blue-600' : 'text-blue-400'}`} />
                 </div>
                 <h2 className={`text-2xl font-bold mb-4 ${isLight ? 'text-slate-900' : 'text-white'}`}>
-                  Best Car Affordability Calculator India
+                  How Much Car Can I Afford?
                 </h2>
-                <p className={`text-lg mb-6 leading-relaxed ${isLight ? 'text-slate-600' : 'text-white/80'}`}>
-                  Budget car EMI calculator with 20/4/10 rule. Calculate how much car you can afford with our car budget afford calculator and car purchase loan eligibility calculator.
+                <p className={`text-lg mb-6 leading-relaxed flex-grow ${isLight ? 'text-slate-600' : 'text-white/80'}`}>
+                  Calculate your ideal car budget based on salary and income. This car buying calculator considers your loan EMI capacity to determine how much you can afford to spend on your dream car.
                 </p>
-                <Link 
-                  href="/car-affordability-calculator"
-                  className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold text-lg px-10 py-4 rounded-full transition-all duration-200 hover:scale-105 shadow-lg hover:shadow-xl"
-                >
+                <div className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold text-lg px-10 py-4 rounded-full transition-all duration-200 hover:scale-105 shadow-lg hover:shadow-xl">
                   Calculate Affordability
-                </Link>
-              </div>
+                </div>
+              </Link>
 
               {/* Prepayment Calculator */}
-              <div className={`text-center p-10 rounded-3xl border ${isLight ? 'bg-white border-slate-200 shadow-lg hover:shadow-xl' : 'bg-slate-800/40 border-slate-700 hover:bg-slate-800/60'} transition-all duration-300 hover:scale-105`}>
+              <Link 
+                href="/car-loan-prepayment-calculator"
+                className={`block text-center p-10 rounded-3xl border min-h-[400px] flex flex-col ${isLight ? 'bg-white border-slate-200 shadow-lg hover:shadow-xl' : 'bg-slate-800/40 border-slate-700 hover:bg-slate-800/60'} transition-all duration-300 hover:scale-105`}
+              >
                 <div className={`w-20 h-20 rounded-3xl flex items-center justify-center mx-auto mb-6 ${isLight ? 'bg-green-100' : 'bg-green-500/20'}`}>
                   <TrendingUp className={`w-10 h-10 ${isLight ? 'text-green-600' : 'text-green-400'}`} />
                 </div>
                 <h2 className={`text-2xl font-bold mb-4 ${isLight ? 'text-slate-900' : 'text-white'}`}>
                   Car Loan Prepayment Calculator India
                 </h2>
-                <p className={`text-lg mb-6 leading-relaxed ${isLight ? 'text-slate-600' : 'text-white/80'}`}>
+                <p className={`text-lg mb-6 leading-relaxed flex-grow ${isLight ? 'text-slate-600' : 'text-white/80'}`}>
                   Calculate prepayment interest savings with our car loan part payment calculator. Zero prepayment penalty analysis included.
                 </p>
-                <Link 
-                  href="/car-loan-prepayment-calculator"
-                  className="inline-block bg-green-600 hover:bg-green-700 text-white font-semibold text-lg px-10 py-4 rounded-full transition-all duration-200 hover:scale-105 shadow-lg hover:shadow-xl"
-                >
+                <div className="inline-block bg-green-600 hover:bg-green-700 text-white font-semibold text-lg px-10 py-4 rounded-full transition-all duration-200 hover:scale-105 shadow-lg hover:shadow-xl">
                   Plan Prepayments
-                </Link>
-              </div>
+                </div>
+              </Link>
             </div>
 
             {/* 20/4/10 Rule Section - Compact */}
@@ -157,10 +157,30 @@ export default function HomePage() {
               {/* FAQ 4 */}
               <div className={`p-6 rounded-2xl border ${isLight ? 'bg-slate-50 border-slate-200' : 'bg-slate-800/30 border-slate-700'}`}>
                 <h3 className={`text-xl font-bold mb-3 ${isLight ? 'text-slate-900' : 'text-white'}`}>
-                  What factors affect car affordability?
+                  How Much Car Can I Afford Based on My Salary?
                 </h3>
                 <p className={`text-lg ${isLight ? 'text-slate-600' : 'text-white/80'}`}>
-                  Key factors include monthly income, existing EMIs, down payment amount, interest rates, loan tenure, and ongoing car expenses like insurance, fuel, and maintenance.
+                  Use our car buying calculator to determine how much you can afford to spend. Calculate your ideal car budget based on your income, existing EMIs, down payment capacity, and follow the 20/4/10 rule for smart car purchasing decisions.
+                </p>
+              </div>
+
+              {/* FAQ 5 - New */}
+              <div className={`p-6 rounded-2xl border ${isLight ? 'bg-slate-50 border-slate-200' : 'bg-slate-800/30 border-slate-700'}`}>
+                <h3 className={`text-xl font-bold mb-3 ${isLight ? 'text-slate-900' : 'text-white'}`}>
+                  Want to Buy a New Car? Here is How to Calculate Your Budget
+                </h3>
+                <p className={`text-lg ${isLight ? 'text-slate-600' : 'text-white/80'}`}>
+                  Start by calculating 10% of your monthly salary for total car expenses. Then determine your down payment capacity (20% recommended), choose appropriate loan tenure (4 years max), and use our calculator to find your ideal car budget range.
+                </p>
+              </div>
+
+              {/* FAQ 6 - Loan EMI Prepayment */}
+              <div className={`p-6 rounded-2xl border ${isLight ? 'bg-slate-50 border-slate-200' : 'bg-slate-800/30 border-slate-700'}`}>
+                <h3 className={`text-xl font-bold mb-3 ${isLight ? 'text-slate-900' : 'text-white'}`}>
+                  How does Loan EMI Prepayment Calculator work?
+                </h3>
+                <p className={`text-lg ${isLight ? 'text-slate-600' : 'text-white/80'}`}>
+                  Our Loan EMI Prepayment Calculator helps you calculate interest savings when you prepay your car loan. Input your current EMI details, prepayment amount, and get instant calculations for reduced tenure and total interest savings.
                 </p>
               </div>
             </div>

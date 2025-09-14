@@ -17,9 +17,22 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Car Loan EMI Calculator India | Best Car Affordability Calculator Online India",
-  description: "Best car loan EMI calculator online India. Calculate car affordability, budget cars under 10 lakh, fuel efficient vehicles, and prepayment savings with 20/4/10 rule. Free budget car EMI calculator with 100% financing options.",
+  title: "Car Buying Calculator - Calculate Your Ideal Car Budget | Loan EMI Prepayment Calculator | How Much Car Can I Afford?",
+  description: "Car Buying Calculator - Calculate Your Ideal Car Budget based on your income and salary. Loan EMI Prepayment Calculator for interest savings. How to Calculate a Car Budget? This calculator considers factors like salary and loan EMI to provide insights into your budget for your dream car. Want to Buy a New Car? Here is How Much You Can Spend.",
   keywords: [
+    "car buying calculator",
+    "calculate your ideal car budget", 
+    "how much car can I afford",
+    "car budget based on income",
+    "car budget calculator salary",
+    "how to calculate a car budget",
+    "want to buy a new car",
+    "how much you can spend car",
+    "loan EMI prepayment calculator",
+    "car loan prepayment calculator",
+    "EMI prepayment savings",
+    "loan prepayment interest calculator",
+    "prepayment calculator EMI",
     "car loan emi calculator",
     "car affordability calculator India", 
     "car afford budget calculator India",
@@ -115,8 +128,8 @@ export const metadata: Metadata = {
     canonical: '/',
   },
   openGraph: {
-    title: "Car Loan EMI Calculator India | Best Car Affordability Calculator Online India",
-    description: "Best car loan EMI calculator online India. Calculate car affordability, budget cars under 10 lakh, fuel efficient vehicles, and prepayment savings with 20/4/10 rule. Free budget car EMI calculator with 100% financing options.",
+    title: "Car Buying Calculator - Calculate Your Ideal Car Budget | Loan EMI Prepayment Calculator",
+    description: "Car Buying Calculator - Calculate Your Ideal Car Budget based on your income and salary. Loan EMI Prepayment Calculator for interest savings. How to Calculate a Car Budget? This calculator considers factors like salary and loan EMI.",
     url: 'https://budgetgear.in',
     siteName: 'BudgetGear',
     images: [
@@ -132,8 +145,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: "Car Loan EMI Calculator India | Best Car Affordability Calculator Online India",
-    description: "Best car loan EMI calculator online India. Calculate car affordability, interest rate, prepayment savings with 20/4/10 rule.",
+    title: "Car Buying Calculator - Calculate Your Ideal Car Budget | Loan EMI Prepayment Calculator",
+    description: "Car Buying Calculator - How to Calculate a Car Budget Based on Your Income? Loan EMI Prepayment Calculator for interest savings. This calculator considers factors like salary and loan EMI.",
     images: ['https://budgetgear.in/bck-logo.svg'],
     creator: '@BudgetGear',
   },
@@ -308,6 +321,30 @@ export default function RootLayout({
           "acceptedAnswer": {
             "@type": "Answer",
             "text": "With ₹50,000 monthly salary, you can afford ₹5,000 monthly car expenses. This enables purchasing a car worth ₹15-25 lakhs depending on down payment amount and loan terms."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How to Calculate a Car Budget Based on Your Income?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Use our car buying calculator to calculate your ideal car budget. Take 10% of your monthly income for total car expenses, determine 20% down payment capacity, choose loan tenure under 4 years, and calculate affordable car price range."
+          }
+        },
+        {
+          "@type": "Question", 
+          "name": "Want to Buy a New Car? Here is How Much You Can Spend",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Calculate your car budget using the 20/4/10 rule: 20% down payment, 4 years maximum loan tenure, 10% of gross income for total monthly car expenses. Our calculator considers salary, EMI capacity, and provides insights into your dream car budget."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How does Loan EMI Prepayment Calculator work?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Our Loan EMI Prepayment Calculator helps you calculate interest savings when you prepay your car loan. Input your current EMI details, prepayment amount, and get instant calculations for reduced tenure and total interest savings. Calculate prepayment benefits before making extra payments."
           }
         }
       ]
