@@ -553,7 +553,7 @@ function PrepaymentCalculator() {
     // Extract parameters from URL with safe parsing
     const carPrice = Math.max(0, parseFloat(searchParams.get('carPrice') || '0'))
     const downPayment = Math.max(0, parseFloat(searchParams.get('downPayment') || '0'))
-    const interestRate = Math.max(0.1, Math.min(20, parseFloat(searchParams.get('interestRate') || '8')))
+    const interestRate = Math.max(1, Math.min(20, parseFloat(searchParams.get('interestRate') || '8')))
     const tenure = Math.max(1, Math.min(10, parseFloat(searchParams.get('tenure') || '5')))
     
     // Apply loan amount limits: minimum 0, maximum 10 crores
@@ -883,7 +883,7 @@ function PrepaymentCalculator() {
                   pattern="[0-9.]*"
                   autoComplete="off"
                   step="0.05"
-                  min="0.1"
+                  min="1"
                   max="20"
                   value={interestRateDisplay}
                   onChange={(e) => {
@@ -913,7 +913,7 @@ function PrepaymentCalculator() {
                       return
                     }
 
-                    const newRate = Math.min(20, Math.max(0.1, parsedValue))
+                    const newRate = Math.min(20, Math.max(1, parsedValue))
                     setLoanData(prev => ({ ...prev, interestRate: newRate, emi: 0 }))
                     setInterestRateDisplay(newRate.toString())
                   }}
