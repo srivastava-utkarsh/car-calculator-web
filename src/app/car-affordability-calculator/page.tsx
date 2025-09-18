@@ -24,6 +24,8 @@ const FAQ = lazy(() => import('@/components/FAQ'))
 const ResultsDisplayV2 = lazy(() => import('@/components/v2/ResultsDisplayV2'))
 
 import { CarData } from '@/types/CarData'
+import Breadcrumbs from '@/components/Breadcrumbs'
+import Footer from '@/components/Footer'
 
 
 export default function CarAffordabilityCalculatorPage() {
@@ -195,6 +197,13 @@ export default function CarAffordabilityCalculatorPage() {
       <section className="relative z-10 pt-4" id="calculator" aria-labelledby="main-heading">
         <div className="container mx-auto px-4">
           <div className="max-w-6xl mx-auto">
+            {/* Breadcrumbs */}
+            <Breadcrumbs
+              items={[
+                { label: 'Home', href: '/' },
+                { label: 'Car Affordability Calculator' }
+              ]}
+            />
             {/* Mobile-optimized heading */}
             <div className="block md:hidden text-center mb-4">
               <h1 className={`text-base font-semibold mb-2 ${isLight ? 'text-slate-800' : 'text-white/90'}`}>
@@ -314,6 +323,25 @@ export default function CarAffordabilityCalculatorPage() {
               <p className={`text-sm ${themeClass('text-slate-600', 'text-white/60', isLight)} font-medium`}>
                 * All calculations are estimates for informational purposes only
               </p>
+              <div className={`mt-4 p-4 rounded-xl ${themeClass('bg-gradient-to-r from-emerald-50 to-teal-50', 'bg-gradient-to-r from-emerald-900/30 to-teal-900/30', isLight)} border-2 ${themeClass('border-emerald-200', 'border-emerald-500/40', isLight)} shadow-sm`}>
+                <div className="flex items-start gap-3">
+                  <div className={`flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center ${themeClass('bg-emerald-100', 'bg-emerald-500/20', isLight)}`}>
+                    <svg className={`w-4 h-4 ${themeClass('text-emerald-600', 'text-emerald-400', isLight)}`} fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                  <div className="flex-1">
+                    <h4 className={`font-semibold text-sm ${themeClass('text-emerald-800', 'text-emerald-300', isLight)} mb-2`}>
+                      How it works
+                    </h4>
+                    <p className={`text-sm ${themeClass('text-slate-700', 'text-slate-300', isLight)} leading-relaxed`}>
+                      Our calculator uses the <span className={`font-medium ${themeClass('text-emerald-700', 'text-emerald-400', isLight)}`}>20/4/10 affordability rule</span> to help you determine how much car you can afford.
+                      It considers your <span className={`font-medium ${themeClass('text-emerald-700', 'text-emerald-400', isLight)}`}>monthly income, EMI obligations, and total cost of ownership</span>
+                      to provide a comprehensive affordability assessment.
+                    </p>
+                  </div>
+                </div>
+              </div>
             </div>
 
             {/* Content Layout - Mobile first responsive design */}
@@ -572,6 +600,30 @@ export default function CarAffordabilityCalculatorPage() {
           </Suspense>
         </div>
       </section>
+
+      {/* Disclaimer Section */}
+      <section className="relative z-10 mt-16 mb-8">
+        <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+          <div className={`md-panel-elevated p-6 ${themeClass('bg-white', 'bg-black', isLight)}`}>
+            <div className="flex items-start space-x-3">
+              <div className={`flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center mt-0.5 ${themeClass('bg-slate-200', 'bg-white/10', isLight)}`}>
+                <svg className={`w-3 h-3 ${themeClass('text-slate-600', 'text-white/50', isLight)}`} fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                </svg>
+              </div>
+              <div className="flex-1">
+                <p className={`font-medium mb-3 text-sm ${themeClass('text-slate-900', 'text-white/90', isLight)}`}>Disclaimer</p>
+                <p className={`leading-relaxed text-sm ${themeClass('text-slate-700', 'text-white/70', isLight)}`}>
+                  This car affordability calculator serves as a helpful tool to understand potential financial outcomes when planning your car purchase. It is designed for informational and educational purposes only and does not constitute professional financial advice for your specific car buying decisions. The calculations and projections shown are estimates and should be treated as general guidance rather than exact financial recommendations. For personalized advice tailored to your unique financial circumstances, we strongly encourage you to consult with a qualified financial advisor who can discuss the various options and their implications for your situation.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <Footer />
     </main>
   )
 }

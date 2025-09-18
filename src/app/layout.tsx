@@ -144,10 +144,10 @@ export const metadata: Metadata = {
     siteName: 'BudgetGear',
     images: [
       {
-        url: 'https://budgetgear.in/bck-logo.svg',
-        width: 1200,
-        height: 630,
-        alt: 'BudgetGear Car Finance Calculator',
+        url: 'https://budgetgear.in/icon-512.png',
+        width: 512,
+        height: 512,
+        alt: 'BudgetGear Car Finance Calculator Logo',
       },
     ],
     locale: 'en_US',
@@ -157,7 +157,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: "Car Buying Calculator - Calculate Your Ideal Car Budget | Loan EMI Prepayment Calculator",
     description: "Figure out the total buying and monthly cost of car and make affordability decision. Reduce loan faster, reduce EMI faster. Get overall cost of running car monthly basis after purchase.",
-    images: ['https://budgetgear.in/bck-logo.svg'],
+    images: ['https://budgetgear.in/icon-512.png'],
     creator: '@BudgetGear',
   },
   robots: {
@@ -171,13 +171,6 @@ export const metadata: Metadata = {
       'max-snippet': -1,
     },
   },
-  viewport: {
-    width: 'device-width',
-    initialScale: 1,
-    maximumScale: 5,
-    userScalable: true,
-    viewportFit: 'cover',
-  },
   verification: {
     google: 'google-site-verification-code-here',
   },
@@ -188,14 +181,40 @@ export const metadata: Metadata = {
     'theme-color': '#ffffff',
     'color-scheme': 'light dark',
   },
-  icons: {
-    icon: [
-      { url: "/favicon.ico", sizes: "32x32", type: "image/x-icon" },
-      { url: "/bck-logo.svg", sizes: "any", type: "image/svg+xml" }
-    ],
-    shortcut: "/favicon.ico",
-    apple: "/bck-logo.svg",
-  },
+  icons: [
+    {
+      rel: 'icon',
+      url: '/favicon.ico',
+      sizes: '16x16 32x32',
+      type: 'image/x-icon',
+    },
+    {
+      rel: 'icon',
+      url: '/icon-192.png',
+      sizes: '192x192',
+      type: 'image/png',
+    },
+    {
+      rel: 'icon',
+      url: '/icon-512.png',
+      sizes: '512x512',
+      type: 'image/png',
+    },
+    {
+      rel: 'apple-touch-icon',
+      url: '/apple-touch-icon.png',
+      sizes: '180x180',
+      type: 'image/png',
+    },
+  ],
+};
+
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+  viewportFit: 'cover',
 };
 
 export default function RootLayout({
@@ -220,9 +239,9 @@ export default function RootLayout({
         "name": "BudgetGear",
         "logo": {
           "@type": "ImageObject",
-          "url": "https://budgetgear.in/bck-logo.svg",
-          "width": 200,
-          "height": 200
+          "url": "https://budgetgear.in/icon-512.png",
+          "width": 512,
+          "height": 512
         }
       },
       "offers": {
@@ -412,10 +431,10 @@ export default function RootLayout({
       "url": "https://budgetgear.in",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://budgetgear.in/bck-logo.svg",
-        "width": 200,
-        "height": 200,
-        "contentUrl": "https://budgetgear.in/bck-logo.svg"
+        "url": "https://budgetgear.in/icon-512.png",
+        "width": 512,
+        "height": 512,
+        "contentUrl": "https://budgetgear.in/icon-512.png"
       },
       "description": "Professional financial calculators and tools for smart car purchasing decisions in India. Trusted by thousands of users for accurate EMI calculations, car affordability assessment, and loan prepayment planning.",
       "foundingDate": "2024",
@@ -470,9 +489,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <link rel="icon" href="/favicon.ico" sizes="32x32" />
-        <link rel="icon" href="/bck-logo.svg" type="image/svg+xml" sizes="any" />
-        <link rel="apple-touch-icon" href="/bck-logo.svg" />
+        <link rel="icon" href="/favicon.ico" sizes="16x16 32x32" type="image/x-icon" />
+        <link rel="icon" href="/icon-192.png" sizes="192x192" type="image/png" />
+        <link rel="icon" href="/icon-512.png" sizes="512x512" type="image/png" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180" />
         <link rel="shortcut icon" href="/favicon.ico" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
@@ -484,11 +504,6 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
         />
-        <script
-          async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-YOUR_PUBLISHER_ID"
-          crossOrigin="anonymous"
-        ></script>
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}

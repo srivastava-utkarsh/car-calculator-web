@@ -3,7 +3,9 @@
 import { Calculator, TrendingUp, Shield } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
+import Script from 'next/script'
 import { useTheme } from '@/contexts/ThemeContext'
+import AdSenseAd from '@/components/AdSenseAd'
 
 
 
@@ -13,14 +15,20 @@ export default function HomePage() {
 
   return (
     <main className={`min-h-screen ${isLight ? 'bg-gradient-to-br from-slate-50 via-white to-slate-50' : 'bg-black'}`}>
+      {/* AdSense Script */}
+      <Script
+        async
+        src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID}`}
+        crossOrigin="anonymous"
+      />
       {/* Header */}
       <header className={`${isLight ? 'bg-white border-b border-slate-200/60' : 'bg-black border-b border-white/5'}`}>
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-center h-16 sm:h-20">
+          <div className="flex items-center justify-between h-16 sm:h-20">
             <div className="flex items-center space-x-3">
-              <Image 
-                src="/bck-logo.svg" 
-                alt="BudgetGear Logo" 
+              <Image
+                src="/bck-logo.svg"
+                alt="BudgetGear Logo"
                 className="w-10 h-10 sm:w-12 sm:h-12"
                 width={48}
                 height={48}
@@ -29,6 +37,20 @@ export default function HomePage() {
                 BudgetGear
               </span>
             </div>
+            <nav className="hidden md:flex items-center space-x-6">
+              <Link href="/" className={`font-medium text-blue-600`}>
+                Home
+              </Link>
+              <Link href="/about" className={`font-medium hover:text-blue-600 transition-colors ${isLight ? 'text-slate-600' : 'text-white/80'}`}>
+                About
+              </Link>
+              <Link href="/car-affordability-calculator" className={`font-medium hover:text-blue-600 transition-colors ${isLight ? 'text-slate-600' : 'text-white/80'}`}>
+                Calculators
+              </Link>
+              <Link href="/contact" className={`font-medium hover:text-blue-600 transition-colors ${isLight ? 'text-slate-600' : 'text-white/80'}`}>
+                Contact
+              </Link>
+            </nav>
           </div>
         </div>
       </header>
@@ -110,6 +132,11 @@ export default function HomePage() {
                   <div className={`text-sm font-semibold ${isLight ? 'text-slate-900' : 'text-white'}`}>of Income</div>
                 </div>
               </div>
+            </div>
+
+            {/* AdSense Ad - After main content */}
+            <div className="mt-12 flex justify-center">
+              <AdSenseAd slot="1234567890" style={{ margin: "24px 0" }} />
             </div>
           </div>
         </div>
@@ -211,6 +238,26 @@ export default function HomePage() {
                 </h3>
                 <p className={`text-lg ${isLight ? 'text-slate-600' : 'text-white/80'}`}>
                   Reduce loan faster through prepayments, higher down payment, or shorter tenure. Reduce EMI faster by refinancing at lower rates, making partial prepayments, or increasing payment frequency to save on total interest costs.
+                </p>
+              </div>
+
+              {/* FAQ 10 - Car Buying Tips */}
+              <div className={`p-6 rounded-2xl border ${isLight ? 'bg-slate-50 border-slate-200' : 'bg-slate-800/30 border-slate-700'}`}>
+                <h3 className={`text-xl font-bold mb-3 ${isLight ? 'text-slate-900' : 'text-white'}`}>
+                  Best Car Buying Tips for First-Time Buyers in India
+                </h3>
+                <p className={`text-lg ${isLight ? 'text-slate-600' : 'text-white/80'}`}>
+                  Research car prices across dealers, negotiate on-road price including all charges, check loan terms from multiple banks, verify insurance coverage, inspect vehicle condition, and read all documents carefully before signing.
+                </p>
+              </div>
+
+              {/* FAQ 11 - Car Insurance */}
+              <div className={`p-6 rounded-2xl border ${isLight ? 'bg-slate-50 border-slate-200' : 'bg-slate-800/30 border-slate-700'}`}>
+                <h3 className={`text-xl font-bold mb-3 ${isLight ? 'text-slate-900' : 'text-white'}`}>
+                  How Car Insurance Affects Your Total Car Budget?
+                </h3>
+                <p className={`text-lg ${isLight ? 'text-slate-600' : 'text-white/80'}`}>
+                  Car insurance typically costs 2-4% of car value annually. Include comprehensive coverage, third-party liability, and add-ons in your budget. Compare policies, check claim settlement ratio, and factor renewal costs into monthly car ownership expenses.
                 </p>
               </div>
             </div>

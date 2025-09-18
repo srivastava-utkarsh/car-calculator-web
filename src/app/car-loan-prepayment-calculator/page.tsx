@@ -157,6 +157,8 @@ import { themeClass } from '@/utils/themeStyles'
 import FAQ from '@/components/FAQ'
 import { prepaymentFAQs } from '@/data/prepaymentFAQData'
 import AdSenseAd from '@/components/AdSenseAd'
+import Breadcrumbs from '@/components/Breadcrumbs'
+import Footer from '@/components/Footer'
 
 interface LoanData {
   loanAmount: number
@@ -654,8 +656,8 @@ function PrepaymentCalculator() {
             {/* Navigation Menu - Center with proper spacing */}
             <div className="flex-1 flex justify-center">
               <nav className="flex items-center gap-6" role="navigation" aria-label="Main navigation">
-                <Link 
-                  href="/" 
+                <Link
+                  href="/car-affordability-calculator"
                   className={`font-semibold text-xs sm:text-sm tracking-wide px-3 py-2 text-center rounded-lg transition-colors duration-200 hover:scale-105 ${isLight ? 'text-slate-700 hover:text-slate-900 hover:bg-slate-100' : 'text-white/80 hover:text-white hover:bg-white/10'}`}
                 >
                   Car Affordability Calculator
@@ -733,7 +735,14 @@ function PrepaymentCalculator() {
       
       <div className="container mx-auto px-4">
         <div className="max-w-6xl mx-auto">
-          
+          {/* Breadcrumbs */}
+          <Breadcrumbs
+            items={[
+              { label: 'Home', href: '/' },
+              { label: 'Car Loan Prepayment Calculator' }
+            ]}
+          />
+
           {/* Mobile-optimized heading */}
           <div className="block md:hidden text-center mb-4">
             <h1 className={`text-lg font-semibold mb-2 ${isLight ? 'text-slate-800' : 'text-white/90'}`}>
@@ -743,8 +752,8 @@ function PrepaymentCalculator() {
               Calculate savings with tenure reduction
             </p>
             <div className="mt-4">
-              <Link 
-                href="/" 
+              <Link
+                href="/car-affordability-calculator"
                 className={`inline-flex items-center px-3 py-2 rounded-lg text-xs font-medium transition-all duration-200 ${isLight ? 'bg-blue-50 text-blue-700 hover:bg-blue-100 hover:text-blue-800' : 'bg-blue-900/30 text-blue-400 hover:bg-blue-900/50 hover:text-blue-300'} border ${isLight ? 'border-blue-200 hover:border-blue-300' : 'border-blue-500/40 hover:border-blue-500/60'}`}
               >
                 <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -768,8 +777,8 @@ function PrepaymentCalculator() {
               <p className={`text-sm ${isLight ? 'text-slate-500' : 'text-slate-400'} mb-2`}>
                 Need to calculate your car budget first?
               </p>
-              <Link 
-                href="/" 
+              <Link
+                href="/car-affordability-calculator"
                 className={`inline-flex items-center px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${isLight ? 'bg-blue-50 text-blue-700 hover:bg-blue-100 hover:text-blue-800' : 'bg-blue-900/30 text-blue-400 hover:bg-blue-900/50 hover:text-blue-300'} border ${isLight ? 'border-blue-200 hover:border-blue-300' : 'border-blue-500/40 hover:border-blue-500/60'}`}
               >
                 <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1627,26 +1636,8 @@ function PrepaymentCalculator() {
           </div>
         </section>
 
-        {/* Footer - Same as Car Affordability Page */}
-        <footer className="relative z-10 mt-16 mb-8">
-          <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-            <div className="md-panel-elevated p-6">
-              <div className="flex items-start space-x-3">
-                <div className={`flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center mt-0.5 ${isLight ? 'bg-slate-200' : 'bg-white/10'}`}>
-                  <svg className={`w-3 h-3 ${isLight ? 'text-slate-600' : 'text-white/50'}`} fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
-                  </svg>
-                </div>
-                <div className="flex-1">
-                  <p className={`font-medium mb-3 text-sm ${isLight ? 'text-slate-900' : 'text-white/90'}`}>Disclaimer</p>
-                  <p className={`leading-relaxed text-sm ${isLight ? 'text-slate-700' : 'text-white/70'}`}>
-                    This prepayment calculator serves as a helpful tool to understand potential financial outcomes when planning your loan prepayments. It is designed for informational and educational purposes only and does not constitute professional financial advice for your specific loan decisions. The calculations and projections shown are estimates and should be treated as general guidance rather than exact financial recommendations. For personalized advice tailored to your unique financial circumstances, we strongly encourage you to consult with a qualified financial advisor who can discuss the various options and their implications for your situation.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </footer>
+        {/* Footer */}
+        <Footer />
       </div>
     </main>
   )
