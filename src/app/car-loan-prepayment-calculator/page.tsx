@@ -435,6 +435,9 @@ function PrepaymentCalculator() {
   
   // Display state for loan amount input (to avoid real-time validation issues)
   const [loanAmountDisplay, setLoanAmountDisplay] = useState('')
+
+  // Display state for interest rate input (to handle decimal values properly)
+  const [interestRateDisplay, setInterestRateDisplay] = useState('')
   
   const [prepaymentAmount, setPrepaymentAmount] = useState(0)
   // Display state for prepayment amount input (to avoid real-time validation issues)
@@ -449,6 +452,11 @@ function PrepaymentCalculator() {
   useEffect(() => {
     setLoanAmountDisplay(loanData.loanAmount ? loanData.loanAmount.toLocaleString('en-IN') : '')
   }, [loanData.loanAmount])
+
+  // Sync display state when interest rate changes from external sources
+  useEffect(() => {
+    setInterestRateDisplay(loanData.interestRate ? loanData.interestRate.toString() : '')
+  }, [loanData.interestRate])
 
   // Sync display state when prepayment amount changes from external sources
   useEffect(() => {
@@ -842,8 +850,19 @@ function PrepaymentCalculator() {
                   type="text" 
                   value={loanAmountDisplay}
                   onChange={(e) => {
-                    // Store exactly what user types - no processing until blur
-                    setLoanAmountDisplay(e.target.value)
+                    const value = e.target.value
+                    if (value === '') {
+                      setLoanAmountDisplay('')
+                      return
+                    }
+                    // Format with commas as user types
+                    const numericOnly = value.replace(/[^0-9]/g, '')
+                    if (numericOnly === '') {
+                      setLoanAmountDisplay('')
+                      return
+                    }
+                    const formatted = numericOnly.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+                    setLoanAmountDisplay(formatted)
                   }}
                   onBlur={(e) => {
                     handleLoanAmountBlur(e.target.value)
@@ -866,7 +885,7 @@ function PrepaymentCalculator() {
                   step="0.05"
                   min="0.1"
                   max="20"
-                  value={loanData.interestRate || ''}
+                  value={interestRateDisplay}
                   onChange={(e) => {
                     const value = e.target.value
                     // Allow only numbers and decimal point
@@ -875,15 +894,28 @@ function PrepaymentCalculator() {
                     const parts = numericOnly.split('.')
                     const cleanValue = parts.length > 2 ? parts[0] + '.' + parts.slice(1).join('') : numericOnly
 
-                    if (cleanValue === '' || cleanValue === '.') {
-                      setLoanData(prev => ({ ...prev, interestRate: 0, emi: 0 }))
-                      setShowResults(false)
+                    // Store the display value (allows partial input like "9.")
+                    setInterestRateDisplay(cleanValue)
+                    setShowResults(false)
+                  }}
+                  onBlur={(e) => {
+                    const value = e.target.value
+                    if (value === '' || value === '.') {
+                      setLoanData(prev => ({ ...prev, interestRate: 8, emi: 0 }))
+                      setInterestRateDisplay('8')
                       return
                     }
 
-                    const newRate = Math.min(20, Math.max(0.1, parseFloat(cleanValue) || 8))
+                    const parsedValue = parseFloat(value)
+                    if (isNaN(parsedValue)) {
+                      setLoanData(prev => ({ ...prev, interestRate: 8, emi: 0 }))
+                      setInterestRateDisplay('8')
+                      return
+                    }
+
+                    const newRate = Math.min(20, Math.max(0.1, parsedValue))
                     setLoanData(prev => ({ ...prev, interestRate: newRate, emi: 0 }))
-                    setShowResults(false)
+                    setInterestRateDisplay(newRate.toString())
                   }}
                   onKeyDown={(e) => {
                     // Enhanced mobile keyboard handling
