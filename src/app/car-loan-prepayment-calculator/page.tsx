@@ -858,20 +858,48 @@ function PrepaymentCalculator() {
             <div className="space-y-3">
               <label className={`block text-sm font-medium ${isLight ? 'text-slate-700' : 'text-white/80'}`}>Interest Rate</label>
               <div className={`relative rounded-xl border-2 ${isLight ? 'border-slate-200 bg-white hover:border-purple-300' : 'border-white/20 bg-black/20 hover:border-purple-400/50'} focus-within:ring-4 focus-within:ring-purple-500/20 focus-within:border-purple-500 transition-all duration-200 group`}>
-                <input 
-                  type="number" 
-                  step="0.05" 
+                <input
+                  type="text"
+                  inputMode="numeric"
+                  pattern="[0-9.]*"
+                  autoComplete="off"
+                  step="0.05"
                   min="0.1"
                   max="20"
                   value={loanData.interestRate || ''}
                   onChange={(e) => {
-                    const newRate = Math.min(20, Math.max(0.1, parseFloat(e.target.value) || 8))
+                    const value = e.target.value
+                    // Allow only numbers and decimal point
+                    const numericOnly = value.replace(/[^0-9.]/g, '')
+                    // Prevent multiple decimal points
+                    const parts = numericOnly.split('.')
+                    const cleanValue = parts.length > 2 ? parts[0] + '.' + parts.slice(1).join('') : numericOnly
+
+                    if (cleanValue === '' || cleanValue === '.') {
+                      setLoanData(prev => ({ ...prev, interestRate: 0, emi: 0 }))
+                      setShowResults(false)
+                      return
+                    }
+
+                    const newRate = Math.min(20, Math.max(0.1, parseFloat(cleanValue) || 8))
                     setLoanData(prev => ({ ...prev, interestRate: newRate, emi: 0 }))
                     setShowResults(false)
                   }}
- 
+                  onKeyDown={(e) => {
+                    // Enhanced mobile keyboard handling
+                    const allowedKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab', 'Enter', 'Escape']
+                    const isAllowedKey = allowedKeys.includes(e.key)
+                    const isNumber = /^[0-9]$/.test(e.key)
+                    const isDecimal = e.key === '.' && !e.currentTarget.value.includes('.')
+
+                    if (!isAllowedKey && !isNumber && !isDecimal) {
+                      e.preventDefault()
+                    }
+                  }}
                   aria-label="Interest Rate"
-                  className={`w-full pl-4 pr-20 py-4 rounded-xl border-0 focus:outline-none text-lg font-medium ${isLight ? 'bg-transparent text-slate-900 placeholder-slate-400' : 'bg-transparent text-white placeholder-white/50'}`}
+                  placeholder="Enter interest rate"
+                  className={`w-full pl-4 pr-20 py-4 rounded-xl border-0 focus:outline-none text-lg font-medium ${isLight ? 'bg-transparent text-slate-900 placeholder-slate-400' : 'bg-transparent text-white placeholder-white/50'} touch-manipulation`}
+                  style={{ WebkitAppearance: 'none', WebkitTapHighlightColor: 'transparent' }}
                 />
                 <span className={`absolute right-4 top-1/2 transform -translate-y-1/2 text-sm font-semibold ${isLight ? 'text-slate-600 group-focus-within:text-purple-600' : 'text-white/70 group-focus-within:text-purple-400'} transition-colors`}>% p.a.</span>
               </div>
@@ -900,6 +928,26 @@ function PrepaymentCalculator() {
                   <option value="8">8 years</option>
                   <option value="9">9 years</option>
                   <option value="10">10 years</option>
+                  <option value="11">11 years</option>
+                  <option value="12">12 years</option>
+                  <option value="13">13 years</option>
+                  <option value="14">14 years</option>
+                  <option value="15">15 years</option>
+                  <option value="16">16 years</option>
+                  <option value="17">17 years</option>
+                  <option value="18">18 years</option>
+                  <option value="19">19 years</option>
+                  <option value="20">20 years</option>
+                  <option value="21">21 years</option>
+                  <option value="22">22 years</option>
+                  <option value="23">23 years</option>
+                  <option value="24">24 years</option>
+                  <option value="25">25 years</option>
+                  <option value="26">26 years</option>
+                  <option value="27">27 years</option>
+                  <option value="28">28 years</option>
+                  <option value="29">29 years</option>
+                  <option value="30">30 years</option>
                 </select>
                 <div className={`absolute right-4 top-1/2 transform -translate-y-1/2 pointer-events-none ${isLight ? 'text-slate-400 group-focus-within:text-green-500' : 'text-white/40 group-focus-within:text-green-400'} transition-colors`}>
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

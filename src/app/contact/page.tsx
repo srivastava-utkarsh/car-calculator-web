@@ -25,17 +25,8 @@ export default function ContactPage() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
 
-    // Create mailto link with form data
-    const subject = encodeURIComponent(`Contact Form: ${formData.subject}`)
-    const body = encodeURIComponent(
-      `Name: ${formData.name}\n` +
-      `Email: ${formData.email}\n` +
-      `Subject: ${formData.subject}\n\n` +
-      `Message:\n${formData.message}`
-    )
-
-    const mailtoLink = `mailto:support@budgetgear.in?subject=${subject}&body=${body}`
-    window.open(mailtoLink, '_blank')
+    // Show success alert
+    alert('Message sent successfully! Thank you for contacting us.')
 
     // Reset form
     setFormData({ name: '', email: '', subject: '', message: '' })
@@ -227,8 +218,7 @@ export default function ContactPage() {
                     Send Message
                   </button>
                   <p className={`mt-4 text-sm ${isLight ? 'text-slate-600' : 'text-white/70'}`}>
-                    This will open your default email client with the message pre-filled.<br/>
-                    Or email us directly at: <a href="mailto:support@budgetgear.in" className="text-blue-600 hover:text-blue-700">support@budgetgear.in</a>
+                    We&apos;ll get back to you within 24-48 hours.
                   </p>
                 </div>
               </form>
