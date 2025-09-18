@@ -45,7 +45,10 @@ export default function HomePage() {
                 About
               </Link>
               <Link href="/car-affordability-calculator" className={`font-medium hover:text-blue-600 transition-colors ${isLight ? 'text-slate-600' : 'text-white/80'}`}>
-                Calculators
+                Car Affordability
+              </Link>
+              <Link href="/car-loan-prepayment-calculator" className={`font-medium hover:text-blue-600 transition-colors ${isLight ? 'text-slate-600' : 'text-white/80'}`}>
+                Loan Prepayment
               </Link>
               <Link href="/contact" className={`font-medium hover:text-blue-600 transition-colors ${isLight ? 'text-slate-600' : 'text-white/80'}`}>
                 Contact

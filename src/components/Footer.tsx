@@ -1,6 +1,7 @@
 'use client'
 
 import Image from 'next/image'
+import Link from 'next/link'
 import { useTheme } from '@/contexts/ThemeContext'
 import { themeClass } from '@/utils/themeStyles'
 
@@ -26,6 +27,17 @@ export default function Footer() {
           <p className={`text-sm mb-4 ${themeClass('text-slate-600', 'text-white/70', isLight)}`}>
             Making car purchase decisions easier with smart financial tools
           </p>
+
+          {/* Navigation Links */}
+          <div className="flex items-center justify-center space-x-6 mb-4">
+            <Link href="/about" className={`text-sm font-medium hover:text-blue-600 transition-colors ${themeClass('text-slate-600', 'text-white/80', isLight)}`}>
+              About Us
+            </Link>
+            <Link href="/contact" className={`text-sm font-medium hover:text-blue-600 transition-colors ${themeClass('text-slate-600', 'text-white/80', isLight)}`}>
+              Contact
+            </Link>
+          </div>
+
           <p className={`text-xs ${themeClass('text-slate-500', 'text-white/60', isLight)}`}>
             All calculations are estimates for informational purposes only. Consult with financial advisors for personalized advice. Last updated: {new Date().getFullYear()}.
           </p>
