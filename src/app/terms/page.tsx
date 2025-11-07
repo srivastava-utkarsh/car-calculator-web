@@ -1,291 +1,280 @@
 'use client'
 
-import { FileText, AlertTriangle, Scale, Ban } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useTheme } from '@/contexts/ThemeContext'
+import Breadcrumbs from '@/components/Breadcrumbs'
+import Footer from '@/components/Footer'
 
 export default function TermsPage() {
   const { isLight } = useTheme()
 
   return (
     <main className={`min-h-screen ${isLight ? 'bg-gradient-to-br from-slate-50 via-white to-slate-50' : 'bg-black'}`}>
-      {/* Header */}
       <header className={`${isLight ? 'bg-white border-b border-slate-200/60' : 'bg-black border-b border-white/5'}`}>
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16 sm:h-20">
-            <div className="flex items-center space-x-3">
-              <Image
-                src="/bck-logo.svg"
-                alt="BudgetGear Logo"
-                className="w-10 h-10 sm:w-12 sm:h-12"
-                width={48}
-                height={48}
-              />
-              <span className={`text-xl sm:text-2xl font-bold ${isLight ? 'text-slate-900' : 'text-white'}`}>
-                BudgetGear
-              </span>
-            </div>
-            <nav className="flex items-center space-x-6">
-              <Link href="/" className={`font-medium hover:text-blue-600 transition-colors ${isLight ? 'text-slate-600' : 'text-white/80'}`}>
-                Home
-              </Link>
-              <Link href="/about" className={`font-medium hover:text-blue-600 transition-colors ${isLight ? 'text-slate-600' : 'text-white/80'}`}>
-                About
-              </Link>
-              <Link href="/terms" className={`font-medium text-blue-600`}>
-                Terms
-              </Link>
+            <Link href="/" className="flex items-center space-x-3">
+              <Image src="/bck-logo.svg" alt="BudgetGear Logo" className="w-10 h-10 sm:w-12 sm:h-12" width={48} height={48} />
+              <span className={`text-xl sm:text-2xl font-bold ${isLight ? 'text-slate-900' : 'text-white'}`}>BudgetGear</span>
+            </Link>
+            <nav className="hidden md:flex items-center space-x-6">
+              <Link href="/" className={`font-medium hover:text-blue-600 transition-colors ${isLight ? 'text-slate-600' : 'text-white/80'}`}>Home</Link>
+              <Link href="/blog" className={`font-medium hover:text-blue-600 transition-colors ${isLight ? 'text-slate-600' : 'text-white/80'}`}>Blog</Link>
+              <Link href="/about" className={`font-medium hover:text-blue-600 transition-colors ${isLight ? 'text-slate-600' : 'text-white/80'}`}>About</Link>
+              <Link href="/contact" className={`font-medium hover:text-blue-600 transition-colors ${isLight ? 'text-slate-600' : 'text-white/80'}`}>Contact</Link>
             </nav>
           </div>
         </div>
       </header>
 
-      {/* Main Content */}
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-12">
-            <Scale className={`w-16 h-16 mx-auto mb-6 ${isLight ? 'text-blue-600' : 'text-blue-400'}`} />
-            <h1 className={`text-4xl sm:text-5xl font-bold mb-6 ${isLight ? 'text-slate-900' : 'text-white'}`}>
-              Terms of Use
-            </h1>
-            <p className={`text-xl ${isLight ? 'text-slate-600' : 'text-white/80'}`}>
-              Last updated: September 15, 2025
-            </p>
-          </div>
-
-          <div className="space-y-12">
-            {/* Agreement */}
-            <section className={`p-8 rounded-2xl ${isLight ? 'bg-white border border-slate-200' : 'bg-slate-800/30 border border-slate-700'}`}>
-              <h2 className={`text-2xl font-bold mb-4 ${isLight ? 'text-slate-900' : 'text-white'}`}>
-                Agreement to Terms
-              </h2>
-              <p className={`text-lg ${isLight ? 'text-slate-600' : 'text-white/80'}`}>
-                By accessing and using BudgetGear (budgetgear.in), you accept and agree to be bound by these Terms of Use. If you do not agree to these terms, please do not use our services.
-              </p>
-            </section>
-
-            {/* Service Description */}
-            <section className={`p-8 rounded-2xl ${isLight ? 'bg-slate-50 border border-slate-200' : 'bg-slate-800/30 border border-slate-700'}`}>
-              <div className="flex items-center mb-4">
-                <FileText className={`w-8 h-8 mr-3 ${isLight ? 'text-green-600' : 'text-green-400'}`} />
-                <h2 className={`text-2xl font-bold ${isLight ? 'text-slate-900' : 'text-white'}`}>
-                  Service Description
-                </h2>
-              </div>
-              <p className={`text-lg mb-4 ${isLight ? 'text-slate-600' : 'text-white/80'}`}>
-                BudgetGear provides free online financial calculators specifically designed for car financing, including:
-              </p>
-              <ul className={`list-disc list-inside space-y-2 ${isLight ? 'text-slate-600' : 'text-white/80'}`}>
-                <li>Car affordability calculator based on income and expenses</li>
-                <li>EMI (Equated Monthly Installment) calculator for car loans</li>
-                <li>Loan prepayment calculator for interest savings analysis</li>
-                <li>Financial planning tools following the 20/4/10 rule</li>
-              </ul>
-            </section>
-
-            {/* Disclaimer */}
-            <section className={`p-8 rounded-2xl ${isLight ? 'bg-yellow-50 border border-yellow-200' : 'bg-yellow-900/20 border border-yellow-700'}`}>
-              <div className="flex items-center mb-4">
-                <AlertTriangle className={`w-8 h-8 mr-3 ${isLight ? 'text-yellow-600' : 'text-yellow-400'}`} />
-                <h2 className={`text-2xl font-bold ${isLight ? 'text-slate-900' : 'text-white'}`}>
-                  Important Disclaimer
-                </h2>
-              </div>
-
-              <div className="space-y-4">
-                <p className={`text-lg font-semibold ${isLight ? 'text-yellow-800' : 'text-yellow-200'}`}>
-                  All calculations are estimates for informational purposes only.
-                </p>
-
-                <div className={`${isLight ? 'text-slate-700' : 'text-white/90'}`}>
-                  <h3 className="text-lg font-semibold mb-2">What This Means:</h3>
-                  <ul className="list-disc list-inside space-y-1">
-                    <li>Results are approximations and may not match actual loan offers</li>
-                    <li>Banks and lenders have their own calculation methods and criteria</li>
-                    <li>Interest rates, fees, and terms vary by lender and individual circumstances</li>
-                    <li>We do not guarantee loan approval or specific terms</li>
-                  </ul>
-                </div>
-
-                <div className={`${isLight ? 'text-slate-700' : 'text-white/90'}`}>
-                  <h3 className="text-lg font-semibold mb-2">Professional Advice:</h3>
-                  <p>Always consult with qualified financial advisors, banks, or certified financial planners before making significant financial decisions.</p>
-                </div>
-              </div>
-            </section>
-
-            {/* User Responsibilities */}
-            <section className={`p-8 rounded-2xl ${isLight ? 'bg-white border border-slate-200' : 'bg-slate-800/30 border border-slate-700'}`}>
-              <h2 className={`text-2xl font-bold mb-4 ${isLight ? 'text-slate-900' : 'text-white'}`}>
-                User Responsibilities
-              </h2>
-              <p className={`text-lg mb-4 ${isLight ? 'text-slate-600' : 'text-white/80'}`}>
-                When using our services, you agree to:
-              </p>
-              <ul className={`list-disc list-inside space-y-2 ${isLight ? 'text-slate-600' : 'text-white/80'}`}>
-                <li>Provide accurate information for calculations</li>
-                <li>Use the service for personal, non-commercial purposes</li>
-                <li>Not attempt to reverse engineer or copy our calculation algorithms</li>
-                <li>Not use the service for any illegal or unauthorized purposes</li>
-                <li>Understand that calculations are estimates, not guarantees</li>
-                <li>Verify all financial decisions with qualified professionals</li>
-              </ul>
-            </section>
-
-            {/* Prohibited Uses */}
-            <section className={`p-8 rounded-2xl ${isLight ? 'bg-red-50 border border-red-200' : 'bg-red-900/20 border border-red-700'}`}>
-              <div className="flex items-center mb-4">
-                <Ban className={`w-8 h-8 mr-3 ${isLight ? 'text-red-600' : 'text-red-400'}`} />
-                <h2 className={`text-2xl font-bold ${isLight ? 'text-slate-900' : 'text-white'}`}>
-                  Prohibited Uses
-                </h2>
-              </div>
-              <p className={`text-lg mb-4 ${isLight ? 'text-slate-700' : 'text-white/90'}`}>
-                You may not use BudgetGear to:
-              </p>
-              <ul className={`list-disc list-inside space-y-2 ${isLight ? 'text-slate-700' : 'text-white/90'}`}>
-                <li>Provide financial advice to others without proper licensing</li>
-                <li>Scrape, copy, or redistribute our content without permission</li>
-                <li>Attempt to hack, disrupt, or damage our systems</li>
-                <li>Upload malicious code or conduct automated attacks</li>
-                <li>Violate any applicable laws or regulations</li>
-                <li>Impersonate BudgetGear or its representatives</li>
-              </ul>
-            </section>
-
-            {/* Intellectual Property */}
-            <section className={`p-8 rounded-2xl ${isLight ? 'bg-slate-50 border border-slate-200' : 'bg-slate-800/30 border border-slate-700'}`}>
-              <h2 className={`text-2xl font-bold mb-4 ${isLight ? 'text-slate-900' : 'text-white'}`}>
-                Intellectual Property
-              </h2>
-              <p className={`text-lg mb-4 ${isLight ? 'text-slate-600' : 'text-white/80'}`}>
-                All content, features, and functionality on BudgetGear, including but not limited to:
-              </p>
-              <ul className={`list-disc list-inside mb-4 space-y-2 ${isLight ? 'text-slate-600' : 'text-white/80'}`}>
-                <li>Text, graphics, logos, and images</li>
-                <li>Calculator algorithms and formulas</li>
-                <li>Software, code, and user interface design</li>
-                <li>Trademarks and service marks</li>
-              </ul>
-              <p className={`text-lg ${isLight ? 'text-slate-600' : 'text-white/80'}`}>
-                Are owned by BudgetGear and protected by copyright, trademark, and other intellectual property laws.
-              </p>
-            </section>
-
-            {/* Limitation of Liability */}
-            <section className={`p-8 rounded-2xl ${isLight ? 'bg-white border border-slate-200' : 'bg-slate-800/30 border border-slate-700'}`}>
-              <h2 className={`text-2xl font-bold mb-4 ${isLight ? 'text-slate-900' : 'text-white'}`}>
-                Limitation of Liability
-              </h2>
-              <p className={`text-lg mb-4 ${isLight ? 'text-slate-600' : 'text-white/80'}`}>
-                To the maximum extent permitted by law, BudgetGear shall not be liable for:
-              </p>
-              <ul className={`list-disc list-inside space-y-2 ${isLight ? 'text-slate-600' : 'text-white/80'}`}>
-                <li>Any financial losses resulting from calculator use</li>
-                <li>Inaccurate calculations or estimation errors</li>
-                <li>Decisions made based on our calculator results</li>
-                <li>Service interruptions or technical issues</li>
-                <li>Third-party actions or omissions</li>
-                <li>Any indirect, incidental, or consequential damages</li>
-              </ul>
-            </section>
-
-            {/* Service Availability */}
-            <section className={`p-8 rounded-2xl ${isLight ? 'bg-slate-50 border border-slate-200' : 'bg-slate-800/30 border border-slate-700'}`}>
-              <h2 className={`text-2xl font-bold mb-4 ${isLight ? 'text-slate-900' : 'text-white'}`}>
-                Service Availability
-              </h2>
-              <p className={`text-lg ${isLight ? 'text-slate-600' : 'text-white/80'}`}>
-                We strive to maintain service availability but cannot guarantee uninterrupted access. We may modify, suspend, or discontinue any part of our service at any time without notice. We are not liable for any service interruptions or modifications.
-              </p>
-            </section>
-
-            {/* Privacy */}
-            <section className={`p-8 rounded-2xl ${isLight ? 'bg-white border border-slate-200' : 'bg-slate-800/30 border border-slate-700'}`}>
-              <h2 className={`text-2xl font-bold mb-4 ${isLight ? 'text-slate-900' : 'text-white'}`}>
-                Privacy
-              </h2>
-              <p className={`text-lg ${isLight ? 'text-slate-600' : 'text-white/80'}`}>
-                Your privacy is important to us. Please review our Privacy Policy, which explains how we collect, use, and protect your information when you use our services.
-              </p>
-              <Link
-                href="/privacy"
-                className={`inline-block mt-4 text-blue-600 hover:text-blue-700 font-semibold`}
-              >
-                Read Privacy Policy →
-              </Link>
-            </section>
-
-            {/* Changes to Terms */}
-            <section className={`p-8 rounded-2xl ${isLight ? 'bg-slate-50 border border-slate-200' : 'bg-slate-800/30 border border-slate-700'}`}>
-              <h2 className={`text-2xl font-bold mb-4 ${isLight ? 'text-slate-900' : 'text-white'}`}>
-                Changes to Terms
-              </h2>
-              <p className={`text-lg ${isLight ? 'text-slate-600' : 'text-white/80'}`}>
-                We reserve the right to modify these terms at any time. Changes will be effective immediately upon posting. Your continued use of the service after any changes constitutes acceptance of the new terms.
-              </p>
-            </section>
-
-            {/* Governing Law */}
-            <section className={`p-8 rounded-2xl ${isLight ? 'bg-white border border-slate-200' : 'bg-slate-800/30 border border-slate-700'}`}>
-              <h2 className={`text-2xl font-bold mb-4 ${isLight ? 'text-slate-900' : 'text-white'}`}>
-                Governing Law
-              </h2>
-              <p className={`text-lg ${isLight ? 'text-slate-600' : 'text-white/80'}`}>
-                These terms are governed by and construed in accordance with the laws of India. Any legal disputes will be subject to the exclusive jurisdiction of the courts in India.
-              </p>
-            </section>
-
-            {/* Contact */}
-            <section className={`p-8 rounded-2xl text-center ${isLight ? 'bg-blue-50 border border-blue-200' : 'bg-blue-900/20 border border-blue-700'}`}>
-              <h2 className={`text-2xl font-bold mb-4 ${isLight ? 'text-slate-900' : 'text-white'}`}>
-                Questions About These Terms?
-              </h2>
-              <p className={`text-lg mb-6 ${isLight ? 'text-slate-600' : 'text-white/80'}`}>
-                If you have questions about these Terms of Use, please contact us.
-              </p>
-              <Link
-                href="/contact"
-                className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold px-8 py-3 rounded-full transition-all duration-200 hover:scale-105"
-              >
-                Contact Us
-              </Link>
-            </section>
-          </div>
-        </div>
-      </div>
-
-      {/* Footer */}
-      <footer className={`py-12 ${isLight ? 'bg-slate-50 border-t border-slate-200' : 'bg-slate-800/50 border-t border-slate-700'}`}>
+      <section className="py-16">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-2xl mx-auto">
-            <div className="flex items-center justify-center space-x-3 mb-6">
-              <Image
-                src="/bck-logo.svg"
-                alt="BudgetGear Logo"
-                className="w-8 h-8"
-                width={32}
-                height={32}
-              />
-              <span className={`text-xl font-bold ${isLight ? 'text-slate-900' : 'text-white'}`}>
-                BudgetGear
-              </span>
+          <div className="max-w-4xl mx-auto">
+            <Breadcrumbs items={[{ label: 'Home', href: '/' }, { label: 'Terms & Conditions' }]} />
+            
+            <h1 className={`text-4xl sm:text-5xl font-bold mb-6 mt-8 ${isLight ? 'text-slate-900' : 'text-white'}`}>
+              Terms & Conditions
+            </h1>
+            
+            <div className={`mb-8 p-4 rounded-lg ${isLight ? 'bg-blue-50 border border-blue-200' : 'bg-blue-900/20 border border-blue-700/50'}`}>
+              <p className={`text-sm ${isLight ? 'text-blue-900' : 'text-blue-200'}`}>
+                <strong>Last Updated:</strong> November 7, 2024<br />
+                <strong>Effective Date:</strong> November 7, 2024
+              </p>
             </div>
-            <div className="flex justify-center space-x-6 text-sm">
-              <Link href="/privacy" className={`hover:text-blue-600 ${isLight ? 'text-slate-600' : 'text-white/70'}`}>
-                Privacy Policy
-              </Link>
-              <Link href="/terms" className={`hover:text-blue-600 ${isLight ? 'text-slate-600' : 'text-white/70'}`}>
-                Terms of Use
-              </Link>
-              <Link href="/contact" className={`hover:text-blue-600 ${isLight ? 'text-slate-600' : 'text-white/70'}`}>
-                Contact
-              </Link>
+
+            <div className={`prose prose-lg max-w-none ${isLight ? 'prose-slate' : 'prose-invert'}`}>
+              <h2>1. Acceptance of Terms</h2>
+              <p>
+                Welcome to BudgetGear. By accessing or using our website at budgetgear.in (the &quot;Site&quot;), you agree to be bound by these Terms and Conditions (&quot;Terms&quot;). If you do not agree to these Terms, please do not use our Site.
+              </p>
+              <p>
+                These Terms constitute a legally binding agreement between you and BudgetGear (&quot;we,&quot; &quot;us,&quot; or &quot;our&quot;). We reserve the right to modify these Terms at any time, and your continued use of the Site after such modifications constitutes your acceptance of the updated Terms.
+              </p>
+
+              <h2>2. Description of Service</h2>
+              <p>
+                BudgetGear provides free online calculators and educational content related to car financing, including but not limited to:
+              </p>
+              <ul>
+                <li>Car affordability calculator</li>
+                <li>Car loan EMI calculator</li>
+                <li>Loan prepayment calculator</li>
+                <li>Educational articles and guides on car financing</li>
+                <li>Comparison tools and financial planning resources</li>
+              </ul>
+              <p>
+                Our services are provided for informational and educational purposes only. We do not provide financial advice, loan services, or act as a financial intermediary.
+              </p>
+
+              <h2>3. Use of Calculators and Tools</h2>
+              
+              <h3>3.1 Accuracy of Calculations</h3>
+              <p>
+                While we strive to ensure the accuracy of our calculators and tools, we make no warranties or representations regarding the accuracy, completeness, or reliability of the results. Calculator results are estimates based on the information you provide and standard financial formulas.
+              </p>
+              
+              <h3>3.2 No Financial Advice</h3>
+              <p>
+                The calculators and content on our Site are for informational purposes only and do not constitute financial, legal, or professional advice. You should consult with qualified financial advisors, accountants, or other professionals before making any financial decisions.
+              </p>
+              
+              <h3>3.3 Your Responsibility</h3>
+              <p>
+                You are solely responsible for:
+              </p>
+              <ul>
+                <li>Verifying the accuracy of information you input into our calculators</li>
+                <li>Confirming calculations with lenders before making financial commitments</li>
+                <li>Understanding the terms and conditions of any financial products you consider</li>
+                <li>Making informed decisions based on your personal financial situation</li>
+              </ul>
+
+              <h2>4. Intellectual Property Rights</h2>
+              
+              <h3>4.1 Our Content</h3>
+              <p>
+                All content on the Site, including but not limited to text, graphics, logos, images, calculator code, articles, and software, is the property of BudgetGear or its content suppliers and is protected by Indian and international copyright, trademark, and other intellectual property laws.
+              </p>
+              
+              <h3>4.2 Limited License</h3>
+              <p>
+                We grant you a limited, non-exclusive, non-transferable license to access and use the Site for personal, non-commercial purposes. You may not:
+              </p>
+              <ul>
+                <li>Copy, modify, distribute, or reproduce any content without our written permission</li>
+                <li>Use our calculators or content for commercial purposes</li>
+                <li>Reverse engineer, decompile, or disassemble any software or code</li>
+                <li>Remove or alter any copyright, trademark, or other proprietary notices</li>
+                <li>Frame or mirror any part of the Site without our express written consent</li>
+              </ul>
+
+              <h2>5. User Conduct</h2>
+              <p>
+                You agree not to use the Site to:
+              </p>
+              <ul>
+                <li>Violate any applicable laws or regulations</li>
+                <li>Infringe upon the rights of others</li>
+                <li>Transmit any harmful, offensive, or inappropriate content</li>
+                <li>Attempt to gain unauthorized access to our systems or networks</li>
+                <li>Interfere with or disrupt the Site or servers</li>
+                <li>Use automated systems (bots, scrapers) without our permission</li>
+                <li>Collect or harvest information about other users</li>
+                <li>Impersonate any person or entity</li>
+              </ul>
+
+              <h2>6. Third-Party Links and Content</h2>
+              <p>
+                Our Site may contain links to third-party websites, including banks, financial institutions, and car manufacturers. These links are provided for your convenience only. We do not endorse, control, or assume responsibility for:
+              </p>
+              <ul>
+                <li>The content, privacy policies, or practices of third-party websites</li>
+                <li>Products or services offered by third parties</li>
+                <li>The accuracy of information on third-party sites</li>
+                <li>Any transactions you enter into with third parties</li>
+              </ul>
+              <p>
+                Your use of third-party websites is at your own risk and subject to their terms and conditions.
+              </p>
+
+              <h2>7. Disclaimer of Warranties</h2>
+              <p>
+                THE SITE AND ALL CONTENT, TOOLS, AND SERVICES ARE PROVIDED &quot;AS IS&quot; AND &quot;AS AVAILABLE&quot; WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO:
+              </p>
+              <ul>
+                <li>Warranties of merchantability, fitness for a particular purpose, or non-infringement</li>
+                <li>Warranties that the Site will be uninterrupted, error-free, or secure</li>
+                <li>Warranties regarding the accuracy, reliability, or completeness of content</li>
+                <li>Warranties that defects will be corrected</li>
+              </ul>
+              <p>
+                We do not warrant that the Site will meet your requirements or that any errors will be corrected. Your use of the Site is at your sole risk.
+              </p>
+
+              <h2>8. Limitation of Liability</h2>
+              <p>
+                TO THE MAXIMUM EXTENT PERMITTED BY LAW, BUDGETGEAR AND ITS AFFILIATES, OFFICERS, DIRECTORS, EMPLOYEES, AND AGENTS SHALL NOT BE LIABLE FOR:
+              </p>
+              <ul>
+                <li>Any indirect, incidental, special, consequential, or punitive damages</li>
+                <li>Loss of profits, revenue, data, or use</li>
+                <li>Financial losses resulting from use of our calculators or content</li>
+                <li>Errors or inaccuracies in calculator results</li>
+                <li>Decisions made based on information from our Site</li>
+                <li>Unauthorized access to or alteration of your data</li>
+                <li>Any other matter relating to the Site or services</li>
+              </ul>
+              <p>
+                This limitation applies whether the alleged liability is based on contract, tort, negligence, strict liability, or any other basis, even if we have been advised of the possibility of such damage.
+              </p>
+
+              <h2>9. Indemnification</h2>
+              <p>
+                You agree to indemnify, defend, and hold harmless BudgetGear and its affiliates, officers, directors, employees, and agents from and against any claims, liabilities, damages, losses, costs, or expenses (including reasonable attorneys&apos; fees) arising out of or related to:
+              </p>
+              <ul>
+                <li>Your use of the Site</li>
+                <li>Your violation of these Terms</li>
+                <li>Your violation of any rights of another party</li>
+                <li>Any content you submit or transmit through the Site</li>
+                <li>Financial decisions made based on our calculators or content</li>
+              </ul>
+
+              <h2>10. Advertising and Sponsored Content</h2>
+              <p>
+                Our Site displays advertisements through Google AdSense and may contain sponsored content or affiliate links. We may receive compensation when you click on certain links or advertisements. However:
+              </p>
+              <ul>
+                <li>We do not endorse any specific products, services, or lenders</li>
+                <li>Our editorial content is independent and unbiased</li>
+                <li>Advertising does not influence our calculator algorithms or educational content</li>
+                <li>We clearly distinguish between editorial content and advertisements</li>
+              </ul>
+
+              <h2>11. Privacy and Data Protection</h2>
+              <p>
+                Your use of the Site is also governed by our Privacy Policy, which is incorporated into these Terms by reference. Please review our{' '}
+                <Link href="/privacy" className="text-blue-600 hover:underline">Privacy Policy</Link>{' '}
+                to understand how we collect, use, and protect your information.
+              </p>
+
+              <h2>12. Modifications to the Site</h2>
+              <p>
+                We reserve the right to:
+              </p>
+              <ul>
+                <li>Modify, suspend, or discontinue any part of the Site at any time</li>
+                <li>Change calculator formulas or methodologies</li>
+                <li>Update content, features, or functionality</li>
+                <li>Impose limits on certain features or restrict access to parts of the Site</li>
+              </ul>
+              <p>
+                We will not be liable to you or any third party for any modification, suspension, or discontinuance of the Site.
+              </p>
+
+              <h2>13. Termination</h2>
+              <p>
+                We may terminate or suspend your access to the Site immediately, without prior notice or liability, for any reason, including but not limited to:
+              </p>
+              <ul>
+                <li>Breach of these Terms</li>
+                <li>Violation of applicable laws</li>
+                <li>Fraudulent, abusive, or illegal activity</li>
+                <li>At our sole discretion</li>
+              </ul>
+              <p>
+                Upon termination, your right to use the Site will immediately cease. All provisions of these Terms that by their nature should survive termination shall survive, including ownership provisions, warranty disclaimers, and limitations of liability.
+              </p>
+
+              <h2>14. Governing Law and Jurisdiction</h2>
+              <p>
+                These Terms shall be governed by and construed in accordance with the laws of India, without regard to its conflict of law provisions. Any disputes arising from these Terms or your use of the Site shall be subject to the exclusive jurisdiction of the courts located in India.
+              </p>
+
+              <h2>15. Dispute Resolution</h2>
+              <p>
+                In the event of any dispute, claim, or controversy arising out of or relating to these Terms or your use of the Site, you agree to first attempt to resolve the dispute informally by contacting us at legal@budgetgear.in. If the dispute cannot be resolved within 30 days, either party may pursue formal legal action.
+              </p>
+
+              <h2>16. Severability</h2>
+              <p>
+                If any provision of these Terms is found to be invalid, illegal, or unenforceable, the remaining provisions shall continue in full force and effect. The invalid provision shall be modified to the minimum extent necessary to make it valid and enforceable.
+              </p>
+
+              <h2>17. Entire Agreement</h2>
+              <p>
+                These Terms, together with our Privacy Policy and any other legal notices published on the Site, constitute the entire agreement between you and BudgetGear regarding your use of the Site and supersede all prior agreements and understandings.
+              </p>
+
+              <h2>18. Contact Information</h2>
+              <p>
+                If you have any questions about these Terms, please contact us:
+              </p>
+              <div className={`p-6 rounded-lg my-6 ${isLight ? 'bg-slate-100' : 'bg-slate-800'}`}>
+                <p className="mb-2"><strong>BudgetGear</strong></p>
+                <p className="mb-2">Email: <a href="mailto:legal@budgetgear.in" className="text-blue-600 hover:underline">legal@budgetgear.in</a></p>
+                <p className="mb-2">Website: <a href="https://budgetgear.in" className="text-blue-600 hover:underline">https://budgetgear.in</a></p>
+                <p>Contact Form: <Link href="/contact" className="text-blue-600 hover:underline">budgetgear.in/contact</Link></p>
+              </div>
+
+              <div className={`p-6 rounded-lg mt-8 ${isLight ? 'bg-yellow-50 border border-yellow-200' : 'bg-yellow-900/20 border border-yellow-700/50'}`}>
+                <h3 className="text-xl font-bold mb-3">Important Reminders</h3>
+                <ul className="space-y-2">
+                  <li>⚠️ Our calculators provide estimates only - verify with lenders</li>
+                  <li>⚠️ We do not provide financial advice - consult professionals</li>
+                  <li>⚠️ Calculator results depend on accuracy of your inputs</li>
+                  <li>⚠️ Interest rates and terms vary by lender and individual circumstances</li>
+                  <li>⚠️ Always read loan documents carefully before signing</li>
+                </ul>
+              </div>
             </div>
           </div>
         </div>
-      </footer>
+      </section>
+
+      <Footer />
     </main>
   )
 }

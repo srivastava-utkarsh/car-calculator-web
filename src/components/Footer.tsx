@@ -29,12 +29,31 @@ export default function Footer() {
           </p>
 
           {/* Navigation Links */}
-          <div className="flex items-center justify-center space-x-6 mb-4">
+          <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6 mb-4">
             <Link href="/about" className={`text-sm font-medium hover:text-blue-600 transition-colors ${themeClass('text-slate-600', 'text-white/80', isLight)}`}>
               About Us
             </Link>
+            <Link href="/blog" className={`text-sm font-medium hover:text-blue-600 transition-colors ${themeClass('text-slate-600', 'text-white/80', isLight)}`}>
+              Blog
+            </Link>
+            <Link href="/how-it-works" className={`text-sm font-medium hover:text-blue-600 transition-colors ${themeClass('text-slate-600', 'text-white/80', isLight)}`}>
+              How It Works
+            </Link>
             <Link href="/contact" className={`text-sm font-medium hover:text-blue-600 transition-colors ${themeClass('text-slate-600', 'text-white/80', isLight)}`}>
               Contact
+            </Link>
+          </div>
+
+          {/* Legal Links */}
+          <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6 mb-6">
+            <Link href="/privacy" className={`text-xs font-medium hover:text-blue-600 transition-colors ${themeClass('text-slate-500', 'text-white/60', isLight)}`}>
+              Privacy Policy
+            </Link>
+            <Link href="/terms" className={`text-xs font-medium hover:text-blue-600 transition-colors ${themeClass('text-slate-500', 'text-white/60', isLight)}`}>
+              Terms & Conditions
+            </Link>
+            <Link href="/disclaimer" className={`text-xs font-medium hover:text-blue-600 transition-colors ${themeClass('text-slate-500', 'text-white/60', isLight)}`}>
+              Disclaimer
             </Link>
           </div>
 
