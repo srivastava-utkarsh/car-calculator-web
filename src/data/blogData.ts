@@ -7,6 +7,10 @@ export interface BlogPost {
   readTime: string
   content: string
   keywords: string[]
+  author: string
+  publishedDate: string
+  lastUpdated: string
+  metaDescription: string
 }
 
 export const blogPosts: BlogPost[] = [
@@ -18,7 +22,11 @@ export const blogPosts: BlogPost[] = [
     date: 'November 2024',
     readTime: '8 min read',
     keywords: ['20/4/10 rule', 'car buying rule', 'car finance India', 'down payment rule'],
-    content: ''
+    content: '',
+    author: 'BudgetGear Team',
+    publishedDate: '2024-11-01',
+    lastUpdated: '2024-11-07',
+    metaDescription: 'Master the 20/4/10 car buying rule for India. Learn how 20% down payment, 4-year tenure, and 10% income rule help you make smart car financing decisions.'
   },
   {
     slug: 'how-much-car-afford-salary',
@@ -28,7 +36,11 @@ export const blogPosts: BlogPost[] = [
     date: 'November 2024',
     readTime: '10 min read',
     keywords: ['car affordability', 'salary car calculator', 'car budget income'],
-    content: ''
+    content: '',
+    author: 'BudgetGear Team',
+    publishedDate: '2024-11-02',
+    lastUpdated: '2024-11-07',
+    metaDescription: 'Calculate how much car you can afford on your salary. Complete guide with examples for ₹25K to ₹1L+ salaries, including EMI calculations and ownership costs.'
   },
   {
     slug: 'car-loan-emi-calculator-guide',
@@ -38,7 +50,11 @@ export const blogPosts: BlogPost[] = [
     date: 'November 2024',
     readTime: '12 min read',
     keywords: ['EMI calculator', 'car loan EMI', 'EMI calculation formula'],
-    content: ''
+    content: '',
+    author: 'BudgetGear Team',
+    publishedDate: '2024-11-03',
+    lastUpdated: '2024-11-07',
+    metaDescription: 'Master car loan EMI calculations with our complete guide. Learn the formula, compare bank rates, and optimize your loan tenure for maximum savings.'
   },
   {
     slug: 'car-prepayment-strategies-save-money',
@@ -48,7 +64,11 @@ export const blogPosts: BlogPost[] = [
     date: 'November 2024',
     readTime: '9 min read',
     keywords: ['car loan prepayment', 'prepayment strategies', 'reduce EMI'],
-    content: ''
+    content: '',
+    author: 'BudgetGear Team',
+    publishedDate: '2024-11-04',
+    lastUpdated: '2024-11-07',
+    metaDescription: 'Save lakhs on car loans with smart prepayment strategies. Learn when to prepay, how much to pay, and calculate your interest savings with real examples.'
   },
   {
     slug: 'hidden-costs-car-ownership-india',
@@ -58,7 +78,11 @@ export const blogPosts: BlogPost[] = [
     date: 'November 2024',
     readTime: '11 min read',
     keywords: ['car ownership cost', 'monthly car expenses', 'total car cost'],
-    content: ''
+    content: '',
+    author: 'BudgetGear Team',
+    publishedDate: '2024-11-05',
+    lastUpdated: '2024-11-07',
+    metaDescription: 'Discover hidden costs of car ownership in India beyond EMI. Complete breakdown of insurance, fuel, maintenance, parking, and depreciation costs.'
   },
   {
     slug: 'car-loan-interest-rates-india',
@@ -68,7 +92,11 @@ export const blogPosts: BlogPost[] = [
     date: 'November 2024',
     readTime: '10 min read',
     keywords: ['car loan interest rate', 'interest rate calculation', 'best car loan rates'],
-    content: ''
+    content: '',
+    author: 'BudgetGear Team',
+    publishedDate: '2024-11-06',
+    lastUpdated: '2024-11-07',
+    metaDescription: 'Understand car loan interest rates in India. Compare rates from SBI, HDFC, ICICI, Axis Bank. Learn how to get the best rates and save on interest.'
   },
   {
     slug: 'car-financing-first-time-buyers',
@@ -78,7 +106,11 @@ export const blogPosts: BlogPost[] = [
     date: 'November 2024',
     readTime: '13 min read',
     keywords: ['first time car buyer', 'car financing guide', 'new car buyer tips'],
-    content: ''
+    content: '',
+    author: 'BudgetGear Team',
+    publishedDate: '2024-10-28',
+    lastUpdated: '2024-11-07',
+    metaDescription: 'First-time car buyer? Complete guide to car financing in India. Learn about loans, documentation, eligibility, and avoid common mistakes.'
   },
   {
     slug: 'comparing-car-loan-options-banks',
@@ -88,7 +120,11 @@ export const blogPosts: BlogPost[] = [
     date: 'November 2024',
     readTime: '10 min read',
     keywords: ['car loan comparison', 'best car loan bank', 'compare car loans'],
-    content: ''
+    content: '',
+    author: 'BudgetGear Team',
+    publishedDate: '2024-10-29',
+    lastUpdated: '2024-11-07',
+    metaDescription: 'Compare car loans from SBI, HDFC, ICICI, Axis Bank, and more. Detailed comparison of interest rates, processing fees, and loan terms for 2024.'
   },
   {
     slug: 'calculate-monthly-car-budget',
@@ -98,7 +134,11 @@ export const blogPosts: BlogPost[] = [
     date: 'November 2024',
     readTime: '8 min read',
     keywords: ['monthly car budget', 'car expense calculator', 'budget planning'],
-    content: ''
+    content: '',
+    author: 'BudgetGear Team',
+    publishedDate: '2024-10-30',
+    lastUpdated: '2024-11-07',
+    metaDescription: 'Calculate your monthly car budget including EMI, fuel, insurance, and maintenance. Practical examples and budgeting tips for Indian car owners.'
   },
   {
     slug: 'car-insurance-first-time-buyers',
@@ -108,7 +148,11 @@ export const blogPosts: BlogPost[] = [
     date: 'November 2024',
     readTime: '12 min read',
     keywords: ['car insurance India', 'insurance coverage', 'car insurance cost'],
-    content: ''
+    content: '',
+    author: 'BudgetGear Team',
+    publishedDate: '2024-10-31',
+    lastUpdated: '2024-11-07',
+    metaDescription: 'Complete car insurance guide for first-time buyers in India. Understand comprehensive vs third-party, IDV, NCB, and how to save on premiums.'
   },
   {
     slug: 'loan-tenure-vs-interest-rate',
@@ -118,7 +162,11 @@ export const blogPosts: BlogPost[] = [
     date: 'November 2024',
     readTime: '9 min read',
     keywords: ['loan tenure', 'interest rate impact', 'loan optimization'],
-    content: ''
+    content: '',
+    author: 'BudgetGear Team',
+    publishedDate: '2024-10-27',
+    lastUpdated: '2024-11-07',
+    metaDescription: 'Loan tenure vs interest rate: which impacts your car loan more? Detailed analysis with calculations showing how to optimize both for maximum savings.'
   },
   {
     slug: 'mistakes-avoid-buying-car-india',
@@ -128,7 +176,11 @@ export const blogPosts: BlogPost[] = [
     date: 'November 2024',
     readTime: '10 min read',
     keywords: ['car buying mistakes', 'avoid car buying errors', 'smart car purchase'],
-    content: ''
+    content: '',
+    author: 'BudgetGear Team',
+    publishedDate: '2024-10-26',
+    lastUpdated: '2024-11-07',
+    metaDescription: 'Avoid costly car buying mistakes in India. Learn from real scenarios about financing, negotiation, insurance, and documentation errors to avoid.'
   },
   {
     slug: 'down-payment-how-much-pay',
@@ -138,7 +190,11 @@ export const blogPosts: BlogPost[] = [
     date: 'November 2024',
     readTime: '8 min read',
     keywords: ['car down payment', 'down payment amount', 'optimal down payment'],
-    content: ''
+    content: '',
+    author: 'BudgetGear Team',
+    publishedDate: '2024-10-25',
+    lastUpdated: '2024-11-07',
+    metaDescription: 'How much down payment should you pay for a car loan? Strategic guide to determining optimal down payment amount to minimize EMI and interest costs.'
   },
   {
     slug: 'early-car-loan-repayment-worth-it',
@@ -148,7 +204,11 @@ export const blogPosts: BlogPost[] = [
     date: 'November 2024',
     readTime: '11 min read',
     keywords: ['early loan repayment', 'loan foreclosure', 'prepayment benefits'],
-    content: ''
+    content: '',
+    author: 'BudgetGear Team',
+    publishedDate: '2024-10-24',
+    lastUpdated: '2024-11-07',
+    metaDescription: 'Is early car loan repayment worth it? Detailed analysis of pros, cons, prepayment penalties, and interest savings with real calculations.'
   },
   {
     slug: 'fixed-vs-floating-rate-car-loans',
@@ -158,7 +218,11 @@ export const blogPosts: BlogPost[] = [
     date: 'November 2024',
     readTime: '9 min read',
     keywords: ['fixed rate loan', 'floating rate loan', 'interest rate types'],
-    content: ''
+    content: '',
+    author: 'BudgetGear Team',
+    publishedDate: '2024-10-23',
+    lastUpdated: '2024-11-07',
+    metaDescription: 'Fixed vs floating rate car loans: which is better? Complete comparison with scenarios, calculations, and expert recommendations for Indian borrowers.'
   },
   {
     slug: 'car-loan-eligibility-criteria-india',
@@ -168,7 +232,11 @@ export const blogPosts: BlogPost[] = [
     date: 'November 2024',
     readTime: '10 min read',
     keywords: ['loan eligibility', 'car loan approval', 'eligibility criteria'],
-    content: ''
+    content: '',
+    author: 'BudgetGear Team',
+    publishedDate: '2024-10-22',
+    lastUpdated: '2024-11-07',
+    metaDescription: 'Car loan eligibility criteria in India 2024. Complete guide to age, income, credit score, employment requirements, and documentation needed for approval.'
   },
   {
     slug: 'used-car-vs-new-car-financing',
@@ -178,7 +246,11 @@ export const blogPosts: BlogPost[] = [
     date: 'November 2024',
     readTime: '12 min read',
     keywords: ['used car loan', 'new car loan', 'car depreciation'],
-    content: ''
+    content: '',
+    author: 'BudgetGear Team',
+    publishedDate: '2024-10-21',
+    lastUpdated: '2024-11-07',
+    metaDescription: 'Used car vs new car financing: complete comparison. Analyze interest rates, depreciation, total costs, and determine which option saves you more money.'
   },
   {
     slug: 'car-loan-tax-benefits-india',
@@ -188,7 +260,11 @@ export const blogPosts: BlogPost[] = [
     date: 'November 2024',
     readTime: '8 min read',
     keywords: ['car loan tax benefits', 'tax deduction car loan', 'income tax benefits'],
-    content: ''
+    content: '',
+    author: 'BudgetGear Team',
+    publishedDate: '2024-10-20',
+    lastUpdated: '2024-11-07',
+    metaDescription: 'Car loan tax benefits in India: complete guide to deductions under Section 80C and business use. Learn what you can claim and save on taxes.'
   },
   {
     slug: 'improve-car-loan-credit-score',
@@ -198,7 +274,11 @@ export const blogPosts: BlogPost[] = [
     date: 'November 2024',
     readTime: '10 min read',
     keywords: ['credit score', 'improve credit score', 'car loan approval'],
-    content: ''
+    content: '',
+    author: 'BudgetGear Team',
+    publishedDate: '2024-10-19',
+    lastUpdated: '2024-11-07',
+    metaDescription: 'Improve your credit score for better car loan rates. Practical 90-day action plan to boost CIBIL score and qualify for lower interest rates.'
   },
   {
     slug: 'car-loan-prepayment-penalty-charges',
@@ -208,7 +288,11 @@ export const blogPosts: BlogPost[] = [
     date: 'November 2024',
     readTime: '9 min read',
     keywords: ['prepayment penalty', 'prepayment charges', 'loan foreclosure charges'],
-    content: ''
+    content: '',
+    author: 'BudgetGear Team',
+    publishedDate: '2024-10-18',
+    lastUpdated: '2024-11-07',
+    metaDescription: 'Car loan prepayment penalty and charges explained. Learn when penalties apply, how much banks charge, and strategies to minimize foreclosure costs.'
   },
   {
     slug: 'best-time-buy-car-india',
@@ -218,7 +302,11 @@ export const blogPosts: BlogPost[] = [
     date: 'November 2024',
     readTime: '8 min read',
     keywords: ['best time buy car', 'car discounts', 'seasonal car offers'],
-    content: ''
+    content: '',
+    author: 'BudgetGear Team',
+    publishedDate: '2024-10-17',
+    lastUpdated: '2024-11-07',
+    metaDescription: 'Best time to buy a car in India: complete guide to seasonal discounts, year-end sales, festive offers, and model launch timing to save maximum money.'
   },
   {
     slug: 'car-loan-refinancing-guide-india',
@@ -228,7 +316,11 @@ export const blogPosts: BlogPost[] = [
     date: 'November 2024',
     readTime: '11 min read',
     keywords: ['car loan refinancing', 'refinance car loan', 'loan balance transfer'],
-    content: ''
+    content: '',
+    author: 'BudgetGear Team',
+    publishedDate: '2024-10-16',
+    lastUpdated: '2024-11-07',
+    metaDescription: 'Car loan refinancing guide for India. Learn when to refinance, how balance transfer works, and calculate potential savings with lower interest rates.'
   },
   {
     slug: 'electric-car-financing-india',
@@ -238,7 +330,11 @@ export const blogPosts: BlogPost[] = [
     date: 'November 2024',
     readTime: '10 min read',
     keywords: ['electric car loan', 'EV financing', 'electric vehicle subsidy'],
-    content: ''
+    content: '',
+    author: 'BudgetGear Team',
+    publishedDate: '2024-10-15',
+    lastUpdated: '2024-11-07',
+    metaDescription: 'Electric car financing in India: complete guide to EV loans, FAME II subsidies, state incentives, and special interest rates for electric vehicles.'
   },
   {
     slug: 'car-loan-documentation-checklist',
@@ -248,7 +344,11 @@ export const blogPosts: BlogPost[] = [
     date: 'November 2024',
     readTime: '7 min read',
     keywords: ['car loan documents', 'loan documentation', 'required documents'],
-    content: ''
+    content: '',
+    author: 'BudgetGear Team',
+    publishedDate: '2024-10-14',
+    lastUpdated: '2024-11-07',
+    metaDescription: 'Car loan documentation checklist for India. Complete list of required documents for salaried, self-employed, and first-time borrowers.'
   },
   {
     slug: 'negotiate-car-price-dealer-tips',
@@ -258,6 +358,10 @@ export const blogPosts: BlogPost[] = [
     date: 'November 2024',
     readTime: '12 min read',
     keywords: ['car price negotiation', 'dealer negotiation', 'car buying tips'],
-    content: ''
+    content: '',
+    author: 'BudgetGear Team',
+    publishedDate: '2024-10-13',
+    lastUpdated: '2024-11-07',
+    metaDescription: 'Master car price negotiation with dealers. Proven strategies, scripts, and tactics to save ₹50,000-2,00,000 on your car purchase in India.'
   }
 ]

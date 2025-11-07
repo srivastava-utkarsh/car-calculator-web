@@ -1,5 +1,6 @@
 'use client'
 
+import { useState, useMemo } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import Script from 'next/script'
@@ -10,6 +11,24 @@ import { blogPosts } from '@/data/blogData'
 
 export default function BlogPage() {
   const { isLight } = useTheme()
+  const [selectedCategory, setSelectedCategory] = useState<string>('All')
+  const [searchQuery, setSearchQuery] = useState<string>('')
+
+  const categories = useMemo(() => {
+    const cats = new Set(blogPosts.map(post => post.category))
+    return ['All', ...Array.from(cats).sort()]
+  }, [])
+
+  const filteredPosts = useMemo(() => {
+    return blogPosts.filter(post => {
+      const matchesCategory = selectedCategory === 'All' || post.category === selectedCategory
+      const matchesSearch = searchQuery === '' || 
+        post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        post.excerpt.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        post.keywords.some(keyword => keyword.toLowerCase().includes(searchQuery.toLowerCase()))
+      return matchesCategory && matchesSearch
+    })
+  }, [selectedCategory, searchQuery])
 
   return (
     <main className={`min-h-screen ${isLight ? 'bg-gradient-to-br from-slate-50 via-white to-slate-50' : 'bg-black'}`}>
@@ -45,12 +64,53 @@ export default function BlogPage() {
             <h1 className={`text-4xl sm:text-5xl font-bold mb-6 mt-8 ${isLight ? 'text-slate-900' : 'text-white'}`}>
               Car Finance & Buying Guides
             </h1>
-            <p className={`text-xl mb-12 ${isLight ? 'text-slate-600' : 'text-white/80'}`}>
+            <p className={`text-xl mb-8 ${isLight ? 'text-slate-600' : 'text-white/80'}`}>
               Expert insights on car loans, EMI calculations, and smart car buying strategies in India
             </p>
 
+            {/* Search Bar */}
+            <div className="mb-8">
+              <input
+                type="text"
+                placeholder="Search articles..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className={`w-full px-6 py-4 rounded-xl border text-lg ${
+                  isLight 
+                    ? 'bg-white border-slate-300 text-slate-900 placeholder-slate-400 focus:border-blue-500' 
+                    : 'bg-slate-800 border-slate-600 text-white placeholder-slate-400 focus:border-blue-400'
+                } focus:outline-none focus:ring-2 focus:ring-blue-500/20`}
+              />
+            </div>
+
+            {/* Category Filter */}
+            <div className="mb-12">
+              <div className="flex flex-wrap gap-3">
+                {categories.map((category) => (
+                  <button
+                    key={category}
+                    onClick={() => setSelectedCategory(category)}
+                    className={`px-5 py-2.5 rounded-full font-medium transition-all ${
+                      selectedCategory === category
+                        ? 'bg-blue-600 text-white shadow-lg'
+                        : isLight
+                        ? 'bg-white text-slate-700 border border-slate-300 hover:border-blue-500'
+                        : 'bg-slate-800 text-white border border-slate-600 hover:border-blue-400'
+                    }`}
+                  >
+                    {category}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Results Count */}
+            <div className={`mb-6 text-sm ${isLight ? 'text-slate-600' : 'text-white/70'}`}>
+              Showing {filteredPosts.length} {filteredPosts.length === 1 ? 'article' : 'articles'}
+            </div>
+
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {blogPosts.map((post) => (
+              {filteredPosts.map((post) => (
                 <Link
                   key={post.slug}
                   href={`/blog/${post.slug}`}

@@ -1,6 +1,7 @@
 import { carLoanEmiGuide } from './articles/carLoanEmiGuide'
 import { prepaymentStrategies } from './articles/prepaymentStrategies'
 import { hiddenCosts } from './articles/hiddenCosts'
+import { carLoanInterestRates } from './articles/carLoanInterestRates'
 import { ReactElement } from 'react'
 
 export function getArticleContent(slug: string): ReactElement {
@@ -374,6 +375,7 @@ export function getArticleContent(slug: string): ReactElement {
     'car-loan-emi-calculator-guide': carLoanEmiGuide,
     'car-prepayment-strategies-save-money': prepaymentStrategies,
     'hidden-costs-car-ownership-india': hiddenCosts,
+    'car-loan-interest-rates-india': carLoanInterestRates,
   }
 
   return articles[slug] || <p>Content coming soon...</p>
