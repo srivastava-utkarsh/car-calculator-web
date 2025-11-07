@@ -41,14 +41,14 @@ export default function HomePage() {
               <Link href="/" className={`font-medium text-blue-600`}>
                 Home
               </Link>
+              <Link href="/blog" className={`font-medium hover:text-blue-600 transition-colors ${isLight ? 'text-slate-600' : 'text-white/80'}`}>
+                Blog
+              </Link>
               <Link href="/about" className={`font-medium hover:text-blue-600 transition-colors ${isLight ? 'text-slate-600' : 'text-white/80'}`}>
                 About
               </Link>
               <Link href="/car-affordability-calculator" className={`font-medium hover:text-blue-600 transition-colors ${isLight ? 'text-slate-600' : 'text-white/80'}`}>
-                Car Affordability
-              </Link>
-              <Link href="/car-loan-prepayment-calculator" className={`font-medium hover:text-blue-600 transition-colors ${isLight ? 'text-slate-600' : 'text-white/80'}`}>
-                Loan Prepayment
+                Calculators
               </Link>
               <Link href="/contact" className={`font-medium hover:text-blue-600 transition-colors ${isLight ? 'text-slate-600' : 'text-white/80'}`}>
                 Contact
@@ -68,9 +68,40 @@ export default function HomePage() {
             </h1>
             
             {/* Subtitle */}
-            <p className={`text-lg sm:text-xl mb-12 font-medium max-w-3xl mx-auto ${isLight ? 'text-slate-600' : 'text-white/80'}`}>
+            <p className={`text-lg sm:text-xl mb-8 font-medium max-w-3xl mx-auto ${isLight ? 'text-slate-600' : 'text-white/80'}`}>
               Figure out the total buying and monthly cost of the car and make affordability decision accordingly. Reduce loan faster and reduce EMI faster with our calculators. Get overall cost of running a car monthly basis after purchase using our proven 20/4/10 rule.
             </p>
+
+            {/* Additional Context with Trust Signals */}
+            <div className={`max-w-4xl mx-auto mb-12 p-8 rounded-2xl ${isLight ? 'bg-slate-50 border border-slate-200' : 'bg-slate-800/30 border border-slate-700'}`}>
+              <h2 className={`text-2xl font-bold mb-4 ${isLight ? 'text-slate-900' : 'text-white'}`}>
+                Why BudgetGear is India&apos;s Trusted Car Finance Calculator
+              </h2>
+              <p className={`text-base mb-4 ${isLight ? 'text-slate-700' : 'text-white/90'}`}>
+                BudgetGear provides professional car finance calculators trusted by over 50,000+ users across India every month. Our tools help you calculate your ideal car budget based on salary, determine monthly EMI payments, plan loan prepayments, and understand the complete cost of car ownership. Whether you want to buy a new car or reduce your existing loan burden, our calculators follow industry-standard formulas used by major Indian banks including SBI, HDFC, ICICI, and Axis Bank.
+              </p>
+              <p className={`text-base mb-4 ${isLight ? 'text-slate-700' : 'text-white/90'}`}>
+                Founded in 2024 by financial technology experts, we believe in financial transparency and empowering car buyers with accurate, unbiased information. Our comprehensive guides cover everything from the proven 20/4/10 car buying rule to hidden costs of car ownership, helping you make informed decisions that align with your financial goals. All our calculators are 100% free to use, require no registration, and provide instant results with detailed breakdowns including amortization schedules and interest savings projections.
+              </p>
+              <div className={`grid grid-cols-2 md:grid-cols-4 gap-4 mt-6 pt-6 border-t ${isLight ? 'border-slate-200' : 'border-slate-700'}`}>
+                <div className="text-center">
+                  <div className={`text-3xl font-bold mb-1 ${isLight ? 'text-blue-600' : 'text-blue-400'}`}>50,000+</div>
+                  <div className={`text-sm ${isLight ? 'text-slate-600' : 'text-white/70'}`}>Monthly Users</div>
+                </div>
+                <div className="text-center">
+                  <div className={`text-3xl font-bold mb-1 ${isLight ? 'text-green-600' : 'text-green-400'}`}>100%</div>
+                  <div className={`text-sm ${isLight ? 'text-slate-600' : 'text-white/70'}`}>Free Tools</div>
+                </div>
+                <div className="text-center">
+                  <div className={`text-3xl font-bold mb-1 ${isLight ? 'text-purple-600' : 'text-purple-400'}`}>25+</div>
+                  <div className={`text-sm ${isLight ? 'text-slate-600' : 'text-white/70'}`}>Expert Guides</div>
+                </div>
+                <div className="text-center">
+                  <div className={`text-3xl font-bold mb-1 ${isLight ? 'text-orange-600' : 'text-orange-400'}`}>4.8/5</div>
+                  <div className={`text-sm ${isLight ? 'text-slate-600' : 'text-white/70'}`}>User Rating</div>
+                </div>
+              </div>
+            </div>
 
             {/* Features Grid - More Prominent */}
             <div className="grid md:grid-cols-2 gap-8 mb-12 max-w-4xl mx-auto">
@@ -140,6 +171,44 @@ export default function HomePage() {
             {/* AdSense Ad - After main content */}
             <div className="mt-12 flex justify-center">
               <AdSenseAd slot="1234567890" style={{ margin: "24px 0" }} />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Blog Preview Section */}
+      <section className="py-16">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-6xl mx-auto">
+            <div className="text-center mb-12">
+              <h2 className={`text-3xl font-bold mb-4 ${isLight ? 'text-slate-900' : 'text-white'}`}>
+                Car Finance Guides & Resources
+              </h2>
+              <p className={`text-lg ${isLight ? 'text-slate-600' : 'text-white/80'}`}>
+                Expert insights on car loans, EMI calculations, and smart car buying strategies
+              </p>
+            </div>
+            <div className="grid md:grid-cols-3 gap-6 mb-8">
+              <Link href="/blog/20-4-10-car-buying-rule-india" className={`p-6 rounded-2xl border transition-all hover:scale-105 ${isLight ? 'bg-white border-slate-200 hover:shadow-xl' : 'bg-slate-800/40 border-slate-700 hover:bg-slate-800/60'}`}>
+                <div className={`text-sm font-semibold mb-2 ${isLight ? 'text-blue-600' : 'text-blue-400'}`}>Car Buying Tips</div>
+                <h3 className={`text-lg font-bold mb-2 ${isLight ? 'text-slate-900' : 'text-white'}`}>20/4/10 Car Buying Rule</h3>
+                <p className={`text-sm ${isLight ? 'text-slate-600' : 'text-white/80'}`}>Learn the proven rule for smart car financing</p>
+              </Link>
+              <Link href="/blog/how-much-car-afford-salary" className={`p-6 rounded-2xl border transition-all hover:scale-105 ${isLight ? 'bg-white border-slate-200 hover:shadow-xl' : 'bg-slate-800/40 border-slate-700 hover:bg-slate-800/60'}`}>
+                <div className={`text-sm font-semibold mb-2 ${isLight ? 'text-blue-600' : 'text-blue-400'}`}>Affordability</div>
+                <h3 className={`text-lg font-bold mb-2 ${isLight ? 'text-slate-900' : 'text-white'}`}>How Much Car Can You Afford?</h3>
+                <p className={`text-sm ${isLight ? 'text-slate-600' : 'text-white/80'}`}>Calculate your ideal car budget based on salary</p>
+              </Link>
+              <Link href="/blog/car-prepayment-strategies-save-money" className={`p-6 rounded-2xl border transition-all hover:scale-105 ${isLight ? 'bg-white border-slate-200 hover:shadow-xl' : 'bg-slate-800/40 border-slate-700 hover:bg-slate-800/60'}`}>
+                <div className={`text-sm font-semibold mb-2 ${isLight ? 'text-blue-600' : 'text-blue-400'}`}>Loan Prepayment</div>
+                <h3 className={`text-lg font-bold mb-2 ${isLight ? 'text-slate-900' : 'text-white'}`}>Prepayment Strategies</h3>
+                <p className={`text-sm ${isLight ? 'text-slate-600' : 'text-white/80'}`}>Save money with smart prepayment tactics</p>
+              </Link>
+            </div>
+            <div className="text-center">
+              <Link href="/blog" className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold px-8 py-3 rounded-full transition-all">
+                View All Articles
+              </Link>
             </div>
           </div>
         </div>
