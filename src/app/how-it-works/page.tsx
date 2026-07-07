@@ -39,7 +39,7 @@ export default function HowItWorksPage() {
               How Our Calculators Work
             </h1>
             <p className={`text-xl mb-12 ${isLight ? 'text-slate-600' : 'text-white/80'}`}>
-              Understanding the methodology behind BudgetGear's car finance calculators
+              Understanding the methodology behind BudgetGear&apos;s car finance calculators
             </p>
 
             {/* Car Affordability Calculator */}
@@ -64,7 +64,7 @@ export default function HowItWorksPage() {
                 <div className={`p-4 rounded-lg ${isLight ? 'bg-blue-50' : 'bg-blue-900/20'}`}>
                   <h4 className={`font-bold mb-2 ${isLight ? 'text-slate-900' : 'text-white'}`}>20% Down Payment</h4>
                   <p className={`text-sm ${isLight ? 'text-slate-700' : 'text-white/80'}`}>
-                    You should pay at least 20% of the car's on-road price upfront. This reduces your loan burden, gets you better interest rates, and ensures positive equity from day one.
+                    You should pay at least 20% of the car&apos;s on-road price upfront. This reduces your loan burden, gets you better interest rates, and ensures positive equity from day one.
                   </p>
                 </div>
                 

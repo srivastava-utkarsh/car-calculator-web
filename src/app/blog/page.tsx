@@ -3,7 +3,6 @@
 import { useState, useMemo } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import Script from 'next/script'
 import { useTheme } from '@/contexts/ThemeContext'
 import Breadcrumbs from '@/components/Breadcrumbs'
 import Footer from '@/components/Footer'
@@ -32,11 +31,6 @@ export default function BlogPage() {
 
   return (
     <main className={`min-h-screen ${isLight ? 'bg-gradient-to-br from-slate-50 via-white to-slate-50' : 'bg-black'}`}>
-      <Script
-        async
-        src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID}`}
-        crossOrigin="anonymous"
-      />
 
       {/* Header */}
       <header className={`${isLight ? 'bg-white border-b border-slate-200/60' : 'bg-black border-b border-white/5'}`}>

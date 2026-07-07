@@ -145,12 +145,9 @@ UI/UX CONSIDERATIONS
 ===============================================================================
 */
 
-import { useState, useEffect, Suspense } from 'react'
-import { Calculator } from 'lucide-react'
-import { useSearchParams } from 'next/navigation'
+import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import Script from 'next/script'
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts'
 import { useTheme } from '@/contexts/ThemeContext'
 import { themeClass } from '@/utils/themeStyles'
@@ -422,8 +419,9 @@ const calculateLoanDetails = (
 
 
 function PrepaymentCalculator() {
-  const searchParams = useSearchParams()
-  const [isLoading, setIsLoading] = useState(true)
+  // Start as not-loading so the full page (H1, calculator, FAQs) is present in the
+  // statically exported HTML for crawlers; the URL-params effect still reseeds state on the client.
+  const [isLoading, setIsLoading] = useState(false)
   const { isLight, isDark } = useTheme()
   
   const [loanData, setLoanData] = useState<LoanData>({
@@ -550,6 +548,9 @@ function PrepaymentCalculator() {
   }
 
   useEffect(() => {
+    // Read URL parameters directly; useSearchParams() would force a static-rendering
+    // bailout and export only the Suspense fallback instead of the page content
+    const searchParams = new URLSearchParams(window.location.search)
     // Extract parameters from URL with safe parsing
     const carPrice = Math.max(0, parseFloat(searchParams.get('carPrice') || '0'))
     const downPayment = Math.max(0, parseFloat(searchParams.get('downPayment') || '0'))
@@ -583,7 +584,7 @@ function PrepaymentCalculator() {
     
     // Set loading to false after component is ready
     setIsLoading(false)
-  }, [searchParams])
+  }, [])
 
   const results = (showResults && loanData.loanAmount > 0) ? calculateLoanDetails(
     loanData.loanAmount,
@@ -636,13 +637,6 @@ function PrepaymentCalculator() {
 
   return (
     <main className={`min-h-screen font-sans relative ${isLight ? 'bg-gradient-to-br from-slate-50 via-white to-slate-50' : 'bg-black'}`} style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>
-      {/* AdSense Script */}
-      <Script
-        async
-        src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID}`}
-        crossOrigin="anonymous"
-        strategy="afterInteractive"
-      />
       {/* Header Navigation - Same as Car Affordability Page */}
       <header className={isLight ? 'bg-white border-b border-slate-200/60' : 'bg-black border-b border-white/5'}>
         <div className="container mx-auto px-6 lg:px-8">
@@ -751,11 +745,13 @@ function PrepaymentCalculator() {
             ]}
           />
 
-          {/* Mobile-optimized heading */}
+          {/* Page heading - single H1, responsive */}
+          <h1 className={`text-lg md:text-xl lg:text-2xl font-semibold mb-2 md:mb-3 text-center ${isLight ? 'text-slate-800' : 'text-white/90'}`}>
+            Car Loan Prepayment Calculator | Tenure Reduction
+          </h1>
+
+          {/* Mobile-optimized sub-heading */}
           <div className="block md:hidden text-center mb-4">
-            <h1 className={`text-lg font-semibold mb-2 ${isLight ? 'text-slate-800' : 'text-white/90'}`}>
-              Car Loan Prepayment Calculator
-            </h1>
             <p className={`text-sm ${isLight ? 'text-slate-600' : 'text-white/80'}`}>
               Calculate savings with tenure reduction
             </p>
@@ -772,11 +768,8 @@ function PrepaymentCalculator() {
             </div>
           </div>
 
-          {/* Desktop heading */}
+          {/* Desktop sub-heading */}
           <div className="hidden md:block text-center mb-6">
-            <h1 className={`text-xl lg:text-2xl font-semibold mb-3 ${isLight ? 'text-slate-800' : 'text-white/90'}`}>
-              Car Loan Prepayment Calculator | Tenure Reduction
-            </h1>
             <p className={`text-base lg:text-lg font-medium max-w-4xl mx-auto ${isLight ? 'text-slate-600' : 'text-slate-400'}`}>
               Calculate savings for early loan closure and partial prepayments with tenure reduction strategy • 
               Get instant results following <span className={`font-semibold ${isLight ? 'text-blue-600' : 'text-blue-400'}`}>industry standard practices</span>!
@@ -1724,17 +1717,5 @@ function PrepaymentCalculator() {
 }
 
 export default function PrepaymentPage() {
-  return (
-    <Suspense fallback={
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50 flex items-center justify-center">
-        <div className="text-center">
-          <Calculator className="w-12 h-12 mx-auto mb-4 animate-pulse text-blue-500" />
-          <p className="text-lg text-slate-900">Loading Smart Prepayment Calculator...</p>
-          <p className="text-slate-600 text-sm mt-2">Analyzing your loan data</p>
-        </div>
-      </div>
-    }>
-      <PrepaymentCalculator />
-    </Suspense>
-  )
+  return <PrepaymentCalculator />
 }

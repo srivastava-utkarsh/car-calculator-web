@@ -41,17 +41,20 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Car Loan Prepayment Calculator | Tenure Reduction Calculator India",
     description: "Use this free car loan prepayment calculator with tenure reduction strategy, save on interest, and understand your total prepayment savings. Following industry standard practices.",
-    images: ["https://budgetgear.in/prepayment_og.png"],
-    url: "https://budgetgear.in/car-loan-prepayment-calculator",
+    images: ["https://budgetgear.in/icon-512.png"],
+    url: "https://budgetgear.in/car-loan-prepayment-calculator/",
+    siteName: 'BudgetGear',
+    locale: 'en_IN',
+    type: 'website',
   },
   twitter: {
     card: "summary_large_image",
     title: "Car Loan Prepayment Calculator | Professional Tool",
     description: "Calculate car loan prepayment savings, penalty charges, and tenure reduction. Should I prepay car loan? Find out now.",
-    images: ["https://budgetgear.in/prepayment_og.png"],
+    images: ["https://budgetgear.in/icon-512.png"],
   },
-  alternates: { 
-    canonical: "/car-loan-prepayment-calculator" 
+  alternates: {
+    canonical: "/car-loan-prepayment-calculator/"
   },
 };
 

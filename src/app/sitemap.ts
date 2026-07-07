@@ -6,48 +6,78 @@ export const dynamic = 'force-static'
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const blogUrls = blogPosts.map((post) => ({
-    url: `https://budgetgear.in/blog/${post.slug}`,
-    lastModified: new Date(),
+    url: `https://budgetgear.in/blog/${post.slug}/`,
+    lastModified: new Date(post.lastUpdated),
     changeFrequency: 'monthly' as const,
     priority: 0.7,
   }))
 
   return [
     {
-      url: 'https://budgetgear.in',
+      url: 'https://budgetgear.in/',
       lastModified: new Date(),
       changeFrequency: 'weekly',
       priority: 1,
     },
     {
-      url: 'https://budgetgear.in/blog',
+      url: 'https://budgetgear.in/car-affordability-calculator/',
       lastModified: new Date(),
       changeFrequency: 'weekly',
       priority: 0.9,
     },
     {
-      url: 'https://budgetgear.in/car-affordability-calculator',
+      url: 'https://budgetgear.in/car-loan-prepayment-calculator/',
       lastModified: new Date(),
       changeFrequency: 'weekly',
       priority: 0.9,
     },
     {
-      url: 'https://budgetgear.in/car-loan-prepayment-calculator',
+      url: 'https://budgetgear.in/blog/',
       lastModified: new Date(),
       changeFrequency: 'weekly',
       priority: 0.9,
     },
     {
-      url: 'https://budgetgear.in/about',
+      url: 'https://budgetgear.in/how-it-works/',
       lastModified: new Date(),
       changeFrequency: 'monthly',
       priority: 0.6,
     },
     {
-      url: 'https://budgetgear.in/contact',
+      url: 'https://budgetgear.in/faq/',
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.6,
+    },
+    {
+      url: 'https://budgetgear.in/about/',
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.6,
+    },
+    {
+      url: 'https://budgetgear.in/contact/',
       lastModified: new Date(),
       changeFrequency: 'monthly',
       priority: 0.5,
+    },
+    {
+      url: 'https://budgetgear.in/privacy/',
+      lastModified: new Date(),
+      changeFrequency: 'yearly',
+      priority: 0.3,
+    },
+    {
+      url: 'https://budgetgear.in/terms/',
+      lastModified: new Date(),
+      changeFrequency: 'yearly',
+      priority: 0.3,
+    },
+    {
+      url: 'https://budgetgear.in/disclaimer/',
+      lastModified: new Date(),
+      changeFrequency: 'yearly',
+      priority: 0.3,
     },
     ...blogUrls,
   ]

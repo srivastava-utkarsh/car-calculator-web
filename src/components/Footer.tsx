@@ -61,7 +61,7 @@ export default function Footer() {
             All calculations are estimates for informational purposes only. Consult with financial advisors for personalized advice. Last updated: {new Date().getFullYear()}.
           </p>
           <p className={`text-xs mt-2 ${themeClass('text-slate-500', 'text-white/60', isLight)}`}>
-            Trusted by thousands of users across India for accurate car loan calculations.
+            Free, accurate car loan calculators built for car buyers across India.
           </p>
         </div>
       </div>

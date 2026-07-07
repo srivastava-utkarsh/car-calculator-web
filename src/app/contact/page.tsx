@@ -25,11 +25,12 @@ export default function ContactPage() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
 
-    // Show success alert
-    alert('Message sent successfully! Thank you for contacting us.')
-
-    // Reset form
-    setFormData({ name: '', email: '', subject: '', message: '' })
+    // Static site with no backend: hand the message off to the visitor's email app
+    const subject = encodeURIComponent(`[BudgetGear] ${formData.subject || 'Contact form message'}`)
+    const body = encodeURIComponent(
+      `Name: ${formData.name}\nEmail: ${formData.email}\n\n${formData.message}`
+    )
+    window.location.href = `mailto:info@budgetgear.in?subject=${subject}&body=${body}`
   }
 
   return (
@@ -218,7 +219,12 @@ export default function ContactPage() {
                     Send Message
                   </button>
                   <p className={`mt-4 text-sm ${isLight ? 'text-slate-600' : 'text-white/70'}`}>
-                    We&apos;ll get back to you within 24-48 hours.
+                    Submitting opens your email app with the message pre-filled. You can also email us
+                    directly at{' '}
+                    <a href="mailto:info@budgetgear.in" className="text-blue-600 hover:underline">
+                      info@budgetgear.in
+                    </a>
+                    . We&apos;ll get back to you within 24-48 hours.
                   </p>
                 </div>
               </form>

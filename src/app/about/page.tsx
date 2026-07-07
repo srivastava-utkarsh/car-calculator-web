@@ -3,7 +3,6 @@
 import { Users, Target, Shield, Calculator } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
-import Script from 'next/script'
 import { useTheme } from '@/contexts/ThemeContext'
 import AdSenseAd from '@/components/AdSenseAd'
 import Breadcrumbs from '@/components/Breadcrumbs'
@@ -14,12 +13,6 @@ export default function AboutPage() {
 
   return (
     <main className={`min-h-screen ${isLight ? 'bg-gradient-to-br from-slate-50 via-white to-slate-50' : 'bg-black'}`}>
-      {/* AdSense Script */}
-      <Script
-        async
-        src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID}`}
-        crossOrigin="anonymous"
-      />
 
       {/* Header */}
       <header className={`${isLight ? 'bg-white border-b border-slate-200/60' : 'bg-black border-b border-white/5'}`}>
@@ -76,7 +69,7 @@ export default function AboutPage() {
             </p>
             <div className={`max-w-2xl mx-auto p-4 rounded-lg ${isLight ? 'bg-blue-50 border border-blue-200' : 'bg-blue-900/20 border border-blue-700/50'}`}>
               <p className={`text-sm ${isLight ? 'text-blue-900' : 'text-blue-200'}`}>
-                <strong>Trusted by 50,000+ users monthly</strong> | Featured in leading finance blogs | Industry-standard calculations verified by financial experts
+                <strong>Free and independent</strong> | No sign-up required | Calculations follow the standard reducing-balance formulas used by major Indian banks
               </p>
             </div>
           </div>
@@ -93,13 +86,13 @@ export default function AboutPage() {
                   Our Mission
                 </h2>
                 <p className={`text-lg mb-6 ${isLight ? 'text-slate-600' : 'text-white/80'}`}>
-                  BudgetGear was founded in 2024 by a team of financial technology experts and automotive finance specialists who recognized a critical gap in the Indian market: accessible, accurate, and unbiased car financing tools. We believe that purchasing a vehicle is one of the largest financial commitments people make, and having the right tools and knowledge is crucial for long-term financial health.
+                  BudgetGear was created in 2024 by Utkarsh Srivastava, a software engineer who saw a gap in the Indian market: accessible, accurate, and unbiased car financing tools. Purchasing a vehicle is one of the largest financial commitments most people make, and having the right tools and knowledge is crucial for long-term financial health.
                 </p>
                 <p className={`text-lg mb-6 ${isLight ? 'text-slate-600' : 'text-white/80'}`}>
-                  Our comprehensive calculators follow industry-standard practices and formulas used by major Indian banks including State Bank of India, HDFC Bank, ICICI Bank, and Axis Bank. Every calculation is verified against actual bank EMI schedules to ensure 100% accuracy. We regularly update our tools to reflect current interest rates, RBI guidelines, and market conditions.
+                  Our calculators follow the industry-standard reducing-balance formulas used by major Indian banks including State Bank of India, HDFC Bank, ICICI Bank, and Axis Bank, and the results are cross-checked against the EMI schedules those banks publish. We update our tools to reflect current interest rates, RBI guidelines, and market conditions.
                 </p>
                 <p className={`text-lg ${isLight ? 'text-slate-600' : 'text-white/80'}`}>
-                  What sets us apart is our commitment to financial education. Beyond calculators, we provide in-depth guides written by finance professionals with over 15 years of combined experience in automotive financing, banking, and personal finance advisory. Our content is researched, fact-checked, and updated regularly to provide you with the most current and relevant information.
+                  What sets us apart is our commitment to financial education. Beyond calculators, we publish in-depth guides on car loans, EMI planning, and ownership costs, researched from official sources such as RBI publications and bank websites, and updated regularly to keep the information current and relevant.
                 </p>
               </div>
               <div className={`p-8 rounded-3xl ${isLight ? 'bg-gradient-to-br from-blue-50 to-slate-50' : 'bg-gradient-to-br from-slate-800/50 to-slate-700/30'}`}>
@@ -192,7 +185,7 @@ export default function AboutPage() {
             </div>
             <div className={`p-6 rounded-lg ${isLight ? 'bg-green-50 border border-green-200' : 'bg-green-900/20 border border-green-700/50'}`}>
               <p className={`text-sm ${isLight ? 'text-green-900' : 'text-green-200'}`}>
-                <strong>Verification Process:</strong> All our calculations are cross-verified against actual bank EMI schedules from SBI, HDFC, ICICI, and Axis Bank. We update our formulas quarterly to ensure continued accuracy and compliance with current banking practices.
+                <strong>Verification Process:</strong> Our calculations are cross-checked against the publicly available EMI schedules and calculators of major banks such as SBI, HDFC, ICICI, and Axis Bank, and reviewed periodically to stay in line with current banking practices.
               </p>
             </div>
           </div>
@@ -204,20 +197,17 @@ export default function AboutPage() {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-4xl mx-auto">
             <h2 className={`text-3xl font-bold text-center mb-12 ${isLight ? 'text-slate-900' : 'text-white'}`}>
-              About Our Team & Expertise
+              About the Creator
             </h2>
             <div className={`p-8 rounded-2xl ${isLight ? 'bg-slate-50' : 'bg-slate-800/30'}`}>
               <p className={`text-lg mb-6 ${isLight ? 'text-slate-600' : 'text-white/80'}`}>
-                BudgetGear was founded by a team of financial technology experts, certified financial planners, and automotive finance specialists with over 15 years of combined experience in the Indian banking and automotive sectors. Our team includes former bank loan officers, financial advisors, and software engineers who understand both the technical and practical aspects of car financing.
+                BudgetGear is built and maintained by <strong>Utkarsh Srivastava</strong>, a software engineer with a strong interest in personal finance. He designs the calculators, writes the guides, and keeps the tools up to date — combining an engineer&apos;s attention to correctness with a car buyer&apos;s practical questions about EMIs, down payments, and total ownership costs.
               </p>
               <p className={`text-lg mb-6 ${isLight ? 'text-slate-600' : 'text-white/80'}`}>
-                We continuously research industry best practices, study Reserve Bank of India guidelines, monitor interest rate trends across 20+ major lenders, and gather feedback from our user community of 50,000+ monthly visitors. This ensures our calculators and content remain accurate, relevant, and helpful.
-              </p>
-              <p className={`text-lg mb-6 ${isLight ? 'text-slate-600' : 'text-white/80'}`}>
-                Our content team includes writers with backgrounds in finance journalism, personal finance advisory, and automotive industry analysis. Every article is researched using data from official sources including RBI reports, bank websites, and automotive industry publications. We fact-check all statistics and update our guides quarterly to reflect current market conditions.
+                All content is researched from official and publicly available sources, including Reserve Bank of India guidelines, bank websites, and automotive industry publications. Calculations are checked against the EMI schedules and calculators published by major Indian banks.
               </p>
               <p className={`text-lg ${isLight ? 'text-slate-600' : 'text-white/80'}`}>
-                Our commitment is to provide reliable, unbiased, and free tools that help thousands of users across India make smarter car financing decisions every month. We don&apos;t accept payments from banks or car dealers, ensuring our recommendations remain completely independent and in your best interest.
+                Our commitment is to provide reliable, unbiased, and free tools that help car buyers across India make smarter financing decisions. We don&apos;t accept payments from banks or car dealers, so our recommendations remain completely independent and in your best interest.
               </p>
             </div>
           </div>

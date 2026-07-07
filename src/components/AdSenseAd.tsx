@@ -16,7 +16,9 @@ export default function AdSenseAd({ slot, style }: AdSenseAdProps) {
 
   useEffect(() => {
     try {
-      if (typeof window !== 'undefined') {
+      // Only request an ad if this slot hasn't been filled yet — pushing again for an
+      // already-processed <ins> throws "All 'ins' elements ... already have ads in them"
+      if (adRef.current && !adRef.current.getAttribute('data-adsbygoogle-status')) {
         (window.adsbygoogle = window.adsbygoogle || []).push({});
       }
     } catch (error) {

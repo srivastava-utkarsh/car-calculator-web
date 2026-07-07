@@ -21,21 +21,6 @@ export default function CookieBanner() {
     }
   }, [])
 
-  useEffect(() => {
-    // Load AdSense script only after consent is granted
-    if (consent === 'granted' && process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID) {
-      const existingScript = document.querySelector('script[data-adsense]')
-      if (!existingScript) {
-        const script = document.createElement('script')
-        script.setAttribute('data-adsense', 'true')
-        script.async = true
-        script.crossOrigin = 'anonymous'
-        script.src = `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID}`
-        document.head.appendChild(script)
-      }
-    }
-  }, [consent])
-
   const handleAccept = () => {
     localStorage.setItem('cookie_consent', 'granted')
     setConsent('granted')

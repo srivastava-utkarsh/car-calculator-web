@@ -1,8 +1,11 @@
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Car Finance Blog - Expert Guides on Car Loans & EMI | BudgetGear',
-  description: 'Expert guides on car loans, EMI calculations, prepayment strategies, and smart car buying tips for India. Learn the 20/4/10 rule and calculate your ideal car budget.',
+  title: {
+    default: 'Car Finance Blog - Guides on Car Loans, EMI & Prepayment',
+    template: '%s | BudgetGear',
+  },
+  description: 'Practical guides on car loans, EMI calculations, prepayment strategies, and smart car buying tips for India. Learn the 20/4/10 rule and plan your car budget.',
   keywords: [
     'car finance blog',
     'car loan guide',
@@ -15,10 +18,13 @@ export const metadata: Metadata = {
     'car insurance guide',
     'car loan interest rates'
   ],
+  alternates: {
+    canonical: '/blog/',
+  },
   openGraph: {
-    title: 'Car Finance Blog - Expert Guides | BudgetGear',
-    description: 'Expert guides on car loans, EMI calculations, and smart car buying strategies in India',
-    url: 'https://budgetgear.in/blog',
+    title: 'Car Finance Blog | BudgetGear',
+    description: 'Practical guides on car loans, EMI calculations, and smart car buying strategies in India',
+    url: 'https://budgetgear.in/blog/',
     type: 'website',
   },
 }

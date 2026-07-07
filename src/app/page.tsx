@@ -3,7 +3,6 @@
 import { Calculator, TrendingUp, Shield } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
-import Script from 'next/script'
 import { useTheme } from '@/contexts/ThemeContext'
 import AdSenseAd from '@/components/AdSenseAd'
 
@@ -15,12 +14,6 @@ export default function HomePage() {
 
   return (
     <main className={`min-h-screen ${isLight ? 'bg-gradient-to-br from-slate-50 via-white to-slate-50' : 'bg-black'}`}>
-      {/* AdSense Script */}
-      <Script
-        async
-        src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID}`}
-        crossOrigin="anonymous"
-      />
       {/* Header */}
       <header className={`${isLight ? 'bg-white border-b border-slate-200/60' : 'bg-black border-b border-white/5'}`}>
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -75,30 +68,30 @@ export default function HomePage() {
             {/* Additional Context with Trust Signals */}
             <div className={`max-w-4xl mx-auto mb-12 p-8 rounded-2xl ${isLight ? 'bg-slate-50 border border-slate-200' : 'bg-slate-800/30 border border-slate-700'}`}>
               <h2 className={`text-2xl font-bold mb-4 ${isLight ? 'text-slate-900' : 'text-white'}`}>
-                Why BudgetGear is India&apos;s Trusted Car Finance Calculator
+                Why Use BudgetGear&apos;s Car Finance Calculators
               </h2>
               <p className={`text-base mb-4 ${isLight ? 'text-slate-700' : 'text-white/90'}`}>
-                BudgetGear provides professional car finance calculators trusted by over 50,000+ users across India every month. Our tools help you calculate your ideal car budget based on salary, determine monthly EMI payments, plan loan prepayments, and understand the complete cost of car ownership. Whether you want to buy a new car or reduce your existing loan burden, our calculators follow industry-standard formulas used by major Indian banks including SBI, HDFC, ICICI, and Axis Bank.
+                BudgetGear provides free car finance calculators for buyers across India. Our tools help you calculate your ideal car budget based on salary, determine monthly EMI payments, plan loan prepayments, and understand the complete cost of car ownership. Whether you want to buy a new car or reduce your existing loan burden, our calculators follow the industry-standard formulas used by major Indian banks including SBI, HDFC, ICICI, and Axis Bank.
               </p>
               <p className={`text-base mb-4 ${isLight ? 'text-slate-700' : 'text-white/90'}`}>
-                Founded in 2024 by financial technology experts, we believe in financial transparency and empowering car buyers with accurate, unbiased information. Our comprehensive guides cover everything from the proven 20/4/10 car buying rule to hidden costs of car ownership, helping you make informed decisions that align with your financial goals. All our calculators are 100% free to use, require no registration, and provide instant results with detailed breakdowns including amortization schedules and interest savings projections.
+                We believe in financial transparency and empowering car buyers with accurate, unbiased information. Our comprehensive guides cover everything from the proven 20/4/10 car buying rule to hidden costs of car ownership, helping you make informed decisions that align with your financial goals. All our calculators are 100% free to use, require no registration, and provide instant results with detailed breakdowns including amortization schedules and interest savings projections.
               </p>
               <div className={`grid grid-cols-2 md:grid-cols-4 gap-4 mt-6 pt-6 border-t ${isLight ? 'border-slate-200' : 'border-slate-700'}`}>
                 <div className="text-center">
-                  <div className={`text-3xl font-bold mb-1 ${isLight ? 'text-blue-600' : 'text-blue-400'}`}>50,000+</div>
-                  <div className={`text-sm ${isLight ? 'text-slate-600' : 'text-white/70'}`}>Monthly Users</div>
-                </div>
-                <div className="text-center">
-                  <div className={`text-3xl font-bold mb-1 ${isLight ? 'text-green-600' : 'text-green-400'}`}>100%</div>
+                  <div className={`text-3xl font-bold mb-1 ${isLight ? 'text-blue-600' : 'text-blue-400'}`}>100%</div>
                   <div className={`text-sm ${isLight ? 'text-slate-600' : 'text-white/70'}`}>Free Tools</div>
                 </div>
                 <div className="text-center">
-                  <div className={`text-3xl font-bold mb-1 ${isLight ? 'text-purple-600' : 'text-purple-400'}`}>25+</div>
-                  <div className={`text-sm ${isLight ? 'text-slate-600' : 'text-white/70'}`}>Expert Guides</div>
+                  <div className={`text-3xl font-bold mb-1 ${isLight ? 'text-green-600' : 'text-green-400'}`}>No</div>
+                  <div className={`text-sm ${isLight ? 'text-slate-600' : 'text-white/70'}`}>Sign-up Needed</div>
                 </div>
                 <div className="text-center">
-                  <div className={`text-3xl font-bold mb-1 ${isLight ? 'text-orange-600' : 'text-orange-400'}`}>4.8/5</div>
-                  <div className={`text-sm ${isLight ? 'text-slate-600' : 'text-white/70'}`}>User Rating</div>
+                  <div className={`text-3xl font-bold mb-1 ${isLight ? 'text-purple-600' : 'text-purple-400'}`}>6</div>
+                  <div className={`text-sm ${isLight ? 'text-slate-600' : 'text-white/70'}`}>In-Depth Guides</div>
+                </div>
+                <div className="text-center">
+                  <div className={`text-3xl font-bold mb-1 ${isLight ? 'text-orange-600' : 'text-orange-400'}`}>Bank-Standard</div>
+                  <div className={`text-sm ${isLight ? 'text-slate-600' : 'text-white/70'}`}>EMI Formulas</div>
                 </div>
               </div>
             </div>
@@ -360,7 +353,7 @@ export default function HomePage() {
               All calculations are estimates for informational purposes only. Consult with financial advisors for personalized advice. Last updated: {new Date().getFullYear()}.
             </p>
             <p className={`text-xs mt-2 ${isLight ? 'text-slate-500' : 'text-white/60'}`}>
-              Trusted by thousands of users across India for accurate car loan calculations.
+              Free, accurate car loan calculators built for car buyers across India.
             </p>
           </div>
         </div>

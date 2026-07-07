@@ -3,8 +3,6 @@
 import { use } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import Script from 'next/script'
-import Head from 'next/head'
 import { useTheme } from '@/contexts/ThemeContext'
 import Breadcrumbs from '@/components/Breadcrumbs'
 import Footer from '@/components/Footer'
@@ -15,110 +13,17 @@ import AdSenseAd from '@/components/AdSenseAd'
 export default function BlogPostClient({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = use(params)
   const { isLight } = useTheme()
-  
+
   const post = blogPosts.find(p => p.slug === slug)
   const content = getArticleContent(slug)
-  
+
   if (!post) {
     return <div>Post not found</div>
   }
 
-  const articleSchema = {
-    "@context": "https://schema.org",
-    "@type": "Article",
-    "headline": post.title,
-    "description": post.metaDescription,
-    "author": {
-      "@type": "Organization",
-      "name": post.author,
-      "url": "https://budgetgear.in/about"
-    },
-    "publisher": {
-      "@type": "Organization",
-      "name": "BudgetGear",
-      "logo": {
-        "@type": "ImageObject",
-        "url": "https://budgetgear.in/bck-logo.svg"
-      }
-    },
-    "datePublished": post.publishedDate,
-    "dateModified": post.lastUpdated,
-    "mainEntityOfPage": {
-      "@type": "WebPage",
-      "@id": `https://budgetgear.in/blog/${post.slug}`
-    },
-    "keywords": post.keywords.join(", ")
-  }
-
-  const breadcrumbSchema = {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    "itemListElement": [
-      {
-        "@type": "ListItem",
-        "position": 1,
-        "name": "Home",
-        "item": "https://budgetgear.in"
-      },
-      {
-        "@type": "ListItem",
-        "position": 2,
-        "name": "Blog",
-        "item": "https://budgetgear.in/blog"
-      },
-      {
-        "@type": "ListItem",
-        "position": 3,
-        "name": post.title,
-        "item": `https://budgetgear.in/blog/${post.slug}`
-      }
-    ]
-  }
-
   return (
     <>
-      <Head>
-        <title>{post.title} | BudgetGear</title>
-        <meta name="description" content={post.metaDescription} />
-        <meta name="keywords" content={post.keywords.join(", ")} />
-        <meta name="author" content={post.author} />
-        <link rel="canonical" href={`https://budgetgear.in/blog/${post.slug}`} />
-        
-        {/* Open Graph */}
-        <meta property="og:type" content="article" />
-        <meta property="og:title" content={post.title} />
-        <meta property="og:description" content={post.metaDescription} />
-        <meta property="og:url" content={`https://budgetgear.in/blog/${post.slug}`} />
-        <meta property="og:site_name" content="BudgetGear" />
-        <meta property="article:published_time" content={post.publishedDate} />
-        <meta property="article:modified_time" content={post.lastUpdated} />
-        <meta property="article:author" content={post.author} />
-        
-        {/* Twitter Card */}
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content={post.title} />
-        <meta name="twitter:description" content={post.metaDescription} />
-      </Head>
-
       <main className={`min-h-screen ${isLight ? 'bg-gradient-to-br from-slate-50 via-white to-slate-50' : 'bg-black'}`}>
-        <Script
-          async
-          src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID}`}
-          crossOrigin="anonymous"
-        />
-        
-        {/* Schema Markup */}
-        <Script
-          id="article-schema"
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
-        />
-        <Script
-          id="breadcrumb-schema"
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
-        />
-
       <header className={`${isLight ? 'bg-white border-b border-slate-200/60' : 'bg-black border-b border-white/5'}`}>
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16 sm:h-20">
@@ -169,6 +74,27 @@ export default function BlogPostClient({ params }: { params: Promise<{ slug: str
 
             <div className="mt-12">
               <AdSenseAd slot="3456789012" style={{ margin: "24px 0" }} />
+            </div>
+
+            {/* Author Bio */}
+            <div className={`mt-12 p-6 rounded-2xl flex flex-col sm:flex-row gap-4 items-start ${isLight ? 'bg-slate-50 border border-slate-200' : 'bg-slate-800/30 border border-slate-700'}`}>
+              <div className={`flex-shrink-0 w-14 h-14 rounded-full flex items-center justify-center text-xl font-bold ${isLight ? 'bg-blue-100 text-blue-700' : 'bg-blue-900/40 text-blue-300'}`}>
+                US
+              </div>
+              <div>
+                <p className={`text-sm font-semibold uppercase tracking-wide mb-1 ${isLight ? 'text-slate-500' : 'text-white/50'}`}>
+                  About the author
+                </p>
+                <h3 className={`text-lg font-bold mb-2 ${isLight ? 'text-slate-900' : 'text-white'}`}>
+                  {post.author}
+                </h3>
+                <p className={`text-sm ${isLight ? 'text-slate-600' : 'text-white/70'}`}>
+                  Utkarsh is a software engineer and the creator of BudgetGear. He builds the calculators on this site
+                  and writes practical guides on car loans, EMI planning, and smart car buying in India, based on
+                  publicly available data from the RBI and major Indian banks.{' '}
+                  <Link href="/about" className="text-blue-600 hover:underline">Learn more about BudgetGear</Link>.
+                </p>
+              </div>
             </div>
 
             <div className={`mt-12 p-8 rounded-2xl ${isLight ? 'bg-blue-50 border border-blue-200' : 'bg-blue-900/20 border border-blue-700/50'}`}>

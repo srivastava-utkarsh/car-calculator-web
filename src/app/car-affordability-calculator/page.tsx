@@ -6,7 +6,6 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useTheme } from '@/contexts/ThemeContext'
 import { themeClass } from '@/utils/themeStyles'
-import Script from 'next/script'
 // Import Version 2 components
 import CarDetailsFormV2 from '@/components/v2/CarDetailsFormV2'
 import FinancialFormV2 from '@/components/v2/FinancialFormV2'
@@ -145,13 +144,6 @@ export default function CarAffordabilityCalculatorPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
       
-      {/* AdSense Script */}
-      <Script
-        async
-        src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID}`}
-        crossOrigin="anonymous"
-        strategy="afterInteractive"
-      />
       
       {/* Header Navigation */}
       <header className={isLight ? 'bg-white border-b border-slate-200/60' : 'bg-black border-b border-white/5'}>
@@ -204,25 +196,20 @@ export default function CarAffordabilityCalculatorPage() {
                 { label: 'Car Affordability Calculator' }
               ]}
             />
-            {/* Mobile-optimized heading */}
-            <div className="block md:hidden text-center mb-4">
-              <h1 className={`text-base font-semibold mb-2 ${isLight ? 'text-slate-800' : 'text-white/90'}`}>
-                Car Loan EMI Calculator India
+            {/* Page heading - single H1, responsive */}
+            <div className="text-center mb-4 md:mb-6">
+              <h1 id="main-heading" className={`text-base md:text-xl lg:text-2xl font-semibold mb-2 md:mb-3 ${isLight ? 'text-slate-800' : 'text-white/90'}`}>
+                Car Loan EMI Calculator India | Car Affordability Calculator
               </h1>
-              <p className={`text-sm ${isLight ? 'text-slate-600' : 'text-white/80'}`}>
-                Check how much car you can afford
-              </p>
-              <div className={`text-xs mt-2 ${isLight ? 'text-slate-500' : 'text-white/70'}`}>
-                Free EMI calculator with 20/4/10 rule & prepayment analysis
+              <div className="block md:hidden">
+                <p className={`text-sm ${isLight ? 'text-slate-600' : 'text-white/80'}`}>
+                  Check how much car you can afford
+                </p>
+                <div className={`text-xs mt-2 ${isLight ? 'text-slate-500' : 'text-white/70'}`}>
+                  Free EMI calculator with 20/4/10 rule & prepayment analysis
+                </div>
               </div>
-            </div>
-
-            {/* Desktop heading */}
-            <div className="hidden md:block text-center mb-6">
-              <h1 id="main-heading" className={`text-xl lg:text-2xl font-semibold mb-3 ${isLight ? 'text-slate-800' : 'text-white/90'}`}>
-                Car Loan EMI Calculator India | Best Car Affordability Calculator Online
-              </h1>
-              <p className="text-base lg:text-lg font-medium">
+              <p className="hidden md:block text-base lg:text-lg font-medium">
                 Calculate car loan EMI with proven 20/4/10 rule • Free budget calculator with prepayment analysis, eligibility check & professional calculations
               </p>
             </div>
