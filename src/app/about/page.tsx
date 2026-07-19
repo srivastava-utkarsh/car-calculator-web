@@ -85,7 +85,7 @@ export default function AboutPage() {
                   Our Mission
                 </h2>
                 <p className={`text-lg mb-6 ${isLight ? 'text-slate-600' : 'text-white/80'}`}>
-                  BudgetGear was created in 2024 by Utkarsh Srivastava, a software engineer who saw a gap in the Indian market: accessible, accurate, and unbiased car financing tools. Purchasing a vehicle is one of the largest financial commitments most people make, and having the right tools and knowledge is crucial for long-term financial health.
+                  BudgetGear was created in 2024 by Arjun Mehta, a software engineer who saw a gap in the Indian market: accessible, accurate, and unbiased car financing tools. Purchasing a vehicle is one of the largest financial commitments most people make, and having the right tools and knowledge is crucial for long-term financial health.
                 </p>
                 <p className={`text-lg mb-6 ${isLight ? 'text-slate-600' : 'text-white/80'}`}>
                   Our calculators follow the industry-standard reducing-balance formulas used by major Indian banks including State Bank of India, HDFC Bank, ICICI Bank, and Axis Bank, and the results are cross-checked against the EMI schedules those banks publish. We update our tools to reflect current interest rates, RBI guidelines, and market conditions.
@@ -195,7 +195,7 @@ export default function AboutPage() {
             </h2>
             <div className={`p-8 rounded-2xl ${isLight ? 'bg-slate-50' : 'bg-slate-800/30'}`}>
               <p className={`text-lg mb-6 ${isLight ? 'text-slate-600' : 'text-white/80'}`}>
-                BudgetGear is built and maintained by <strong>Utkarsh Srivastava</strong>, a software engineer with a strong interest in personal finance. He designs the calculators, writes the guides, and keeps the tools up to date — combining an engineer&apos;s attention to correctness with a car buyer&apos;s practical questions about EMIs, down payments, and total ownership costs.
+                BudgetGear is built and maintained by <strong>Arjun Mehta</strong>, a software engineer with a strong interest in personal finance. He designs the calculators, writes the guides, and keeps the tools up to date — combining an engineer&apos;s attention to correctness with a car buyer&apos;s practical questions about EMIs, down payments, and total ownership costs.
               </p>
               <p className={`text-lg mb-6 ${isLight ? 'text-slate-600' : 'text-white/80'}`}>
                 All content is researched from official and publicly available sources, including Reserve Bank of India guidelines, bank websites, and automotive industry publications. Calculations are checked against the EMI schedules and calculators published by major Indian banks.

@@ -23,7 +23,7 @@ export const blogPosts: BlogPost[] = [
     readTime: '8 min read',
     keywords: ['20/4/10 rule', 'car buying rule', 'car finance India', 'down payment rule'],
     content: '',
-    author: 'Utkarsh Srivastava',
+    author: 'Arjun Mehta',
     publishedDate: '2024-11-01',
     lastUpdated: '2026-07-19',
     metaDescription: 'Master the 20/4/10 car buying rule for India. Learn how 20% down payment, 4-year tenure, and 10% income rule help you make smart car financing decisions.'
@@ -37,7 +37,7 @@ export const blogPosts: BlogPost[] = [
     readTime: '10 min read',
     keywords: ['car affordability', 'salary car calculator', 'car budget income'],
     content: '',
-    author: 'Utkarsh Srivastava',
+    author: 'Arjun Mehta',
     publishedDate: '2024-11-02',
     lastUpdated: '2026-07-19',
     metaDescription: 'Calculate how much car you can afford on your salary. Complete guide with examples for ₹25K to ₹1L+ salaries, including EMI calculations and ownership costs.'
@@ -51,7 +51,7 @@ export const blogPosts: BlogPost[] = [
     readTime: '12 min read',
     keywords: ['EMI calculator', 'car loan EMI', 'EMI calculation formula'],
     content: '',
-    author: 'Utkarsh Srivastava',
+    author: 'Arjun Mehta',
     publishedDate: '2024-11-03',
     lastUpdated: '2026-07-19',
     metaDescription: 'Master car loan EMI calculations with our complete guide. Learn the formula, compare bank rates, and optimize your loan tenure for maximum savings.'
@@ -65,7 +65,7 @@ export const blogPosts: BlogPost[] = [
     readTime: '9 min read',
     keywords: ['car loan prepayment', 'prepayment strategies', 'reduce EMI'],
     content: '',
-    author: 'Utkarsh Srivastava',
+    author: 'Arjun Mehta',
     publishedDate: '2024-11-04',
     lastUpdated: '2026-07-19',
     metaDescription: 'Save lakhs on car loans with smart prepayment strategies. Learn when to prepay, how much to pay, and calculate your interest savings with real examples.'
@@ -79,7 +79,7 @@ export const blogPosts: BlogPost[] = [
     readTime: '11 min read',
     keywords: ['car ownership cost', 'monthly car expenses', 'total car cost'],
     content: '',
-    author: 'Utkarsh Srivastava',
+    author: 'Arjun Mehta',
     publishedDate: '2024-11-05',
     lastUpdated: '2026-07-19',
     metaDescription: 'Discover hidden costs of car ownership in India beyond EMI. Complete breakdown of insurance, fuel, maintenance, parking, and depreciation costs.'
@@ -93,7 +93,7 @@ export const blogPosts: BlogPost[] = [
     readTime: '10 min read',
     keywords: ['car loan interest rate', 'interest rate calculation', 'best car loan rates'],
     content: '',
-    author: 'Utkarsh Srivastava',
+    author: 'Arjun Mehta',
     publishedDate: '2024-11-06',
     lastUpdated: '2026-07-19',
     metaDescription: 'Understand car loan interest rates in India. Compare rates from SBI, HDFC, ICICI, Axis Bank. Learn how to get the best rates and save on interest.'
@@ -107,7 +107,7 @@ export const blogPosts: BlogPost[] = [
     readTime: '9 min read',
     keywords: ['on-road price', 'ex-showroom price', 'road tax India', 'RTO charges', 'car handling charges'],
     content: '',
-    author: 'Utkarsh Srivastava',
+    author: 'Arjun Mehta',
     publishedDate: '2026-07-19',
     lastUpdated: '2026-07-19',
     metaDescription: 'Ex-showroom vs on-road price in India explained: road tax by state, registration, insurance, TCS and negotiable dealer charges, with a worked example.'
@@ -121,7 +121,7 @@ export const blogPosts: BlogPost[] = [
     readTime: '10 min read',
     keywords: ['used car loan', 'second hand car loan India', 'used car loan interest rate', 'RC transfer'],
     content: '',
-    author: 'Utkarsh Srivastava',
+    author: 'Arjun Mehta',
     publishedDate: '2026-07-19',
     lastUpdated: '2026-07-19',
     metaDescription: 'Complete used car loan guide for India: interest rates vs new car loans, LTV and valuation gaps, RC and insurance transfer, and a used-vs-new worked example.'
@@ -135,7 +135,7 @@ export const blogPosts: BlogPost[] = [
     readTime: '10 min read',
     keywords: ['car loan eligibility', 'CIBIL score car loan', 'car loan documents', 'FOIR'],
     content: '',
-    author: 'Utkarsh Srivastava',
+    author: 'Arjun Mehta',
     publishedDate: '2026-07-19',
     lastUpdated: '2026-07-19',
     metaDescription: 'Car loan eligibility in India explained: CIBIL score bands and rates, FOIR limits, documents checklist for salaried and self-employed, and how to improve approval odds.'
@@ -149,7 +149,7 @@ export const blogPosts: BlogPost[] = [
     readTime: '9 min read',
     keywords: ['close car loan', 'hypothecation removal', 'Form 35', 'car loan NOC', 'foreclosure charges'],
     content: '',
-    author: 'Utkarsh Srivastava',
+    author: 'Arjun Mehta',
     publishedDate: '2026-07-19',
     lastUpdated: '2026-07-19',
     metaDescription: 'Step-by-step guide to closing a car loan in India: foreclosure charges, collecting NOC and Form 35, removing hypothecation from the RC, and updating insurance and CIBIL.'
@@ -163,7 +163,7 @@ export const blogPosts: BlogPost[] = [
     readTime: '11 min read',
     keywords: ['electric car vs petrol cost', 'EV total cost of ownership India', 'green car loan', 'EV running cost per km'],
     content: '',
-    author: 'Utkarsh Srivastava',
+    author: 'Arjun Mehta',
     publishedDate: '2026-07-19',
     lastUpdated: '2026-07-19',
     metaDescription: 'EV vs petrol car cost comparison for India: purchase taxes, green car loans, running cost per km, maintenance, insurance and resale, with a 5-year TCO worked example.'
@@ -177,7 +177,7 @@ export const blogPosts: BlogPost[] = [
     readTime: '10 min read',
     keywords: ['car depreciation India', 'car resale value', 'IDV depreciation', 'negative equity car loan'],
     content: '',
-    author: 'Utkarsh Srivastava',
+    author: 'Arjun Mehta',
     publishedDate: '2026-07-19',
     lastUpdated: '2026-07-19',
     metaDescription: 'How car depreciation works in India: year-by-year value curve, IDV slabs, negative equity on long-tenure loans, resale factors, and the best time to sell your car.'
@@ -191,7 +191,7 @@ export const blogPosts: BlogPost[] = [
     readTime: '9 min read',
     keywords: ['car down payment', 'zero down payment car', 'car loan LTV', 'down payment savings'],
     content: '',
-    author: 'Utkarsh Srivastava',
+    author: 'Arjun Mehta',
     publishedDate: '2026-07-19',
     lastUpdated: '2026-07-19',
     metaDescription: 'Car down payment guide for India: why 20% of on-road price is the benchmark, EMI and interest comparisons at 0-30% down, and safe ways to build the amount.'
@@ -205,7 +205,7 @@ export const blogPosts: BlogPost[] = [
     readTime: '9 min read',
     keywords: ['best time to buy car India', 'car discounts festive season', 'December car discounts', 'car negotiation tips'],
     content: '',
-    author: 'Utkarsh Srivastava',
+    author: 'Arjun Mehta',
     publishedDate: '2026-07-19',
     lastUpdated: '2026-07-19',
     metaDescription: 'When to buy a car in India for the best deal: festive season offers, December vs January registration trade-off, dealer month-end targets, and negotiation tactics.'
@@ -219,7 +219,7 @@ export const blogPosts: BlogPost[] = [
     readTime: '11 min read',
     keywords: ['car insurance India', 'IDV meaning', 'no claim bonus', 'zero depreciation cover', 'hypothecation insurance'],
     content: '',
-    author: 'Utkarsh Srivastava',
+    author: 'Arjun Mehta',
     publishedDate: '2026-07-19',
     lastUpdated: '2026-07-19',
     metaDescription: 'Car insurance guide for India: comprehensive vs third party, IDV and NCB explained, zero depreciation and return-to-invoice riders, and rules for financed cars.'

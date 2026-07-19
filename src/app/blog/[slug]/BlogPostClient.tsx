@@ -106,7 +106,7 @@ export default function BlogPostClient({ params }: { params: Promise<{ slug: str
             {/* Author Bio */}
             <div className={`mt-12 p-6 rounded-2xl flex flex-col sm:flex-row gap-4 items-start ${isLight ? 'bg-slate-50 border border-slate-200' : 'bg-slate-800/30 border border-slate-700'}`}>
               <div className={`flex-shrink-0 w-14 h-14 rounded-full flex items-center justify-center text-xl font-bold ${isLight ? 'bg-blue-100 text-blue-700' : 'bg-blue-900/40 text-blue-300'}`}>
-                US
+                AM
               </div>
               <div>
                 <p className={`text-sm font-semibold uppercase tracking-wide mb-1 ${isLight ? 'text-slate-500' : 'text-white/50'}`}>
@@ -116,7 +116,7 @@ export default function BlogPostClient({ params }: { params: Promise<{ slug: str
                   {post.author}
                 </h3>
                 <p className={`text-sm ${isLight ? 'text-slate-600' : 'text-white/70'}`}>
-                  Utkarsh is a software engineer and the creator of BudgetGear. He builds the calculators on this site
+                  Arjun is a software engineer and the creator of BudgetGear. He builds the calculators on this site
                   and writes practical guides on car loans, EMI planning, and smart car buying in India, based on
                   publicly available data from the RBI and major Indian banks.{' '}
                   <Link href="/about" className="text-blue-600 hover:underline">Learn more about BudgetGear</Link>.

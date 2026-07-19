@@ -37,8 +37,8 @@ export const metadata: Metadata = {
     "car loan interest rate India",
     "total car ownership cost",
   ],
-  authors: [{ name: "Utkarsh Srivastava", url: "https://budgetgear.in/about/" }],
-  creator: "Utkarsh Srivastava",
+  authors: [{ name: "Arjun Mehta", url: "https://budgetgear.in/about/" }],
+  creator: "Arjun Mehta",
   publisher: "BudgetGear",
   category: "Finance",
   formatDetection: {
@@ -161,7 +161,7 @@ export default function RootLayout({
       "foundingDate": "2024",
       "founder": {
         "@type": "Person",
-        "name": "Utkarsh Srivastava",
+        "name": "Arjun Mehta",
         "url": "https://budgetgear.in/about/"
       },
       "knowsAbout": [

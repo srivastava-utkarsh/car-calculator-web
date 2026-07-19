@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "About BudgetGear - Free Car Finance Calculators for India",
-  description: "BudgetGear offers free, independent car loan EMI, affordability, and prepayment calculators built by Utkarsh Srivastava. Learn about our methodology and mission.",
+  description: "BudgetGear offers free, independent car loan EMI, affordability, and prepayment calculators built by Arjun Mehta. Learn about our methodology and mission.",
   alternates: {
     canonical: '/about/',
   },

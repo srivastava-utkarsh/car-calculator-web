@@ -21,8 +21,8 @@ export const metadata: Metadata = {
     "car loan EMI",
     "down payment calculator"
   ],
-  authors: [{ name: "Utkarsh Srivastava", url: "https://budgetgear.in/about/" }],
-  creator: "Utkarsh Srivastava",
+  authors: [{ name: "Arjun Mehta", url: "https://budgetgear.in/about/" }],
+  creator: "Arjun Mehta",
   publisher: "BudgetGear",
   formatDetection: {
     email: false,
