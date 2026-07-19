@@ -43,7 +43,8 @@ export default function EducationalSummary({ carData }: EducationalSummaryProps)
     >
       <div className="container mx-auto px-4">
         <div className="max-w-4xl mx-auto">
-          <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-6 shadow-2xl">
+          {/* Deliberately dark band in both themes: the guide reads as a distinct section */}
+          <div className="bg-slate-900 rounded-2xl border border-slate-800 p-6 shadow-xl">
             
             {/* Header */}
             <div className="text-center mb-8">

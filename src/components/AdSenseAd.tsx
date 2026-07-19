@@ -17,8 +17,14 @@ export default function AdSenseAd({ slot, style }: AdSenseAdProps) {
   useEffect(() => {
     try {
       // Only request an ad if this slot hasn't been filled yet — pushing again for an
-      // already-processed <ins> throws "All 'ins' elements ... already have ads in them"
-      if (adRef.current && !adRef.current.getAttribute('data-adsbygoogle-status')) {
+      // already-processed <ins> throws "All 'ins' elements ... already have ads in them".
+      // Skip zero-width slots (inside display:none containers) — they throw
+      // "No slot size for availableWidth=0" and would never render anyway.
+      if (
+        adRef.current &&
+        !adRef.current.getAttribute('data-adsbygoogle-status') &&
+        adRef.current.offsetWidth > 0
+      ) {
         (window.adsbygoogle = window.adsbygoogle || []).push({});
       }
     } catch (error) {

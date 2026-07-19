@@ -153,7 +153,6 @@ import { useTheme } from '@/contexts/ThemeContext'
 import { themeClass } from '@/utils/themeStyles'
 import FAQ from '@/components/FAQ'
 import { prepaymentFAQs } from '@/data/prepaymentFAQData'
-import AdSenseAd from '@/components/AdSenseAd'
 import Breadcrumbs from '@/components/Breadcrumbs'
 import Footer from '@/components/Footer'
 
@@ -624,7 +623,7 @@ function PrepaymentCalculator() {
 
   if (isLoading) {
     return (
-      <main className={`min-h-screen font-sans relative ${isLight ? 'bg-gradient-to-br from-slate-50 via-white to-slate-50' : 'bg-black'}`} style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>
+      <main className={`min-h-screen font-sans relative ${isLight ? 'bg-[#F4F5F8]' : 'bg-black'}`} style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>
         <div className="flex items-center justify-center min-h-screen">
           <div className="text-center">
             <div className={`text-lg mb-2 ${isLight ? 'text-slate-900' : 'text-white'}`}>Loading Prepayment Calculator...</div>
@@ -636,7 +635,7 @@ function PrepaymentCalculator() {
   }
 
   return (
-    <main className={`min-h-screen font-sans relative ${isLight ? 'bg-gradient-to-br from-slate-50 via-white to-slate-50' : 'bg-black'}`} style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>
+    <main className={`min-h-screen font-sans relative ${isLight ? 'bg-[#F4F5F8]' : 'bg-black'}`} style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>
       {/* Header Navigation - Same as Car Affordability Page */}
       <header className={isLight ? 'bg-white border-b border-slate-200/60' : 'bg-black border-b border-white/5'}>
         <div className="container mx-auto px-6 lg:px-8">
@@ -664,7 +663,7 @@ function PrepaymentCalculator() {
                 >
                   Car Affordability Calculator
                 </Link>
-                <span className={`font-semibold text-xs sm:text-sm tracking-wide px-3 py-2 text-center rounded-lg ${isLight ? 'text-white bg-blue-600' : 'text-black bg-white'}`}>
+                <span className={`font-semibold text-xs sm:text-sm tracking-wide px-3 py-2 text-center rounded-lg ${isLight ? 'text-white bg-slate-900' : 'text-black bg-white'}`}>
                   Loan Prepayment Calculator
                 </span>
               </nav>
@@ -798,7 +797,7 @@ function PrepaymentCalculator() {
             <p className={`text-xs ${themeClass('text-slate-600', 'text-white/60', isLight)} font-medium`}>
               * All calculations are estimates for informational purposes only
             </p>
-            <div className={`mt-4 p-4 rounded-xl ${themeClass('bg-gradient-to-r from-emerald-50 to-teal-50', 'bg-gradient-to-r from-emerald-900/30 to-teal-900/30', isLight)} border-2 ${themeClass('border-emerald-200', 'border-emerald-500/40', isLight)} shadow-sm`}>
+            <div className={`mt-4 p-4 rounded-xl ${themeClass('bg-white', 'bg-gradient-to-r from-emerald-900/30 to-teal-900/30', isLight)} border ${themeClass('border-slate-200', 'border-emerald-500/40', isLight)} shadow-sm`}>
               <div className="flex items-start gap-3">
                 <div className={`flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center ${themeClass('bg-emerald-100', 'bg-emerald-500/20', isLight)}`}>
                   <svg className={`w-4 h-4 ${themeClass('text-emerald-600', 'text-emerald-400', isLight)}`} fill="currentColor" viewBox="0 0 20 20">
@@ -1238,23 +1237,6 @@ function PrepaymentCalculator() {
               </div>
             </section>
 
-            {/* Advertisement - Before Loan Details */}
-            <section className="relative z-10 mb-8">
-              <div className="container mx-auto px-4">
-                <div className="max-w-4xl mx-auto">
-                  {/* Desktop Ad - 970x250 Billboard */}
-                  <div className="hidden md:block" style={{ textAlign: 'center', margin: '24px 0' }}>
-                    <AdSenseAd slot="5678901234" style={{ margin: "24px 0" }} />
-                  </div>
-                  
-                  {/* Mobile Ad - 320x100 Banner */}
-                  <div className="block md:hidden" style={{ textAlign: 'center', margin: '24px 0' }}>
-                    <AdSenseAd slot="6789012345" style={{ margin: "24px 0" }} />
-                  </div>
-                </div>
-              </div>
-            </section>
-
             {/* Loan Details */}
             <section className="md-panel-elevated p-8 mb-8">
               <div className="flex items-center gap-4 mb-8">
@@ -1366,23 +1348,6 @@ function PrepaymentCalculator() {
               </div>
             </section>
 
-
-            {/* Advertisement - Before Payment Timeline Chart */}
-            <section className="relative z-10 mb-6">
-              <div className="container mx-auto px-4">
-                <div className="max-w-4xl mx-auto">
-                  {/* Desktop Ad - 970x250 Billboard */}
-                  <div className="hidden md:block" style={{ textAlign: 'center', margin: '24px 0' }}>
-                    <AdSenseAd slot="7890123456" style={{ margin: "24px 0" }} />
-                  </div>
-                  
-                  {/* Mobile Ad - 320x100 Banner */}
-                  <div className="block md:hidden" style={{ textAlign: 'center', margin: '24px 0' }}>
-                    <AdSenseAd slot="8901234567" style={{ margin: "24px 0" }} />
-                  </div>
-                </div>
-              </div>
-            </section>
 
             {/* Monthly Payment Timeline Chart */}
             <section className="md-panel-elevated p-4 mb-6">

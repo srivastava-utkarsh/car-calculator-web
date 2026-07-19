@@ -1,6 +1,6 @@
 'use client'
 
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react'
+import { createContext, useContext, useEffect, ReactNode } from 'react'
 
 type Theme = 'light' | 'dark'
 
@@ -17,46 +17,22 @@ interface ThemeProviderProps {
   children: ReactNode
 }
 
+// The site is light-only. The provider keeps the old ThemeContext API so the many
+// `isLight ? ... : ...` branches across components keep compiling, but it always
+// reports light and ignores any previously saved theme preference.
 export function ThemeProvider({ children }: ThemeProviderProps) {
-  const [theme, setTheme] = useState<Theme>('dark')
-  const [mounted, setMounted] = useState(false)
-
-  // Handle hydration and localStorage safely
   useEffect(() => {
-    setMounted(true)
-    
-    // Check localStorage on client-side only
-    if (typeof window !== 'undefined') {
-      const savedTheme = localStorage.getItem('theme') as Theme || 'dark'
-      setTheme(savedTheme)
-    }
+    // Clear stale preference from when the site had a dark theme
+    localStorage.removeItem('theme')
+    // globals.css keys its tokens off this attribute
+    document.documentElement.dataset.theme = 'light'
   }, [])
 
-  // Save theme to localStorage whenever it changes (client-side only)
-  useEffect(() => {
-    if (mounted && typeof window !== 'undefined') {
-      localStorage.setItem('theme', theme)
-    }
-  }, [theme, mounted])
-
-  const toggleTheme = () => {
-    setTheme(prev => prev === 'light' ? 'dark' : 'light')
-  }
-
   const contextValue: ThemeContextType = {
-    theme,
-    toggleTheme,
-    isDark: theme === 'dark',
-    isLight: theme === 'light'
-  }
-
-  // Prevent hydration mismatch by not rendering until mounted
-  if (!mounted) {
-    return (
-      <ThemeContext.Provider value={{ theme: 'dark', toggleTheme: () => {}, isDark: true, isLight: false }}>
-        {children}
-      </ThemeContext.Provider>
-    )
+    theme: 'light',
+    toggleTheme: () => {},
+    isDark: false,
+    isLight: true,
   }
 
   return (

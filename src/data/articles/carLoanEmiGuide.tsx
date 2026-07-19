@@ -1,7 +1,7 @@
 export const carLoanEmiGuide = (
   <>
     <p>
-      <strong>Last Updated: November 2024</strong> | Understanding how car loan EMI is calculated is crucial for making informed financing decisions in India. Whether you&apos;re buying your first car or upgrading to a new vehicle, knowing the exact EMI calculation helps you budget effectively and avoid financial stress. This comprehensive guide explains the EMI calculation formula, factors affecting your monthly payment, and proven strategies to optimize your car loan based on current market conditions in India.
+      <strong>Last Updated: July 2026</strong> | Understanding how car loan EMI is calculated is crucial for making informed financing decisions in India. Whether you&apos;re buying your first car or upgrading to a new vehicle, knowing the exact EMI calculation helps you budget effectively and avoid financial stress. This comprehensive guide explains the EMI calculation formula, factors affecting your monthly payment, and proven strategies to optimize your car loan based on current market conditions in India.
     </p>
 
     <div style={{ padding: '16px', backgroundColor: '#f0f9ff', borderLeft: '4px solid #3b82f6', marginBottom: '24px', borderRadius: '8px' }}>
@@ -69,7 +69,7 @@ export const carLoanEmiGuide = (
       The principal amount directly impacts EMI. Every ₹1 lakh increase in loan amount raises EMI by approximately ₹2,488 (at 9% for 4 years). This is why maximizing your down payment is one of the most effective ways to reduce EMI burden.
     </p>
     <p>
-      <strong>Real Example:</strong> Rajesh from Mumbai wanted to buy a ₹12 lakh car. Initially, he planned a 10% down payment (₹1.2 lakhs), which would require financing ₹10.8 lakhs with an EMI of ₹26,875. After saving for 3 more months, he increased his down payment to 25% (₹3 lakhs), reducing his loan to ₹9 lakhs. His new EMI: ₹22,397 - a saving of ₹4,478 per month and ₹2.15 lakhs in total interest over 4 years.
+      <strong>Worked Example:</strong> Take a ₹12 lakh car. With a 10% down payment (₹1.2 lakhs), you finance ₹10.8 lakhs with an EMI of ₹26,875. Save for three more months and raise the down payment to 25% (₹3 lakhs), and the loan drops to ₹9 lakhs with an EMI of ₹22,397 - a saving of ₹4,478 per month and ₹2.15 lakhs in total interest over 4 years.
     </p>
     <p>
       <strong>Strategy:</strong> Maximize your down payment to reduce the loan amount and consequently the EMI burden.
@@ -124,14 +124,17 @@ export const carLoanEmiGuide = (
     </p>
     
     <p>
-      <strong>Current Market Rates (November 2024):</strong>
+      <strong>Current Market Rates (mid-2026, indicative):</strong>
     </p>
     <ul>
-      <li><strong>Public Sector Banks:</strong> 8.5% - 10.5% (SBI, PNB, Bank of Baroda)</li>
-      <li><strong>Private Banks:</strong> 8.0% - 11.0% (HDFC, ICICI, Axis Bank)</li>
-      <li><strong>NBFCs:</strong> 9.0% - 14.0% (Bajaj Finance, Mahindra Finance)</li>
-      <li><strong>Manufacturer Financing:</strong> 7.0% - 9.0% (often promotional rates during festive seasons)</li>
+      <li><strong>Public Sector Banks:</strong> 7.4% - 9.5% (Union Bank and Canara Bank start lowest; SBI around 8.75% - 9.25%)</li>
+      <li><strong>Private Banks:</strong> 8.4% - 11.0% (ICICI from about 8.4%, HDFC Bank from about 9.4%)</li>
+      <li><strong>NBFCs:</strong> 10.0% - 16.0% (Bajaj Finance, Mahindra Finance; higher for weaker credit profiles)</li>
+      <li><strong>Manufacturer Financing:</strong> 7.0% - 9.0% (promotional rates during festive seasons)</li>
     </ul>
+    <p>
+      Rates change with RBI policy and your credit profile — always verify current rates on lender websites before applying.
+    </p>
 
     <h3>3. Loan Tenure</h3>
     <p>
@@ -213,7 +216,7 @@ export const carLoanEmiGuide = (
       <li>If below 750, wait another 2-3 months while maintaining good habits</li>
     </ul>
     <p>
-      <strong>Real Impact:</strong> Priya from Bangalore improved her credit score from 680 to 760 in 4 months. Her car loan interest rate dropped from 11.5% to 8.5% - saving her ₹91,344 on a ₹10 lakh loan over 4 years.
+      <strong>The Impact in Numbers:</strong> Consider a borrower who improves their credit score from 680 to 760 over four months of disciplined repayment. Their offered car loan rate can realistically drop from around 11.5% to 8.5% - a saving of roughly ₹91,000 on a ₹10 lakh loan over 4 years.
     </p>
 
     <h3>Strategy 2: Compare Multiple Lenders (Mandatory Step)</h3>
@@ -230,7 +233,7 @@ export const carLoanEmiGuide = (
       <li><strong>Negotiate Using Competing Offers:</strong> Show Bank A&apos;s 8.5% offer to Bank B offering 9% - they often match or beat it</li>
     </ol>
     <p>
-      <strong>Lender Comparison Table (November 2024 Rates):</strong>
+      <strong>Lender Comparison Table (mid-2026 indicative rates):</strong>
     </p>
     <div style={{ overflowX: 'auto', marginBottom: '24px' }}>
       <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '14px' }}>
@@ -245,19 +248,19 @@ export const carLoanEmiGuide = (
         <tbody>
           <tr>
             <td style={{ padding: '12px', borderBottom: '1px solid #e5e7eb' }}>Public Banks</td>
-            <td style={{ padding: '12px', borderBottom: '1px solid #e5e7eb' }}>8.5% - 10.5%</td>
+            <td style={{ padding: '12px', borderBottom: '1px solid #e5e7eb' }}>7.4% - 9.5%</td>
             <td style={{ padding: '12px', borderBottom: '1px solid #e5e7eb' }}>0.5% - 1%</td>
             <td style={{ padding: '12px', borderBottom: '1px solid #e5e7eb' }}>Existing customers, lower fees</td>
           </tr>
           <tr style={{ backgroundColor: '#f9fafb' }}>
             <td style={{ padding: '12px', borderBottom: '1px solid #e5e7eb' }}>Private Banks</td>
-            <td style={{ padding: '12px', borderBottom: '1px solid #e5e7eb' }}>8.0% - 11.0%</td>
+            <td style={{ padding: '12px', borderBottom: '1px solid #e5e7eb' }}>8.4% - 11.0%</td>
             <td style={{ padding: '12px', borderBottom: '1px solid #e5e7eb' }}>1% - 2%</td>
             <td style={{ padding: '12px', borderBottom: '1px solid #e5e7eb' }}>Fast approval, better service</td>
           </tr>
           <tr>
             <td style={{ padding: '12px', borderBottom: '1px solid #e5e7eb' }}>NBFCs</td>
-            <td style={{ padding: '12px', borderBottom: '1px solid #e5e7eb' }}>9.0% - 14.0%</td>
+            <td style={{ padding: '12px', borderBottom: '1px solid #e5e7eb' }}>10.0% - 16.0%</td>
             <td style={{ padding: '12px', borderBottom: '1px solid #e5e7eb' }}>1.5% - 2.5%</td>
             <td style={{ padding: '12px', borderBottom: '1px solid #e5e7eb' }}>Lower credit scores, flexible terms</td>
           </tr>
@@ -297,7 +300,7 @@ export const carLoanEmiGuide = (
       Banks often have rate tiers. A ₹5 lakh loan might get 9.5% while a ₹7 lakh loan gets 8.5%. Sometimes borrowing slightly more at a lower rate costs less overall.
     </p>
     <p>
-      <strong>Example:</strong> Amit needed ₹4.8 lakhs for his car. The bank offered 10% for loans under ₹5 lakhs, but 8.5% for ₹5-10 lakh loans. By borrowing ₹5 lakhs (just ₹20,000 more) and investing the extra in a fixed deposit, he saved ₹28,000 in interest over 4 years.
+      <strong>Example:</strong> Suppose you need ₹4.8 lakhs for a car, and the bank prices loans under ₹5 lakhs at 10% but ₹5-10 lakh loans at 8.5%. Borrowing ₹5 lakhs (just ₹20,000 more) and parking the surplus in a deposit can save around ₹28,000 in interest over 4 years. Always ask the lender about amount-based rate tiers.
     </p>
 
     <h2>Fixed vs Floating Interest Rates</h2>

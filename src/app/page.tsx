@@ -4,7 +4,6 @@ import { Calculator, TrendingUp, Shield } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useTheme } from '@/contexts/ThemeContext'
-import AdSenseAd from '@/components/AdSenseAd'
 
 
 
@@ -13,7 +12,7 @@ export default function HomePage() {
 
 
   return (
-    <main className={`min-h-screen ${isLight ? 'bg-gradient-to-br from-slate-50 via-white to-slate-50' : 'bg-black'}`}>
+    <main className={`min-h-screen ${isLight ? 'bg-[#F4F5F8]' : 'bg-black'}`}>
       {/* Header */}
       <header className={`${isLight ? 'bg-white border-b border-slate-200/60' : 'bg-black border-b border-white/5'}`}>
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -112,7 +111,7 @@ export default function HomePage() {
                 <p className={`text-lg mb-6 leading-relaxed flex-grow ${isLight ? 'text-slate-600' : 'text-white/80'}`}>
                   Figure out the total buying cost of car and monthly cost breakdown. Make affordability decision based on your salary. Calculate overall cost of running a car monthly to determine total car ownership expenses.
                 </p>
-                <div className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold text-lg px-10 py-4 rounded-full transition-all duration-200 hover:scale-105 shadow-lg hover:shadow-xl">
+                <div className="inline-block bg-[#E8542F] hover:bg-[#D64A28] text-white font-semibold text-lg px-10 py-4 rounded-full transition-all duration-200 hover:scale-105 shadow-lg hover:shadow-xl">
                   Calculate Affordability
                 </div>
               </Link>
@@ -131,7 +130,7 @@ export default function HomePage() {
                 <p className={`text-lg mb-6 leading-relaxed flex-grow ${isLight ? 'text-slate-600' : 'text-white/80'}`}>
                   Reduce loan faster and reduce EMI faster with prepayment strategies. Calculate monthly cost savings and total buying cost reduction through smart prepayment planning.
                 </p>
-                <div className="inline-block bg-green-600 hover:bg-green-700 text-white font-semibold text-lg px-10 py-4 rounded-full transition-all duration-200 hover:scale-105 shadow-lg hover:shadow-xl">
+                <div className="inline-block bg-slate-800 hover:bg-slate-900 text-white font-semibold text-lg px-10 py-4 rounded-full transition-all duration-200 hover:scale-105 shadow-lg hover:shadow-xl">
                   Plan Prepayments
                 </div>
               </Link>
@@ -159,11 +158,6 @@ export default function HomePage() {
                   <div className={`text-sm font-semibold ${isLight ? 'text-slate-900' : 'text-white'}`}>of Income</div>
                 </div>
               </div>
-            </div>
-
-            {/* AdSense Ad - After main content */}
-            <div className="mt-12 flex justify-center">
-              <AdSenseAd slot="1234567890" style={{ margin: "24px 0" }} />
             </div>
           </div>
         </div>
@@ -199,7 +193,7 @@ export default function HomePage() {
               </Link>
             </div>
             <div className="text-center">
-              <Link href="/blog" className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold px-8 py-3 rounded-full transition-all">
+              <Link href="/blog" className="inline-block bg-[#E8542F] hover:bg-[#D64A28] text-white font-semibold px-8 py-3 rounded-full transition-all">
                 View All Articles
               </Link>
             </div>

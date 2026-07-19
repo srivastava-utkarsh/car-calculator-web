@@ -14,7 +14,7 @@ interface TotalCostDisplayV2Props {
 
 export default function TotalCostDisplayV2({ carData }: TotalCostDisplayV2Props) {
   const { isLight } = useTheme()
-  const themeStyles = getThemeStyles('dark')
+  const themeStyles = getThemeStyles(isLight ? 'light' : 'dark')
   
   // Use monthly fuel expense from form input
   const monthlyFuelCost = carData.monthlyFuelExpense || 0
@@ -118,12 +118,22 @@ export default function TotalCostDisplayV2({ carData }: TotalCostDisplayV2Props)
         <div 
           id="afford-panel"
           tabIndex={-1}
-          className={`relative p-4 sm:p-5 rounded-2xl border backdrop-blur-xl shadow-xl mb-6 sm:mb-8 transition-all duration-300 hover:shadow-xl hover:scale-[1.01] overflow-hidden focus:outline-none focus:ring-2 focus:ring-blue-400/50 ${
-            !isAllRequiredFieldsFilled || carData.carPrice <= 0 || carData.tenure <= 0 || emi <= 0
-              ? 'bg-gradient-to-br from-slate-500/20 via-slate-600/10 to-slate-700/20 border-slate-400/30 shadow-slate-500/20'
-              : isAffordable 
-                ? 'bg-gradient-to-br from-emerald-400/20 via-green-500/15 to-emerald-600/20 border-emerald-400/40 shadow-emerald-500/20' 
-                : 'bg-gradient-to-br from-red-400/20 via-red-500/15 to-red-600/20 border-red-400/40 shadow-red-500/20'
+          className={`relative p-4 sm:p-5 rounded-2xl border mb-6 sm:mb-8 transition-all duration-300 overflow-hidden focus:outline-none focus:ring-2 focus:ring-blue-400/50 ${
+            isLight
+              ? `bg-white shadow-sm ${
+                  !isAllRequiredFieldsFilled || carData.carPrice <= 0 || carData.tenure <= 0 || emi <= 0
+                    ? 'border-slate-200'
+                    : isAffordable
+                      ? 'border-emerald-300'
+                      : 'border-red-300'
+                }`
+              : `backdrop-blur-xl shadow-xl hover:shadow-xl hover:scale-[1.01] ${
+                  !isAllRequiredFieldsFilled || carData.carPrice <= 0 || carData.tenure <= 0 || emi <= 0
+                    ? 'bg-gradient-to-br from-slate-500/20 via-slate-600/10 to-slate-700/20 border-slate-400/30 shadow-slate-500/20'
+                    : isAffordable
+                      ? 'bg-gradient-to-br from-emerald-400/20 via-green-500/15 to-emerald-600/20 border-emerald-400/40 shadow-emerald-500/20'
+                      : 'bg-gradient-to-br from-red-400/20 via-red-500/15 to-red-600/20 border-red-400/40 shadow-red-500/20'
+                }`
           }`}
         >
           {/* Subtle background pattern */}
@@ -148,24 +158,24 @@ export default function TotalCostDisplayV2({ carData }: TotalCostDisplayV2Props)
               <div className="flex items-center">
                 {!isAllRequiredFieldsFilled || carData.carPrice <= 0 || carData.tenure <= 0 || emi <= 0 ? (
                   <div className="flex items-center space-x-2">
-                    <div className="w-6 h-6 bg-gray-400/20 rounded-lg flex items-center justify-center">
-                      <Clock className="w-4 h-4 text-gray-400" />
+                    <div className={`w-6 h-6 rounded-lg flex items-center justify-center ${themeClass('bg-slate-100', 'bg-gray-400/20', isLight)}`}>
+                      <Clock className={`w-4 h-4 ${themeClass('text-slate-400', 'text-gray-400', isLight)}`} />
                     </div>
-                    <span className="text-lg font-bold text-gray-400">Pending</span>
+                    <span className={`text-lg font-bold ${themeClass('text-slate-400', 'text-gray-400', isLight)}`}>Pending</span>
                   </div>
                 ) : isAffordable ? (
                   <div className="flex items-center space-x-2">
-                    <div className="w-6 h-6 bg-green-400/20 rounded-lg flex items-center justify-center">
-                      <CheckCircle className="w-4 h-4 text-green-400" />
+                    <div className={`w-6 h-6 rounded-lg flex items-center justify-center ${themeClass('bg-emerald-50', 'bg-green-400/20', isLight)}`}>
+                      <CheckCircle className={`w-4 h-4 ${themeClass('text-emerald-600', 'text-green-400', isLight)}`} />
                     </div>
-                    <span className="text-lg font-bold text-green-400">In Budget</span>
+                    <span className={`text-lg font-bold ${themeClass('text-emerald-600', 'text-green-400', isLight)}`}>In Budget</span>
                   </div>
                 ) : (
                   <div className="flex items-center space-x-2">
-                    <div className="w-6 h-6 bg-red-400/20 rounded-lg flex items-center justify-center">
-                      <XCircle className="w-4 h-4 text-red-400" />
+                    <div className={`w-6 h-6 rounded-lg flex items-center justify-center ${themeClass('bg-red-50', 'bg-red-400/20', isLight)}`}>
+                      <XCircle className={`w-4 h-4 ${themeClass('text-red-500', 'text-red-400', isLight)}`} />
                     </div>
-                    <span className="text-lg font-bold text-red-400">Over Budget</span>
+                    <span className={`text-lg font-bold ${themeClass('text-red-500', 'text-red-400', isLight)}`}>Over Budget</span>
                   </div>
                 )}
               </div>
@@ -175,31 +185,33 @@ export default function TotalCostDisplayV2({ carData }: TotalCostDisplayV2Props)
             <div className="space-y-1 text-sm">
               {/* 20% Down Payment Rule */}
               <div 
-                className={`relative p-2 sm:p-3 rounded-md sm:rounded-lg border transition-all duration-300 hover:scale-[1.01] ${
-                  isDownPaymentOk 
-                    ? 'bg-slate-100/10 border-green-200/30 hover:bg-slate-100/15' 
-                    : 'bg-slate-100/10 border-red-200/30 hover:bg-slate-100/15'
+                className={`relative p-2 sm:p-3 rounded-md sm:rounded-lg border transition-all duration-300 ${
+                  isLight
+                    ? 'bg-slate-50 border-slate-200'
+                    : isDownPaymentOk
+                      ? 'bg-slate-100/10 border-green-200/30 hover:bg-slate-100/15 hover:scale-[1.01]'
+                      : 'bg-slate-100/10 border-red-200/30 hover:bg-slate-100/15 hover:scale-[1.01]'
                 }`}
               >
                 <div className="flex items-center justify-between mb-1">
                   <span className={`font-medium flex items-center text-sm ${themeClass(themeStyles.secondaryText, 'text-white/90', isLight)}`}>
-                    <span className="text-yellow-400 mr-1 font-bold">₹</span>
+                    <span className={`mr-1 font-bold ${themeClass('text-amber-500', 'text-yellow-400', isLight)}`}>₹</span>
                     20% Down Payment
                   </span>
                   <div className="flex items-center space-x-2">
                     <span className={`font-bold text-sm ${themeClass(themeStyles.primaryText, 'text-white', isLight)}`}>{formatPercentage(downPaymentPercentage)}%</span>
                     {isDownPaymentOk ? (
-                      <CheckCircle className="w-4 h-4 text-green-400" />
+                      <CheckCircle className={`w-4 h-4 ${themeClass('text-emerald-600', 'text-green-400', isLight)}`} />
                     ) : (
-                      <XCircle className="w-4 h-4 text-red-400" />
+                      <XCircle className={`w-4 h-4 ${themeClass('text-red-500', 'text-red-400', isLight)}`} />
                     )}
                   </div>
                 </div>
-                <div className="w-full bg-white/15 rounded-full h-1.5 overflow-hidden">
+                <div className={`w-full rounded-full h-1.5 overflow-hidden ${themeClass('bg-slate-200', 'bg-white/15', isLight)}`}>
                   <div 
                     style={{ width: `${Math.min(downPaymentPercentage, 100)}%` }}
                     className={`h-full rounded-full transition-all duration-500 ${
-                      isDownPaymentOk ? 'bg-gradient-to-r from-green-400 to-emerald-500' : 'bg-gradient-to-r from-red-400 to-red-500'
+                      isDownPaymentOk ? themeClass('bg-emerald-500', 'bg-gradient-to-r from-green-400 to-emerald-500', isLight) : themeClass('bg-red-500', 'bg-gradient-to-r from-red-400 to-red-500', isLight)
                     }`}
                   />
                 </div>
@@ -207,31 +219,33 @@ export default function TotalCostDisplayV2({ carData }: TotalCostDisplayV2Props)
               
               {/* 4 Year Tenure Rule */}
               <div 
-                className={`relative p-2 sm:p-3 rounded-md sm:rounded-lg border transition-all duration-300 hover:scale-[1.01] ${
-                  isTenureOk 
-                    ? 'bg-slate-100/10 border-green-200/30 hover:bg-slate-100/15' 
-                    : 'bg-slate-100/10 border-red-200/30 hover:bg-slate-100/15'
+                className={`relative p-2 sm:p-3 rounded-md sm:rounded-lg border transition-all duration-300 ${
+                  isLight
+                    ? 'bg-slate-50 border-slate-200'
+                    : isTenureOk
+                      ? 'bg-slate-100/10 border-green-200/30 hover:bg-slate-100/15 hover:scale-[1.01]'
+                      : 'bg-slate-100/10 border-red-200/30 hover:bg-slate-100/15 hover:scale-[1.01]'
                 }`}
               >
                 <div className="flex items-center justify-between mb-1">
                   <span className={`font-medium flex items-center text-sm ${themeClass(themeStyles.secondaryText, 'text-white/90', isLight)}`}>
-                    <Clock className="w-3 h-3 mr-1 text-blue-400" />
+                    <Clock className={`w-3 h-3 mr-1 ${themeClass('text-blue-600', 'text-blue-400', isLight)}`} />
                     Max 4 Years
                   </span>
                   <div className="flex items-center space-x-2">
                     <span className={`font-bold text-sm ${themeClass(themeStyles.primaryText, 'text-white', isLight)}`}>{carData.tenure || 0}y</span>
                     {isTenureOk ? (
-                      <CheckCircle className="w-4 h-4 text-green-400" />
+                      <CheckCircle className={`w-4 h-4 ${themeClass('text-emerald-600', 'text-green-400', isLight)}`} />
                     ) : (
-                      <XCircle className="w-4 h-4 text-red-400" />
+                      <XCircle className={`w-4 h-4 ${themeClass('text-red-500', 'text-red-400', isLight)}`} />
                     )}
                   </div>
                 </div>
-                <div className="w-full bg-white/15 rounded-full h-1.5 overflow-hidden">
+                <div className={`w-full rounded-full h-1.5 overflow-hidden ${themeClass('bg-slate-200', 'bg-white/15', isLight)}`}>
                   <div 
                     style={{ width: `${(carData.tenure / 7) * 100}%` }}
                     className={`h-full rounded-full transition-all duration-500 ${
-                      isTenureOk ? 'bg-gradient-to-r from-green-400 to-emerald-500' : 'bg-gradient-to-r from-red-400 to-red-500'
+                      isTenureOk ? themeClass('bg-emerald-500', 'bg-gradient-to-r from-green-400 to-emerald-500', isLight) : themeClass('bg-red-500', 'bg-gradient-to-r from-red-400 to-red-500', isLight)
                     }`}
                   />
                 </div>
@@ -239,31 +253,33 @@ export default function TotalCostDisplayV2({ carData }: TotalCostDisplayV2Props)
               
               {/* 10% Income Rule */}
               <div 
-                className={`relative p-2 sm:p-3 rounded-md sm:rounded-lg border transition-all duration-300 hover:scale-[1.01] ${
-                  isExpenseOk 
-                    ? 'bg-slate-100/10 border-green-200/30 hover:bg-slate-100/15' 
-                    : 'bg-slate-100/10 border-red-200/30 hover:bg-slate-100/15'
+                className={`relative p-2 sm:p-3 rounded-md sm:rounded-lg border transition-all duration-300 ${
+                  isLight
+                    ? 'bg-slate-50 border-slate-200'
+                    : isExpenseOk
+                      ? 'bg-slate-100/10 border-green-200/30 hover:bg-slate-100/15 hover:scale-[1.01]'
+                      : 'bg-slate-100/10 border-red-200/30 hover:bg-slate-100/15 hover:scale-[1.01]'
                 }`}
               >
                 <div className="flex items-center justify-between mb-1">
                   <span className={`font-medium flex items-center text-sm ${themeClass(themeStyles.secondaryText, 'text-white/90', isLight)}`}>
-                    <Percent className="w-3 h-3 mr-1 text-purple-400" />
+                    <Percent className={`w-3 h-3 mr-1 ${themeClass('text-violet-600', 'text-purple-400', isLight)}`} />
                     Max 10% Income
                   </span>
                   <div className="flex items-center space-x-2">
                     <span className={`font-bold text-sm ${themeClass(themeStyles.primaryText, 'text-white', isLight)}`}>{formatPercentage(expensePercentage)}%</span>
                     {isExpenseOk ? (
-                      <CheckCircle className="w-4 h-4 text-green-400" />
+                      <CheckCircle className={`w-4 h-4 ${themeClass('text-emerald-600', 'text-green-400', isLight)}`} />
                     ) : (
-                      <XCircle className="w-4 h-4 text-red-400" />
+                      <XCircle className={`w-4 h-4 ${themeClass('text-red-500', 'text-red-400', isLight)}`} />
                     )}
                   </div>
                 </div>
-                <div className="w-full bg-white/15 rounded-full h-1.5 overflow-hidden">
+                <div className={`w-full rounded-full h-1.5 overflow-hidden ${themeClass('bg-slate-200', 'bg-white/15', isLight)}`}>
                   <div 
                     style={{ width: `${Math.min(expensePercentage, 100)}%` }}
                     className={`h-full rounded-full transition-all duration-500 ${
-                      isExpenseOk ? 'bg-gradient-to-r from-green-400 to-emerald-500' : 'bg-gradient-to-r from-red-400 to-red-500'
+                      isExpenseOk ? themeClass('bg-emerald-500', 'bg-gradient-to-r from-green-400 to-emerald-500', isLight) : themeClass('bg-red-500', 'bg-gradient-to-r from-red-400 to-red-500', isLight)
                     }`}
                   />
                 </div>
@@ -279,10 +295,10 @@ export default function TotalCostDisplayV2({ carData }: TotalCostDisplayV2Props)
         <div className="flex items-center space-x-2">
           {completionPercentage === 100 ? (
             <>
-              <div className="w-6 h-6 bg-green-400/20 rounded-lg flex items-center justify-center">
-                <CheckCircle className="w-4 h-4 text-green-400" />
+              <div className={`w-6 h-6 rounded-lg flex items-center justify-center ${themeClass('bg-emerald-50', 'bg-green-400/20', isLight)}`}>
+                <CheckCircle className={`w-4 h-4 ${themeClass('text-emerald-600', 'text-green-400', isLight)}`} />
               </div>
-              <span className="text-lg font-bold text-green-400">100% Complete</span>
+              <span className={`text-lg font-bold ${themeClass('text-emerald-600', 'text-green-400', isLight)}`}>100% Complete</span>
             </>
           ) : (
             <>
@@ -299,14 +315,18 @@ export default function TotalCostDisplayV2({ carData }: TotalCostDisplayV2Props)
       >
         {/* Main EMI Display - Proportional UX */}
         <div className="text-center mb-2">
-          {/* Primary EMI Section - Teal design like screenshot */}
-          <div className="bg-gradient-to-r from-teal-500 to-teal-600 rounded-2xl p-4 mb-3 shadow-lg relative overflow-hidden">
+          {/* Primary EMI Section - highlighted result card */}
+          <div className={`rounded-2xl p-4 mb-3 relative overflow-hidden ${
+            isLight
+              ? 'bg-white border-2 border-[#E8542F] shadow-sm'
+              : 'bg-gradient-to-r from-teal-500 to-teal-600 shadow-lg'
+          }`}>
             {/* Content container - centered */}
             <div className="text-center relative z-10">
-              <h3 className="text-white text-lg font-semibold mb-2 tracking-wide">
+              <h3 className={`text-lg font-semibold mb-2 tracking-wide ${themeClass('text-slate-500', 'text-white', isLight)}`}>
                 Monthly EMI
               </h3>
-              <div className="text-white text-4xl font-bold tracking-tight">
+              <div className={`text-4xl font-bold tracking-tight ${themeClass('text-slate-900', 'text-white', isLight)}`}>
                 {formatCurrency(emi)}
               </div>
             </div>
@@ -319,54 +339,58 @@ export default function TotalCostDisplayV2({ carData }: TotalCostDisplayV2Props)
 
           {/* Loan Details - Modern Gradient Background with Header and Icons */}
           {carData.tenure > 0 && emi > 0 && (
-            <div className="bg-gradient-to-br from-purple-600 to-indigo-700 rounded-2xl p-4 mb-3 shadow-lg">
-              <h3 className="text-white font-bold text-lg mb-4">Loan Details</h3>
-              <div className="space-y-3 text-white">
+            <div className={`rounded-2xl p-4 mb-3 ${
+              isLight
+                ? 'bg-white border border-slate-200 shadow-sm'
+                : 'bg-gradient-to-br from-purple-600 to-indigo-700 shadow-lg'
+            }`}>
+              <h3 className={`font-bold text-lg mb-4 text-left ${themeClass('text-slate-900', 'text-white', isLight)}`}>Loan Details</h3>
+              <div className={`space-y-3 ${themeClass('text-slate-700', 'text-white', isLight)}`}>
                 {/* Loan Amount - Highlighted */}
-                <div className="flex justify-between items-center bg-white/10 rounded-lg p-3 border border-white/20">
+                <div className={`flex justify-between items-center rounded-lg p-3 border ${themeClass('bg-slate-50 border-slate-200', 'bg-white/10 border-white/20', isLight)}`}>
                   <div className="flex items-center space-x-2">
-                    <IndianRupee className="w-5 h-5 text-yellow-300" />
-                    <span className="text-sm font-bold">Loan Amount</span>
+                    <IndianRupee className={`w-5 h-5 ${themeClass('text-slate-500', 'text-yellow-300', isLight)}`} />
+                    <span className={`text-sm font-bold ${themeClass('text-slate-600', '', isLight)}`}>Loan Amount</span>
                   </div>
-                  <span className="text-lg font-black text-yellow-300">₹{loanAmount.toLocaleString('en-IN')}</span>
+                  <span className={`text-lg font-black ${themeClass('text-slate-900', 'text-yellow-300', isLight)}`}>₹{loanAmount.toLocaleString('en-IN')}</span>
                 </div>
-                
+
                 {/* Total Interest - Highlighted */}
-                <div className="flex justify-between items-center bg-white/10 rounded-lg p-3 border border-white/20">
+                <div className={`flex justify-between items-center rounded-lg p-3 border ${themeClass('bg-amber-50 border-amber-200', 'bg-white/10 border-white/20', isLight)}`}>
                   <div className="flex items-center space-x-2">
-                    <IndianRupee className="w-5 h-5 text-orange-300" />
-                    <span className="text-sm font-bold">Total Interest</span>
+                    <IndianRupee className={`w-5 h-5 ${themeClass('text-amber-600', 'text-orange-300', isLight)}`} />
+                    <span className={`text-sm font-bold ${themeClass('text-slate-600', '', isLight)}`}>Total Interest</span>
                   </div>
-                  <span className="text-lg font-black text-orange-300">₹{totalInterest.toLocaleString('en-IN', { maximumFractionDigits: 0 })}</span>
+                  <span className={`text-lg font-black ${themeClass('text-amber-600', 'text-orange-300', isLight)}`}>₹{totalInterest.toLocaleString('en-IN', { maximumFractionDigits: 0 })}</span>
                 </div>
-                
+
                 <div className="flex justify-between items-center">
                   <div className="flex items-center space-x-2">
-                    <IndianRupee className="w-4 h-4 text-white" />
-                    <span className="text-sm font-medium">Down Payment</span>
+                    <IndianRupee className={`w-4 h-4 ${themeClass('text-slate-400', 'text-white', isLight)}`} />
+                    <span className={`text-sm font-medium ${themeClass('text-slate-500', '', isLight)}`}>Down Payment</span>
                   </div>
-                  <span className="text-sm font-bold">₹{carData.downPayment.toLocaleString('en-IN')}</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <div className="flex items-center space-x-2">
-                    <Percent className="w-4 h-4 text-white" />
-                    <span className="text-sm font-medium">Interest Rate</span>
-                  </div>
-                  <span className="text-sm font-bold">{carData.interestRate}%</span>
+                  <span className={`text-sm font-bold ${themeClass('text-slate-900', '', isLight)}`}>₹{carData.downPayment.toLocaleString('en-IN')}</span>
                 </div>
                 <div className="flex justify-between items-center">
                   <div className="flex items-center space-x-2">
-                    <Clock className="w-4 h-4 text-white" />
-                    <span className="text-sm font-medium">Loan Period</span>
+                    <Percent className={`w-4 h-4 ${themeClass('text-slate-400', 'text-white', isLight)}`} />
+                    <span className={`text-sm font-medium ${themeClass('text-slate-500', '', isLight)}`}>Interest Rate</span>
                   </div>
-                  <span className="text-sm font-bold">{carData.tenure} Years</span>
+                  <span className={`text-sm font-bold ${themeClass('text-slate-900', '', isLight)}`}>{carData.interestRate}%</span>
                 </div>
                 <div className="flex justify-between items-center">
                   <div className="flex items-center space-x-2">
-                    <Calendar className="w-4 h-4 text-white" />
-                    <span className="text-sm font-medium">Completion Date</span>
+                    <Clock className={`w-4 h-4 ${themeClass('text-slate-400', 'text-white', isLight)}`} />
+                    <span className={`text-sm font-medium ${themeClass('text-slate-500', '', isLight)}`}>Loan Period</span>
                   </div>
-                  <span className="text-sm font-bold">{formatDate(completionDate)}</span>
+                  <span className={`text-sm font-bold ${themeClass('text-slate-900', '', isLight)}`}>{carData.tenure} Years</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <div className="flex items-center space-x-2">
+                    <Calendar className={`w-4 h-4 ${themeClass('text-slate-400', 'text-white', isLight)}`} />
+                    <span className={`text-sm font-medium ${themeClass('text-slate-500', '', isLight)}`}>Completion Date</span>
+                  </div>
+                  <span className={`text-sm font-bold ${themeClass('text-slate-900', '', isLight)}`}>{formatDate(completionDate)}</span>
                 </div>
               </div>
             </div>
@@ -374,10 +398,10 @@ export default function TotalCostDisplayV2({ carData }: TotalCostDisplayV2Props)
 
           {/* Monthly Running Cost - Tabular format like Yearly section */}
           {(monthlyFuelCost > 0 || monthlyParkingCost > 0) ? (
-            <div className="bg-gradient-to-br from-yellow-400 via-orange-400 to-yellow-500 rounded-2xl p-3 mb-2 shadow-lg">
+            <div className={`rounded-2xl p-3 mb-2 ${isLight ? 'bg-white border border-slate-200 shadow-sm' : 'bg-gradient-to-br from-yellow-400 via-orange-400 to-yellow-500 shadow-lg'}`}>
               <div className="text-center mb-4">
-                <h3 className="text-black font-bold text-lg sm:text-xl tracking-wide mb-3">Monthly Running Cost</h3>
-                <div className="text-black text-2xl sm:text-3xl font-bold mb-4">
+                <h3 className={`font-bold text-lg sm:text-xl tracking-wide mb-3 ${themeClass('text-slate-900', 'text-black', isLight)}`}>Monthly Running Cost</h3>
+                <div className={`text-2xl sm:text-3xl font-bold mb-4 ${themeClass('text-slate-900', 'text-black', isLight)}`}>
                   {formatCurrency(totalMonthlyCarExpenses)}
                 </div>
               </div>
@@ -385,9 +409,9 @@ export default function TotalCostDisplayV2({ carData }: TotalCostDisplayV2Props)
               {/* Tabular breakdown with icons - same style as yearly cost */}
               <div className="space-y-2">
                 {emi > 0 && (
-                  <div className="flex justify-between items-center text-black/90">
+                  <div className={`flex justify-between items-center ${themeClass('text-slate-600', 'text-black/90', isLight)}`}>
                     <div className="flex items-center space-x-2 min-w-0 flex-1">
-                      <CreditCard className="w-4 h-4 text-black flex-shrink-0" />
+                      <CreditCard className={`w-4 h-4 flex-shrink-0 ${themeClass('text-amber-600', 'text-black', isLight)}`} />
                       <span className="font-medium text-sm sm:text-base truncate">EMI</span>
                     </div>
                     <span className="font-bold text-sm sm:text-base ml-2 flex-shrink-0">{formatCurrency(emi)}</span>
@@ -395,9 +419,9 @@ export default function TotalCostDisplayV2({ carData }: TotalCostDisplayV2Props)
                 )}
                 
                 {monthlyFuelCost > 0 && (
-                  <div className="flex justify-between items-center text-black/90">
+                  <div className={`flex justify-between items-center ${themeClass('text-slate-600', 'text-black/90', isLight)}`}>
                     <div className="flex items-center space-x-2 min-w-0 flex-1">
-                      <Fuel className="w-4 h-4 text-black flex-shrink-0" />
+                      <Fuel className={`w-4 h-4 flex-shrink-0 ${themeClass('text-amber-600', 'text-black', isLight)}`} />
                       <span className="font-medium text-sm sm:text-base truncate">Fuel</span>
                     </div>
                     <span className="font-bold text-sm sm:text-base ml-2 flex-shrink-0">{formatCurrency(monthlyFuelCost)}</span>
@@ -405,9 +429,9 @@ export default function TotalCostDisplayV2({ carData }: TotalCostDisplayV2Props)
                 )}
                 
                 {monthlyParkingCost > 0 && (
-                  <div className="flex justify-between items-center text-black/90">
+                  <div className={`flex justify-between items-center ${themeClass('text-slate-600', 'text-black/90', isLight)}`}>
                     <div className="flex items-center space-x-2 min-w-0 flex-1">
-                      <ParkingCircle className="w-4 h-4 text-black flex-shrink-0" />
+                      <ParkingCircle className={`w-4 h-4 flex-shrink-0 ${themeClass('text-amber-600', 'text-black', isLight)}`} />
                       <span className="font-medium text-sm sm:text-base truncate">Parking</span>
                     </div>
                     <span className="font-bold text-sm sm:text-base ml-2 flex-shrink-0">{formatCurrency(monthlyParkingCost)}</span>
@@ -416,7 +440,7 @@ export default function TotalCostDisplayV2({ carData }: TotalCostDisplayV2Props)
               </div>
             </div>
           ) : (
-            <div className="bg-gradient-to-r from-cyan-500/10 to-blue-500/10 border border-cyan-400/20 rounded-xl p-3 mb-3">
+            <div className={`rounded-xl p-3 mb-3 ${themeClass('bg-white border border-slate-200 shadow-sm', 'bg-gradient-to-r from-cyan-500/10 to-blue-500/10 border border-cyan-400/20', isLight)}`}>
               <button
                 onClick={() => {
                   const fuelExpenseElement = document.getElementById('monthly-fuel-expense');
@@ -428,12 +452,16 @@ export default function TotalCostDisplayV2({ carData }: TotalCostDisplayV2Props)
                     }, 500);
                   }
                 }}
-                className="w-full p-2 text-cyan-300 hover:text-cyan-200 transition-all duration-200 cursor-pointer bg-cyan-500/10 hover:bg-cyan-500/20 rounded-lg border border-cyan-400/20 hover:border-cyan-400/40 outline-none"
+                className={`w-full p-2 transition-all duration-200 cursor-pointer rounded-lg border outline-none ${
+                  isLight
+                    ? 'text-[#E8542F] hover:text-[#D64A28] bg-orange-50 hover:bg-orange-100 border-orange-200 hover:border-orange-300'
+                    : 'text-cyan-300 hover:text-cyan-200 bg-cyan-500/10 hover:bg-cyan-500/20 border-cyan-400/20 hover:border-cyan-400/40'
+                }`}
               >
                 <div className="flex items-center justify-center space-x-2">
                   <span className="text-sm font-medium">+ Add Fuel Expense</span>
                 </div>
-                <p className="text-sm text-cyan-400/80 mt-1">Get your complete monthly car cost</p>
+                <p className={`text-sm mt-1 ${themeClass('text-slate-500', 'text-cyan-400/80', isLight)}`}>Get your complete monthly car cost</p>
               </button>
             </div>
           )}
@@ -441,10 +469,10 @@ export default function TotalCostDisplayV2({ carData }: TotalCostDisplayV2Props)
 
           {/* Yearly Running Cost - Pink/Red Gradient like Reference */}
           {(emi > 0 || monthlyFuelCost > 0 || monthlyParkingCost > 0 || (carData.insuranceAndMaintenance || 0) > 0 || (carData.maintenanceCostPerYear || 0) > 0) && (
-            <div className="bg-gradient-to-br from-yellow-400 via-orange-400 to-yellow-500 rounded-2xl p-3 mb-2 shadow-lg">
+            <div className={`rounded-2xl p-3 mb-2 ${isLight ? 'bg-white border border-slate-200 shadow-sm' : 'bg-gradient-to-br from-yellow-400 via-orange-400 to-yellow-500 shadow-lg'}`}>
               <div className="text-center mb-4">
-                <h3 className="text-black font-bold text-xl tracking-wide mb-3">Yearly Running Cost</h3>
-                <div className="text-black text-3xl font-bold mb-4">
+                <h3 className={`font-bold text-xl tracking-wide mb-3 ${themeClass('text-slate-900', 'text-black', isLight)}`}>Yearly Running Cost</h3>
+                <div className={`text-3xl font-bold mb-4 ${themeClass('text-slate-900', 'text-black', isLight)}`}>
                   {formatCurrency((totalMonthlyCarExpenses * 12) + (carData.insuranceAndMaintenance || 0) + (carData.maintenanceCostPerYear || 0))}
                 </div>
               </div>
@@ -452,54 +480,54 @@ export default function TotalCostDisplayV2({ carData }: TotalCostDisplayV2Props)
               {/* Breakdown with icons - vertical layout */}
               <div className="space-y-2">
                 {emi > 0 && (
-                  <div className="flex justify-between items-center text-black/90">
+                  <div className={`flex justify-between items-center ${themeClass('text-slate-600', 'text-black/90', isLight)}`}>
                     <div className="flex items-center space-x-2">
-                      <CreditCard className="w-4 h-4 text-black" />
+                      <CreditCard className={`w-4 h-4 ${themeClass('text-amber-600', 'text-black', isLight)}`} />
                       <span className="font-medium">EMI × 12</span>
                     </div>
                     <span className="font-bold">{formatCurrency(emi * 12)}</span>
                   </div>
                 )}
                 {totalInterest > 0 && carData.tenure > 0 && (
-                  <div className="flex justify-between items-center text-black/90">
+                  <div className={`flex justify-between items-center ${themeClass('text-slate-600', 'text-black/90', isLight)}`}>
                     <div className="flex items-center space-x-2">
-                      <IndianRupee className="w-4 h-4 text-black" />
+                      <IndianRupee className={`w-4 h-4 ${themeClass('text-amber-600', 'text-black', isLight)}`} />
                       <span className="font-medium">Total Interest (1Y)</span>
                     </div>
                     <span className="font-bold">{formatCurrency(totalInterest / carData.tenure)}</span>
                   </div>
                 )}
                 {monthlyFuelCost > 0 && (
-                  <div className="flex justify-between items-center text-black/90">
+                  <div className={`flex justify-between items-center ${themeClass('text-slate-600', 'text-black/90', isLight)}`}>
                     <div className="flex items-center space-x-2">
-                      <Fuel className="w-4 h-4 text-black" />
+                      <Fuel className={`w-4 h-4 ${themeClass('text-amber-600', 'text-black', isLight)}`} />
                       <span className="font-medium">Fuel × 12</span>
                     </div>
                     <span className="font-bold">{formatCurrency(monthlyFuelCost * 12)}</span>
                   </div>
                 )}
                 {monthlyParkingCost > 0 && (
-                  <div className="flex justify-between items-center text-black/90">
+                  <div className={`flex justify-between items-center ${themeClass('text-slate-600', 'text-black/90', isLight)}`}>
                     <div className="flex items-center space-x-2">
-                      <ParkingCircle className="w-4 h-4 text-black" />
+                      <ParkingCircle className={`w-4 h-4 ${themeClass('text-amber-600', 'text-black', isLight)}`} />
                       <span className="font-medium">Parking × 12</span>
                     </div>
                     <span className="font-bold">{formatCurrency(monthlyParkingCost * 12)}</span>
                   </div>
                 )}
                 {(carData.insuranceAndMaintenance || 0) > 0 && (
-                  <div className="flex justify-between items-center text-black/90">
+                  <div className={`flex justify-between items-center ${themeClass('text-slate-600', 'text-black/90', isLight)}`}>
                     <div className="flex items-center space-x-2">
-                      <Info className="w-4 h-4 text-black" />
+                      <Info className={`w-4 h-4 ${themeClass('text-amber-600', 'text-black', isLight)}`} />
                       <span className="font-medium">Insurance</span>
                     </div>
                     <span className="font-bold">{formatCurrency(carData.insuranceAndMaintenance || 0)}</span>
                   </div>
                 )}
                 {(carData.maintenanceCostPerYear || 0) > 0 && (
-                  <div className="flex justify-between items-center text-black/90">
+                  <div className={`flex justify-between items-center ${themeClass('text-slate-600', 'text-black/90', isLight)}`}>
                     <div className="flex items-center space-x-2">
-                      <Car className="w-4 h-4 text-black" />
+                      <Car className={`w-4 h-4 ${themeClass('text-amber-600', 'text-black', isLight)}`} />
                       <span className="font-medium">Maintenance</span>
                     </div>
                     <span className="font-bold">{formatCurrency(carData.maintenanceCostPerYear || 0)}</span>

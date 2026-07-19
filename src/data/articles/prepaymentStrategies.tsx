@@ -1,3 +1,5 @@
+import Link from 'next/link'
+
 export const prepaymentStrategies = (
   <>
     <p>
@@ -329,7 +331,10 @@ export const prepaymentStrategies = (
       Car loan prepayment is a powerful tool for financial freedom. Whether you choose annual lump sums, monthly micro-prepayments, or a hybrid approach, the key is consistency and starting early. Even small prepayments compound into significant savings over time.
     </p>
     <p>
-      Remember, the best prepayment strategy is one you can sustain without compromising your emergency fund or other financial goals. Use our calculator to model different scenarios and choose the approach that aligns with your income pattern and financial objectives.
+      Remember, the best prepayment strategy is one you can sustain without compromising your emergency fund or other financial goals. Use our <Link href="/car-loan-prepayment-calculator/">prepayment calculator</Link> to model different scenarios and choose the approach that aligns with your income pattern and financial objectives.
+    </p>
+    <p>
+      Once your final prepayment clears the loan, one important task remains: collecting the NOC and removing the bank&apos;s hypothecation from your RC. Our step-by-step guide on <Link href="/blog/how-to-close-car-loan-remove-hypothecation/">closing a car loan and removing hypothecation</Link> walks through that entire process.
     </p>
   </>
 )

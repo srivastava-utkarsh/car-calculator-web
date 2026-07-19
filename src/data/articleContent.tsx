@@ -1,7 +1,17 @@
+import Link from 'next/link'
 import { carLoanEmiGuide } from './articles/carLoanEmiGuide'
 import { prepaymentStrategies } from './articles/prepaymentStrategies'
 import { hiddenCosts } from './articles/hiddenCosts'
 import { carLoanInterestRates } from './articles/carLoanInterestRates'
+import { onRoadPrice } from './articles/onRoadPrice'
+import { usedCarLoan } from './articles/usedCarLoan'
+import { loanEligibility } from './articles/loanEligibility'
+import { loanClosure } from './articles/loanClosure'
+import { evVsPetrol } from './articles/evVsPetrol'
+import { depreciation } from './articles/depreciation'
+import { downPayment } from './articles/downPayment'
+import { bestTimeToBuy } from './articles/bestTimeToBuy'
+import { carInsurance } from './articles/carInsurance'
 import { ReactElement } from 'react'
 
 export function getArticleContent(slug: string): ReactElement {
@@ -116,7 +126,7 @@ export function getArticleContent(slug: string): ReactElement {
 
         <h2>Benefits of Following the 20/4/10 Rule</h2>
         <p>
-          <strong>Financial Security:</strong> By limiting car expenses to 10% of income, you maintain financial flexibility for other goals like savings, investments, and emergencies.
+          <strong>Financial Security:</strong> By limiting car expenses to 10% of income, you maintain financial flexibility for other goals like savings, investments, and emergencies. For a deeper look at the first leg of the rule — including what &quot;zero down payment&quot; offers really finance — see our <Link href="/blog/car-down-payment-strategy-india/">down payment strategy guide</Link>, and remember to apply the rule to the <Link href="/blog/car-on-road-price-explained-india/">on-road price</Link>, not the advertised ex-showroom figure.
         </p>
         <p>
           <strong>Lower Stress:</strong> Affordable EMIs mean you won&apos;t struggle to make payments, even if you face temporary income disruptions.
@@ -356,7 +366,7 @@ export function getArticleContent(slug: string): ReactElement {
 
         <h2>Using Our Calculator</h2>
         <p>
-          Our car affordability calculator takes all these factors into account. Simply input your monthly income, existing EMIs, down payment capacity, and expected monthly driving, and it will show you exactly what car you can afford while following the 20/4/10 rule.
+          Our <Link href="/car-affordability-calculator/">car affordability calculator</Link> takes all these factors into account. Simply input your monthly income, existing EMIs, down payment capacity, and expected monthly driving, and it will show you exactly what car you can afford while following the 20/4/10 rule. Before you apply for the loan itself, check our guide on <Link href="/blog/car-loan-eligibility-documents-cibil/">car loan eligibility and CIBIL scores</Link> — the rate you are offered depends heavily on your credit profile.
         </p>
         <p>
           The calculator also shows you how different scenarios affect affordability - like increasing your down payment, choosing a longer tenure (not recommended), or improving your credit score for better rates.
@@ -376,6 +386,15 @@ export function getArticleContent(slug: string): ReactElement {
     'car-prepayment-strategies-save-money': prepaymentStrategies,
     'hidden-costs-car-ownership-india': hiddenCosts,
     'car-loan-interest-rates-india': carLoanInterestRates,
+    'car-on-road-price-explained-india': onRoadPrice,
+    'used-car-loan-guide-india': usedCarLoan,
+    'car-loan-eligibility-documents-cibil': loanEligibility,
+    'how-to-close-car-loan-remove-hypothecation': loanClosure,
+    'electric-vs-petrol-car-cost-india': evVsPetrol,
+    'car-depreciation-resale-value-india': depreciation,
+    'car-down-payment-strategy-india': downPayment,
+    'best-time-to-buy-car-india': bestTimeToBuy,
+    'car-insurance-guide-new-car-buyers': carInsurance,
   }
 
   return articles[slug] || <p>Content coming soon...</p>

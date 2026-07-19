@@ -266,7 +266,7 @@ export default function FinancialFormV2({ carData, updateCarData, monthlyIncomeI
     <>
       {/* Monthly Income - Required for calculations */}
       <div className="flex items-center space-x-3 mb-3">
-        <h4 className="text-lg font-semibold text-blue-400">
+        <h4 className={`text-lg font-semibold ${themeClass('text-slate-900', 'text-blue-400', isLight)}`}>
           Monthly Income
         </h4>
         <div className={`h-px w-16 ${themeClass('bg-slate-300', 'bg-white/30', isLight)}`}></div>
@@ -284,7 +284,7 @@ export default function FinancialFormV2({ carData, updateCarData, monthlyIncomeI
           </div>
         )}
         <div className="relative">
-          <span className="absolute left-4 top-1/2 transform -translate-y-1/2 font-semibold text-white/70 z-10">₹</span>
+          <span className={`absolute left-4 top-1/2 transform -translate-y-1/2 font-semibold ${isLight ? 'text-slate-400' : 'text-white/70'} z-10`}>₹</span>
           <input
             type="text"
             inputMode="numeric"
@@ -345,7 +345,7 @@ export default function FinancialFormV2({ carData, updateCarData, monthlyIncomeI
         onClick={() => setIsOperationalCostExpanded(!isOperationalCostExpanded)}
       >
         <div className="flex items-center space-x-3">
-          <h4 className="text-lg font-semibold text-blue-400">
+          <h4 className={`text-lg font-semibold ${themeClass('text-slate-900', 'text-blue-400', isLight)}`}>
             Operational Cost
           </h4>
           <div className={`h-px w-16 ${themeClass('bg-slate-300', 'bg-white/30', isLight)}`}></div>
@@ -377,7 +377,7 @@ export default function FinancialFormV2({ carData, updateCarData, monthlyIncomeI
             Insurance Cost
           </label>
           <div className="relative rounded-md border-2 border-white/20 focus-within:border-green-400 focus-within:ring-2 focus-within:ring-green-400/20 transition-all duration-200">
-            <span className="absolute left-4 top-1/2 transform -translate-y-1/2 font-semibold text-white/70 z-10 pointer-events-none">₹</span>
+            <span className={`absolute left-4 top-1/2 transform -translate-y-1/2 font-semibold ${isLight ? 'text-slate-400' : 'text-white/70'} z-10 pointer-events-none`}>₹</span>
             <input
               type="text"
               inputMode="numeric"
@@ -431,7 +431,7 @@ export default function FinancialFormV2({ carData, updateCarData, monthlyIncomeI
             Maintenance Cost (per year)
           </label>
           <div className="relative rounded-md border-2 border-white/20 focus-within:border-green-400 focus-within:ring-2 focus-within:ring-green-400/20 transition-all duration-200">
-            <span className="absolute left-4 top-1/2 transform -translate-y-1/2 font-semibold text-white/70 z-10 pointer-events-none">₹</span>
+            <span className={`absolute left-4 top-1/2 transform -translate-y-1/2 font-semibold ${isLight ? 'text-slate-400' : 'text-white/70'} z-10 pointer-events-none`}>₹</span>
             <input
               type="text"
               inputMode="numeric"
@@ -485,7 +485,7 @@ export default function FinancialFormV2({ carData, updateCarData, monthlyIncomeI
             Monthly Fuel Expense
           </label>
           <div className="relative rounded-md border-2 border-white/20 focus-within:border-green-400 focus-within:ring-2 focus-within:ring-green-400/20 transition-all duration-200">
-            <span className="absolute left-4 top-1/2 transform -translate-y-1/2 font-semibold text-white/70 z-10 pointer-events-none">₹</span>
+            <span className={`absolute left-4 top-1/2 transform -translate-y-1/2 font-semibold ${isLight ? 'text-slate-400' : 'text-white/70'} z-10 pointer-events-none`}>₹</span>
             <input
               type="text"
               inputMode="numeric"
@@ -539,7 +539,7 @@ export default function FinancialFormV2({ carData, updateCarData, monthlyIncomeI
             Parking Fee (per month)
           </label>
           <div className="relative rounded-md border-2 border-white/20 focus-within:border-green-400 focus-within:ring-2 focus-within:ring-green-400/20 transition-all duration-200">
-            <span className="absolute left-4 top-1/2 transform -translate-y-1/2 font-semibold text-white/70 z-10 pointer-events-none">₹</span>
+            <span className={`absolute left-4 top-1/2 transform -translate-y-1/2 font-semibold ${isLight ? 'text-slate-400' : 'text-white/70'} z-10 pointer-events-none`}>₹</span>
             <input
               type="text"
               inputMode="numeric"

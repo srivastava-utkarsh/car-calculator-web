@@ -34,7 +34,7 @@ export default function ContactPage() {
   }
 
   return (
-    <main className={`min-h-screen ${isLight ? 'bg-gradient-to-br from-slate-50 via-white to-slate-50' : 'bg-black'}`}>
+    <main className={`min-h-screen ${isLight ? 'bg-[#F4F5F8]' : 'bg-black'}`}>
       {/* Header */}
       <header className={`${isLight ? 'bg-white border-b border-slate-200/60' : 'bg-black border-b border-white/5'}`}>
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -213,7 +213,7 @@ export default function ContactPage() {
                 <div className="text-center">
                   <button
                     type="submit"
-                    className="inline-flex items-center px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-lg rounded-full transition-all duration-200 hover:scale-105 shadow-lg hover:shadow-xl"
+                    className="inline-flex items-center px-8 py-4 bg-[#E8542F] hover:bg-[#D64A28] text-white font-semibold text-lg rounded-full transition-all duration-200 hover:scale-105 shadow-lg hover:shadow-xl"
                   >
                     <Send className="w-5 h-5 mr-2" />
                     Send Message

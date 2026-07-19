@@ -4,7 +4,6 @@ import { Users, Target, Shield, Calculator } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useTheme } from '@/contexts/ThemeContext'
-import AdSenseAd from '@/components/AdSenseAd'
 import Breadcrumbs from '@/components/Breadcrumbs'
 import Footer from '@/components/Footer'
 
@@ -12,7 +11,7 @@ export default function AboutPage() {
   const { isLight } = useTheme()
 
   return (
-    <main className={`min-h-screen ${isLight ? 'bg-gradient-to-br from-slate-50 via-white to-slate-50' : 'bg-black'}`}>
+    <main className={`min-h-screen ${isLight ? 'bg-[#F4F5F8]' : 'bg-black'}`}>
 
       {/* Header */}
       <header className={`${isLight ? 'bg-white border-b border-slate-200/60' : 'bg-black border-b border-white/5'}`}>
@@ -108,11 +107,6 @@ export default function AboutPage() {
           </div>
         </div>
       </section>
-
-      {/* AdSense Ad */}
-      <div className="container mx-auto px-4 py-8 flex justify-center">
-        <AdSenseAd slot="2345678901" style={{ margin: "24px 0" }} />
-      </div>
 
       {/* Values Section */}
       <section className="py-16">
@@ -226,7 +220,7 @@ export default function AboutPage() {
             </p>
             <Link
               href="/contact"
-              className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold text-lg px-8 py-4 rounded-full transition-all duration-200 hover:scale-105 shadow-lg hover:shadow-xl"
+              className="inline-block bg-[#E8542F] hover:bg-[#D64A28] text-white font-semibold text-lg px-8 py-4 rounded-full transition-all duration-200 hover:scale-105 shadow-lg hover:shadow-xl"
             >
               Contact Us
             </Link>

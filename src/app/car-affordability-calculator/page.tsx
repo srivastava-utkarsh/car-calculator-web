@@ -11,7 +11,6 @@ import CarDetailsFormV2 from '@/components/v2/CarDetailsFormV2'
 import FinancialFormV2 from '@/components/v2/FinancialFormV2'
 // ResultsDisplayV2 now lazy loaded above
 import TotalCostDisplayV2 from '@/components/v2/TotalCostDisplayV2'
-import AdSenseAd from '@/components/AdSenseAd'
 
 // Import FAQ data directly
 import { carCalculatorFAQs } from '@/data/faqData'
@@ -137,7 +136,7 @@ export default function CarAffordabilityCalculatorPage() {
   }
 
   return (
-    <main className={`min-h-screen font-sans relative ${isLight ? 'bg-gradient-to-br from-slate-50 via-white to-slate-50' : 'bg-black'}`} style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>
+    <main className={`min-h-screen font-sans relative ${isLight ? 'bg-[#F4F5F8]' : 'bg-black'}`} style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>
       {/* Structured Data */}
       <script
         type="application/ld+json"
@@ -166,7 +165,7 @@ export default function CarAffordabilityCalculatorPage() {
             {/* Navigation Menu - Mobile optimized */}
             <div className="flex-1 flex justify-center px-2">
               <nav className="flex items-center gap-2 sm:gap-4" role="navigation" aria-label="Main navigation">
-                <span className={`font-semibold text-xs sm:text-sm tracking-wide px-1 sm:px-3 py-1 sm:py-2 text-center rounded-md min-h-[32px] sm:min-h-[44px] flex items-center ${isLight ? 'text-white bg-blue-600' : 'text-black bg-white'}`}>
+                <span className={`font-semibold text-xs sm:text-sm tracking-wide px-1 sm:px-3 py-1 sm:py-2 text-center rounded-md min-h-[32px] sm:min-h-[44px] flex items-center ${isLight ? 'text-white bg-slate-900' : 'text-black bg-white'}`}>
                   Car Affordability Calculator
                 </span>
                 <a 
@@ -310,7 +309,7 @@ export default function CarAffordabilityCalculatorPage() {
               <p className={`text-sm ${themeClass('text-slate-600', 'text-white/60', isLight)} font-medium`}>
                 * All calculations are estimates for informational purposes only
               </p>
-              <div className={`mt-4 p-4 rounded-xl ${themeClass('bg-gradient-to-r from-emerald-50 to-teal-50', 'bg-gradient-to-r from-emerald-900/30 to-teal-900/30', isLight)} border-2 ${themeClass('border-emerald-200', 'border-emerald-500/40', isLight)} shadow-sm`}>
+              <div className={`mt-4 p-4 rounded-xl ${themeClass('bg-white', 'bg-gradient-to-r from-emerald-900/30 to-teal-900/30', isLight)} border ${themeClass('border-slate-200', 'border-emerald-500/40', isLight)} shadow-sm`}>
                 <div className="flex items-start gap-3">
                   <div className={`flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center ${themeClass('bg-emerald-100', 'bg-emerald-500/20', isLight)}`}>
                     <svg className={`w-4 h-4 ${themeClass('text-emerald-600', 'text-emerald-400', isLight)}`} fill="currentColor" viewBox="0 0 20 20">
@@ -361,7 +360,7 @@ export default function CarAffordabilityCalculatorPage() {
                             {/* Collapse Button */}
                             <div className="flex justify-between items-center mb-4">
                               <div className="flex items-center space-x-3">
-                                <h3 className="text-lg font-semibold text-blue-400">
+                                <h3 className={`text-lg font-semibold ${isLight ? 'text-slate-900' : 'text-blue-400'}`}>
                                   Car Cost Details
                                 </h3>
                                 <div className={`h-px w-16 ${isLight ? 'bg-slate-300' : 'bg-white/30'}`}></div>
@@ -476,7 +475,7 @@ export default function CarAffordabilityCalculatorPage() {
 
                 {/* Cost Distribution Chart - Desktop only (hidden on mobile) */}
                 {!isLeftCollapsed && carData.carPrice > 0 && carData.tenure > 0 && (
-                  <div className="hidden lg:block md-panel-elevated p-4 animate-fadeIn">
+                  <div className="hidden lg:block md-panel-elevated !bg-slate-900 !border-slate-800 p-4 animate-fadeIn">
                     <Suspense fallback={<div className="h-64 bg-gray-100 animate-pulse rounded-lg"></div>}>
                       <CostDistributionChart carData={carData} />
                     </Suspense>
@@ -498,7 +497,7 @@ export default function CarAffordabilityCalculatorPage() {
 
             {/* Cost Distribution Chart - Mobile only (after Summary) */}
             {!isLeftCollapsed && carData.carPrice > 0 && carData.tenure > 0 && (
-              <div className="block lg:hidden mt-6 md-panel-elevated p-4 animate-fadeIn">
+              <div className="block lg:hidden mt-6 md-panel-elevated !bg-slate-900 !border-slate-800 p-4 animate-fadeIn">
                 <Suspense fallback={<div className="h-64 bg-gray-100 animate-pulse rounded-lg"></div>}>
                   <CostDistributionChart carData={carData} />
                 </Suspense>
@@ -512,10 +511,6 @@ export default function CarAffordabilityCalculatorPage() {
       <section className="relative z-10 block lg:hidden">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
-            {/* Mobile Ad - 320x100 Banner */}
-            <div style={{ textAlign: 'center', margin: '24px 0' }}>
-              <AdSenseAd slot="1234567890" style={{ margin: "24px 0" }} />
-            </div>
           </div>
         </div>
       </section>
@@ -591,7 +586,7 @@ export default function CarAffordabilityCalculatorPage() {
       {/* Disclaimer Section */}
       <section className="relative z-10 mt-16 mb-8">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-          <div className={`md-panel-elevated p-6 ${themeClass('bg-white', 'bg-black', isLight)}`}>
+          <div className={`md-panel-elevated p-6 ${themeClass('!bg-slate-900 !border-slate-800', 'bg-black', isLight)}`}>
             <div className="flex items-start space-x-3">
               <div className={`flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center mt-0.5 ${themeClass('bg-slate-200', 'bg-white/10', isLight)}`}>
                 <svg className={`w-3 h-3 ${themeClass('text-slate-600', 'text-white/50', isLight)}`} fill="currentColor" viewBox="0 0 20 20">

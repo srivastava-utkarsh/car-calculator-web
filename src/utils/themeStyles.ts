@@ -40,9 +40,9 @@ export interface ThemeStyles {
 }
 
 export const lightTheme: ThemeStyles = {
-  // Clean, professional white theme inspired by Bankrate and ICICI Bank
-  mainBg: 'bg-gradient-to-br from-slate-50 via-white to-slate-50',
-  cardBg: 'bg-white border border-slate-200/60 shadow-sm',
+  // Clean, flat light-gray canvas with white cards (fintech-calculator reference)
+  mainBg: 'bg-[#F4F5F8]',
+  cardBg: 'bg-white border border-slate-200 shadow-sm',
   headerBg: 'bg-white border-b border-slate-200/60',
   
   // Professional text hierarchy
@@ -59,8 +59,8 @@ export const lightTheme: ThemeStyles = {
   inputBorder: 'border-slate-300 focus:border-blue-500',
   inputFocus: 'focus:ring-2 focus:ring-blue-500/20',
   
-  // Professional blue buttons (common in financial sites)
-  primaryButton: 'bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white',
+  // Warm signal-orange primary action (single accent spent on CTAs)
+  primaryButton: 'bg-[#E8542F] hover:bg-[#D64A28] text-white',
   secondaryButton: 'bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-300',
   
   // Consistent status colors
@@ -69,8 +69,8 @@ export const lightTheme: ThemeStyles = {
   error: 'text-red-600 bg-red-50 border-red-200',
   info: 'text-blue-600 bg-blue-50 border-blue-200',
   
-  // Professional financial blue accents
-  accent: 'bg-blue-600',
+  // Signal-orange accent
+  accent: 'bg-[#E8542F]',
   accentSecondary: 'bg-slate-100',
   
   // Subtle, professional shadows

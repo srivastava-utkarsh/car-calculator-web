@@ -6,7 +6,7 @@ export const carLoanInterestRates = (
         Car loan interest rates in India range from 7% to 14% depending on your credit score, lender, loan amount, and vehicle type. Understanding how rates are calculated and what factors affect them can save you lakhs of rupees over your loan tenure.
       </p>
       <p className="text-sm text-slate-600 dark:text-white/70">
-        <strong>Last Updated:</strong> November 7, 2024
+        <strong>Last Updated:</strong> July 19, 2026
       </p>
     </div>
 
@@ -14,9 +14,9 @@ export const carLoanInterestRates = (
       When buying a car on loan, the interest rate is one of the most critical factors that determines your total cost. A difference of just 1-2% in interest rate can mean paying tens of thousands of rupees more over the loan tenure. In this comprehensive guide, we&apos;ll break down everything you need to know about car loan interest rates in India, how they&apos;re calculated, and most importantly, how to get the best rates.
     </p>
 
-    <h2>Current Car Loan Interest Rates in India (November 2024)</h2>
+    <h2>Current Car Loan Interest Rates in India (July 2026)</h2>
     <p>
-      Here&apos;s a comprehensive comparison of car loan interest rates from major Indian banks and financial institutions as of November 2024:
+      Here&apos;s an indicative comparison of new car loan interest rates from major Indian banks as of July 2026. Public sector banks currently advertise the lowest starting rates, with Union Bank of India and Canara Bank beginning around 7.4-7.45%:
     </p>
 
     <div className="overflow-x-auto my-6">
@@ -32,19 +32,19 @@ export const carLoanInterestRates = (
         <tbody>
           <tr>
             <td className="border border-slate-300 dark:border-slate-600 px-4 py-3">State Bank of India (SBI)</td>
-            <td className="border border-slate-300 dark:border-slate-600 px-4 py-3">8.70% - 9.70%</td>
+            <td className="border border-slate-300 dark:border-slate-600 px-4 py-3">8.75% - 9.70%</td>
             <td className="border border-slate-300 dark:border-slate-600 px-4 py-3">₹2,000 + GST</td>
             <td className="border border-slate-300 dark:border-slate-600 px-4 py-3">Up to ₹1 Crore</td>
           </tr>
           <tr className="bg-slate-50 dark:bg-slate-800/50">
             <td className="border border-slate-300 dark:border-slate-600 px-4 py-3">HDFC Bank</td>
-            <td className="border border-slate-300 dark:border-slate-600 px-4 py-3">8.75% - 10.50%</td>
+            <td className="border border-slate-300 dark:border-slate-600 px-4 py-3">9.40% - 11.00%</td>
             <td className="border border-slate-300 dark:border-slate-600 px-4 py-3">₹3,500 + GST</td>
             <td className="border border-slate-300 dark:border-slate-600 px-4 py-3">Up to ₹75 Lakhs</td>
           </tr>
           <tr>
             <td className="border border-slate-300 dark:border-slate-600 px-4 py-3">ICICI Bank</td>
-            <td className="border border-slate-300 dark:border-slate-600 px-4 py-3">8.75% - 11.25%</td>
+            <td className="border border-slate-300 dark:border-slate-600 px-4 py-3">8.40% - 11.25%</td>
             <td className="border border-slate-300 dark:border-slate-600 px-4 py-3">₹3,500 + GST</td>
             <td className="border border-slate-300 dark:border-slate-600 px-4 py-3">Up to ₹50 Lakhs</td>
           </tr>
@@ -68,8 +68,20 @@ export const carLoanInterestRates = (
           </tr>
           <tr>
             <td className="border border-slate-300 dark:border-slate-600 px-4 py-3">Bank of Baroda</td>
-            <td className="border border-slate-300 dark:border-slate-600 px-4 py-3">8.90% - 10.50%</td>
+            <td className="border border-slate-300 dark:border-slate-600 px-4 py-3">8.60% - 10.50%</td>
             <td className="border border-slate-300 dark:border-slate-600 px-4 py-3">0.50% of loan amount</td>
+            <td className="border border-slate-300 dark:border-slate-600 px-4 py-3">Up to ₹1 Crore</td>
+          </tr>
+          <tr className="bg-slate-50 dark:bg-slate-800/50">
+            <td className="border border-slate-300 dark:border-slate-600 px-4 py-3">Union Bank of India</td>
+            <td className="border border-slate-300 dark:border-slate-600 px-4 py-3">7.40% - 9.40%</td>
+            <td className="border border-slate-300 dark:border-slate-600 px-4 py-3">₹1,000 + GST</td>
+            <td className="border border-slate-300 dark:border-slate-600 px-4 py-3">Up to ₹1 Crore</td>
+          </tr>
+          <tr>
+            <td className="border border-slate-300 dark:border-slate-600 px-4 py-3">Canara Bank</td>
+            <td className="border border-slate-300 dark:border-slate-600 px-4 py-3">7.45% - 9.45%</td>
+            <td className="border border-slate-300 dark:border-slate-600 px-4 py-3">0.25% of loan amount</td>
             <td className="border border-slate-300 dark:border-slate-600 px-4 py-3">Up to ₹1 Crore</td>
           </tr>
         </tbody>
@@ -334,17 +346,20 @@ export const carLoanInterestRates = (
       <li>Own the car faster</li>
     </ul>
 
-    <h2>Real Case Studies: Interest Rate Impact</h2>
-
-    <h3>Case Study 1: Priya&apos;s Credit Score Improvement</h3>
+    <h2>Worked Scenarios: How Much the Rate Really Matters</h2>
     <p>
-      <strong>Situation:</strong> Priya wanted to buy a ₹8 lakh car. Her initial credit score was 680.
+      The following hypothetical scenarios use realistic market numbers to show the rupee impact of the strategies above.
+    </p>
+
+    <h3>Scenario 1: Improving the Credit Score Before Applying</h3>
+    <p>
+      <strong>Situation:</strong> A buyer wants a ₹8 lakh car loan. Their credit score is 680.
     </p>
     <p>
       <strong>Initial Offer:</strong> 11% interest rate, EMI of ₹17,456 for 5 years, total interest = ₹2,47,360
     </p>
     <p>
-      <strong>Action Taken:</strong> She delayed her purchase by 3 months, paid off credit card debt, and improved her score to 760.
+      <strong>Action Taken:</strong> Delaying the purchase by 3 months, paying off credit card debt, and lifting the score to 760.
     </p>
     <p>
       <strong>New Offer:</strong> 9% interest rate, EMI of ₹16,607 for 5 years, total interest = ₹1,96,420
@@ -353,15 +368,15 @@ export const carLoanInterestRates = (
       <strong>Savings:</strong> ₹50,940 in total interest + ₹849 lower monthly EMI
     </p>
 
-    <h3>Case Study 2: Rajesh&apos;s Negotiation Success</h3>
+    <h3>Scenario 2: Negotiating With Competing Quotes</h3>
     <p>
-      <strong>Situation:</strong> Rajesh needed a ₹12 lakh loan for a new SUV.
+      <strong>Situation:</strong> A buyer needs a ₹12 lakh loan for a new SUV.
     </p>
     <p>
       <strong>Initial Offer (Bank A):</strong> 9.5% interest rate
     </p>
     <p>
-      <strong>Action Taken:</strong> He got quotes from 4 banks, found Bank B offering 9%, and negotiated with his salary bank (Bank A) using this as leverage.
+      <strong>Action Taken:</strong> Collecting quotes from 4 banks, finding Bank B at 9%, and negotiating with the salary-account bank (Bank A) using this as leverage.
     </p>
     <p>
       <strong>Final Offer (Bank A):</strong> 8.75% interest rate (matched competitor and gave relationship discount)
@@ -370,9 +385,9 @@ export const carLoanInterestRates = (
       <strong>Savings:</strong> ₹48,000 over 5 years compared to initial offer
     </p>
 
-    <h3>Case Study 3: Amit&apos;s Down Payment Strategy</h3>
+    <h3>Scenario 3: Choosing the Larger Down Payment</h3>
     <p>
-      <strong>Situation:</strong> Amit was buying a ₹10 lakh car and had ₹3 lakhs in savings.
+      <strong>Situation:</strong> A buyer with ₹3 lakhs in savings is purchasing a ₹10 lakh car.
     </p>
     <p>
       <strong>Option 1:</strong> 15% down payment (₹1.5 lakhs), loan ₹8.5 lakhs at 10%, EMI = ₹18,065, total interest = ₹2,33,900
@@ -414,7 +429,7 @@ export const carLoanInterestRates = (
 
     <h3>1. What is a good interest rate for a car loan in India?</h3>
     <p>
-      As of November 2024, a good car loan interest rate is between 8.5% - 9.5% for borrowers with excellent credit scores (750+). Rates between 9.5% - 10.5% are average, while anything above 11% is on the higher side and worth negotiating or improving your credit profile before applying.
+      As of mid-2026, a good car loan interest rate is between 7.5% - 9% for borrowers with excellent credit scores (750+), with public sector banks advertising starting rates as low as 7.4%. Rates between 9% - 10.5% are average, while anything above 11% is on the higher side and worth negotiating or improving your credit profile before applying.
     </p>
 
     <h3>2. Can I negotiate car loan interest rates?</h3>
@@ -439,7 +454,7 @@ export const carLoanInterestRates = (
 
     <h3>6. Which bank offers the lowest car loan interest rate?</h3>
     <p>
-      As of November 2024, SBI and Kotak Mahindra Bank offer some of the lowest rates starting at 8.70%. However, the actual rate you get depends on your credit profile, loan amount, and tenure. Always compare multiple banks as rates vary by individual circumstances.
+      As of July 2026, Union Bank of India (from about 7.40%) and Canara Bank (from about 7.45%) advertise some of the lowest starting rates, with ICICI Bank from about 8.40% and SBI from about 8.75% among large banks. However, the actual rate you get depends on your credit profile, loan amount, and tenure. Always compare multiple banks as rates vary by individual circumstances.
     </p>
 
     <h3>7. How can I reduce my car loan interest rate?</h3>
@@ -460,7 +475,7 @@ export const carLoanInterestRates = (
 
     <div className="bg-slate-100 dark:bg-slate-800 rounded-lg p-6 mt-8">
       <p className="text-sm text-slate-600 dark:text-white/70">
-        <strong>Disclaimer:</strong> Interest rates mentioned in this article are indicative and based on publicly available information as of November 2024. Actual rates may vary based on individual credit profiles, loan amounts, tenure, and lender policies. Always verify current rates directly with lenders before making any financial decisions. This article is for informational purposes only and does not constitute financial advice.
+        <strong>Disclaimer:</strong> Interest rates mentioned in this article are indicative and based on publicly available information as of July 2026. Actual rates may vary based on individual credit profiles, loan amounts, tenure, and lender policies. Always verify current rates directly with lenders before making any financial decisions. This article is for informational purposes only and does not constitute financial advice.
       </p>
     </div>
   </>

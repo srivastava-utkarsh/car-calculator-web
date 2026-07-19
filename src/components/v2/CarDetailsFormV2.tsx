@@ -187,7 +187,7 @@ export default function CarDetailsFormV2({ carData, updateCarData, monthlyIncome
           </div>
           
           <div className="relative">
-            <span className="absolute left-4 top-1/2 transform -translate-y-1/2 font-semibold text-white/70 z-10">₹</span>
+            <span className={`absolute left-4 top-1/2 transform -translate-y-1/2 font-semibold ${isLight ? 'text-slate-400' : 'text-white/70'} z-10`}>₹</span>
             <input
               id="car-price-input"
               type="text"
@@ -224,7 +224,7 @@ export default function CarDetailsFormV2({ carData, updateCarData, monthlyIncome
                   e.preventDefault()
                 }
               }}
-              className="w-full pl-8 pr-4 py-1.5 max-md:py-3 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-transparent transition-all text-sm max-md:text-base bg-white/10 backdrop-blur-md border border-white/20 text-white placeholder-white/50 max-md:min-h-[48px]"
+              className={`w-full pl-8 pr-4 py-1.5 max-md:py-3 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-transparent transition-all text-sm max-md:text-base ${isLight ? 'bg-white border border-slate-300 text-slate-900 placeholder-slate-400' : 'bg-white/10 backdrop-blur-md border border-white/20 text-white placeholder-white/50'} max-md:min-h-[48px]`}
               placeholder="Enter car price"
             />
           </div>
@@ -278,7 +278,7 @@ export default function CarDetailsFormV2({ carData, updateCarData, monthlyIncome
           </div>
           
           <div className="relative">
-            <span className="absolute left-4 top-1/2 -translate-y-1/2 font-semibold text-white/70 z-10">₹</span>
+            <span className={`absolute left-4 top-1/2 -translate-y-1/2 font-semibold ${isLight ? 'text-slate-400' : 'text-white/70'} z-10`}>₹</span>
             <input
               type="text"
               required
@@ -313,7 +313,7 @@ export default function CarDetailsFormV2({ carData, updateCarData, monthlyIncome
                   e.preventDefault()
                 }
               }}
-              className="w-full pl-8 pr-4 py-1.5 max-md:py-3 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-transparent transition-all text-sm max-md:text-base bg-white/10 backdrop-blur-md border border-white/20 text-white placeholder-white/50 max-md:min-h-[48px]"
+              className={`w-full pl-8 pr-4 py-1.5 max-md:py-3 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-transparent transition-all text-sm max-md:text-base ${isLight ? 'bg-white border border-slate-300 text-slate-900 placeholder-slate-400' : 'bg-white/10 backdrop-blur-md border border-white/20 text-white placeholder-white/50'} max-md:min-h-[48px]`}
               placeholder="Enter down payment"
             />
           </div>
@@ -334,7 +334,7 @@ export default function CarDetailsFormV2({ carData, updateCarData, monthlyIncome
                 }}
                 className={`w-full h-0.5 rounded-full appearance-none cursor-pointer slider-enhanced transition-all duration-200 ${isLight ? 'light-theme' : 'dark-theme'}`}
                 style={{
-                  background: `linear-gradient(to right, ${downPaymentPercentage >= 20 ? '#06b6d4' : '#f97316'} 0%, ${downPaymentPercentage >= 20 ? '#06b6d4' : '#f97316'} ${(carData.downPayment / carData.carPrice) * 100}%, ${isLight ? '#e2e8f0' : 'rgba(255,255,255,0.2)'} ${(carData.downPayment / carData.carPrice) * 100}%, ${isLight ? '#e2e8f0' : 'rgba(255,255,255,0.2)'} 100%)`
+                  background: `linear-gradient(to right, ${downPaymentPercentage >= 20 ? '#06b6d4' : '#f97316'} 0%, ${downPaymentPercentage >= 20 ? '#06b6d4' : '#f97316'} ${carData.carPrice > 0 ? (carData.downPayment / carData.carPrice) * 100 : 0}%, ${isLight ? '#e2e8f0' : 'rgba(255,255,255,0.2)'} ${carData.carPrice > 0 ? (carData.downPayment / carData.carPrice) * 100 : 0}%, ${isLight ? '#e2e8f0' : 'rgba(255,255,255,0.2)'} 100%)`
                 }}
               />
             </div>
@@ -348,7 +348,7 @@ export default function CarDetailsFormV2({ carData, updateCarData, monthlyIncome
 
       {/* Loan Details Section Header */}
       <div className="flex items-center space-x-3 mb-3">
-        <h4 className="text-lg font-semibold text-blue-400">
+        <h4 className={`text-lg font-semibold ${themeClass('text-slate-900', 'text-blue-400', isLight)}`}>
           Loan Details
         </h4>
         <div className={`h-px w-16 ${themeClass('bg-slate-300', 'bg-white/30', isLight)}`}></div>

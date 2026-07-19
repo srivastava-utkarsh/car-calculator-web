@@ -4,7 +4,6 @@ import { HelpCircle, Calculator, TrendingUp, DollarSign, FileText } from 'lucide
 import Image from 'next/image'
 import Link from 'next/link'
 import { useTheme } from '@/contexts/ThemeContext'
-import AdSenseAd from '@/components/AdSenseAd'
 import Breadcrumbs from '@/components/Breadcrumbs'
 import Footer from '@/components/Footer'
 import { faqPageCategories } from '@/data/faqPageData'
@@ -19,7 +18,7 @@ export default function FAQPage() {
   }))
 
   return (
-    <main className={`min-h-screen ${isLight ? 'bg-gradient-to-br from-slate-50 via-white to-slate-50' : 'bg-black'}`}>
+    <main className={`min-h-screen ${isLight ? 'bg-[#F4F5F8]' : 'bg-black'}`}>
 
       {/* Header */}
       <header className={`${isLight ? 'bg-white border-b border-slate-200/60' : 'bg-black border-b border-white/5'}`}>
@@ -105,11 +104,6 @@ export default function FAQPage() {
               </div>
 
               {/* AdSense Ad after each category */}
-              {categoryIndex === 1 && (
-                <div className="mt-12 flex justify-center">
-                  <AdSenseAd slot="3456789012" style={{ margin: "24px 0" }} />
-                </div>
-              )}
             </div>
           </div>
         </section>
@@ -128,13 +122,13 @@ export default function FAQPage() {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
                 href="/car-affordability-calculator"
-                className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold text-lg px-8 py-4 rounded-full transition-all duration-200 hover:scale-105 shadow-lg hover:shadow-xl"
+                className="inline-block bg-[#E8542F] hover:bg-[#D64A28] text-white font-semibold text-lg px-8 py-4 rounded-full transition-all duration-200 hover:scale-105 shadow-lg hover:shadow-xl"
               >
                 Car Affordability Calculator
               </Link>
               <Link
                 href="/car-loan-prepayment-calculator"
-                className="inline-block bg-green-600 hover:bg-green-700 text-white font-semibold text-lg px-8 py-4 rounded-full transition-all duration-200 hover:scale-105 shadow-lg hover:shadow-xl"
+                className="inline-block bg-slate-800 hover:bg-slate-900 text-white font-semibold text-lg px-8 py-4 rounded-full transition-all duration-200 hover:scale-105 shadow-lg hover:shadow-xl"
               >
                 Prepayment Calculator
               </Link>

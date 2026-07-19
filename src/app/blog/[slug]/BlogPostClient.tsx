@@ -8,7 +8,6 @@ import Breadcrumbs from '@/components/Breadcrumbs'
 import Footer from '@/components/Footer'
 import { blogPosts } from '@/data/blogData'
 import { getArticleContent } from '@/data/articleContent'
-import AdSenseAd from '@/components/AdSenseAd'
 
 export default function BlogPostClient({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = use(params)
@@ -21,9 +20,15 @@ export default function BlogPostClient({ params }: { params: Promise<{ slug: str
     return <div>Post not found</div>
   }
 
+  // Same-category posts first, then others, excluding the current post
+  const relatedPosts = [
+    ...blogPosts.filter(p => p.slug !== slug && p.category === post.category),
+    ...blogPosts.filter(p => p.slug !== slug && p.category !== post.category),
+  ].slice(0, 3)
+
   return (
     <>
-      <main className={`min-h-screen ${isLight ? 'bg-gradient-to-br from-slate-50 via-white to-slate-50' : 'bg-black'}`}>
+      <main className={`min-h-screen ${isLight ? 'bg-[#F4F5F8]' : 'bg-black'}`}>
       <header className={`${isLight ? 'bg-white border-b border-slate-200/60' : 'bg-black border-b border-white/5'}`}>
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16 sm:h-20">
@@ -72,8 +77,30 @@ export default function BlogPostClient({ params }: { params: Promise<{ slug: str
               {content}
             </div>
 
+            {/* Related guides */}
             <div className="mt-12">
-              <AdSenseAd slot="3456789012" style={{ margin: "24px 0" }} />
+              <h2 className={`text-2xl font-bold mb-6 ${isLight ? 'text-slate-900' : 'text-white'}`}>
+                Related Guides
+              </h2>
+              <div className="grid gap-4 sm:grid-cols-3">
+                {relatedPosts.map(related => (
+                  <Link
+                    key={related.slug}
+                    href={`/blog/${related.slug}`}
+                    className={`block p-5 rounded-2xl transition-all ${isLight ? 'bg-white border border-slate-200 shadow-sm hover:shadow-md' : 'bg-slate-800/40 border border-slate-700 hover:bg-slate-800/70'}`}
+                  >
+                    <span className={`text-xs font-semibold uppercase tracking-wide ${isLight ? 'text-[#E8542F]' : 'text-blue-400'}`}>
+                      {related.category}
+                    </span>
+                    <h3 className={`mt-2 font-semibold leading-snug ${isLight ? 'text-slate-900' : 'text-white'}`}>
+                      {related.title}
+                    </h3>
+                    <span className={`mt-2 block text-sm ${isLight ? 'text-slate-500' : 'text-white/60'}`}>
+                      {related.readTime}
+                    </span>
+                  </Link>
+                ))}
+              </div>
             </div>
 
             {/* Author Bio */}
@@ -105,10 +132,10 @@ export default function BlogPostClient({ params }: { params: Promise<{ slug: str
                 Use our free calculators to determine how much car you can afford and plan your loan prepayments.
               </p>
               <div className="flex flex-wrap gap-4">
-                <Link href="/car-affordability-calculator" className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-full transition-all">
+                <Link href="/car-affordability-calculator" className="inline-block bg-[#E8542F] hover:bg-[#D64A28] text-white font-semibold px-6 py-3 rounded-full transition-all">
                   Car Affordability Calculator
                 </Link>
-                <Link href="/car-loan-prepayment-calculator" className="inline-block bg-green-600 hover:bg-green-700 text-white font-semibold px-6 py-3 rounded-full transition-all">
+                <Link href="/car-loan-prepayment-calculator" className="inline-block bg-slate-800 hover:bg-slate-900 text-white font-semibold px-6 py-3 rounded-full transition-all">
                   Prepayment Calculator
                 </Link>
               </div>

@@ -1,3 +1,5 @@
+import Link from 'next/link'
+
 export const hiddenCosts = (
   <>
     <p>
@@ -353,6 +355,9 @@ export const hiddenCosts = (
     </p>
     <p>
       Remember, a car is a depreciating asset. The goal is to minimize total ownership costs while maximizing utility and enjoyment. Choose wisely, maintain diligently, and drive efficiently to keep your car affordable throughout its life.
+    </p>
+    <p>
+      Two of the costs discussed here deserve deeper reading: depreciation is usually the single largest expense of ownership — our <Link href="/blog/car-depreciation-resale-value-india/">car depreciation and resale value guide</Link> shows the year-by-year curve and how to protect your resale price — and insurance premiums can be trimmed 20-40% with the approach in our <Link href="/blog/car-insurance-guide-new-car-buyers/">car insurance guide</Link>.
     </p>
   </>
 )
